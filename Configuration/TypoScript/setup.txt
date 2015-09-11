@@ -1,0 +1,73 @@
+page.includeCSS.socstyle = typo3conf/ext/pxa_social_feed/Resources/Public/css/style.css
+
+plugin.tx_pxasocialfeed {
+	view {
+		templateRootPath = {$plugin.tx_pxasocialfeed.view.templateRootPath}
+		partialRootPath = {$plugin.tx_pxasocialfeed.view.partialRootPath}
+		layoutRootPath = {$plugin.tx_pxasocialfeed.view.layoutRootPath}
+	}
+	persistence {
+		storagePid = {$plugin.tx_pxasocialfeed.persistence.storagePid}
+	}
+	features {
+		# uncomment the following line to enable the new Property Mapper.
+		# rewrittenPropertyMapper = 1
+	}
+	settings {
+		facebookID = {$plugin.tx_pxasocialfeed.settings.facebookID}
+    	instagramID = {$plugin.tx_pxasocialfeed.settings.instagramID}
+    	limit = {$plugin.tx_pxasocialfeed.settings.limit}
+	}
+}
+
+plugin.tx_pxasocialfeed._CSS_DEFAULT_STYLE (
+	textarea.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	input.f3-form-error {
+		background-color:#FF9F9F;
+		border: 1px #FF0000 solid;
+	}
+
+	.tx-pxa-social-feed table {
+		border-collapse:separate;
+		border-spacing:10px;
+	}
+
+	.tx-pxa-social-feed table th {
+		font-weight:bold;
+	}
+
+	.tx-pxa-social-feed table td {
+		vertical-align:top;
+	}
+
+	.typo3-messages .message-error {
+		color:red;
+	}
+
+	.typo3-messages .message-ok {
+		color:green;
+	}
+
+)
+
+ # Module configuration
+module.tx_pxasocialfeed {
+	persistence {
+		storagePid = {$module.tx_pxasocialfeed.persistence.storagePid}
+	}
+	view {
+		templateRootPath = {$module.tx_pxasocialfeed.view.templateRootPath}
+		partialRootPath = {$module.tx_pxasocialfeed.view.partialRootPath}
+		layoutRootPath = {$module.tx_pxasocialfeed.view.layoutRootPath}
+	}
+	settings {
+		facebookID = {$plugin.tx_pxasocialfeed.settings.facebookID}
+    	instagramID = {$plugin.tx_pxasocialfeed.settings.instagramID}
+    	limit = {$plugin.tx_pxasocialfeed.settings.limit}
+	}
+}
+

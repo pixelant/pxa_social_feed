@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-10T22:26:32Z" product-name="pxa_social_feed">
+		<header/>
+		<body>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds">
+				<source>Feeds</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.social_type">
+				<source>Social Type</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.date">
+				<source>Date</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.post_url">
+				<source>Post Url</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.message">
+				<source>Message</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.image">
+				<source>Image</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.title">
+				<source>Title</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.description">
+				<source>Description</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_url">
+				<source>External Url</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

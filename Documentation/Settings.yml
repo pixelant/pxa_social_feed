@@ -1,0 +1,7 @@
+---
+conf.py:
+  copyright: 2015
+  project: Social Media Feed Reader
+  version: 0.0.1
+  release: 0.0.1
+...
