@@ -13,7 +13,6 @@ instagramID -- instagram user ID.
 limit -- amount of records to show in feed.
 
 facebook page ID can be found by page name using service like http://findmyfbid.com/
-
 instagram user ID can be found by username using service like http://jelled.com/instagram/lookup-user-id
 
 To run import in backend click on 'Social Import' link in tab 'ADMIN TOOLS'.
