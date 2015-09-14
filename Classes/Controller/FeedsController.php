@@ -42,13 +42,12 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 */
 	protected $feedsRepository = NULL;
 
-	
 	/**
 	 * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
 	protected $persistenceManager;
-	
+
 	/**
 	 * action list
 	 *
@@ -71,14 +70,14 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	public function importAction() {
 		//clear table before begin the import
 		$GLOBALS['TYPO3_DB']->exec_TRUNCATEquery('tx_pxasocialfeed_domain_model_feeds');
-		
+
 		//importing data from facebook if TS constant facebookID is not empty
 		if (isset($this->settings['facebookID']) && $this->settings['facebookID'] != ''){
 			//getting data array from facebook graph api json result
-			$url = "https://graph.facebook.com/".$this->settings['facebookID']."/posts?fields=message,attachments,created_time&limit=".$this->settings['limit']."&access_token=1649405702013411|595200d48abe20def994eabf14b0af21";
+			$url = "https://graph.facebook.com/".$this->settings['facebookID']."/posts?fields=message,attachments,created_time&limit=".$this->settings['limit']."&access_token=".$this->settings['facebookAccessToken'];
 			$res = $this->file_get_contents_curl($url);
 			$data = json_decode($res, true);
-			
+
 			//adding each record from array to database 
 			foreach($data['data'] as $record){
 				$fb = new Feeds();
@@ -107,14 +106,14 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 				$this->persistenceManager->persistAll();
 			}
 		}
-		
+
 		//importing data from instagram if TS constant instagramID is not empty
 		if (isset($this->settings['instagramID']) && $this->settings['instagramID'] != '') {
 			//getting data array from instagram api json result
-			$url = "https://api.instagram.com/v1/users/".$this->settings['instagramID']."/media/recent/?client_id=a2dc6041024f4d3b86fd2f690492b070";
+			$url = "https://api.instagram.com/v1/users/".$this->settings['instagramID']."/media/recent/?client_id=".$this->settings['instagramClientID'];
 			$res = $this->file_get_contents_curl($url);
 			$data = json_decode($res, true);
-			
+
 			//adding each record from array to database
 			foreach($data['data'] as $record){
 				$ig = new Feeds();
@@ -136,13 +135,13 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 			}
 		}
 	}
-	
+
 	/**
 	 * function to use php curl to get page's content
 	 */
 	public function file_get_contents_curl($url) {
 		$ch = curl_init();
-	
+
 		curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Cache-Control: no-cache"));
 		curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
@@ -151,14 +150,14 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	
+
 		$data = curl_exec($ch);
 		if(curl_exec($ch) === false)
 		{
 			echo 'Curl error: ' . curl_error($ch);
 		}
 		curl_close($ch);
-	
+
 		return $data;
 	}
 

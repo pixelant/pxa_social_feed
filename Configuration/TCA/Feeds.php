@@ -15,7 +15,7 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = array(
 		'1' => array('showitem' => ''),
 	),
 	'columns' => array(
-	
+
 		'sys_language_uid' => array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',

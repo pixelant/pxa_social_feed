@@ -15,6 +15,10 @@ plugin.tx_pxasocialfeed {
     	instagramID = 1737087862
     	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Number of Results to Show:
     	limit = 12
+    	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Facebook Access Token:
+    	facebookAccessToken = 1649405702013411|595200d48abe20def994eabf14b0af21
+    	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Instagram Client-ID:
+    	instagramClientID = a2dc6041024f4d3b86fd2f690492b070
 	}
 	persistence {
 		# cat=plugin.tx_pxasocialfeed//a; type=string; label=Default storage PID

@@ -4,15 +4,12 @@ if (!defined('TYPO3_MODE')) {
 }
 
 \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-	'Pixelant.' . $_EXTKEY,
-	'Showfeed',
-	array(
-		'Feeds' => 'list',
-		
-	),
-	// non-cacheable actions
-	array(
-		'Feeds' => 'list',
-		
-	)
+		'Pixelant.' . $_EXTKEY,
+		'Showfeed',
+		array(
+				'Feeds' => 'list',
+
+		),
+		// non-cacheable actions
+		array()
 );

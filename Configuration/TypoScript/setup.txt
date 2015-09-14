@@ -17,6 +17,8 @@ plugin.tx_pxasocialfeed {
 		facebookID = {$plugin.tx_pxasocialfeed.settings.facebookID}
     	instagramID = {$plugin.tx_pxasocialfeed.settings.instagramID}
     	limit = {$plugin.tx_pxasocialfeed.settings.limit}
+    	facebookAccessToken = {$plugin.tx_pxasocialfeed.settings.facebookAccessToken}
+    	instagramClientID = {$plugin.tx_pxasocialfeed.settings.instagramClientID}
 	}
 }
 
@@ -68,6 +70,8 @@ module.tx_pxasocialfeed {
 		facebookID = {$plugin.tx_pxasocialfeed.settings.facebookID}
     	instagramID = {$plugin.tx_pxasocialfeed.settings.instagramID}
     	limit = {$plugin.tx_pxasocialfeed.settings.limit}
+    	facebookAccessToken = {$plugin.tx_pxasocialfeed.settings.facebookAccessToken}
+    	instagramClientID = {$plugin.tx_pxasocialfeed.settings.instagramClientID}
 	}
 }
 

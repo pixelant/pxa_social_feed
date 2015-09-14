@@ -34,7 +34,7 @@ class FeedsRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
 	/**
 	 * Method to get last records ordered by date
-	 * 
+	 *
 	 * @param int $limit
 	 */
 	public function findLast ($limit){
@@ -49,7 +49,6 @@ class FeedsRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 		$query->getQuerySettings()->setRespectSysLanguage(FALSE);
 		//executing query
 		$result = $query->execute();
-		return $result;		
+		return $result;
 	}
-
 }
