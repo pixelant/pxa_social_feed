@@ -1,6 +1,6 @@
 <?php
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
-
+use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 
 /***************************************************************
  *
@@ -51,4 +51,63 @@ class FeedsRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 		$result = $query->execute();
 		return $result;
 	}
+        
+        /**
+         * get all feeds with custom config
+         * 
+         * @param \Pixelant\PxaSocialFeed\Domain\Model\Config $config
+         * 
+         * @return array
+         */
+        public function getFeedsWithConfig (\Pixelant\PxaSocialFeed\Domain\Model\Config $config){            
+            $query = $this->createQuery();
+        
+            $query->getQuerySettings()->setRespectStoragePage(FALSE);
+            $query->getQuerySettings()->setRespectSysLanguage(FALSE);
+            $query->matching( $query->equals('config.uid', $config->getUid()) );
+            $feeds = $query->execute();
+            
+            return $feeds->toArray();
+        }
+        
+        /**
+         * get all feeds with custom config
+         * 
+         * @param integer $config
+         * 
+         * @return array
+         */
+        public function getFeedsWithConfigUid ($config){            
+            $query = $this->createQuery();
+        
+            $query->getQuerySettings()->setRespectStoragePage(FALSE);
+            $query->getQuerySettings()->setRespectSysLanguage(FALSE);
+            $query->matching( $query->equals('config.uid', $config) );
+            $feeds = $query->execute();
+            
+            return $feeds->toArray();
+        }
+        
+        /**
+         * find all feds record
+         * 
+         * @return array
+         */
+        public function findAllFeeds (){
+            //create query
+            $query = $this->createQuery();
+            //disable some settings
+            $query->getQuerySettings()->setRespectStoragePage(FALSE);
+            $query->getQuerySettings()->setRespectSysLanguage(FALSE);
+            //executing query
+            $result = $query->execute();
+            return $result;
+        }
+        
+        /*
+         * delete all records where field deleted == 1
+         */
+        public function cleanFeedsTable (){
+            $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_pxasocialfeed_domain_model_feeds', 'deleted=1');
+        }
 }

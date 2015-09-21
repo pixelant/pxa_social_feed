@@ -1,51 +1,29 @@
 
 <f:layout name="Default" />
 
-This Template is responsible for creating a table of domain objects.
-
-If you modify this template, do not forget to change the overwrite settings
-in /Configuration/ExtensionBuilder/settings.yaml:
-  Resources:
-    Private:
-      Templates:
-        List.html: keep
-
-Otherwise your changes will be overwritten the next time you save the extension in the extension builder
-
 <f:section name="content">
-<h1>Listing for Feeds</h1>
-
-<f:flashMessages />
-
-<table  class="tx_pxasocialfeed" >
-	<tr>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.social_type" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.date" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.post_url" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.message" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.image" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.title" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.description" /></th>
-		<th><f:translate key="tx_pxasocialfeed_domain_model_feeds.external_url" /></th>
-		<th> </th>
-		<th> </th>
-	</tr>
-
-	<f:for each="{feedss}" as="feeds">
-		<tr>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.socialType}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.date -> f:format.date()}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.postUrl}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.message}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.image}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.title}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.description}</f:link.action></td>
-			<td><f:link.action action="show" arguments="{feeds : feeds}"> {feeds.externalUrl}</f:link.action></td>
-			<td><f:link.action action="edit" arguments="{feeds : feeds}">Edit</f:link.action></td>
-			<td><f:link.action action="delete" arguments="{feeds : feeds}">Delete</f:link.action></td>
-		</tr>
-	</f:for>
-</table>
-
-<f:link.action action="new">New Feeds</f:link.action>
+    
+    <div class="tx-pxa-social-feed">
+    <ul class="social-feed-container owl-carousel">
+        
+        <f:for each="{feeds}" as="feed">
+        
+        <li class="social-feed-{feed.socialType}">
+            <a href="{feed.postUrl}" target="_blank">
+                <h3 class="social-feed-title">{feed.title}</h3>
+                <div class="social-feed-image-container">
+                    <div class="social-feed-information">
+                        <span class="social-feed-date">{feed.date -> f:format.date()}</span>
+                    </div>
+                    
+                    <img title="{feed.socialType}" alt="{feed.socialType}" src="{feed.image}">
+                </div>
+                <p class="social-feed-message">{feed.message}</p>
+            </a>
+        </li>
+        
+        </f:for>
+        
+    </ul>
+    </div>
 </f:section>

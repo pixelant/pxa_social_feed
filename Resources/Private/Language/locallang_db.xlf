@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-10T22:26:32Z" product-name="pxa_social_feed">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-17T08:00:15Z" product-name="pxa_social_feed">
 		<header/>
 		<body>
 			<trans-unit id="tx_pxasocialfeed_domain_model_feeds">
@@ -30,6 +30,50 @@
 			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_url">
 				<source>External Url</source>
 			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_feeds.config">
+				<source>Config</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_tokens">
+				<source>Tokens</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_id">
+				<source>App Id</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_secret">
+				<source>App Secret</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_tokens.social_type">
+				<source>Social Type</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config">
+				<source>Config</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
+				<source>Social Id</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.config_name">
+				<source>Config Name</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.feed_pid">
+				<source>Feed Pid</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.executed">
+				<source>Executed</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.feed_count">
+				<source>Feed Count</source>
+			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.token">
+				<source>Token</source>
+			</trans-unit>
+                        
+                        <trans-unit id="tx_pxasocialfeed.task.import.name">
+				<source>Social Feed Import</source>
+			</trans-unit>
+                        <trans-unit id="tx_pxasocialfeed.task.import.description">
+				<source>Import feeds from social network</source>
+			</trans-unit>
+                        
 		</body>
 	</file>
 </xliff>

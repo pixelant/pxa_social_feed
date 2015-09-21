@@ -6,16 +6,16 @@ if (!defined ('TYPO3_MODE')) {
 $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = array(
 	'ctrl' => $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds']['ctrl'],
 	'interface' => array(
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, social_type, date, post_url, message, image, title, description, external_url',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, social_type, date, post_url, message, image, title, description, external_url, config',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, social_type, date, post_url, message, image, title, description, external_url, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
+		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, social_type, date, post_url, message, image, title, description, external_url, config, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
 	),
 	'columns' => array(
-
+	
 		'sys_language_uid' => array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
@@ -172,6 +172,23 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = array(
 				'type' => 'input',
 				'size' => 30,
 				'eval' => 'trim'
+			),
+		),
+		'config' => array(
+			'exclude' => 1,
+			'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.config',
+			'config' => array(
+				'type' => 'inline',
+				'foreign_table' => 'tx_pxasocialfeed_domain_model_config',
+				'minitems' => 0,
+				'maxitems' => 1,
+				'appearance' => array(
+					'collapseAll' => 0,
+					'levelLinksPosition' => 'top',
+					'showSynchronizationLink' => 1,
+					'showPossibleLocalizationRecords' => 1,
+					'showAllLocalizationLink' => 1
+				),
 			),
 		),
 		

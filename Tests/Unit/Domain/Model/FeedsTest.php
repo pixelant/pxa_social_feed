@@ -231,4 +231,28 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 			$this->subject
 		);
 	}
+
+	/**
+	 * @test
+	 */
+	public function getConfigReturnsInitialValueForConfig() {
+		$this->assertEquals(
+			NULL,
+			$this->subject->getConfig()
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setConfigForConfigSetsConfig() {
+		$configFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
+		$this->subject->setConfig($configFixture);
+
+		$this->assertAttributeEquals(
+			$configFixture,
+			'config',
+			$this->subject
+		);
+	}
 }

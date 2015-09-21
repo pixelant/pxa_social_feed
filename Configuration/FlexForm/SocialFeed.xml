@@ -1,0 +1,43 @@
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <TCEforms>
+                    <!--<sheetTitle>LLL:EXT:pxa_youtube/Resources/Private/Language/locallang_db.xlf:tx_pxayoutube.label_video</sheetTitle>-->
+                    <sheetTitle>Social Feed form</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <settings.flexFeedsCount>
+                        <TCEforms>
+                            <!--<label>LLL:EXT:pxa_youtube/Resources/Private/Language/locallang_db.xlf:tx_pxayoutube.label_uid</label>-->
+                            <label>Count of feed on page</label>
+                            <config>
+                                <type>input</type>
+                                <size>30</size>
+                            </config>
+                        </TCEforms>
+                    </settings.flexFeedsCount>
+                    
+                    <settings.flexConfig>
+                        <TCEforms>
+                            <label>Choose config for plugin</label>
+                            <config>
+                                <type>select</type>                                
+                                <size>10</size>
+                                <minitems>0</minitems>
+                                <maxitems>999</maxitems>
+                                <autoSizeMax>7</autoSizeMax>
+                                <foreign_table>tx_pxasocialfeed_domain_model_config</foreign_table>
+                            </config>
+                        </TCEforms>
+                    </settings.flexConfig>
+                    
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

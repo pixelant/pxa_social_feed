@@ -1,0 +1,128 @@
+
+<f:layout name="default" />
+
+<f:section name="content">    
+    
+    <div class="pxa-social-feed-be-config">
+    
+        <f:if condition="{tokens}">
+            
+            <f:then>                
+                <div class ="js__pxasocialfeed-be-config-form" >
+                    <h4>Add new config or edit existing</h4>
+                    <f:form action="addConfig" name="pxasocialfeed_form_config" controller="Feeds" enctype="multipart/form-data" noCache="1">
+
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>Config name</td>
+                                <td><f:form.textfield name="configName"/></td>
+                            </tr>
+                            <tr>
+                                <td>Social ID</td>
+                                <td><f:form.textfield name="socialId"/></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Pid for feeds</td>
+                                <td><f:form.textfield name="feedPid"/></td>
+                            </tr>
+                            <tr>
+                                <td>Count of feeds (that will be taken from social network)</td>
+                                <td><f:form.textfield name="feedCount"/></td>
+                            </tr>
+                            <tr>
+                                <td>Type</td>
+                                <td>
+                                    <select name="tx_pxasocialfeed_tools_pxasocialfeedimporter[token]">
+                                        <f:for each="{tokens}" as="token" iteration="index">
+                                            <f:if condition="{index} == 1">
+                                                <f:then>
+                                                    <option selected="selected" value="{token.uid}">
+                                                        {token.uid}
+                                                        <f:render partial="Feeds/SelectType" arguments="{type: token.socialType}" />
+                                                        <f:format.crop maxCharacters="7">{token.appId}</f:format.crop>
+                                                    </option>
+                                                </f:then>
+                                                <f:else>
+                                                    <option value="{token.uid}">
+                                                        {token.uid}
+                                                        <f:render partial="Feeds/SelectType" arguments="{type: token.socialType}" />
+                                                        <f:format.crop maxCharacters="7">{token.appId}</f:format.crop>
+                                                    </option>
+                                                </f:else>
+                                            </f:if>
+                                        </f:for>
+                                        
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <f:form.hidden name="configUid" value="0" />
+                                    <f:form.hidden name="DeleteConfig" value="0" />
+                                </td>
+
+                                <td>
+                                    <f:form.submit class="btn btn-success" name="save" value="Save Config"/>
+                                    <input class="js__pxasocialfeed-be-config-form-clear-button btn btn-default" style="/*display: none;*/" type="button" value="Clear Table"/>
+                                    <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="Delete Config"/>   
+                                </td>
+                            </tr>
+                        </table>                
+                    </f:form>
+                </div>	
+
+                <div class="js__pxasocialfeed-be-show-all-configs">        
+                    <f:if condition="{configs}">                
+                        <f:then>
+                            <h2>Available configs</h2>
+                            <div class="js__pxasocialfeed-be-configs">
+                                <table class="table table-striped">
+
+                                    <tr class="info">
+                                        <td>uid</td>
+                                        <td>Config name</td>
+                                        <td>Social ID</td>
+                                        <td>Feed pid</td>
+                                        <td>Feed count</td>
+                                        <td>Type</td>
+                                        <td>Token uid</td>
+                                        <td>App ID</td>
+                                    </tr>
+
+                                    <f:for each="{configs}" as="config">                                
+                                        <tr class="js__pxasocialfeed-be-custom-config">
+                                            <td>{config.uid}</td>
+                                            <td>{config.configName}</td>
+                                            <td>{config.socialId}</td>
+                                            <td>{config.feedPid}</td>
+                                            <td>{config.feedCount}</td>                              
+                                            <td>
+                                                <f:render partial="Feeds/SelectType" arguments="{type: config.token.socialType}" />                                                
+                                            </td>
+                                            <td>{config.token.uid}</td>
+                                            <td>{config.token.appId}
+                                                <input type="hidden" value="{config.token.uid}"/>
+                                                <input type="hidden" value="{config.token.uid}"/>
+                                            </td>
+                                        </tr>                                
+                                    </f:for>
+
+                                </table> 
+                            </div>
+                        </f:then>
+                        <f:else>
+                            <h2> There is no created config </h2>
+                        </f:else>
+                    </f:if>
+                </div>
+                
+            </f:then>
+            <f:else>
+                <h1 class="text-danger"> CRETE TOKEN OBJECT FIRST !!! </h1>
+            </f:else>
+            
+        </f:if>
+    </div>
+        
+</f:section>

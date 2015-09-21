@@ -87,6 +87,13 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 * @var string
 	 */
 	protected $externalUrl = '';
+        
+        /**
+	 * token
+	 *
+	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Config
+	 */
+	protected $config = NULL;
 
 	/**
 	 * Returns the socialType
@@ -238,6 +245,25 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function setExternalUrl($externalUrl) {
 		$this->externalUrl = $externalUrl;
+	}
+        
+        /**
+	 * Returns the config
+	 *
+	 * @return \Pixelant\PxaSocialFeed\Domain\Model\Config $config
+	 */
+	public function getConfig() {
+		return $this->config;
+	}
+
+	/**
+	 * Sets the token
+	 *
+	 * @param \Pixelant\PxaSocialFeed\Domain\Model\Config $config
+	 * @return void
+	 */
+	public function setConfig(\Pixelant\PxaSocialFeed\Domain\Model\Config $config) {
+		$this->config = $config;
 	}
 
 }
