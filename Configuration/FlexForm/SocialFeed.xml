@@ -6,15 +6,13 @@
         <sDEF>
             <ROOT>
                 <TCEforms>
-                    <!--<sheetTitle>LLL:EXT:pxa_youtube/Resources/Private/Language/locallang_db.xlf:tx_pxayoutube.label_video</sheetTitle>-->
-                    <sheetTitle>Social Feed form</sheetTitle>
+                    <sheetTitle>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.name</sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
                     <settings.flexFeedsCount>
                         <TCEforms>
-                            <!--<label>LLL:EXT:pxa_youtube/Resources/Private/Language/locallang_db.xlf:tx_pxayoutube.label_uid</label>-->
-                            <label>Count of feed on page</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.amount_feeds</label>
                             <config>
                                 <type>input</type>
                                 <size>30</size>
@@ -24,7 +22,7 @@
                     
                     <settings.flexConfig>
                         <TCEforms>
-                            <label>Choose config for plugin</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.config</label>
                             <config>
                                 <type>select</type>                                
                                 <size>10</size>

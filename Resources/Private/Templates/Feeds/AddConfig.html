@@ -9,29 +9,29 @@
             
             <f:then>                
                 <div class ="js__pxasocialfeed-be-config-form" >
-                    <h4>Add new config or edit existing</h4>
+                    <h4><f:translate key='tx_pxasocialfeed_module.config.header1'> Add new config or edit existing </f:translate></h4>
                     <f:form action="addConfig" name="pxasocialfeed_form_config" controller="Feeds" enctype="multipart/form-data" noCache="1">
 
                         <table class="table table-bordered">
                             <tr>
-                                <td>Config name</td>
+                                <td><f:translate key='tx_pxasocialfeed_module.config.form.config_name'> Config name </f:translate></td>
                                 <td><f:form.textfield name="configName"/></td>
                             </tr>
                             <tr>
-                                <td>Social ID</td>
+                                <td><f:translate key='tx_pxasocialfeed_module.config.form.social_id'> Social ID </f:translate></td>
                                 <td><f:form.textfield name="socialId"/></td>
                             </tr>
                             
                             <tr>
-                                <td>Pid for feeds</td>
+                                <td><f:translate key='tx_pxasocialfeed_module.config.form.pid_for_feeds'> Pid for feeds </f:translate></td>
                                 <td><f:form.textfield name="feedPid"/></td>
                             </tr>
                             <tr>
-                                <td>Count of feeds (that will be taken from social network)</td>
+                                <td><f:translate key='tx_pxasocialfeed_module.config.form.amount_of_feeds'> Count of feeds (that will be taken from social network) </f:translate></td>
                                 <td><f:form.textfield name="feedCount"/></td>
                             </tr>
                             <tr>
-                                <td>Type</td>
+                                <td><f:translate key='tx_pxasocialfeed_module.config.form.type'> Type </f:translate></td>
                                 <td>
                                     <select name="tx_pxasocialfeed_tools_pxasocialfeedimporter[token]">
                                         <f:for each="{tokens}" as="token" iteration="index">
@@ -63,9 +63,9 @@
                                 </td>
 
                                 <td>
-                                    <f:form.submit class="btn btn-success" name="save" value="Save Config"/>
-                                    <input class="js__pxasocialfeed-be-config-form-clear-button btn btn-default" style="/*display: none;*/" type="button" value="Clear Table"/>
-                                    <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="Delete Config"/>   
+                                    <f:form.submit class="btn btn-success" name="save" value="<f:translate key='tx_pxasocialfeed_module.config.form.button_save'> Save Config </f:translate>"/>
+                                    <input class="js__pxasocialfeed-be-config-form-clear-button btn btn-default" type="button" value="<f:translate key='tx_pxasocialfeed_module.config.form.button_clear'> Clear Table </f:translate>"/>
+                                    <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="<f:translate key='tx_pxasocialfeed_module.config.form.button_delete'> Delete Config </f:translate>"/>   
                                 </td>
                             </tr>
                         </table>                
@@ -75,19 +75,19 @@
                 <div class="js__pxasocialfeed-be-show-all-configs">        
                     <f:if condition="{configs}">                
                         <f:then>
-                            <h2>Available configs</h2>
+                            <h2><f:translate key='tx_pxasocialfeed_module.config.header2'> Available configs </f:translate></h2>
                             <div class="js__pxasocialfeed-be-configs">
                                 <table class="table table-striped">
 
                                     <tr class="info">
-                                        <td>uid</td>
-                                        <td>Config name</td>
-                                        <td>Social ID</td>
-                                        <td>Feed pid</td>
-                                        <td>Feed count</td>
-                                        <td>Type</td>
-                                        <td>Token uid</td>
-                                        <td>App ID</td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.table.uid'> uid </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.form.config_name'> Config name </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.form.social_id'> Social ID </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.table.pid'> Feed pid </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.table.feed_amount'> Amount of feeds </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.form.type'> Type </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.config.table.token_uid'> Token uid </f:translate></td>
+                                        <td><f:translate key='tx_pxasocialfeed_module.token.form.app_id'> App ID </f:translate></td>
                                     </tr>
 
                                     <f:for each="{configs}" as="config">                                
@@ -112,14 +112,14 @@
                             </div>
                         </f:then>
                         <f:else>
-                            <h2> There is no created config </h2>
+                            <h2> <f:translate key='tx_pxasocialfeed_module.config.header3'> There is no created config </f:translate></h2>
                         </f:else>
                     </f:if>
                 </div>
                 
             </f:then>
             <f:else>
-                <h1 class="text-danger"> CRETE TOKEN OBJECT FIRST !!! </h1>
+                <h1 class="text-danger"> <f:translate key='tx_pxasocialfeed_module.config.header4'> CRETE TOKEN OBJECT FIRST !!! </f:translate></h1>
             </f:else>
             
         </f:if>

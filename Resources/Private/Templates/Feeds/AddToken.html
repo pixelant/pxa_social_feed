@@ -5,20 +5,20 @@
     
     <div class="pxa-social-feed-be-token">
         <div class ="js__pxasocialfeed-be-token-form" >
-            <h4>Add new token or edit existing</h4>
+            <h4><f:translate key="tx_pxasocialfeed_module.token.header1"> Add new token or edit existing </f:translate></h4>
             <f:form action="addToken" name="pxasocialfeed_form_token" controller="Feeds" enctype="multipart/form-data" noCache="1">
                 
                 <table class="table table-bordered">
                     <tr>
-                        <td>App Id</td>
+                        <td><f:translate key="tx_pxasocialfeed_module.token.form.app_id"> App Id </f:translate></td>
                         <td><f:form.textfield name="appID"/></td>
                     </tr>
                     <tr>
-                        <td>App Secret</td>
+                        <td><f:translate key="tx_pxasocialfeed_module.token.form.app_secret"> App Secret </f:translate></td>
                         <td><f:form.textfield name="appSecret"/></td>
                     </tr>
                     <tr>
-                        <td>Type</td>
+                        <td><f:translate key="tx_pxasocialfeed_module.token.form.type"> Type </f:translate></td>
                         <td>
                             <select name="tx_pxasocialfeed_tools_pxasocialfeedimporter[tokenType]">
                                 <option selected="selected" value="1">Facebook</option>
@@ -33,9 +33,9 @@
                         </td>
                         
                         <td>
-                            <f:form.submit class="btn btn-success" name="save" value="Save Token"/>
-                            <input class="js__pxasocialfeed-be-token-form-clear-button btn btn-default" style="/*display: none;*/" type="button" value="Clear Table"/>
-                            <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="Delete Token"/>   
+                            <f:form.submit class="btn btn-success" name="save" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_save'> Save Token </f:translate>"/>
+                            <input class="js__pxasocialfeed-be-token-form-clear-button btn btn-default" type="button" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_clear'> Clear Table </f:translate>"/>
+                            <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_delete'> Delete Token </f:translate>"/>   
                         </td>
                     </tr>
                 </table>                
@@ -45,15 +45,15 @@
         <div class="js__pxasocialfeed-be-show-all-tokens">        
             <f:if condition="{tokens}">                
                 <f:then>
-                    <h2>Available tokens object</h2>
+                    <h2><f:translate key="tx_pxasocialfeed_module.token.header2"> Available tokens object </f:translate></h2>
                     <div class="js__pxasocialfeed-be-tokens">
                         <table class="table table-striped">
                             
                             <tr class="info">
-                                <td>uid</td>
-                                <td>App ID</td>
-                                <td>App secret</td>
-                                <td>Token type</td>
+                                <td><f:translate key="tx_pxasocialfeed_module.token.table.uid"> uid </f:translate></td>
+                                <td><f:translate key="tx_pxasocialfeed_module.token.form.app_id"> App ID </f:translate></td>
+                                <td><f:translate key="tx_pxasocialfeed_module.token.form.app_secret"> App secret </f:translate></td>
+                                <td><f:translate key="tx_pxasocialfeed_module.token.form.type"> Token type </f:translate></td>
                             </tr>
                             
                             <f:for each="{tokens}" as="token">                                
@@ -72,7 +72,7 @@
                     </div>
                 </f:then>
                 <f:else>
-                    <h2> There is no created token </h2>
+                    <h2> <f:translate key="tx_pxasocialfeed_module.token.header3"> There is no created token </f:translate></h2>
                 </f:else>
             </f:if>
         </div>
