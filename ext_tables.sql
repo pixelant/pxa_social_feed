@@ -10,7 +10,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feeds (
 	date datetime DEFAULT '0000-00-00 00:00:00',
 	post_url varchar(255) DEFAULT '' NOT NULL,
 	message text NOT NULL,
-	image varchar(255) DEFAULT '' NOT NULL,
+	image TEXT DEFAULT '' NOT NULL,
 	title varchar(255) DEFAULT '' NOT NULL,
 	description text NOT NULL,
 	external_url varchar(255) DEFAULT '' NOT NULL,

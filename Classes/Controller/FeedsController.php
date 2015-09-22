@@ -80,7 +80,7 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
 	 *
 	 * @return void
 	 */
-    public function listAction() {                
+    public function listAction() {
         $limit = 10;
         if ( isset($this->settings['flexFeedsCount']) && !empty($this->settings['flexFeedsCount'])){
             $limit = intval($this->settings['flexFeedsCount']);
@@ -105,7 +105,6 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
             }
         }
 
-        du::var_dump($feeds);
         $this->view->assign('feeds', $feeds);
     }   
     public function addTokenAction (){

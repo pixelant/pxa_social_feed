@@ -63,33 +63,18 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 			
                         $res = $this->file_get_contents_curl($url);
 			$data = json_decode($res, true);
-                        
-//                        du::var_dump($data, $url);
 
 			//adding each record from array to database 
 			foreach($data['data'] as $record){
-//                             du::var_dump($record, $url);
                             
 				$fb = new \Pixelant\PxaSocialFeed\Domain\Model\Feeds();
 				$fb->setSocialType('facebook');
 				if (isset($record['message'])){
 					$fb->setMessage($record['message']);
 				}
-                                
-//                                if (isset($record['attachments']['data'][0]['type']) &&
-//                                        $record['attachments']['data'][0]['type'] == 'share') {
-//                                    
-//                                    $fb->setImage("");
-//                                    
-//                                } else {
-                                    if (isset($record['attachments']['data'][0]['media']['image']['src']))	{
-					$fb->setImage($record['attachments']['data'][0]['media']['image']['src']);
-                                    }
-//                                }
-                                
-				
-                                
-                                
+                                if (isset($record['attachments']['data'][0]['media']['image']['src']))	{
+                                    $fb->setImage($record['attachments']['data'][0]['media']['image']['src']);
+                                }
 				if (isset($record['attachments']['data'][0]['title'])){
 					$fb->setTitle($record['attachments']['data'][0]['title']);
 				}	
@@ -119,22 +104,26 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
                     
 			$res = $this->file_get_contents_curl($url);
 			$data = json_decode($res, true);
-                        
-//                        du::var_dump($data, $url);
 
 			//adding each record from array to database
 			foreach($data['data'] as $record){
+                            
 				$ig = new \Pixelant\PxaSocialFeed\Domain\Model\Feeds();
 				$ig->setSocialType('instagram');
 				if (isset ($record['images']['standard_resolution']['url'])){
 					$ig->setImage($record['images']['standard_resolution']['url']);
 				}
-				if (isset($record['caption'])){
-					$ig->setTitle($record['caption']);
-				}
-				if (isset($record['location']['name'])){
-					$ig->setMessage($record['location']['name']);
-				}
+//				if (isset($record['caption'])){
+//					$ig->setTitle($record['caption']);
+//				}
+				if (isset($record['location']['name']) && !empty($record['location']['name'])){
+//					$ig->setTitle($record['location']['name']);
+                                        $ig->setMessage($record['location']['name']);
+                                } elseif (isset($record['caption']['text']) && !empty($record['caption']['text'])){
+//                                    $ig->setTitle($record['caption']['text']);
+                                    $ig->setMessage($record['caption']['text']);
+                                }
+                                
 				$ig->setPostUrl($record['link']);
 				$timestamp = date('Y-m-d H:i:s', $record['created_time']);
 				$ig->setDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
@@ -151,73 +140,6 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
             }
             $this->feedRepository->cleanFeedsTable();
         }
-        
-//        //clear table before begin the import
-//		$GLOBALS['TYPO3_DB']->exec_TRUNCATEquery('tx_pxasocialfeed_domain_model_feeds');
-//
-//		//importing data from facebook if TS constant facebookID is not empty
-//		if (isset($this->settings['facebookID']) && $this->settings['facebookID'] != ''){
-//			//getting data array from facebook graph api json result
-//			$url = "https://graph.facebook.com/".$this->settings['facebookID']."/posts?fields=message,attachments,created_time&limit=".$this->settings['limit']."&access_token=".$this->settings['facebookAccessToken'];
-//			$res = $this->file_get_contents_curl($url);
-//			$data = json_decode($res, true);
-//
-//			//adding each record from array to database 
-//			foreach($data['data'] as $record){
-//				$fb = new Feeds();
-//				$fb->setSocialType('facebook');
-//				if (isset($record['message'])){
-//					$fb->setMessage($record['message']);
-//				}
-//				if (isset($record['attachments']['data'][0]['media']['image']['src']))	{
-//					$fb->setImage($record['attachments']['data'][0]['media']['image']['src']);
-//				}
-//				if (isset($record['attachments']['data'][0]['title'])){
-//					$fb->setTitle($record['attachments']['data'][0]['title']);
-//				}	
-//				if (isset($record['attachments']['data'][0]['description'])){
-//					$fb->setDescription($record['attachments']['data'][0]['description']);
-//				}
-//				if (isset($record['attachments']['data'][0]['url'])){
-//					$fb->setExternalUrl($record['attachments']['data'][0]['url']);
-//				}
-//				$post_array = explode ("_", $record['id']);
-//				$fb->setPostUrl('https://facebook.com/'.$post_array[0].'/posts/'.$post_array[1]);
-//				$date_source = strtotime($record['created_time']);
-//				$timestamp = date('Y-m-d H:i:s', $date_source);
-//				$fb->setDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
-//				$this->feedsRepository->add($fb);
-//				$this->persistenceManager->persistAll();
-//			}
-//		}
-//
-//		//importing data from instagram if TS constant instagramID is not empty
-//		if (isset($this->settings['instagramID']) && $this->settings['instagramID'] != '') {
-//			//getting data array from instagram api json result
-//			$url = "https://api.instagram.com/v1/users/".$this->settings['instagramID']."/media/recent/?client_id=".$this->settings['instagramClientID'];
-//			$res = $this->file_get_contents_curl($url);
-//			$data = json_decode($res, true);
-//
-//			//adding each record from array to database
-//			foreach($data['data'] as $record){
-//				$ig = new Feeds();
-//				$ig->setSocialType('instagram');
-//				if (isset ($record['images']['standard_resolution']['url'])){
-//					$ig->setImage($record['images']['standard_resolution']['url']);
-//				}
-//				if (isset($record['caption'])){
-//					$ig->setTitle($record['caption']);
-//				}
-//				if (isset($record['location']['name'])){
-//					$ig->setDescription($record['location']['name']);
-//				}
-//				$ig->setPostUrl($record['link']);
-//				$timestamp = date('Y-m-d H:i:s', $record['created_time']);
-//				$ig->setDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
-//				$this->feedsRepository->add($ig);
-//				$this->persistenceManager->persistAll();
-//			}
-//		}
         return TRUE;
     }
     
@@ -245,22 +167,4 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
 
             return $data;
     }
-    
-//    public function getImageUrlByObjectId($object_id, $token) {
-//        
-//        $url = 'https://graph.facebook.com/v2.2/' . $object_id;
-//
-//        $http =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Http\\HttpRequest',$url);
-//        $url = $http->getUrl();
-//        $url->setQueryVariables(array(
-//            'fields' => 'images',
-//            'access_token' => $token
-//        ));
-//
-//        $response = $http->send();
-//        $result = json_decode($response->getBody());
-//
-//        return $result->images[0]->source;
-//    }
-    
 }
