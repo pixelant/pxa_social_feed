@@ -98,15 +98,21 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
         } else {
             foreach ($config as $conf){
                 $feeds = array_merge($feeds, $this->feedsRepository->getFeedsWithConfigUid($conf));
-                if ( count($feeds) >= $limit ){
+                /*if ( count($feeds) >= $limit ){
                     $feeds = array_slice($feeds, 0, $limit);
                     break;
-                }
+                }*/
             }
+            $dates = array();
+            foreach ($feeds as $row){
+                $dates[] = $row->getDate();
+            }
+            array_multisort($dates, SORT_DESC, $feeds);
+	    $feeds = array_slice($feeds, 0, $limit);
         }
 
         $this->view->assign('feeds', $feeds);
-    }   
+    }
     public function addTokenAction (){
         $getParams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedimporter');
 
