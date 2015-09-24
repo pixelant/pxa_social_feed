@@ -85,15 +85,12 @@
 .tx-pxa-social-feed .social-feed-image-container {
   position: relative;
   margin: 10px auto 20px;
-  background-color: #6f6f6f;
-}
-.tx-pxa-social-feed .social-feed-image-container img {
-  display: block;
-  width: 100%;
-  -webkit-transform-style: preserve-3d;
+  height: 0;
+  padding-bottom: 100%;
+  background-size: cover;
 }
 .tx-pxa-social-feed .social-feed-image-container.no-image {
-  padding-bottom: 100%;
+  background-color: #6f6f6f;
 }
 .tx-pxa-social-feed .social-feed-image-container.no-image:before {
   position: absolute;
@@ -232,6 +229,18 @@
 .touch .tx-pxa-social-feed .social-feed-instagram .social-feed-image-container:after {
   background: linear-gradient(135deg, rgba(78, 132, 170, 0) 0%, rgba(78, 132, 170, 0) 50%, #4e84aa 51%, #4e84aa 100%);
 }
+.no-touch .tx-pxa-social-feed .social-feed-image-container:not(.no-image):before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #6f6f6f;
+  opacity: 0;
+  will-change: opacity .4s;
+  transition: opacity .4s;
+}
 .no-touch .tx-pxa-social-feed .social-feed-image-container:after {
   content: 's';
   position: absolute;
@@ -253,20 +262,17 @@
           transform: translate(-50%, -50%);
   color: #fff;
   opacity: 0;
-}
-.no-touch .tx-pxa-social-feed .social-feed-image-container:after,
-.no-touch .tx-pxa-social-feed .social-feed-image-container img {
   will-change: opacity .4s;
   transition: opacity .4s;
+}
+.no-touch .tx-pxa-social-feed a:hover .social-feed-image-container:not(.no-image):before {
+  opacity: .5;
 }
 .no-touch .tx-pxa-social-feed a:hover .social-feed-image-container:after {
   opacity: 1;
 }
 .no-touch .tx-pxa-social-feed a:hover .social-feed-image-container.no-image:before {
   opacity: 0;
-}
-.no-touch .tx-pxa-social-feed a:hover .social-feed-image-container img {
-  opacity: .5;
 }
 @media (max-width: 767px) {
   .tx-pxa-social-feed {
@@ -317,7 +323,7 @@
     text-transform: none;
     line-height: 1;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: gra yscale;
+    -moz-osx-font-smoothing: grayscale;
   }
   .tx-pxa-social-feed .nav .next {
     float: right;
