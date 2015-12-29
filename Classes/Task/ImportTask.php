@@ -75,8 +75,15 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
                         if (isset($record['message'])) {
                             $fb->setMessage($record['message']);
                         }
-                        if (isset($record['attachments']['data'][0]['media']['image']['src'])) {
-                            $fb->setImage($record['attachments']['data'][0]['media']['image']['src']);
+
+                        $firstAttachmentMediaSrc = $record['attachments']['data'][0]['media']['image']['src'];
+                        $firstSubAttachmentMediaSrc =
+                            $record['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'];
+
+                        if (isset($firstAttachmentMediaSrc)) {
+                            $fb->setImage($firstAttachmentMediaSrc);
+                        } elseif (isset($firstSubAttachmentMediaSrc)) {
+                            $fb->setImage($firstSubAttachmentMediaSrc);
                         }
                         if (isset($record['attachments']['data'][0]['title'])) {
                             $fb->setTitle($record['attachments']['data'][0]['title']);
