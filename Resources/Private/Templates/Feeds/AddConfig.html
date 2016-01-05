@@ -39,14 +39,14 @@
                                                 <f:then>
                                                     <option selected="selected" value="{token.uid}">
                                                         {token.uid}
-                                                        <f:render partial="Feeds/SelectType" arguments="{type: token.socialType}" />
+                                                        {token.socialTypeDescription}
                                                         <f:format.crop maxCharacters="7">{token.appId}</f:format.crop>
                                                     </option>
                                                 </f:then>
                                                 <f:else>
                                                     <option value="{token.uid}">
                                                         {token.uid}
-                                                        <f:render partial="Feeds/SelectType" arguments="{type: token.socialType}" />
+                                                        {token.socialTypeDescription}
                                                         <f:format.crop maxCharacters="7">{token.appId}</f:format.crop>
                                                     </option>
                                                 </f:else>
