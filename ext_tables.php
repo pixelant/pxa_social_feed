@@ -20,7 +20,7 @@ if (TYPO3_MODE === 'BE') {
 		'importer',	// Submodule key
 		'',						// Position
 		array(
-			'Feeds' => 'addConfig,addToken',
+			'Feeds' => 'addConfig,addToken,addAccessToken',
 			
 		),
 		array(

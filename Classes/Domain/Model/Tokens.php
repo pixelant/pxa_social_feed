@@ -49,6 +49,13 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $appSecret = '';
 
 	/**
+	 * accessToken
+	 *
+	 * @var string
+	 */
+	protected $accessToken = '';
+
+	/**
 	 * socialType
 	 *
 	 * @var integer
@@ -95,6 +102,25 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	/**
+	 * Returns the accessToken
+	 *
+	 * @return string $accessToken
+	 */
+	public function getAccessToken() {
+		return $this->accessToken;
+	}
+
+	/**
+	 * Sets the accessToken
+	 *
+	 * @param string $accessToken
+	 * @return void
+	 */
+	public function setAccessToken($accessToken) {
+		$this->accessToken = $accessToken;
+	}
+
+	/**
 	 * Returns the socialType
 	 *
 	 * @return integer $socialType
@@ -113,4 +139,24 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$this->socialType = $socialType;
 	}
 
+	/**
+	 * Returns description of socialType
+	 *
+	 * @return string $socialTypeDescription
+	 */
+	public function getSocialTypeDescription() {
+		$description = 'N/A';
+		switch ($this->socialType) {
+			case 1:
+				$description = 'Facebook';
+				break;
+			case 2:
+				$description = 'Instagram';
+				break;
+			case 3:
+				$description = 'Instagram (OAuth2)';
+				break;
+		}
+		return $description;
+	}
 }

@@ -12,6 +12,9 @@
 			<trans-unit id="social_type.description">
 				<source>socialType</source>
 			</trans-unit>
+			<trans-unit id="access_token">
+				<source>Access Token</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

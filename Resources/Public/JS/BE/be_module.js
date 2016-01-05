@@ -12,7 +12,7 @@ $(document).ready(function() {
         if (tokens.length > 0 ){
             tokens = tokens.find("tr.js__pxasocialfeed-be-custom-token");
             // add click function for aech token record at table
-            tokens.each (function (){                
+            tokens.each (function (){
                 $(this).mouseover(function(){ $(this).addClass("active"); });
                 $(this).mouseleave(function(){ $(this).removeClass("active"); });
                 
@@ -22,7 +22,12 @@ $(document).ready(function() {
                     rowToken.find("td input[name*='appSecret']").val($(td[2]).text() );
                     rowToken.find("td select[name*='tokenType']").val( $(td[3]).find("input").val() );
                     rowToken.find("td input[name*='tokenUid']").val( $(td[0]).text() );
-                    
+                    var accesTokenUrl = $(td[4]).find("input").val();
+                    rowToken.find("td a[name*='GenerateAccessToken']").attr('href', accesTokenUrl );
+                    rowToken.find("td a[name*='GenerateAccessToken']").hide();
+                    if (typeof accesTokenUrl !== 'undefined' && accesTokenUrl.length > 0) {
+                        rowToken.find("td a[name*='GenerateAccessToken']").show();
+                    }
                     rowToken.find("td input[name='tx_pxasocialfeed_tools_pxasocialfeedimporter[delete]']").show();
                     rowToken.find("td input[name='tx_pxasocialfeed_tools_pxasocialfeedimporter[delete]']").click(function(){
                         rowToken.find("td input[name='tx_pxasocialfeed_tools_pxasocialfeedimporter[DeleteToken]']").val(1);

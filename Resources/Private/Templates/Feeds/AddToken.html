@@ -23,6 +23,7 @@
                             <select name="tx_pxasocialfeed_tools_pxasocialfeedimporter[tokenType]">
                                 <option selected="selected" value="1">Facebook</option>
                                 <option value="2">Instagram</option>
+                                <option value="3">Instagram (OAuth2)</option>
                             </select>
                         </td>
                     </tr>
@@ -35,7 +36,8 @@
                         <td>
                             <f:form.submit class="btn btn-success" name="save" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_save'> Save Token </f:translate>"/>
                             <input class="js__pxasocialfeed-be-token-form-clear-button btn btn-default" type="button" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_clear'> Clear Table </f:translate>"/>
-                            <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_delete'> Delete Token </f:translate>"/>   
+                            <f:form.submit class="btn btn-danger" style="display: none;" name="delete" value="<f:translate key='tx_pxasocialfeed_module.token.form.button_delete'> Delete Token </f:translate>"/>
+                            <a name="GenerateAccessToken" href="/" target="_blank" style="display: none;" class="btn btn-warning">Generate Acces Token</a>
                         </td>
                     </tr>
                 </table>                
@@ -54,6 +56,8 @@
                                 <td><f:translate key="tx_pxasocialfeed_module.token.form.app_id"> App ID </f:translate></td>
                                 <td><f:translate key="tx_pxasocialfeed_module.token.form.app_secret"> App secret </f:translate></td>
                                 <td><f:translate key="tx_pxasocialfeed_module.token.form.type"> Token type </f:translate></td>
+                                <td></td>
+                                <td><f:translate key="tx_pxasocialfeed_module.token.form.accessToken"></f:translate></td>
                             </tr>
                             
                             <f:for each="{tokens}" as="token">                                
@@ -62,8 +66,16 @@
                                     <td>{token.appId}</td>
                                     <td>{token.appSecret}</td>
                                     <td>
-                                        <f:render partial="Feeds/SelectType" arguments="{type: token.socialType}" />
+                                        {token.socialTypeDescription} ({token.socialType})
                                         <input type="hidden" value="{token.socialType}"/>
+                                    </td>
+                                    <td>
+                                        <f:if condition="{token.socialType} == 3">
+                                            <input type="hidden" value="https://api.instagram.com/oauth/authorize/?client_id={token.appId}&redirect_uri={f:uri.action(action:'addAccessToken', absolute:1, additionalParams: {response_type: code, tx_pxasocialfeed_tools_pxasocialfeedimporter: {token: token}})->f:format.urlencode()}&response_type=code"/>
+                                        </f:if>
+                                    </td>
+                                    <td>
+                                        {token.accessToken}
                                     </td>
                                 </tr>                                
                             </f:for>

@@ -143,6 +143,43 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask
                         $this->persistenceManager->persistAll();
                     }
                     break;
+                case \Pixelant\PxaSocialFeed\Controller\FeedsController::INSTAGRAM_OAUTH2:
+                    //getting data array from instagram api json result
+                    $url = "https://api.instagram.com/v1/users/" . $config->getSocialId() .
+                            "/media/recent/?access_token=" . $config->getToken()->getAccessToken();
+                    $res = $this->fileGetContentsCurl($url);
+                    $data = json_decode($res, true);
+
+                    //adding each record from array to database
+                    if (isset($data['data']) && is_array($data['data'])) {
+                        foreach ($data['data'] as $record) {
+                            $ig = new \Pixelant\PxaSocialFeed\Domain\Model\Feeds();
+                            $ig->setSocialType('instagram');
+                            if (isset($record['images']['standard_resolution']['url'])) {
+                                $ig->setImage($record['images']['standard_resolution']['url']);
+                            }
+                            //if (isset($record['caption'])){
+                            //  $ig->setTitle($record['caption']);
+                            //}
+                            if (isset($record['location']['name']) && !empty($record['location']['name'])) {
+                                //$ig->setTitle($record['location']['name']);
+                                $ig->setMessage($record['location']['name']);
+                            } elseif (isset($record['caption']['text']) && !empty($record['caption']['text'])) {
+                                //$ig->setTitle($record['caption']['text']);
+                                $ig->setMessage($record['caption']['text']);
+                            }
+
+                            $ig->setPostUrl($record['link']);
+                            $timestamp = date('Y-m-d H:i:s', $record['created_time']);
+                            $ig->setDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
+                            $ig->setConfig($config);
+                            $ig->setPid($config->getFeedPid());
+                                            
+                            $this->feedRepository->add($ig);
+                            $this->persistenceManager->persistAll();
+                        }
+                    }
+                    break;
                 default:
                     //generate error
                     break;

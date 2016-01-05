@@ -42,6 +42,9 @@
 			<trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_secret">
 				<source>App Secret</source>
 			</trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_tokens.access_token">
+				<source>Access Token</source>
+			</trans-unit>
 			<trans-unit id="tx_pxasocialfeed_domain_model_tokens.social_type">
 				<source>Social Type</source>
 			</trans-unit>

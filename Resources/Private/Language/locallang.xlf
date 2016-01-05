@@ -80,10 +80,13 @@
                         <trans-unit id="tx_pxasocialfeed_module.token.form.app_id">
 				<source>App Id</source>
 			</trans-unit>
-                        <trans-unit id="tx_pxasocialfeed_module.token.form.app_secret">
+            <trans-unit id="tx_pxasocialfeed_module.token.form.app_secret">
 				<source>App Secret</source>
 			</trans-unit>
-                        <trans-unit id="tx_pxasocialfeed_module.token.form.type">
+            <trans-unit id="tx_pxasocialfeed_module.token.form.access_token">
+				<source>Access Token</source>
+			</trans-unit>
+            <trans-unit id="tx_pxasocialfeed_module.token.form.type">
 				<source>Type</source>
 			</trans-unit>
                         <trans-unit id="tx_pxasocialfeed_module.token.form.button_delete">

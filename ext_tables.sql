@@ -55,6 +55,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_tokens (
 
 	app_id varchar(255) DEFAULT '' NOT NULL,
 	app_secret varchar(255) DEFAULT '' NOT NULL,
+	access_token varchar(255) DEFAULT '' NOT NULL,
 	social_type int(11) DEFAULT '1' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
