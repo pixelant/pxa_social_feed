@@ -32,6 +32,11 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  */
 class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
+    /**
+     * @var int
+     */
+    protected $pid = 0;
+
 	/**
 	 * socialId
 	 *

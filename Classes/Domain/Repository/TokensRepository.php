@@ -30,27 +30,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 /**
  * The repository for Feeds
  */
-class TokensRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
+class TokensRepository extends AbstractRepository {
 
-    /*
-     * will find all tokens
-     */
-    public function findSocialTokens (){
-        //create query
-        $query = $this->createQuery();
-        //disable some settings
-        $query->getQuerySettings()->setRespectStoragePage(FALSE);
-        $query->getQuerySettings()->setRespectSysLanguage(FALSE);
-        //executing query
-        $result = $query->execute();
-        return $result;
-    }
-    
-    /*
-     * delete all records where field deleted == 1
-     */
-    public function cleanTokensTable (){
-        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_pxasocialfeed_domain_model_tokens', 'deleted=1');
-    }
-	
 }

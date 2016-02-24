@@ -20,7 +20,7 @@ if (TYPO3_MODE === 'BE') {
 		'importer',	// Submodule key
 		'',						// Position
 		array(
-			'Feeds' => 'addConfig,addToken,addAccessToken',
+			'Feeds' => 'addConfig,addToken,saveToken,deleteToken,addAccessToken,deleteConfig,saveConfig',
 			
 		),
 		array(
@@ -69,7 +69,9 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = array(
 		),
 		'searchFields' => 'social_type,date,post_url,message,image,title,description,external_url,config,',
 		'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'Configuration/TCA/Feeds.php',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif'
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif',
+
+        'rootLevel' => 1
 	),
 );
 
@@ -98,7 +100,9 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_tokens'] = array(
 		),
 		'searchFields' => 'app_id,app_secret,social_type,',
 		'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'Configuration/TCA/Tokens.php',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_tokens.gif'
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_tokens.gif',
+
+        'rootLevel' => 1
 	),
 );
 
@@ -127,6 +131,8 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_config'] = array(
 		),
 		'searchFields' => 'config_name,social_id,feed_pid,executed,feed_count,token,',
 		'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'Configuration/TCA/Config.php',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_config.gif'
+		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_config.gif',
+
+        'rootLevel' => 1
 	),
 );

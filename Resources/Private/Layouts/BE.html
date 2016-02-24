@@ -1,21 +1,23 @@
 {namespace n=Tx_News_ViewHelpers}
 
-<f:be.container enableClickMenu="FALSE" enableExtJsDebug="FALSE" enableJumpToUrl="FALSE" loadExtJs="FALSE" loadExtJsTheme="FALSE" loadPrototype="FALSE" loadScriptaculous="FALSE">
+<f:be.container enableClickMenu="FALSE" enableExtJsDebug="FALSE" loadExtJs="FALSE" loadExtJsTheme="FALSE">
     
     <n:includeFile path="../typo3conf/ext/pxa_social_feed/Resources/Public/bootstrap-3.3.5-dist/css/bootstrap.min.css" />
     <n:includeFile path="../typo3conf/ext/pxa_social_feed/Resources/Public/css/BE/be_module.css" />
-    
+
+    <f:comment>
     <n:includeFile path="../typo3conf/ext/pxa_social_feed/Resources/Public/JS/BE/jquery-1.11.3.min.js" />
     <n:includeFile path="../typo3conf/ext/pxa_social_feed/Resources/Public/bootstrap-3.3.5-dist/js/bootstrap.min.js" />
-    <n:includeFile path="../typo3conf/ext/pxa_social_feed/Resources/Public/JS/BE/be_module.js" />
+    </f:comment>
 
+    <n:includeFile path="../typo3conf/ext/pxa_social_feed/Resources/Public/JS/BE/be_module.js" />
 	<div class="typo3-fullDoc">
 		<div id="typo3-docheader">
 			<div class="typo3-docheader-functions">
 				<div class="left">
 					<f:be.buttons.csh />
 					<f:be.menus.actionMenu>
-                                                <f:be.menus.actionMenuItem label="Create new config" action="addConfig" controller="Feeds" />
+                        <f:be.menus.actionMenuItem label="Create new config" action="addConfig" controller="Feeds" />
 						<f:be.menus.actionMenuItem label="Create new token" controller="Feeds" action="addToken" />
 					</f:be.menus.actionMenu>
 				</div>
@@ -36,7 +38,6 @@
 		</div>
 		<div id="typo3-docbody">
 			<div id="typo3-inner-docbody">
-				<f:flashMessages renderMode="div" />
 				<f:render section="content" />
 			</div>
 		</div>

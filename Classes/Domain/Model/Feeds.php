@@ -32,6 +32,27 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  */
 class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
+    /**
+     * pid
+     *
+     * @var int
+     */
+    protected $pid = 0;
+
+    /**
+     * updateDate
+     *
+     * @var int
+     */
+    protected $updateDate = NULL;
+
+    /**
+     * externalIdentifier
+     *
+     * @var string
+     */
+    protected $externalIdentifier = '';
+
 	/**
 	 * socialType
 	 *
@@ -266,4 +287,31 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$this->config = $config;
 	}
 
+    /**
+     * @return string
+     */
+    public function getExternalIdentifier() {
+        return $this->externalIdentifier;
+    }
+
+    /**
+     * @param string $externalIdentifier
+     */
+    public function setExternalIdentifier($externalIdentifier) {
+        $this->externalIdentifier = $externalIdentifier;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUpdateDate() {
+        return $this->updateDate;
+    }
+
+    /**
+     * @param int $updateDate
+     */
+    public function setUpdateDate($updateDate) {
+        $this->updateDate = $updateDate;
+    }
 }

@@ -1,6 +1,10 @@
 <?php
 namespace Pixelant\PxaSocialFeed\Controller;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Config;
+use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 
 /***************************************************************
@@ -33,8 +37,7 @@ use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
  */
 use Pixelant\PxaSocialFeed\Domain\Model\Feeds;
 
-class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
-{
+class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController {
     
         
     /**
@@ -83,214 +86,123 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
      *
      * @return void
      */
-    public function listAction()
-    {
-        $limit = 10;
-        if (isset($this->settings['flexFeedsCount']) && !empty($this->settings['flexFeedsCount'])) {
-            $limit = intval($this->settings['flexFeedsCount']);
-        }
+    public function listAction() {
+        $limit = $this->settings['flexFeedsCount'] ? intval($this->settings['flexFeedsCount']) : 10;
 
-        $config = null;
-        if (isset($this->settings['flexConfig']) && !empty($this->settings['flexConfig'])) {
-            $config = $this->settings['flexConfig'];
-            $config = explode(",", $config);
-        }
-
-        $feeds = array();
-        if (empty($config)) {
-            $feeds = $this->feedsRepository->findLast($limit);
-        } else {
-            foreach ($config as $conf) {
-                $feeds = array_merge($feeds, $this->feedsRepository->getFeedsWithConfigUid($conf));
-                /*if ( count($feeds) >= $limit ){
-                    $feeds = array_slice($feeds, 0, $limit);
-                    break;
-                }*/
-            }
-            $dates = array();
-            foreach ($feeds as $row) {
-                $dates[] = $row->getDate();
-            }
-            array_multisort($dates, SORT_DESC, $feeds);
-            $feeds = array_slice($feeds, 0, $limit);
-        }
+        $feeds = $this->feedsRepository->findFeedsByConfig($this->settings['flexConfig'], $limit);
 
         $this->view->assign('feeds', $feeds);
     }
-    public function addTokenAction()
-    {
-        $getParams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedimporter');
-        $code = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('code');
-        if (isset($getParams['tokenUid'])) {
-            $token = null;
 
-            // check uid of element
-            if (empty($getParams['tokenUid'])) {
-                // create new token object
-                $token = new \Pixelant\PxaSocialFeed\Domain\Model\Tokens();
-            } else {
-                // update existing token object
-                $token = $this->tokenRepository->findByUid($getParams['tokenUid']);
-            }
-
-            // check if token object was found
-            if (!empty($token)) {
-
-                // check delete option for current query
-                if (isset($getParams['DeleteToken']) && $getParams['DeleteToken'] == 1) {
-                    $this->tokenRepository->remove($token);
-                } else {
-
-                    switch ($getParams['tokenType']) {
-                        case self::FACEBOOK:
-                            if (!empty($getParams['appID']) && !empty($getParams['appSecret'])) {
-                                $token->setAppId($getParams['appID']);
-                                $token->setAppSecret($getParams['appSecret']);
-                                $token->setSocialType(self::FACEBOOK);
-                                $token->setPid(1);
-                                
-                                $this->tokenRepository->add($token);
-                            } else {
-                                //generate error
-                            }
-
-                            break;
-                        case self::INSTAGRAM:
-                            if (!empty($getParams['appID'])) {
-                                $token->setAppId($getParams['appID']);
-                                $token->setAppSecret($getParams['appSecret']);
-                                $token->setSocialType(self::INSTAGRAM);
-                                $token->setPid(1);
-
-                                $this->tokenRepository->add($token);
-                            } else {
-                                //generate error
-                            }
-
-                            break;
-                        case self::INSTAGRAM_OAUTH2:
-                            if (!empty($getParams['appID'])) {
-                                $token->setAppId($getParams['appID']);
-                                $token->setAppSecret($getParams['appSecret']);
-                                $token->setSocialType(self::INSTAGRAM_OAUTH2);
-                                $token->setPid(1);
-
-                                $this->tokenRepository->add($token);
-                            } else {
-                                //generate error
-                            }
-
-                            break;
-                    }
-                }
-                // save all data
-                $this->persistenceManager->persistAll();
-
-            } else {
-                //generate error
-            }
-
-        }
+    /**
+     * @param Tokens $token
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @return void
+     */
+    public function addTokenAction(Tokens $token = NULL) {
         // show all tokens at FE
-        $tokens = $this->tokenRepository->findSocialTokens();
-        $this->view->assign("tokens", $tokens);
-
+        $this->view->assignMultiple(array(
+            'token' => $token,
+            'isEditForm' => $token !== NULL,
+            'tokens' => $this->tokenRepository->findAll()
+        ));
     }
 
-    public function addConfigAction()
-    {
-            $getParams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedimporter');
-
-        if (isset($getParams['configUid'])) {
-            $token = null;
-            $config = null;
-
-            // check uid of element
-            if (empty($getParams['configUid'])) {
-                // create new config object
-                $config = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
-            } else {
-                // update existing token object
-                $config = $this->configRepository->findByUid($getParams['configUid']);
-            }
-            // chech if selected delete option
-            if (isset($getParams['DeleteConfig']) && $getParams['DeleteConfig'] == 1 && !empty($config)) {
-                    $this->configRepository->remove($config);
-            } else {
-
-                // check if there is selected token
-                if (isset($getParams['token']) && !empty($getParams['token'])) {
-                    $token = $this->tokenRepository->findByUid($getParams['token']);
-                } else {
-                    // generate error
-                }
-                // check if all data is available
-                if (!empty($token) && !empty($config)) {
-
-                    // check if there is required option 'socialId'
-                    if (isset($getParams['socialId']) && !empty($getParams['socialId'])) {
-
-                        // set defaulr values for non required options
-                        $name = "name_" . md5($getParams['socialId']);
-                        $feedPid = 1;
-                        $feedCount = 15;
-
-                        if (isset($getParams['configName']) && !empty($getParams['configName'])) {
-                            $name = $getParams['configName'];
-                        }
-                        if (isset($getParams['feedPid']) && !empty($getParams['feedPid'])) {
-                            $feedPid = $getParams['feedPid'];
-                        }
-                        if (isset($getParams['feedCount']) && !empty($getParams['feedCount'])) {
-                            $feedCount = $getParams['feedCount'];
-                        }
-
-                        $config->setConfigName($name);
-                        $config->setFeedPid($feedPid);
-                        $config->setFeedCount($feedCount);
-                        $config->setSocialId($getParams['socialId']);
-                        $config->setToken($token);
-
-                        $this->configRepository->add($config);
-                    } else {
-                        //generate error
-                    }
-
-                } else {
-                    //generate error
-                }
-            }
-            // save all data
-            $this->persistenceManager->persistAll();
+    /**
+     * @param Tokens $token
+     * @validate $token Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokensValidator
+     * @return void
+     */
+    public function saveTokenAction(Tokens $token) {
+        if($token->getUid()) {
+            $this->tokenRepository->update($token);
+            $title = 'Edit Access Token';
+            $message = 'Changes saved.';
+        } else {
+            $this->tokenRepository->add($token);
+            $title = 'Create Access Token';
+            $message = 'Access Token was created.';
         }
-
-        // show all configs at FE
-        $configs = $this->configRepository->findAllConfigs();
-        $this->view->assign("configs", $configs);
-
-         // show all tokens at FE
-        $tokens = $this->tokenRepository->findSocialTokens();
-        $this->view->assign("tokens", $tokens);
+        $this->getControllerContext()->getFlashMessageQueue()->getAllMessagesAndFlush();
+        $this->addFlashMessage($message, $title, FlashMessage::OK);
+        $this->redirect('addToken');
     }
 
-    public function addAccessTokenAction()
-    {
-        $getParams = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedimporter');
-        $tokenUid = $getParams['token'];
-        $code = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('code');
-        $redirectUri = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_REQUEST_DIR') . $GLOBALS['BACK_PATH'];
-        $redirectUri .= $this->uriBuilder->setArguments(
-            array(
-                'tx_pxasocialfeed_tools_pxasocialfeedimporter' => array(
-                    'token' => $tokenUid,
-                    'action' => 'addAccessToken',
-                    'controller' => 'Feeds'
-                )
-            )
-        )->buildBackendUri();
+    /**
+     * @param Tokens $token
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @return void
+     */
+    public function deleteTokenAction(Tokens $token) {
+        $this->tokenRepository->remove($token);
+        $this->addFlashMessage('Token successfully removed', 'Token removed', FlashMessage::OK);
+        $this->redirect('addToken');
+    }
 
-        if (isset($tokenUid) && isset($code)) {
-            $token = $this->tokenRepository->findByUid($tokenUid);
+    /**
+     * @param Config $config
+     * @return void
+     */
+    public function addConfigAction(Config $config = NULL) {
+        $this->view->assignMultiple(array(
+            'configs' => $this->configRepository->findAll(),
+            'tokens' => $this->tokenRepository->findAll(),
+            'config' => $config,
+            'isEditForm' => $config !== NULL
+        ));
+    }
+
+    /**
+     * @param Config $config
+     * @validate $config Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigValidator
+     * @return void
+     */
+    public function saveConfigAction(Config $config) {
+        if($config->getUid()) {
+            $this->configRepository->update($config);
+            $title = 'Edit Config';
+            $message = 'Changes saved.';
+        } else {
+            $this->configRepository->add($config);
+            $title = 'Create Config';
+            $message = 'Config was created.';
+        }
+        // remove all flash message with error
+        $this->getControllerContext()->getFlashMessageQueue()->getAllMessagesAndFlush();
+        $this->addFlashMessage($message, $title, FlashMessage::OK);
+
+        $this->redirect('addConfig');
+    }
+
+    /**
+     * @param Config $config
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @return void
+     */
+    public function deleteConfigAction(Config $config) {
+        $this->configRepository->remove($config);
+        $this->addFlashMessage('Config successfully removed', 'Config removed', FlashMessage::OK);
+        $this->redirect('addConfig');
+    }
+
+    /**
+     * get access token
+     *
+     * @param Tokens $token
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @return void
+     */
+    protected function addAccessTokenAction(Tokens $token) {
+        $code = GeneralUtility::_GP('code');
+
+        $redirectUri = $this->uriBuilder->reset()
+            ->setCreateAbsoluteUri(TRUE)
+            ->uriFor('addAccessToken', array('token' => $token->getUid()));
+
+        if (isset($code)) {
             $query = array(
                 'client_id'     => $token->getAppId(),
                 'client_secret' => $token->getAppSecret(),
@@ -310,62 +222,19 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
                 $data = json_decode(curl_exec($curl_connection), true);
                 curl_close($curl_connection);
 
-                \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(
-                    array(
-                        'class' => __CLASS__,
-                        'function' => __FUNCTION__,
-                        'url' => $url,
-                        'token' => $token,
-                        'data' => $data,
-                        'query' => $query,
-                        'http_build_query($query)' => http_build_query($query)
-                    )
-                );
                 if (isset($data['access_token'])) {
                     $token->setAccessToken($data['access_token']);
                     $this->tokenRepository->update($token);
-                    $this->persistenceManager->persistAll();
-                    $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                        'TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
-                        'Access Token was created and stored to ' . $tokenUid,
-                        'Create Access Token',
-                        \TYPO3\CMS\Core\Messaging\FlashMessage::OK,
-                        true
-                    );
-                    $flashMessageService = $this->objectManager->get(
-                        \TYPO3\CMS\Core\Messaging\FlashMessageService::class
-                    );
-                    $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
-                    $messageQueue->addMessage($message);
+
+                    $this->addFlashMessage('Access token updated', 'Success', FlashMessage::OK);
                 } else {
-                    $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                        'TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
-                        $data['error_message'],
-                        'Create Access Token',
-                        \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR,
-                        true
-                    );
-                    $flashMessageService = $this->objectManager->get(
-                        \TYPO3\CMS\Core\Messaging\FlashMessageService::class
-                    );
-                    $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
-                    $messageQueue->addMessage($message);
+                    $this->addFlashMessage('Error gettings access token', 'Error', FlashMessage::ERROR);
                 }
-            } catch (Exception $e) {
-                $message = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-                    'TYPO3\\CMS\\Core\\Messaging\\FlashMessage',
-                    $e->getMessage(),
-                    'Create Access Token',
-                    \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR,
-                    true
-                );
-                $flashMessageService = $this->objectManager->get(
-                    \TYPO3\CMS\Core\Messaging\FlashMessageService::class
-                );
-                $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
-                $messageQueue->addMessage($message);
+            } catch (\Exception $e) {
+                $this->addFlashMessage($e->getMessage(), 'Error', FlashMessage::ERROR);
             }
         }
+
         $this->redirect('addToken');
     }
 }

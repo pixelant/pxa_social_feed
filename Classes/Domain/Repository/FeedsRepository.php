@@ -1,5 +1,7 @@
 <?php
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
+
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 
 /***************************************************************
@@ -30,84 +32,31 @@ use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 /**
  * The repository for Feeds
  */
-class FeedsRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
+class FeedsRepository extends AbstractRepository {
 
-	/**
-	 * Method to get last records ordered by date
-	 *
-	 * @param int $limit
-	 */
-	public function findLast ($limit){
-		//create query
-		$query = $this->createQuery();
-		//add ordering by date
-		$query->setOrderings(array("date" => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING));
-		//add limit
-		$query->setLimit($limit);
-		//disable some settings
-		$query->getQuerySettings()->setRespectStoragePage(FALSE);
-		$query->getQuerySettings()->setRespectSysLanguage(FALSE);
-		//executing query
-		$result = $query->execute();
-		return $result;
-	}
-        
-        /**
-         * get all feeds with custom config
-         * 
-         * @param \Pixelant\PxaSocialFeed\Domain\Model\Config $config
-         * 
-         * @return array
-         */
-        public function getFeedsWithConfig (\Pixelant\PxaSocialFeed\Domain\Model\Config $config){            
-            $query = $this->createQuery();
-        
-            $query->getQuerySettings()->setRespectStoragePage(FALSE);
-            $query->getQuerySettings()->setRespectSysLanguage(FALSE);
-            $query->matching( $query->equals('config.uid', $config->getUid()) );
-            $feeds = $query->execute();
-            
-            return $feeds->toArray();
+    /**
+     * @var array $defaultOrderings
+     */
+    protected $defaultOrderings = array(
+        'date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+    );
+
+    /**
+     * get feeds by config
+     *
+     * @param string $config
+     * @param int $limit
+     * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult
+     */
+    public function findFeedsByConfig($config = '', $limit = 0) {
+        $query = $this->createQuery();
+
+        if($config) {
+            $query->matching($query->in('config.uid', GeneralUtility::intExplode(',', $config, 1)));
         }
-        
-        /**
-         * get all feeds with custom config
-         * 
-         * @param integer $config
-         * 
-         * @return array
-         */
-        public function getFeedsWithConfigUid ($config){            
-            $query = $this->createQuery();
-        
-            $query->getQuerySettings()->setRespectStoragePage(FALSE);
-            $query->getQuerySettings()->setRespectSysLanguage(FALSE);
-            $query->matching( $query->equals('config.uid', $config) );
-            $feeds = $query->execute();
-            
-            return $feeds->toArray();
-        }
-        
-        /**
-         * find all feds record
-         * 
-         * @return array
-         */
-        public function findAllFeeds (){
-            //create query
-            $query = $this->createQuery();
-            //disable some settings
-            $query->getQuerySettings()->setRespectStoragePage(FALSE);
-            $query->getQuerySettings()->setRespectSysLanguage(FALSE);
-            //executing query
-            $result = $query->execute();
-            return $result;
-        }
-        
-        /*
-         * delete all records where field deleted == 1
-         */
-        public function cleanFeedsTable (){
-            $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_pxasocialfeed_domain_model_feeds', 'deleted=1');
-        }
+
+        $query->setLimit($limit);
+
+        return $query->execute();
+    }
 }

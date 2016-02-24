@@ -146,17 +146,11 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_config'] = array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_config.token',
 			'config' => array(
-				'type' => 'inline',
+				'type' => 'select',
 				'foreign_table' => 'tx_pxasocialfeed_domain_model_tokens',
 				'minitems' => 0,
 				'maxitems' => 1,
-				'appearance' => array(
-					'collapseAll' => 0,
-					'levelLinksPosition' => 'top',
-					'showSynchronizationLink' => 1,
-					'showPossibleLocalizationRecords' => 1,
-					'showAllLocalizationLink' => 1
-				),
+                'renderType' => 'selectSingleBox'
 			),
 		),
 		

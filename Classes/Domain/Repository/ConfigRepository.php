@@ -30,25 +30,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 /**
  * The repository for Feeds
  */
-class ConfigRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
-    
-    // find all available configs
-    public function findAllConfigs (){
-        //create query
-        $query = $this->createQuery();
-        //disable some settings
-        $query->getQuerySettings()->setRespectStoragePage(FALSE);
-        $query->getQuerySettings()->setRespectSysLanguage(FALSE);
-        //executing query
-        $result = $query->execute();
-        return $result;
-    }
-    
-    /*
-     * delete all records where field deleted == 1
-     */
-    public function cleanConfigTable (){
-        $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_pxasocialfeed_domain_model_config', 'deleted=1');
-    }
-	
+class ConfigRepository extends AbstractRepository {
+
 }

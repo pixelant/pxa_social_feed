@@ -14,6 +14,8 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feeds (
 	title varchar(255) DEFAULT '' NOT NULL,
 	description text NOT NULL,
 	external_url varchar(255) DEFAULT '' NOT NULL,
+	external_identifier varchar(255) DEFAULT '' NOT NULL,
+	update_date int(11) unsigned DEFAULT '0' NOT NULL,
 	config int(11) unsigned DEFAULT '0',
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,

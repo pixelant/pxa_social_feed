@@ -32,131 +32,143 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  */
 class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
-	/**
-	 * appId
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $appId = '';
+    /**
+     * pid
+     *
+     * @var int
+     */
+    protected $pid = 0;
 
-	/**
-	 * appSecret
-	 *
-	 * @var string
-	 * @validate NotEmpty
-	 */
-	protected $appSecret = '';
+    /**
+     * appId
+     *
+     * @var string $appId
+     */
+    protected $appId = '';
 
-	/**
-	 * accessToken
-	 *
-	 * @var string
-	 */
-	protected $accessToken = '';
+    /**
+     * appSecret
+     *
+     * @var string
+     */
+    protected $appSecret = '';
 
-	/**
-	 * socialType
-	 *
-	 * @var integer
-	 * @validate NotEmpty
-	 */
-	protected $socialType = 0;
+    /**
+     * accessToken
+     *
+     * @var string
+     */
+    protected $accessToken = '';
 
-	/**
-	 * Returns the appId
-	 *
-	 * @return string $appId
-	 */
-	public function getAppId() {
-		return $this->appId;
-	}
+    /**
+     * socialType
+     *
+     * @var integer
+     */
+    protected $socialType = 0;
 
-	/**
-	 * Sets the appId
-	 *
-	 * @param string $appId
-	 * @return void
-	 */
-	public function setAppId($appId) {
-		$this->appId = $appId;
-	}
+    /**
+     * Returns the appId
+     *
+     * @return string $appId
+     */
+    public function getAppId() {
+        return $this->appId;
+    }
 
-	/**
-	 * Returns the appSecret
-	 *
-	 * @return string $appSecret
-	 */
-	public function getAppSecret() {
-		return $this->appSecret;
-	}
+    /**
+     * Sets the appId
+     *
+     * @param string $appId
+     * @return void
+     */
+    public function setAppId($appId) {
+        $this->appId = $appId;
+    }
 
-	/**
-	 * Sets the appSecret
-	 *
-	 * @param string $appSecret
-	 * @return void
-	 */
-	public function setAppSecret($appSecret) {
-		$this->appSecret = $appSecret;
-	}
+    /**
+     * Returns the appSecret
+     *
+     * @return string $appSecret
+     */
+    public function getAppSecret() {
+        return $this->appSecret;
+    }
 
-	/**
-	 * Returns the accessToken
-	 *
-	 * @return string $accessToken
-	 */
-	public function getAccessToken() {
-		return $this->accessToken;
-	}
+    /**
+     * Sets the appSecret
+     *
+     * @param string $appSecret
+     * @return void
+     */
+    public function setAppSecret($appSecret) {
+        $this->appSecret = $appSecret;
+    }
 
-	/**
-	 * Sets the accessToken
-	 *
-	 * @param string $accessToken
-	 * @return void
-	 */
-	public function setAccessToken($accessToken) {
-		$this->accessToken = $accessToken;
-	}
+    /**
+     * Returns the accessToken
+     *
+     * @return string $accessToken
+     */
+    public function getAccessToken() {
+        return $this->accessToken;
+    }
 
-	/**
-	 * Returns the socialType
-	 *
-	 * @return integer $socialType
-	 */
-	public function getSocialType() {
-		return $this->socialType;
-	}
+    /**
+     * Sets the accessToken
+     *
+     * @param string $accessToken
+     * @return void
+     */
+    public function setAccessToken($accessToken) {
+        $this->accessToken = $accessToken;
+    }
 
-	/**
-	 * Sets the socialType
-	 *
-	 * @param integer $socialType
-	 * @return void
-	 */
-	public function setSocialType($socialType) {
-		$this->socialType = $socialType;
-	}
+    /**
+     * Returns the socialType
+     *
+     * @return integer $socialType
+     */
+    public function getSocialType() {
+        return $this->socialType;
+    }
 
-	/**
-	 * Returns description of socialType
-	 *
-	 * @return string $socialTypeDescription
-	 */
-	public function getSocialTypeDescription() {
-		$description = 'N/A';
-		switch ($this->socialType) {
-			case 1:
-				$description = 'Facebook';
-				break;
-			case 2:
-				$description = 'Instagram';
-				break;
-			case 3:
-				$description = 'Instagram (OAuth2)';
-				break;
-		}
-		return $description;
-	}
+    /**
+     * Sets the socialType
+     *
+     * @param integer $socialType
+     * @return void
+     */
+    public function setSocialType($socialType) {
+        $this->socialType = $socialType;
+    }
+
+    /**
+     * Returns description of socialType
+     *
+     * @return string $socialTypeDescription
+     */
+    public function getSocialTypeDescription() {
+        $description = 'N/A';
+        switch ($this->socialType) {
+            case 1:
+                $description = 'Facebook';
+                break;
+            case 2:
+                $description = 'Instagram';
+                break;
+            case 3:
+                $description = 'Instagram (OAuth2)';
+                break;
+        }
+        return $description;
+    }
+
+    /**
+     * get value for select box
+     * @return string
+     */
+    public function getSelectBoxLabel() {
+        return $this->getUid() . ' ' . $this->getSocialTypeDescription() . ' ' . substr($this->getAppId(), 0, 7);
+    }
 }
