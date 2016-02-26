@@ -3,6 +3,7 @@ namespace Pixelant\PxaSocialFeed\Controller;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Config;
 use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
+use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
@@ -203,32 +204,33 @@ class FeedsController extends \TYPO3\CMS\Extbase\Mvc\Controller\ActionController
             ->uriFor('addAccessToken', array('token' => $token->getUid()));
 
         if (isset($code)) {
-            $query = array(
-                'client_id'     => $token->getAppId(),
-                'client_secret' => $token->getAppSecret(),
-                'grant_type' => 'authorization_code',
-                'redirect_uri' => $redirectUri,
-                'code' => $code
-            );
-            $url = 'https://api.instagram.com/oauth/access_token';
+            /** @var HttpRequest $httpRequest */
+            $httpRequest = GeneralUtility::makeInstance('TYPO3\CMS\Core\Http\HttpRequest', 'https://api.instagram.com/oauth/access_token', HttpRequest::METHOD_POST);
+
+            // set post parameters
+            $httpRequest->addPostParameter('client_id', $token->getAppId())
+                ->addPostParameter('client_secret', $token->getAppSecret())
+                ->addPostParameter('grant_type', 'authorization_code')
+                ->addPostParameter('redirect_uri', $redirectUri)
+                ->addPostParameter('code', $code);
+
             try {
-                $curl_connection = curl_init($url);
-                curl_setopt($curl_connection, CURLOPT_CONNECTTIMEOUT, 30);
-                curl_setopt($curl_connection, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl_connection, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curl_connection, CURLOPT_POST, true);
-                curl_setopt($curl_connection, CURLOPT_POSTFIELDS, http_build_query($query));
-                //Data are stored in $data
-                $data = json_decode(curl_exec($curl_connection), true);
-                curl_close($curl_connection);
+                /** @var \HTTP_Request2_Response $response */
+                $response = $httpRequest->send();
 
-                if (isset($data['access_token'])) {
-                    $token->setAccessToken($data['access_token']);
-                    $this->tokenRepository->update($token);
+                if ($response->getStatus() === 200) {
+                    $data = json_decode($response->getBody(), TRUE);
 
-                    $this->addFlashMessage('Access token updated', 'Success', FlashMessage::OK);
+                    if (isset($data['access_token'])) {
+                        $token->setAccessToken($data['access_token']);
+                        $this->tokenRepository->update($token);
+
+                        $this->addFlashMessage('Access token updated', 'Success', FlashMessage::OK);
+                    } else {
+                        $this->addFlashMessage('Error gettings access token', 'Error', FlashMessage::ERROR);
+                    }
                 } else {
-                    $this->addFlashMessage('Error gettings access token', 'Error', FlashMessage::ERROR);
+                    $this->addFlashMessage('Error communication with server', 'Error', FlashMessage::ERROR);
                 }
             } catch (\Exception $e) {
                 $this->addFlashMessage($e->getMessage(), 'Error', FlashMessage::ERROR);
