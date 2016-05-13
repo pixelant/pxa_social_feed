@@ -6,11 +6,10 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feeds (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 
-	social_type varchar(255) DEFAULT '' NOT NULL,
-	date datetime DEFAULT '0000-00-00 00:00:00',
+  post_date int(11) DEFAULT '0' NOT NULL,
 	post_url varchar(255) DEFAULT '' NOT NULL,
 	message text NOT NULL,
-	image TEXT DEFAULT '' NOT NULL,
+	image text NOT NULL,
 	title varchar(255) DEFAULT '' NOT NULL,
 	description text NOT NULL,
 	external_url varchar(255) DEFAULT '' NOT NULL,
@@ -55,9 +54,8 @@ CREATE TABLE tx_pxasocialfeed_domain_model_tokens (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 
-	app_id varchar(255) DEFAULT '' NOT NULL,
-	app_secret varchar(255) DEFAULT '' NOT NULL,
-	access_token varchar(255) DEFAULT '' NOT NULL,
+  serialized_credentials blob,
+
 	social_type int(11) DEFAULT '1' NOT NULL,
 
 	tstamp int(11) unsigned DEFAULT '0' NOT NULL,
@@ -97,10 +95,8 @@ CREATE TABLE tx_pxasocialfeed_domain_model_config (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
         
-        config_name varchar(255) DEFAULT '' NOT NULL,
+  config_name varchar(255) DEFAULT '' NOT NULL,
 	social_id varchar(255) DEFAULT '' NOT NULL,	
-	feed_pid int(11) DEFAULT '0' NOT NULL,
-	executed int(11) DEFAULT '0' NOT NULL,
 	feed_count int(11) DEFAULT '15' NOT NULL,
 	token int(11) unsigned DEFAULT '0',
 

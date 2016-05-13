@@ -9,7 +9,8 @@
 namespace Pixelant\PxaSocialFeed\Utility;
 
 
-use Pixelant\PxaSocialFeed\Controller\FeedsController;
+use Pixelant\PxaSocialFeed\Domain\Model\Config;
+use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use Pixelant\PxaSocialFeed\Domain\Model\Feeds;
 
@@ -58,16 +59,14 @@ class TaskUtility {
 
         $configs = $this->confRepository->findAll();
 
-        /** @var \Pixelant\PxaSocialFeed\Domain\Model\Config $config */
+        /** @var Config $config */
         foreach ($configs as $config) {
             switch ($config->getToken()->getSocialType()) {
-
-                case FeedsController::FACEBOOK:
+                case Tokens::FACEBOOK:
                     //getting data array from facebook graph api json result
                     $url = "https://graph.facebook.com/" . $config->getSocialId() .
                         "/posts?fields=message,attachments,created_time,updated_time&limit=" . $config->getFeedCount() .
-                        "&access_token=" . $config->getToken()->getAppId() . "|" .
-                        $config->getToken()->getAppSecret();
+                        "&access_token=" . $config->getToken()->getCredential('appId') . "|" . $config->getToken()->getCredential('appSecret');
 
                     $data = json_decode(GeneralUtility::getUrl($url), true);
 
@@ -76,18 +75,37 @@ class TaskUtility {
                     }
 
                     break;
-                case FeedsController::INSTAGRAM:
-                case FeedsController::INSTAGRAM_OAUTH2:
+                case Tokens::INSTAGRAM:
+                case Tokens::INSTAGRAM_OAUTH2:
                     //getting data array from instagram api json result
-                    $url = 'https://api.instagram.com/v1/users/' . $config->getSocialId() .
-                        '/media/recent/';
-                    $url .= $config->getToken()->getSocialType() === FeedsController::INSTAGRAM ? '?client_id=' . $config->getToken()->getAppId() : '?access_token=' . $config->getToken()->getAccessToken();
+                    $url = 'https://api.instagram.com/v1/users/' . $config->getSocialId() . '/media/recent/';
+                    $url .= $config->getToken()->getSocialType() === Tokens::INSTAGRAM ? '?client_id=' . $config->getToken()->getCredential('clientId') : '?access_token=' . $config->getToken()->getCredential('accessToken');
 
                     $data = json_decode(GeneralUtility::getUrl($url), true);
                     if (is_array($data)) {
                         $this->saveInstagramFeed($data['data'], $config);
                     }
 
+                    break;
+                case Tokens::TWITTER:
+                    $fields = [
+                        'screen_name' => $config->getSocialId(),
+                        'count' => $config->getFeedCount(),
+                        'exclude_replies' => 1,
+                        'include_rts' => 0
+                    ];
+
+                    /** @var \Pixelant\PxaSocialFeed\Utility\Api\TwitterApi $twitterApi */
+                    $twitterApi = GeneralUtility::makeInstance(
+                        'Pixelant\PxaSocialFeed\Utility\Api\TwitterApi',
+                        $config->getToken()->getCredential('consumerKey'),
+                        $config->getToken()->getCredential('consumerSecret'),
+                        $config->getToken()->getCredential('accessToken'),
+                        $config->getToken()->getCredential('accessTokenSecret')
+                    );
+
+                    $data = $twitterApi->setGetFields($fields)->performRequest();
+                    $this->saveTwitterFeed($data, $config);
                     break;
                 default:
                     //generate error
@@ -102,18 +120,46 @@ class TaskUtility {
 
     /**
      * @param array $data
-     * @param \Pixelant\PxaSocialFeed\Domain\Model\Config $config
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @param Config $config
      * @return void
      */
-    private function saveInstagramFeed($data, \Pixelant\PxaSocialFeed\Domain\Model\Config $config) {
+    private function saveTwitterFeed($data, Config $config) {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
+            if($this->feedRepository->findOneByExternalIdentifier($rawData['id_str']) === NULL) {
+                /** @var Feeds $twitterFeed */
+                $twitterFeed = $this->objectManager->get('Pixelant\\PxaSocialFeed\\Domain\\Model\\Feeds');
 
+                if(!empty($rawData['text'])) {
+                    $twitterFeed->setMessage($rawData['text']);
+                }
+                if(isset($rawData['entities']['media'][0])) {
+                    $twitterFeed->setImage($rawData['entities']['media'][0]['media_url']);
+                }
+
+                $timestamp = strtotime($rawData['created_at']);
+                $twitterFeed->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', $timestamp)));
+                $twitterFeed->setConfig($config);
+
+                $this->feedRepository->add($twitterFeed);
+            }
+        }
+    }
+
+    /**
+     * @param array $data
+     * @param Config $config
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @return void
+     */
+    private function saveInstagramFeed($data, Config $config) {
+        //adding each rawData from array to database
+        // @TODO: is there a update date ? to update feed item if it was changed ?
+        foreach ($data as $rawData) {
             if($this->feedRepository->findOneByExternalIdentifier($rawData['id']) === NULL) {
+                /** @var Feeds $ig */
                 $ig = $this->objectManager->get('Pixelant\\PxaSocialFeed\\Domain\\Model\\Feeds');
-                $ig->setSocialType('instagram');
 
                 if (isset($rawData['images']['standard_resolution']['url'])) {
                     $ig->setImage($rawData['images']['standard_resolution']['url']);
@@ -127,7 +173,7 @@ class TaskUtility {
 
                 $ig->setPostUrl($rawData['link']);
                 $timestamp = date('Y-m-d H:i:s', $rawData['created_time']);
-                $ig->setDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
+                $ig->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
                 $ig->setConfig($config);
 
                 $this->feedRepository->add($ig);
@@ -137,11 +183,11 @@ class TaskUtility {
 
     /**
      * @param array $data
-     * @param \Pixelant\PxaSocialFeed\Domain\Model\Config $config
+     * @param Config $config
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    private function updateFacebookFeed($data, \Pixelant\PxaSocialFeed\Domain\Model\Config $config) {
+    private function updateFacebookFeed($data, Config $config) {
         //adding each record from array to database
         foreach ($data as $rawData) {
             /** @var Feeds $feedItem */
@@ -155,13 +201,12 @@ class TaskUtility {
             } else {
                 /** @var Feeds $feed */
                 $feed = $this->objectManager->get('Pixelant\\PxaSocialFeed\\Domain\\Model\\Feeds');
-                $feed->setSocialType('facebook');
                 $this->setFacebookData($feed, $rawData);
 
                 $post_array = GeneralUtility::trimExplode('_', $rawData['id'], 1);
                 $feed->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
                 $timestamp = strtotime($rawData['created_time']);
-                $feed->setDate(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', $timestamp)));
+                $feed->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', $timestamp)));
                 $feed->setConfig($config);
                 $feed->setUpdateDate(strtotime($rawData['updated_time']));
                 $feed->setExternalIdentifier($rawData['id']);

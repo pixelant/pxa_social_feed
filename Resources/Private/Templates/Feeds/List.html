@@ -16,14 +16,14 @@
                     <f:then>
                         <div class="social-feed-image-container" style="background-image:url({feed.image});">
                             <div class="social-feed-information">
-                                <span class="social-feed-date">{feed.date -> f:format.date()}</span>
+                                <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
                             </div>
                         </div>
                     </f:then>
                     <f:else>
                         <div class="social-feed-image-container no-image">
                             <div class="social-feed-information">
-                                <span class="social-feed-date">{feed.date -> f:format.date()}</span>
+                                <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
                             </div>
                         </div>
                     </f:else>

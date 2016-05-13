@@ -26,11 +26,32 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use Pixelant\PxaSocialFeed\Controller\BaseController;
 
 /**
  * Tokens
  */
 class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+
+    /**
+     * facebook token
+     */
+    const FACEBOOK = 1;
+
+    /**
+     * instagram  token
+     */
+    const INSTAGRAM = 2;
+
+    /**
+     * instagram_oauth2
+     */
+    const INSTAGRAM_OAUTH2 = 3;
+
+    /**
+     * twitter token
+     */
+    const TWITTER = 4;
 
     /**
      * pid
@@ -40,25 +61,11 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     protected $pid = 0;
 
     /**
-     * appId
-     *
-     * @var string $appId
-     */
-    protected $appId = '';
-
-    /**
-     * appSecret
+     * All credentials
      *
      * @var string
      */
-    protected $appSecret = '';
-
-    /**
-     * accessToken
-     *
-     * @var string
-     */
-    protected $accessToken = '';
+    protected $serializedCredentials = '';
 
     /**
      * socialType
@@ -68,60 +75,58 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     protected $socialType = 0;
 
     /**
-     * Returns the appId
-     *
-     * @return string $appId
+     * @return string
      */
-    public function getAppId() {
-        return $this->appId;
+    public function getSerializedCredentials() {
+        return $this->serializedCredentials;
     }
 
     /**
-     * Sets the appId
+     * @param string $serializedCredentials
+     */
+    public function setSerializedCredentials($serializedCredentials) {
+        $this->serializedCredentials = $serializedCredentials;
+    }
+
+    /**
+     * Credentials array
      *
-     * @param string $appId
+     * @return array
+     */
+    public function getCredentials() {
+        return unserialize($this->getSerializedCredentials());
+    }
+
+    /**
+     * Get credential
+     *
+     * @param string $key
+     * @return string
+     */
+    public function getCredential($key = '') {
+        $credentials = $this->getCredentials();
+
+        if(!empty($key) && isset($credentials[$key])) {
+            return $credentials[$key];
+        }
+
+        return '';
+    }
+
+    /**
+     * Set credential
+     *
+     * @param string $key
+     * @param string $value
      * @return void
      */
-    public function setAppId($appId) {
-        $this->appId = $appId;
-    }
+    public function setCredential($key = '', $value = '') {
+        if(!empty($key) && !empty($value)) {
+            $credentials = $this->getCredentials();
+            $credentials[$key] = $value;
 
-    /**
-     * Returns the appSecret
-     *
-     * @return string $appSecret
-     */
-    public function getAppSecret() {
-        return $this->appSecret;
-    }
-
-    /**
-     * Sets the appSecret
-     *
-     * @param string $appSecret
-     * @return void
-     */
-    public function setAppSecret($appSecret) {
-        $this->appSecret = $appSecret;
-    }
-
-    /**
-     * Returns the accessToken
-     *
-     * @return string $accessToken
-     */
-    public function getAccessToken() {
-        return $this->accessToken;
-    }
-
-    /**
-     * Sets the accessToken
-     *
-     * @param string $accessToken
-     * @return void
-     */
-    public function setAccessToken($accessToken) {
-        $this->accessToken = $accessToken;
+            $this->setSerializedCredentials(serialize($credentials));
+        }
     }
 
     /**
@@ -144,24 +149,12 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     }
 
     /**
-     * Returns description of socialType
+     * get social type translation
      *
-     * @return string $socialTypeDescription
+     * @return string
      */
     public function getSocialTypeDescription() {
-        $description = 'N/A';
-        switch ($this->socialType) {
-            case 1:
-                $description = 'Facebook';
-                break;
-            case 2:
-                $description = 'Instagram';
-                break;
-            case 3:
-                $description = 'Instagram (OAuth2)';
-                break;
-        }
-        return $description;
+        return BaseController::translate('pxasocialfeed_module.labels.type.' . $this->getSocialType());
     }
 
     /**
@@ -169,6 +162,11 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @return string
      */
     public function getSelectBoxLabel() {
-        return $this->getUid() . ' ' . $this->getSocialTypeDescription() . ' ' . substr($this->getAppId(), 0, 7);
+        return $this->getUid() . ': ' . $this->getSocialTypeDescription();
+    }
+
+    static public function getAllConstant() {
+        $oClass = new \ReflectionClass(__CLASS__);
+        return $oClass->getConstants();
     }
 }

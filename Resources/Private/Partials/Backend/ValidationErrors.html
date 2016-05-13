@@ -1,0 +1,31 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:section name="main">
+        <f:form.validationResults for="{for}">
+            <f:if condition="{validationResults.flattenedErrors}">
+                <f:for each="{validationResults.flattenedErrors}" key="propertyPath" as="errors">
+                    <f:for each="{errors}" as="error">
+                        <div class="typo3-messages">
+                            <div class="alert alert-danger">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <span class="fa-stack fa-lg">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-check fa-stack-1x"></i>
+                                        </span>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="alert-title"><f:translate key="pxasocialfeed_module.labels.error"/></h4>
+                                        <div class="alert-message">{error.message}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </f:for>
+                </f:for>
+            </f:if>
+        </f:form.validationResults>
+    </f:section>
+</div>
+

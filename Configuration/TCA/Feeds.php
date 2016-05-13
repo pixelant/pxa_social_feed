@@ -6,10 +6,10 @@ if (!defined ('TYPO3_MODE')) {
 $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = array(
 	'ctrl' => $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds']['ctrl'],
 	'interface' => array(
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, social_type, date, post_url, message, image, title, description, external_url, config, update_date, external_identifier',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, post_date, post_url, message, image, title, description, external_url, config, update_date, external_identifier',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, social_type, date, post_url, message, image, title, description, external_url, config, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
+		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, post_date, post_url, message, image, title, description, external_url, config, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -97,25 +97,15 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = array(
 			),
 		),
 
-		'social_type' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.social_type',
-			'config' => array(
-				'type' => 'input',
-				'size' => 30,
-				'eval' => 'trim'
-			),
-		),
-		'date' => array(
+		'post_date' => array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.date',
 			'config' => array(
-				'dbType' => 'datetime',
 				'type' => 'input',
-				'size' => 12,
+				'size' => 15,
 				'eval' => 'datetime',
-				'checkbox' => 0,
-				'default' => '0000-00-00 00:00:00'
+				'checkbox' => 1,
+                'default' => time()
 			),
 		),
 		'post_url' => array(

@@ -1,0 +1,52 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:layout name="Backend/Default" />
+
+    <f:section name="content">
+        <f:comment><!--clean all messages--></f:comment>
+        <f:flashMessages as="messages"></f:flashMessages>
+
+        <f:if condition="{tokens -> f:count()} > 0">
+            <f:then>
+                <h4><f:translate key="pxasocialfeed_module.labels.{f:if(then: 'editConfig', else: 'addNewConfig', condition: isEditForm)}"/></h4>
+
+                <f:render partial="Backend/ValidationErrors" section="main" arguments="{for: 'config'}"/>
+
+                <f:form action="saveConfig" name="config" object="{config}">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td><f:translate key="pxasocialfeed_module.labels.form.config_name"/></td>
+                            <td><f:form.textfield property="configName" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td><f:translate key="pxasocialfeed_module.labels.form.social_id"/></td>
+                            <td><f:form.textfield property="socialId" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td><f:translate key="pxasocialfeed_module.labels.form.amount_of_feeds"/></td>
+                            <td><f:form.textfield property="feedCount" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td><f:translate key="pxasocialfeed_module.labels.type"/></td>
+                            <td><f:form.select property="token" options="{tokens}" optionLabelField="selectBoxLabel" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <f:form.submit class="btn btn-success" name="save" value="{f:translate(key: '{f:if(then: \'pxasocialfeed_module.labels.button_save\', else: \'pxasocialfeed_module.labels.createNewConfig\', condition: isEditForm)}')}"/>
+                                <input class="btn btn-default" type="reset" value="{f:translate(key: 'pxasocialfeed_module.labels.button_clear')}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </f:form>
+
+                <f:link.action class="btn btn-default" action="index"><f:translate key="pxasocialfeed_module.labels.back"/></f:link.action>
+            </f:then>
+            <f:else>
+                <h1 class="text-danger"><f:translate key="pxasocialfeed_module.labels.firstCreateToken"/></h1>
+                <f:link.action class="btn btn-success" action="manageToken"><f:translate key="pxasocialfeed_module.labels.create_new_token"/></f:link.action>
+            </f:else>
+        </f:if>
+    </f:section>
+</div>

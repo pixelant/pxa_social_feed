@@ -1,4 +1,3 @@
-/*
 plugin.tx_pxasocialfeed {
 	view {
 		# cat=plugin.tx_pxasocialfeed/file; type=string; label=Path to template root (FE)
@@ -8,36 +7,4 @@ plugin.tx_pxasocialfeed {
 		# cat=plugin.tx_pxasocialfeed/file; type=string; label=Path to template layouts (FE)
 		layoutRootPath = EXT:pxa_social_feed/Resources/Private/Layouts/
 	}
-	settings {
-		# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Facebook Page ID:
-    	facebookID = 112994108753764
-    	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Instagram Page ID:
-    	instagramID = 1737087862
-    	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Number of Results to Show:
-    	limit = 12
-    	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Facebook Access Token:
-    	facebookAccessToken = 1649405702013411|595200d48abe20def994eabf14b0af21
-    	# cat=plugin.tx_pxasocialfeed/settings; type=string; label=Instagram Client-ID:
-    	instagramClientID = a2dc6041024f4d3b86fd2f690492b070
-	}
-	persistence {
-		# cat=plugin.tx_pxasocialfeed//a; type=string; label=Default storage PID
-		storagePid =
-	}
 }
-
-module.tx_pxasocialfeed {
-	view {
-		# cat=module.tx_pxasocialfeed/file; type=string; label=Path to template root (BE)
-		templateRootPath = EXT:pxa_social_feed/Resources/Private/Backend/Templates/
-		# cat=module.tx_pxasocialfeed/file; type=string; label=Path to template partials (BE)
-		partialRootPath = EXT:pxa_social_feed/Resources/Private/Backend/Partials/
-		# cat=module.tx_pxasocialfeed/file; type=string; label=Path to template layouts (BE)
-		layoutRootPath = EXT:pxa_social_feed/Resources/Private/Backend/Layouts/
-	}
-	persistence {
-		# cat=module.tx_pxasocialfeed//a; type=string; label=Default storage PID
-		storagePid =
-	}
-}
-*/

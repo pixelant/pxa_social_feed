@@ -54,18 +54,11 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     protected $externalIdentifier = '';
 
 	/**
-	 * socialType
-	 *
-	 * @var string
-	 */
-	protected $socialType = '';
-
-	/**
 	 * date
 	 *
 	 * @var \DateTime
 	 */
-	protected $date = NULL;
+	protected $postDate = NULL;
 
 	/**
 	 * postUrl
@@ -117,41 +110,22 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $config = NULL;
 
 	/**
-	 * Returns the socialType
-	 *
-	 * @return string $socialType
-	 */
-	public function getSocialType() {
-		return $this->socialType;
-	}
-
-	/**
-	 * Sets the socialType
-	 *
-	 * @param string $socialType
-	 * @return void
-	 */
-	public function setSocialType($socialType) {
-		$this->socialType = $socialType;
-	}
-
-	/**
 	 * Returns the date
 	 *
 	 * @return \DateTime $date
 	 */
-	public function getDate() {
-		return $this->date;
+	public function getPostDate() {
+		return $this->postDate;
 	}
 
 	/**
 	 * Sets the date
 	 *
-	 * @param \DateTime $date
+	 * @param \DateTime $postDate
 	 * @return void
 	 */
-	public function setDate(\DateTime $date) {
-		$this->date = $date;
+	public function setPostDate(\DateTime $postDate) {
+		$this->postDate = $postDate;
 	}
 
 	/**

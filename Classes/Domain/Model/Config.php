@@ -52,20 +52,6 @@ class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $configName = '';
 
 	/**
-	 * feedPid
-	 *
-	 * @var integer
-	 */
-	protected $feedPid = 0;
-
-	/**
-	 * executed
-	 *
-	 * @var integer
-	 */
-	protected $executed = 0;
-
-	/**
 	 * feedCount
 	 *
 	 * @var integer
@@ -115,44 +101,6 @@ class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	public function setConfigName($configName) {
 		$this->configName = $configName;
-	}
-
-	/**
-	 * Returns the feedPid
-	 *
-	 * @return integer $feedPid
-	 */
-	public function getFeedPid() {
-		return $this->feedPid;
-	}
-
-	/**
-	 * Sets the feedPid
-	 *
-	 * @param integer $feedPid
-	 * @return void
-	 */
-	public function setFeedPid($feedPid) {
-		$this->feedPid = $feedPid;
-	}
-
-	/**
-	 * Returns the executed
-	 *
-	 * @return integer $executed
-	 */
-	public function getExecuted() {
-		return $this->executed;
-	}
-
-	/**
-	 * Sets the executed
-	 *
-	 * @param integer $executed
-	 * @return void
-	 */
-	public function setExecuted($executed) {
-		$this->executed = $executed;
 	}
 
 	/**

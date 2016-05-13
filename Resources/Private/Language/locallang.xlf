@@ -4,173 +4,196 @@
           product-name="pxa_social_feed">
         <header/>
         <body>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds">
-                <source>Feeds</source>
+            <!-- BE MODULE -->
+            <!-- ACTIONS -->
+            <trans-unit id="pxasocialfeed_module.action.indexAction">
+                <source>List of tokes and configurations</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.social_type">
-                <source>Social Type</source>
+            <trans-unit id="pxasocialfeed_module.action.manageConfigAction">
+                <source>Create new / Edit configuration</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.date">
-                <source>Date</source>
+            <trans-unit id="pxasocialfeed_module.action.manageTokenAction">
+                <source>Create new / Edit token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.post_url">
-                <source>Post Url</source>
+
+            <trans-unit id="pxasocialfeed_module.labels.listOfConfigs">
+                <source>List of configurations</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.message">
-                <source>Message</source>
+            <trans-unit id="pxasocialfeed_module.labels.noConfigurationsFound">
+                <source>No configurations were found</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.image">
-                <source>Image</source>
+            <trans-unit id="pxasocialfeed_module.labels.listOfTokens">
+                <source>List of tokens</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.title">
-                <source>Title</source>
+            <trans-unit id="pxasocialfeed_module.labels.noTokensFound">
+                <source>No tokens were found</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.description">
-                <source>Description</source>
+            <trans-unit id="pxasocialfeed_module.labels.notRelevant">
+                <source>Not relevant</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_url">
-                <source>External Url</source>
+            <trans-unit id="pxasocialfeed_module.labels.generateAccessToken">
+                <source>Generate access token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.config">
-                <source>Config</source>
+            <trans-unit id="pxasocialfeed_module.labels.firstCreateToken">
+                <source>No tokens were found, please, first create some.</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens">
-                <source>Tokens</source>
+            <trans-unit id="pxasocialfeed_module.labels.addNewToken">
+                <source>Add new token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_id">
-                <source>App Id</source>
+            <trans-unit id="pxasocialfeed_module.labels.addNewConfig">
+                <source>Add new configuration</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_secret">
-                <source>App Secret</source>
+            <trans-unit id="pxasocialfeed_module.labels.createNewConfig">
+                <source>Create new configuration</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.social_type">
-                <source>Social Type</source>
+            <trans-unit id="pxasocialfeed_module.labels.editToken">
+                <source>Edit token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config">
-                <source>Config</source>
+            <trans-unit id="pxasocialfeed_module.labels.editConfig">
+                <source>Edit configuration</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
-                <source>Social Id</source>
+            <trans-unit id="pxasocialfeed_module.labels.type.1">
+                <source>Facebook</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.config_name">
-                <source>Config Name</source>
+            <trans-unit id="pxasocialfeed_module.labels.type.2">
+                <source>Instagram</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_pid">
-                <source>Feed Pid</source>
+            <trans-unit id="pxasocialfeed_module.labels.type.3">
+                <source>Instagram (OAuth2)</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.executed">
-                <source>Executed</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_count">
-                <source>Feed Count</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.token">
-                <source>Token</source>
+            <trans-unit id="pxasocialfeed_module.labels.type.4">
+                <source>Twitter</source>
             </trans-unit>
 
             <!-- labels for module token tab -->
-            <trans-unit id="tx_pxasocialfeed_module.token.header1">
-                <source>Add new token or edit existing</source>
+
+            <trans-unit id="pxasocialfeed_module.labels.general_info">
+                <source>General info</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.header2">
-                <source>Available tokens object</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.actions">
+            <trans-unit id="pxasocialfeed_module.labels.actions">
                 <source>Edit / Delete</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.edit">
+            <trans-unit id="pxasocialfeed_module.labels.edit">
                 <source>Edit</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.delete">
+            <trans-unit id="pxasocialfeed_module.labels.create">
+                <source>Create</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.successCreated">
+                <source>Successfully created</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.delete">
                 <source>Delete</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.header3">
-                <source>There is no created token</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.app_id">
+            <trans-unit id="pxasocialfeed_module.labels.appId">
                 <source>App Id</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.app_secret">
+            <trans-unit id="pxasocialfeed_module.labels.appSecret">
                 <source>App Secret</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.access_token">
+            <trans-unit id="pxasocialfeed_module.labels.accessToken">
                 <source>Access Token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.type">
+            <trans-unit id="pxasocialfeed_module.labels.clientId">
+                <source>Client Id</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.clientSecret">
+                <source>Client Secret</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.consumerKey">
+                <source>Consumer Key</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.consumerSecret">
+                <source>Consumer Secret</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.accessTokenSecret">
+                <source>Access Token Secret</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.type">
                 <source>Type</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.button_delete">
+            <trans-unit id="pxasocialfeed_module.labels.button_delete">
                 <source>Delete Token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.button_save">
-                <source>Save changes</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.create_new_token">
+            <trans-unit id="pxasocialfeed_module.labels.create_new_token">
                 <source>Create new token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.form.button_clear">
+            <trans-unit id="pxasocialfeed_module.labels.button_clear">
                 <source>Clear Form</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.token.table.uid">
+            <trans-unit id="pxasocialfeed_module.labels.uid">
                 <source>UID</source>
             </trans-unit>
-
-            <!-- labels for module config tab -->
-            <trans-unit id="tx_pxasocialfeed_module.config.header1">
-                <source>Add new config or edit existing</source>
+            <trans-unit id="pxasocialfeed_module.labels.form.config_name">
+                <source>Configuration name</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.header2">
-                <source>Available configs</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.header3">
-                <source>There is no created config</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.header4">
-                <source>CRETE TOKEN OBJECT FIRST !!!</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed_module.config.form.config_name">
-                <source>Config name</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.social_id">
+            <trans-unit id="pxasocialfeed_module.labels.form.social_id">
                 <source>Social ID</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.pid_for_feeds">
-                <source>PID for feeds</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.amount_of_feeds">
+            <trans-unit id="pxasocialfeed_module.labels.form.amount_of_feeds">
                 <source>Limit</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.type">
-                <source>Type</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed_module.config.form.button_delete">
-                <source>Delete Config</source>
+            <trans-unit id="pxasocialfeed_module.labels.button_delete">
+                <source>Delete configuration</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_module.config.form.button_clear">
                 <source>Clear Form</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.button_save">
-                <source>Save Config</source>
+            <trans-unit id="pxasocialfeed_module.labels.button_save">
+                <source>Save</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.create_new_config">
-                <source>Add new config</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed_module.config.table.uid">
-                <source>UID</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.table.pid">
-                <source>PID</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.table.feed_amount">
-                <source>Amount of feeds</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.table.token_uid">
+            <trans-unit id="pxasocialfeed_module.labels.token_uid">
                 <source>Token UID</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.back">
+                <source>Back</source>
+            </trans-unit>
 
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1463130121">
+                <source>All fields are required</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234619">
+                <source>Please, enter configuration name</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234671">
+                <source>Please, enter Social ID</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234832">
+                <source>Amount of feeds is not valid</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456154742">
+                <source>App ID can not be empty</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456154743">
+                <source>App Secret can not be empty</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.changesSaved">
+                <source>Changes saved successfully.</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.removedSuccess">
+                <source>Successfully removed.</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.cantRemoveTokenConfigExist">
+                <source>Error removing token. Some configuration is still using it.</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.removed">
+                <source>Removed</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.success">
+                <source>Success</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.error">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorCommunication">
+                <source>Error communication with server</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorGettingsToken">
+                <source>Error gettings access token</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.access_tokenUpdated">
+                <source>Access token updated</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

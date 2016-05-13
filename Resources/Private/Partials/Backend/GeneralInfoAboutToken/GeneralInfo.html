@@ -1,0 +1,22 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+     xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers">
+
+    <f:section name="main">
+        <pxa:tokenFields as="fields" type="{tokenItem.socialType}">
+            <f:for each="{fields}" as="field">
+                <b><f:translate key="pxasocialfeed_module.labels.{field}"/></b>: <pxa:getToketCredential token="{tokenItem}" credential="{field}"/><br />
+            </f:for>
+        </pxa:tokenFields>
+
+        <f:if condition="{tokenItem.socialType} == 3">
+            <f:if condition="{pxa:getToketCredential(token: tokenItem, credential: 'accessToken')}">
+                <f:else>
+                    <a class="btn btn-default" href="https://api.instagram.com/oauth/authorize/?client_id={tokenItem.appId}&redirect_uri={f:uri.action(action:'addAccessToken', absolute:1, arguments: {token: tokenItem})->f:format.urlencode()}&response_type=code">
+                        <f:translate key="pxasocialfeed_module.labels.generateAccessToken"/>
+                    </a>
+                </f:else>
+            </f:if>
+        </f:if>
+    </f:section>
+</div>

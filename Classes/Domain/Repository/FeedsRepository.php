@@ -38,7 +38,7 @@ class FeedsRepository extends AbstractRepository {
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = array(
-        'date' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+        'postDate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
     );
 
     /**

@@ -76,7 +76,7 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	public function getDateReturnsInitialValueForDateTime() {
 		$this->assertEquals(
 			NULL,
-			$this->subject->getDate()
+			$this->subject->getPostDate()
 		);
 	}
 
@@ -85,7 +85,7 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
 	 */
 	public function setDateForDateTimeSetsDate() {
 		$dateTimeFixture = new \DateTime();
-		$this->subject->setDate($dateTimeFixture);
+		$this->subject->setPostDate($dateTimeFixture);
 
 		$this->assertAttributeEquals(
 			$dateTimeFixture,

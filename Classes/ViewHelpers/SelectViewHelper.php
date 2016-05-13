@@ -1,5 +1,12 @@
 <?php
-namespace Pixelant\PxaSocialFeed\Controller;
+/**
+ * Created by PhpStorm.
+ * User: anjey
+ * Date: 13.05.16
+ * Time: 12:25
+ */
+
+namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
 /***************************************************************
  *
@@ -27,20 +34,28 @@ namespace Pixelant\PxaSocialFeed\Controller;
  ***************************************************************/
 
 /**
- * FeedsController
+ * Class SelectViewHelper
+ * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
-class FeedsController extends BaseController {
-
+class SelectViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Form\SelectViewHelper {
     /**
-     * action list
+     * Retrieves the selected value(s)
      *
-     * @return void
+     * We don't need respect submitted data
+     *
+     * @return mixed value string or an array of strings
      */
-    public function listAction() {
-        $limit = $this->settings['flexFeedsCount'] ? intval($this->settings['flexFeedsCount']) : 10;
-
-        $feeds = $this->feedsRepository->findFeedsByConfig($this->settings['flexConfig'], $limit);
-
-        $this->view->assign('feeds', $feeds);
+    protected function getSelectedValue()  {
+        $this->setRespectSubmittedDataValue(false);
+        $value = $this->getValueAttribute();
+        if (!is_array($value) && !$value instanceof \Traversable) {
+            return $this->getOptionValueScalar($value);
+        }
+        $selectedValues = array();
+        foreach ($value as $selectedValueElement) {
+            $selectedValues[] = $this->getOptionValueScalar($selectedValueElement);
+        }
+        return $selectedValues;
     }
+
 }

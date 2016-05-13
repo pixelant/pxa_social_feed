@@ -1,0 +1,48 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:section name="list">
+        <f:if condition="{configs}">
+            <f:then>
+                <table class="table table-striped">
+                    <tr class="info">
+                        <td><f:translate key="pxasocialfeed_module.labels.uid"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.form.config_name"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.form.social_id"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.form.amount_of_feeds"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.type"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.token_uid"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.app_id"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.edit"/></td>
+                        <td><f:translate key="pxasocialfeed_module.labels.delete"/></td>
+                    </tr>
+
+                    <f:for each="{configs}" as="configItem">
+                        <tr>
+                            <td>{configItem.uid}</td>
+                            <td>{configItem.configName}</td>
+                            <td>{configItem.socialId}</td>
+                            <td>{configItem.feedCount}</td>
+                            <td>{configItem.token.socialTypeDescription}</td>
+                            <td>{configItem.token.uid}</td>
+                            <td>{configItem.token.appId}</td>
+                            <td>
+                                <f:link.action action="manageConfig" class="btn btn-default" arguments="{config: configItem}">
+                                    <f:translate key="pxasocialfeed_module.labels.editConfig"/>
+                                </f:link.action>
+                            </td>
+                            <td>
+                                <f:link.action action="deleteConfig" class="btn btn-danger  delete-action" arguments="{config: configItem}">
+                                    <f:translate key="pxasocialfeed_module.labels.delete"/>
+                                </f:link.action>
+                            </td>
+                        </tr>
+                    </f:for>
+                </table>
+            </f:then>
+            <f:else>
+                <p class="text-info"><f:translate key="pxasocialfeed_module.labels.noConfigurationsFound"/></p>
+            </f:else>
+        </f:if>
+    </f:section>
+</div>

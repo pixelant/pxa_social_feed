@@ -36,19 +36,17 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
 
 
-use Pixelant\PxaSocialFeed\Controller\FeedsController;
+use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TokensValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator {
 
     /**
-     * Object Manager
-     *
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
+     * @var \Pixelant\PxaSocialFeed\Utility\ConfigurationUtility
      * @inject
      */
-    protected $objectManager;
+    protected $configurationUtility;
 
     /**
      * Validates tokens
@@ -58,18 +56,17 @@ class TokensValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractVa
      * @return bool
      */
     protected function isValid($token) {
-        if(is_object($token)) {
-            if(empty($token->getAppId())) {
-                $errorCode = 1456154742;
-                $message = 'App ID can not be empty';
-            } elseif (empty($token->getAppSecret()) && $token->getSocialType() != FeedsController::INSTAGRAM) {
-                $errorCode = 1456154743;
-                $message = 'App Secret can not be empty';
+        $credentialsFields = GeneralUtility::trimExplode(',', $this->configurationUtility->getConfiguration($token->getSocialType()));
+        $args = GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedpxasocialfeed');
+
+        foreach($credentialsFields as $field) {
+            if(!isset($args['credentials'][$field]) || empty($args['credentials'][$field])) {
+                $errorCode = 1463130121;
             }
         }
 
         if(isset($errorCode)) {
-            $this->addError($message, $errorCode);
+            $this->addError(BaseController::translate('pxasocialfeed_module.labels.errorcode.'.$errorCode), $errorCode);
         }
 
         return (!isset($errorCode));

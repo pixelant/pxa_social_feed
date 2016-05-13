@@ -1,5 +1,15 @@
 <?php
-namespace Pixelant\PxaSocialFeed\Controller;
+/**
+ * Created by PhpStorm.
+ * User: anjey
+ * Date: 12.05.16
+ * Time: 13:26
+ */
+
+namespace Pixelant\PxaSocialFeed\ViewHelpers;
+
+use Pixelant\PxaSocialFeed\Controller\BaseController;
+use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
 
 /***************************************************************
  *
@@ -25,22 +35,21 @@ namespace Pixelant\PxaSocialFeed\Controller;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-/**
- * FeedsController
- */
-class FeedsController extends BaseController {
+class AvailableTokensTypesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
     /**
-     * action list
+     * get available tokens types
      *
-     * @return void
+     * @return array
      */
-    public function listAction() {
-        $limit = $this->settings['flexFeedsCount'] ? intval($this->settings['flexFeedsCount']) : 10;
+    public function render() {
+        $options = [];
+        $types = Tokens::getAllConstant();
 
-        $feeds = $this->feedsRepository->findFeedsByConfig($this->settings['flexConfig'], $limit);
+        foreach($types as $type) {
+            $options[$type] = BaseController::translate('pxasocialfeed_module.labels.type.' . $type);
+        }
 
-        $this->view->assign('feeds', $feeds);
+        return $options;
     }
 }

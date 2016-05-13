@@ -1,0 +1,35 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:section name="main">
+        <f:flashMessages as="messages">
+            <f:for each="{messages}" as="message">
+                <f:switch expression="{message.severity}">
+                    <f:case value="0"><f:render section="message" arguments="{class: 'success', title: message.title, message: message.message}"/></f:case>
+                    <f:case value="1"><f:render section="message" arguments="{class: 'info', title: message.title, message: message.message}"/></f:case>
+                    <f:case value="2"><f:render section="message" arguments="{class: 'danger', title: message.title, message: message.message}"/></f:case>
+                    <f:case default="1"><f:render section="message" arguments="{class: 'info', title: message.title, message: message.message}"/></f:case>
+                </f:switch>
+            </f:for>
+        </f:flashMessages>
+    </f:section>
+
+    <f:section name="message">
+        <div class="typo3-messages">
+            <div class="alert alert-{class}">
+                <div class="media">
+                    <div class="media-left">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-check fa-stack-1x"></i>
+                        </span>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="alert-title">{title}</h4>
+                        <div class="alert-message">{message}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </f:section>
+</div>

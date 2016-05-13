@@ -6,10 +6,10 @@ if (!defined ('TYPO3_MODE')) {
 $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_config'] = array(
 	'ctrl' => $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_config']['ctrl'],
 	'interface' => array(
-		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, config_name, social_id, feed_pid, executed, feed_count, token',
+		'showRecordFieldList' => 'sys_language_uid, l10n_parent, l10n_diffsource, hidden, config_name, social_id, feed_count, token',
 	),
 	'types' => array(
-		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, config_name, social_id, feed_pid, executed, feed_count, token, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
+		'1' => array('showitem' => 'sys_language_uid;;;;1-1-1, l10n_parent, l10n_diffsource, hidden;;1, config_name, social_id, feed_count, token, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'),
 	),
 	'palettes' => array(
 		'1' => array('showitem' => ''),
@@ -118,15 +118,6 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_config'] = array(
 		'feed_pid' => array(
 			'exclude' => 1,
 			'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_config.feed_pid',
-			'config' => array(
-				'type' => 'input',
-				'size' => 4,
-				'eval' => 'int'
-			)
-		),
-		'executed' => array(
-			'exclude' => 1,
-			'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_config.executed',
 			'config' => array(
 				'type' => 'input',
 				'size' => 4,

@@ -36,17 +36,10 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
 
 
+use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Config;
 
 class ConfigValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator {
-
-    /**
-     * Object Manager
-     *
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManagerInterface
-     * @inject
-     */
-    protected $objectManager;
 
     /**
      * Validates tokens
@@ -59,18 +52,15 @@ class ConfigValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractVa
         if(is_object($config)) {
             if(empty($config->getConfigName())) {
                 $errorCode = 1456234619;
-                $message = 'Please, enter Config name';
             } elseif (empty($config->getSocialId())) {
                 $errorCode = 1456234671;
-                $message = 'Please, enter Social ID';
             } elseif(!$config->getFeedCount() || !is_int($config->getFeedCount())) {
                 $errorCode = 1456234832;
-                $message = 'Amount of feeds is not valid';
             }
         }
 
         if(isset($errorCode)) {
-            $this->addError($message, $errorCode);
+            $this->addError(BaseController::translate('pxasocialfeed_module.labels.errorcode.'.$errorCode), $errorCode);
         }
 
         return (!isset($errorCode));
