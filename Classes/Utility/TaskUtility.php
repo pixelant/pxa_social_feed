@@ -141,6 +141,7 @@ class TaskUtility {
                 $timestamp = strtotime($rawData['created_at']);
                 $twitterFeed->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', $timestamp)));
                 $twitterFeed->setConfig($config);
+                $twitterFeed->setExternalIdentifier($rawData['id_str']);
 
                 $this->feedRepository->add($twitterFeed);
             }
@@ -175,6 +176,7 @@ class TaskUtility {
                 $timestamp = date('Y-m-d H:i:s', $rawData['created_time']);
                 $ig->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
                 $ig->setConfig($config);
+                $ig->setExternalIdentifier($rawData['id']);
 
                 $this->feedRepository->add($ig);
             }

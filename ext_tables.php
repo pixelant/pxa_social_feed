@@ -64,7 +64,7 @@ $GLOBALS['TCA']['tx_pxasocialfeed_domain_model_feeds'] = [
         ],
         'searchFields' => 'social_type,date,post_url,message,image,title,description,external_url,config,',
         'dynamicConfigFile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($_EXTKEY) . 'Configuration/TCA/Feeds.php',
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif',
+        'iconfile' => 'EXT:pxa_social_feed/Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif',
 
         'rootLevel' => 1
     ],

@@ -32,4 +32,10 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  */
 class ConfigRepository extends AbstractRepository {
 
+    /**
+     * @var array $defaultOrderings
+     */
+    protected $defaultOrderings = array(
+        'crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+    );
 }

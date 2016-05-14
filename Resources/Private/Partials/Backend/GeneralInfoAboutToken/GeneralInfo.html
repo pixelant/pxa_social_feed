@@ -11,8 +11,9 @@
 
         <f:if condition="{tokenItem.socialType} == 3">
             <f:if condition="{pxa:getToketCredential(token: tokenItem, credential: 'accessToken')}">
+                <f:then><b><f:translate key="pxasocialfeed_module.labels.accessToken"/></b>: <pxa:getToketCredential token="{tokenItem}" credential="accessToken"/></f:then>
                 <f:else>
-                    <a class="btn btn-default" href="https://api.instagram.com/oauth/authorize/?client_id={tokenItem.appId}&redirect_uri={f:uri.action(action:'addAccessToken', absolute:1, arguments: {token: tokenItem})->f:format.urlencode()}&response_type=code">
+                    <a class="btn btn-default" href="https://api.instagram.com/oauth/authorize/?client_id={pxa:getToketCredential(token: tokenItem, credential: 'clientId')}&redirect_uri={f:uri.action(action:'addAccessToken', absolute:1, arguments: {token: tokenItem})->f:format.urlencode()}&response_type=code">
                         <f:translate key="pxasocialfeed_module.labels.generateAccessToken"/>
                     </a>
                 </f:else>
