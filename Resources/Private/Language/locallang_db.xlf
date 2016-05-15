@@ -106,7 +106,7 @@
                 <source>Amount of feeds on page</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_plugin.flexform.config">
-                <source>Choose config for plugin</source>
+                <source>Choose configuration for plugin</source>
             </trans-unit>
         </body>
     </file>

@@ -34,7 +34,7 @@ $initBoot = function($_EXTKEY) {
     $extensionName = \TYPO3\CMS\Core\Utility\GeneralUtility::underscoredToUpperCamelCase($_EXTKEY);
     $pluginSignature = strtolower($extensionName);
 
-    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature . '_showfeed'] = 'layout,select_key';
+    $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist'][$pluginSignature . '_showfeed'] = 'pages,recursive,layout,select_key';
     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist'][$pluginSignature . '_showfeed'] = 'pi_flexform';
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($pluginSignature . '_showfeed', 'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForm/SocialFeed.xml');
