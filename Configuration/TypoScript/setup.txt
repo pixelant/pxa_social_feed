@@ -7,7 +7,7 @@ plugin.tx_pxasocialfeed {
 			10 = {$plugin.tx_pxasocialfeed.view.partialRootPath}
 		}
 		layoutRootPaths {
-			10 = = {$plugin.tx_pxasocialfeed.view.layoutRootPath}
+			10 = {$plugin.tx_pxasocialfeed.view.layoutRootPath}
 		}
 	}
 }
@@ -29,11 +29,13 @@ module.tx_pxasocialfeed {
 }
 
 
-#page.includeCSS.pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/css/socialFeed.min.css
-
-#page.includeJSFooter.pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/JS/jquery.dotdotdot.min.js
-#page.includeJSFooter.pxa_cosial_feed_2 = EXT:pxa_social_feed/Resources/Public/JS/owl.carousel.min.js
-#page.includeJSFooter.pxa_cosial_feed_3 = EXT:pxa_social_feed/Resources/Public/JS/socialFeed.min.js
-
+page.includeCSS {
+	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/css/socialFeed.min.css
+}
+page.includeJSFooter {
+	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/JS/jquery.dotdotdot.min.js
+	pxa_cosial_feed_2 = EXT:pxa_social_feed/Resources/Public/JS/owl.carousel.min.js
+	pxa_cosial_feed_3 = EXT:pxa_social_feed/Resources/Public/JS/socialFeed.min.js
+}
 
 

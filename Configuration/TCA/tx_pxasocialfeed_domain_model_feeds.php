@@ -10,7 +10,7 @@ defined('TYPO3_MODE') or die();
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds',
-        'label' => 'social_type',
+        'label' => 'title',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
@@ -28,7 +28,7 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'searchFields' => 'social_type,date,post_url,message,image,title,description,external_url,config,',
+        'searchFields' => 'date,post_url,message,image,title,description,external_url,config,',
         'iconfile' => 'EXT:pxa_social_feed/Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif',
 
         'rootLevel' => 1

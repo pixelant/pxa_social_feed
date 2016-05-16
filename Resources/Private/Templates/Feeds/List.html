@@ -1,42 +1,36 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
 
-<f:layout name="Default" />
-
-<f:section name="main">
+    <f:layout name="Default"/>
     
-    <div class="tx-pxa-social-feed">
-    <ul class="social-feed-container owl-carousel">
-        
-        <f:for each="{feeds}" as="feed">
-        
-        <li class="social-feed-{feed.socialType}">
-            <a href="{feed.postUrl}" target="_blank">
-                <h3 class="social-feed-title">{feed.title}</h3>
-
-                <f:if condition="{feed.image}">
-                    <f:then>
-                        <div class="social-feed-image-container" style="background-image:url({feed.image});">
-                            <div class="social-feed-information">
-                                <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
-                            </div>
-                        </div>
-                    </f:then>
-                    <f:else>
-                        <div class="social-feed-image-container no-image">
-                            <div class="social-feed-information">
-                                <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
-                            </div>
-                        </div>
-                    </f:else>
-                </f:if>
-
-                <p class="social-feed-message">{feed.message}</p>
-            </a>
-        </li>
-
-        </f:for>
-
-    </ul>
-    </div>
-
-
-</f:section>
+    <f:section name="main">
+        <div class="tx-pxa-social-feed">
+            <ul class="social-feed-container owl-carousel">
+                <f:for each="{feeds}" as="feed">
+                    <li class="social-feed-{feed.config.token.socialTypeDescription} social-config-{feed.config.configName}">
+                        <a href="{feed.postUrl}" target="_blank">
+                            <h3 class="social-feed-title">{feed.title}</h3>
+                            <f:if condition="{feed.image}">
+                                <f:then>
+                                    <div class="social-feed-image-container" style="background-image:url({feed.image});">
+                                        <div class="social-feed-information">
+                                            <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
+                                        </div>
+                                    </div>
+                                </f:then>
+                                <f:else>
+                                    <div class="social-feed-image-container no-image">
+                                        <div class="social-feed-information">
+                                            <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
+                                        </div>
+                                    </div>
+                                </f:else>
+                            </f:if>
+                            <p class="social-feed-message">{feed.message}</p>
+                        </a>
+                    </li>
+                </f:for>
+            </ul>
+        </div>
+    </f:section>
+</div>
