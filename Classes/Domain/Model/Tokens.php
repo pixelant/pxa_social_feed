@@ -165,6 +165,11 @@ class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
         return $this->getUid() . ': ' . $this->getSocialTypeDescription();
     }
 
+    /**
+     * return class constants (types of social feeds)
+     *
+     * @return array
+     */
     static public function getAllConstant() {
         $oClass = new \ReflectionClass(__CLASS__);
         return $oClass->getConstants();
