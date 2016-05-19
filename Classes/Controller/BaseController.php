@@ -56,24 +56,7 @@ class BaseController extends ActionController {
      * @param string $label
      * @return NULL|string
      */
-    protected function translateLabel($label = '') {
-        return LocalizationUtility::translate($label, $this->extensionName);
-    }
-
-    /**
-     * @param string $label
-     * @return string
-     */
     static public function translate($label = '') {
-        return self::getLanguageService()->sL('LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang.xlf:' . $label);
-    }
-
-    /**
-     * Returns the LanguageService
-     *
-     * @return LanguageService
-     */
-    static protected function getLanguageService() {
-        return $GLOBALS['LANG'];
+        return LocalizationUtility::translate($label, 'pxa_social_feed');
     }
 }
