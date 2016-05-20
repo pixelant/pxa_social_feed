@@ -139,12 +139,12 @@ class SocialFeedAdministrationController extends BaseController {
 
         if ($token->getUid()) {
             $this->tokenRepository->update($token);
-            $title = $this->translate('pxasocialfeed_module.labels.edit');
-            $message = $this->translate('pxasocialfeed_module.labels.changesSaved');
+            $title = self::translate('pxasocialfeed_module.labels.edit');
+            $message = self::translate('pxasocialfeed_module.labels.changesSaved');
         } else {
             $this->tokenRepository->add($token);
-            $title = $this->translate('pxasocialfeed_module.labels.create');
-            $message = $this->translate('pxasocialfeed_module.labels.successCreated');
+            $title = self::translate('pxasocialfeed_module.labels.create');
+            $message = self::translate('pxasocialfeed_module.labels.successCreated');
         }
 
         $this->addFlashMessage($message, $title, FlashMessage::OK);
@@ -163,9 +163,9 @@ class SocialFeedAdministrationController extends BaseController {
 
         if($configs->count() == 0) {
             $this->tokenRepository->remove($token);
-            $this->addFlashMessage($this->translate('pxasocialfeed_module.labels.removedSuccess'), $this->translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
+            $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
         } else {
-            $this->addFlashMessage($this->translate('pxasocialfeed_module.labels.cantRemoveTokenConfigExist'), $this->translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+            $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.cantRemoveTokenConfigExist'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
         }
 
         $this->redirect('index');
@@ -192,12 +192,12 @@ class SocialFeedAdministrationController extends BaseController {
     public function saveConfigAction(Config $config) {
         if ($config->getUid()) {
             $this->configRepository->update($config);
-            $title = $this->translate('pxasocialfeed_module.labels.edit');
-            $message = $this->translate('pxasocialfeed_module.labels.changesSaved');
+            $title = self::translate('pxasocialfeed_module.labels.edit');
+            $message = self::translate('pxasocialfeed_module.labels.changesSaved');
         } else {
             $this->configRepository->add($config);
-            $title = $this->translate('pxasocialfeed_module.labels.create');
-            $message = $this->translate('pxasocialfeed_module.labels.successCreated');
+            $title = self::translate('pxasocialfeed_module.labels.create');
+            $message = self::translate('pxasocialfeed_module.labels.successCreated');
         }
         // remove all flash message with error
         $this->getControllerContext()->getFlashMessageQueue()->getAllMessagesAndFlush();
@@ -214,7 +214,7 @@ class SocialFeedAdministrationController extends BaseController {
      */
     public function deleteConfigAction(Config $config) {
         $this->configRepository->remove($config);
-        $this->addFlashMessage($this->translate('pxasocialfeed_module.labels.removedSuccess'), $this->translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
+        $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
         $this->redirect('index');
     }
 
@@ -255,12 +255,12 @@ class SocialFeedAdministrationController extends BaseController {
                         $token->setCredential('accessToken', $data['access_token']);
                         $this->tokenRepository->update($token);
 
-                        $this->addFlashMessage($this->translate('pxasocialfeed_module.labels.access_tokenUpdated'), $this->translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
+                        $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.access_tokenUpdated'), self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
                     } else {
-                        $this->addFlashMessage($this->translate('pxasocialfeed_module.labels.errorGettingsToken'), $this->translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+                        $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorGettingsToken'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                     }
                 } else {
-                    $this->addFlashMessage($this->translate('pxasocialfeed_module.labels.errorCommunication'), $this->translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+                    $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorCommunication'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                 }
             } catch (\Exception $e) {
                 $this->addFlashMessage($e->getMessage(), 'Error', FlashMessage::ERROR);
@@ -293,7 +293,7 @@ class SocialFeedAdministrationController extends BaseController {
 
             foreach ($actions as $action) {
                 $item = $menu->makeMenuItem()
-                    ->setTitle($this->translate($action['label']))
+                    ->setTitle(self::translate($action['label']))
                     ->setHref($uriBuilder->reset()->uriFor($action['action'], [], 'SocialFeedAdministration'))
                     ->setActive($this->request->getControllerActionName() === $action['action']);
                 $menu->addMenuItem($item);
