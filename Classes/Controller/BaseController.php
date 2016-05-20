@@ -10,7 +10,6 @@ namespace Pixelant\PxaSocialFeed\Controller;
 
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
-use TYPO3\CMS\Lang\LanguageService;
 
 /***************************************************************
  *
