@@ -29,10 +29,10 @@ return [
         'rootLevel' => 1
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, title, configuration, update_date, external_identifier',
+        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier',
     ],
     'types' => [
-        '1' => ['showitem' => 'hidden;;1, post_date, title, post_url, message, image, configuration, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'hidden;;1, post_date, title, post_url, message, image, likes, configuration, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'],
     ],
     'palettes' => [
         '1' => ['showitem' => ''],
@@ -117,6 +117,15 @@ return [
                 'size' => 30,
                 'eval' => 'trim'
             ],
+        ],
+        'likes' => [
+            'exclude' => 1,
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.likes',
+            'config' => [
+                'type' => 'input',
+                'size' => 4,
+                'eval' => 'int'
+            ]
         ],
         'title' => [
             'exclude' => 1,

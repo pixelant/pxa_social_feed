@@ -80,6 +80,7 @@ class TaskUtility {
      * @param array $configurationsUids
      * @return bool
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \UnexpectedValueException
      */
     public function run($configurationsUids) {
         if(is_array($configurationsUids)) {
@@ -91,7 +92,7 @@ class TaskUtility {
                     case Token::FACEBOOK:
                         //getting data array from facebook graph api json result
                         $url = 'https://graph.facebook.com/v2.6/' . $configuration->getSocialId() . '/posts/' .
-                            '?fields=message,attachments,created_time,updated_time' .
+                            '?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time' .
                             '&limit=' . $configuration->getFeedsLimit() .
                             '&access_token=' . $configuration->getToken()->getCredential('appId') . '|' . $configuration->getToken()->getCredential('appSecret');
 
@@ -99,6 +100,8 @@ class TaskUtility {
 
                         if (is_array($data)) {
                             $this->updateFacebookFeed($data['data'], $configuration);
+                        } else {
+                            throw new \UnexpectedValueException('Invalid data from FACEBOOK feed. Please, check credentials.', 1466682087);
                         }
 
                         break;
@@ -109,8 +112,11 @@ class TaskUtility {
                         $url .= $configuration->getToken()->getSocialType() === Token::INSTAGRAM ? '?client_id=' . $configuration->getToken()->getCredential('clientId') : '?access_token=' . $configuration->getToken()->getCredential('accessToken');
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
+
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
+                        } else {
+                            throw new \UnexpectedValueException('Invalid data from INSTAGRAM feed. Please, check credentials.', 1466682066);
                         }
 
                         break;
@@ -119,7 +125,7 @@ class TaskUtility {
                             'screen_name' => $configuration->getSocialId(),
                             'count' => $configuration->getFeedsLimit(),
                             'exclude_replies' => 1,
-                            'include_rts' => 0
+                            'include_rts' => 1
                         ];
 
                         /** @var \Pixelant\PxaSocialFeed\Utility\Api\TwitterApi $twitterApi */
@@ -132,10 +138,16 @@ class TaskUtility {
                         );
 
                         $data = $twitterApi->setGetFields($fields)->performRequest();
-                        $this->saveTwitterFeed($data, $configuration);
+
+                        if(is_array($data)) {
+                            $this->saveTwitterFeed($data, $configuration);
+                        } else {
+                            throw new \UnexpectedValueException('Invalid data from Twitter feed. Please, check credentials.', 1466682071);
+                        }
+
                         break;
                     default:
-                        //generate error
+                        throw new \UnexpectedValueException('Such social type is not valid', 1466690851);
                         break;
                 }
             }
@@ -156,7 +168,9 @@ class TaskUtility {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            if($this->feedRepository->findOneByExternalIdentifier($rawData['id_str']) === NULL) {
+            $twitterFeed = $this->feedRepository->findOneByExternalIdentifier($rawData['id_str']);
+
+            if($twitterFeed === NULL) {
                 /** @var Feed $twitterFeed */
                 $twitterFeed = $this->objectManager->get(Feed::class);
 
@@ -171,7 +185,15 @@ class TaskUtility {
                 $twitterFeed->setPostDate($date);
                 $twitterFeed->setConfiguration($configuration);
                 $twitterFeed->setExternalIdentifier($rawData['id_str']);
+            }
 
+            //take likes of original tweet if it's retweet
+            $likes = isset($rawData['retweeted_status']) ? $rawData['retweeted_status']['favorite_count'] : $rawData['favorite_count'];
+
+            if($twitterFeed->getUid() && $likes != $twitterFeed->getLikes()) {
+                $twitterFeed->setLikes($likes);
+                $this->feedRepository->update($twitterFeed);
+            } else {
                 $this->feedRepository->add($twitterFeed);
             }
         }
@@ -187,7 +209,9 @@ class TaskUtility {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            if($this->feedRepository->findOneByExternalIdentifier($rawData['id']) === NULL) {
+            $ig = $this->feedRepository->findOneByExternalIdentifier($rawData['id']);
+
+            if($ig === NULL) {
                 /** @var Feed $ig */
                 $ig = $this->objectManager->get(Feed::class);
 
@@ -202,11 +226,21 @@ class TaskUtility {
                 }
 
                 $ig->setPostUrl($rawData['link']);
-                $timestamp = date('Y-m-d H:i:s', $rawData['created_time']);
-                $ig->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', $timestamp));
+
+                $dt = new \DateTime();
+                $dt->setTimestamp($rawData['created_time']);
+
+                $ig->setPostDate($dt);
                 $ig->setConfiguration($configuration);
                 $ig->setExternalIdentifier($rawData['id']);
+            }
 
+            $likes = intval($rawData['likes']['count']);
+
+            if($ig->getUid() && $likes != $ig->getLikes()) {
+                $ig->setLikes($likes);
+                $this->feedRepository->update($ig);
+            } else {
                 $this->feedRepository->add($ig);
             }
         }
@@ -226,23 +260,26 @@ class TaskUtility {
                 if ($feedItem->getUpdateDate() < strtotime($rawData['updated_time'])) {
                     $this->setFacebookData($feedItem, $rawData);
                     $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
-
-                    $this->feedRepository->update($feedItem);
                 }
             } else {
-                /** @var Feed $feed */
-                $feed = $this->objectManager->get(Feed::class);
-                $this->setFacebookData($feed, $rawData);
+                /** @var Feed $feedItem */
+                $feedItem = $this->objectManager->get(Feed::class);
+                $this->setFacebookData($feedItem, $rawData);
 
                 $post_array = GeneralUtility::trimExplode('_', $rawData['id'], 1);
-                $feed->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
-                $timestamp = strtotime($rawData['created_time']);
-                $feed->setPostDate(\DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', $timestamp)));
-                $feed->setConfiguration($configuration);
-                $feed->setUpdateDate(strtotime($rawData['updated_time']));
-                $feed->setExternalIdentifier($rawData['id']);
+                $feedItem->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
+                $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
+                $feedItem->setConfiguration($configuration);
+                $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
+                $feedItem->setExternalIdentifier($rawData['id']);
+            }
 
-                $this->feedRepository->add($feed);
+            $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
+
+            if($feedItem->getUid()) {
+                $this->feedRepository->update($feedItem);
+            } else {
+                $this->feedRepository->add($feedItem);
             }
         }
     }

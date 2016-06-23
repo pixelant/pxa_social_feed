@@ -5,7 +5,7 @@
     <f:layout name="Default"/>
     
     <f:section name="main">
-        <ul class="social-feed-container owl-carousel" data-like-load="{f:if(then: '1', else: '0', condition: settings.loadLikesCount)}">
+        <ul class="social-feed-container owl-carousel">
             <f:for each="{feeds}" as="feed">
                 <li class="social-feed-{pxa:format.lowerCase(string: feed.configuration.token.socialTypeDescription)} social-configuration-{pxa:format.lowerCase(string: feed.configuration.configName)}">
                     <a href="{feed.postUrl}" target="_blank">
@@ -13,26 +13,23 @@
                             <h3 class="social-feed-title">{feed.title}</h3>
                         </f:if>
 
-                        <f:if condition="{feed.image}">
-                            <f:then>
-                                <div class="social-feed-image-container" style="background-image:url({feed.image});">
-                                    <div class="social-feed-information">
-                                        <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
-                                    </div>
-                                </div>
-                            </f:then>
-                            <f:else>
-                                <div class="social-feed-image-container no-image">
-                                    <div class="social-feed-information">
-                                        <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
-                                    </div>
-                                </div>
-                            </f:else>
-                        </f:if>
+                        <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.image)}" style="{f:if(else: '', then: 'background-image:url({feed.image});', condition: feed.image)}">
+                            <div class="social-feed-information">
+                                <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
+                            </div>
+                            <f:if condition="{settings.loadLikesCount}">
+                                <span class="social-feed-like-count">
+                                    <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/like.svg" class="like-icon" alt="like" width="17"/>
+                                    <span class="social-feed-like-like-count-element">{feed.likes}</span>
+                                </span>
+                            </f:if>
+                        </div>
+
                         <p class="social-feed-message">{feed.message -> f:format.raw()}</p>
                     </a>
                 </li>
             </f:for>
         </ul>
     </f:section>
+
 </div>

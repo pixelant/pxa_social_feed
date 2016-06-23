@@ -81,6 +81,13 @@ class Feed extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	protected $image = '';
 
+    /**
+     * pid
+     *
+     * @var int
+     */
+    protected $likes = 0;
+
 	/**
 	 * title
 	 *
@@ -236,5 +243,19 @@ class Feed extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      */
     public function setUpdateDate($updateDate) {
         $this->updateDate = $updateDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLikes() {
+        return $this->likes;
+    }
+
+    /**
+     * @param int $likes
+     */
+    public function setLikes($likes) {
+        $this->likes = $likes;
     }
 }

@@ -16,7 +16,7 @@ plugin.tx_pxasocialfeed {
 }
 
 page.includeCSS {
-	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/css/socialFeed.min.css
+	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/css/socialFeed.css
 }
 page.includeJSFooter {
 	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/JS/jquery.dotdotdot.min.js

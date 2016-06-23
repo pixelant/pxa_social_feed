@@ -60,7 +60,7 @@ class TokenValidator extends AbstractValidator {
         $args = GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedpxasocialfeed');
 
         foreach($credentialsFields as $field) {
-            if(!isset($args['credentials'][$field]) || empty($args['credentials'][$field])) {
+            if(!isset($args['credentials'][$field]) || trim($args['credentials'][$field]) == '') {
                 $errorCode = 1463130121;
             }
         }

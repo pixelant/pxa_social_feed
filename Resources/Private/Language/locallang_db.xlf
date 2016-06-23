@@ -25,6 +25,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.title">
                 <source>Title</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.likes">
+                <source>Likes</source>
+            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.description">
                 <source>Description</source>
             </trans-unit>
