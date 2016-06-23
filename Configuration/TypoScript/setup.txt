@@ -10,6 +10,9 @@ plugin.tx_pxasocialfeed {
 			10 = {$plugin.tx_pxasocialfeed.view.layoutRootPath}
 		}
 	}
+    settings {
+        dateFormat = %d-%m-%y
+    }
 }
 
 page.includeCSS {

@@ -90,9 +90,10 @@ class TaskUtility {
                 switch ($configuration->getToken()->getSocialType()) {
                     case Token::FACEBOOK:
                         //getting data array from facebook graph api json result
-                        $url = "https://graph.facebook.com/" . $configuration->getSocialId() .
-                            "/posts?fields=message,attachments,created_time,updated_time&limit=" . $configuration->getFeedsLimit() .
-                            "&access_token=" . $configuration->getToken()->getCredential('appId') . "|" . $configuration->getToken()->getCredential('appSecret');
+                        $url = 'https://graph.facebook.com/v2.6/' . $configuration->getSocialId() . '/posts/' .
+                            '?fields=message,attachments,created_time,updated_time' .
+                            '&limit=' . $configuration->getFeedsLimit() .
+                            '&access_token=' . $configuration->getToken()->getCredential('appId') . '|' . $configuration->getToken()->getCredential('appSecret');
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
 

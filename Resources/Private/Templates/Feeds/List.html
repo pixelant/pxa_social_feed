@@ -5,10 +5,10 @@
     <f:layout name="Default"/>
     
     <f:section name="main">
-        <ul class="social-feed-container owl-carousel">
+        <ul class="social-feed-container owl-carousel" data-like-load="{f:if(then: '1', else: '0', condition: settings.loadLikesCount)}">
             <f:for each="{feeds}" as="feed">
-                <li class="social-feed-{pxa:format.lowerCase(string: feed.config.token.socialTypeDescription)} social-config-{pxa:format.lowerCase(string: feed.config.configName)}">
-                    <f:uri.external uri="{feed.postUrl}" target="_blank">
+                <li class="social-feed-{pxa:format.lowerCase(string: feed.configuration.token.socialTypeDescription)} social-configuration-{pxa:format.lowerCase(string: feed.configuration.configName)}">
+                    <a href="{feed.postUrl}" target="_blank">
                         <f:if condition="{feed.title}">
                             <h3 class="social-feed-title">{feed.title}</h3>
                         </f:if>
@@ -17,20 +17,20 @@
                             <f:then>
                                 <div class="social-feed-image-container" style="background-image:url({feed.image});">
                                     <div class="social-feed-information">
-                                        <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
+                                        <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
                                     </div>
                                 </div>
                             </f:then>
                             <f:else>
                                 <div class="social-feed-image-container no-image">
                                     <div class="social-feed-information">
-                                        <span class="social-feed-date">{feed.postDate -> f:format.date()}</span>
+                                        <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
                                     </div>
                                 </div>
                             </f:else>
                         </f:if>
-                        <p class="social-feed-message">{feed.message}</p>
-                    </f:uri.external>
+                        <p class="social-feed-message">{feed.message -> f:format.raw()}</p>
+                    </a>
                 </li>
             </f:for>
         </ul>

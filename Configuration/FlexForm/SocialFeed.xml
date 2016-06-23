@@ -19,7 +19,17 @@
                             </config>
                         </TCEforms>
                     </settings.feedsLimit>
-                    
+
+                    <settings.loadLikesCount>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.loadLikesCount</label>
+                            <config>
+                                <type>check</type>
+                                <default>1</default>
+                            </config>
+                        </TCEforms>
+                    </settings.loadLikesCount>
+
                     <settings.configuration>
                         <TCEforms>
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.config</label>
