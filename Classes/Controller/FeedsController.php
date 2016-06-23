@@ -37,9 +37,9 @@ class FeedsController extends BaseController {
      * @return void
      */
     public function listAction() {
-        $limit = $this->settings['flexFeedsCount'] ? intval($this->settings['flexFeedsCount']) : 10;
+        $limit = $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10;
 
-        $feeds = $this->feedsRepository->findFeedsByConfig($this->settings['flexConfig'], $limit);
+        $feeds = $this->feedRepository->findFeedsByConfig($this->settings['configuration'], $limit);
 
         $this->view->assign('feeds', $feeds);
     }

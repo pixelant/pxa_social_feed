@@ -27,15 +27,24 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+
 /**
- * Config
+ * Configuration
  */
-class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Configuration extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
     /**
      * @var int
      */
     protected $pid = 0;
+
+    /**
+     * hidden state
+     *
+     * @var boolean
+     */
+    protected $hidden = FALSE;
 
 	/**
 	 * socialId
@@ -45,23 +54,23 @@ class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $socialId = '';
 
 	/**
-	 * configName
+	 * name
 	 *
 	 * @var string
 	 */
-	protected $configName = '';
+	protected $name = '';
 
 	/**
-	 * feedCount
+	 * $feedsLimit
 	 *
 	 * @var integer
 	 */
-	protected $feedCount = 0;
+	protected $feedsLimit = 0;
 
 	/**
 	 * token
 	 *
-	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Tokens
+	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
 	 */
 	protected $token = NULL;
 
@@ -85,47 +94,47 @@ class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	}
 
 	/**
-	 * Returns the configName
+	 * Returns the name
 	 *
-	 * @return string $configName
+	 * @return string $name
 	 */
-	public function getConfigName() {
-		return $this->configName;
+	public function getName() {
+		return $this->name;
 	}
 
 	/**
-	 * Sets the configName
+	 * Sets the name
 	 *
-	 * @param string $configName
+	 * @param string $name
 	 * @return void
 	 */
-	public function setConfigName($configName) {
-		$this->configName = $configName;
+	public function setName($name) {
+		$this->name = $name;
 	}
 
 	/**
-	 * Returns the feedCount
+	 * Returns the $feedsLimit
 	 *
-	 * @return integer $feedCount
+	 * @return integer $feedsLimit
 	 */
-	public function getFeedCount() {
-		return $this->feedCount;
+	public function getFeedsLimit() {
+		return $this->feedsLimit;
 	}
 
 	/**
-	 * Sets the feedCount
+	 * Sets the $feedsLimit
 	 *
-	 * @param integer $feedCount
+	 * @param integer $feedsLimit
 	 * @return void
 	 */
-	public function setFeedCount($feedCount) {
-		$this->feedCount = $feedCount;
+	public function setFeedsLimit($feedsLimit) {
+		$this->feedsLimit = $feedsLimit;
 	}
 
 	/**
 	 * Returns the token
 	 *
-	 * @return \Pixelant\PxaSocialFeed\Domain\Model\Tokens $token
+	 * @return \Pixelant\PxaSocialFeed\Domain\Model\Token $token
 	 */
 	public function getToken() {
 		return $this->token;
@@ -134,11 +143,24 @@ class Config extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	/**
 	 * Sets the token
 	 *
-	 * @param \Pixelant\PxaSocialFeed\Domain\Model\Tokens $token
+	 * @param \Pixelant\PxaSocialFeed\Domain\Model\Token $token
 	 * @return void
 	 */
-	public function setToken(\Pixelant\PxaSocialFeed\Domain\Model\Tokens $token) {
+	public function setToken(Token $token) {
 		$this->token = $token;
 	}
 
+    /**
+     * @return boolean
+     */
+    public function isHidden() {
+        return $this->hidden;
+    }
+
+    /**
+     * @param boolean $hidden
+     */
+    public function setHidden($hidden) {
+        $this->hidden = $hidden;
+    }
 }

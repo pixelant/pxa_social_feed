@@ -42,12 +42,12 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 class BaseController extends ActionController {
 
     /**
-     * feedsRepository
+     * feedRepository
      *
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\FeedsRepository
+     * @var \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository
      * @inject
      */
-    protected $feedsRepository;
+    protected $feedRepository;
 
     /**
      * get label translation

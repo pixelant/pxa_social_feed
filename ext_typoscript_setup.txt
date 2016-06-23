@@ -1,0 +1,15 @@
+# Module configuration
+module.tx_pxasocialfeed {
+    settings {
+        credentials {
+            #facebook
+            1 = appId,appSecret
+            #instagram
+            2 = clientId,clientSecret
+            #instagram OAuth 2.0
+            3 = clientId,clientSecret
+            #twitter
+            4 = consumerKey,consumerSecret,accessToken,accessTokenSecret
+        }
+    }
+}

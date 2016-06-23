@@ -9,7 +9,7 @@
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
 use Pixelant\PxaSocialFeed\Controller\BaseController;
-use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 
 /***************************************************************
  *
@@ -44,7 +44,7 @@ class AvailableTokensTypesViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Ab
      */
     public function render() {
         $options = [];
-        $types = Tokens::getAllConstant();
+        $types = Token::getAllConstant();
 
         foreach($types as $type) {
             $options[$type] = BaseController::translate('pxasocialfeed_module.labels.type.' . $type);

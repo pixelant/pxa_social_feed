@@ -6,7 +6,7 @@
 			<trans-unit id="social_id.description">
 				<source>socialId</source>
 			</trans-unit>
-			<trans-unit id="config_name.description">
+			<trans-unit id="name.description">
 				<source>configName</source>
 			</trans-unit>
 			<trans-unit id="feed_pid.description">

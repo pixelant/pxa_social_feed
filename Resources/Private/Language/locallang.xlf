@@ -159,13 +159,16 @@
                 <source>Please, enter Social ID</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234832">
-                <source>Amount of feeds is not valid</source>
+                <source>Limit of feeds is not valid</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1456154742">
                 <source>App ID can not be empty</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1456154743">
                 <source>App Secret can not be empty</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1466669831">
+                <source>Something went wrong</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.changesSaved">
                 <source>Changes saved successfully.</source>

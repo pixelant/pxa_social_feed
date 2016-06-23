@@ -8,8 +8,8 @@
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
-use Pixelant\PxaSocialFeed\Domain\Model\Config;
-use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -48,17 +48,17 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 class SocialFeedAdministrationController extends BaseController {
 
     /**
-     * configRepository
+     * configurationRepository
      *
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\ConfigRepository
+     * @var \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository
      * @inject
      */
-    protected $configRepository;
+    protected $configurationRepository;
 
     /**
      * tokenRepository
      *
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\TokensRepository
+     * @var \Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository
      * @inject
      */
     protected $tokenRepository;
@@ -105,16 +105,16 @@ class SocialFeedAdministrationController extends BaseController {
     public function indexAction() {
         $this->view->assignMultiple([
             'tokens' => $this->tokenRepository->findAll(),
-            'configs' => $this->configRepository->findAll()
+            'configs' => $this->configurationRepository->findAll()
         ]);
     }
 
     /**
-     * @param Tokens $token
+     * @param Token $token
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function manageTokenAction(Tokens $token = NULL) {
+    public function manageTokenAction(Token $token = NULL) {
         $this->view->assignMultiple([
             'type' => ($token === NULL ? ($this->request->hasArgument('type') ? $this->request->getArgument('type') : 1) : $token->getSocialType()),
             'token' => $token,
@@ -124,11 +124,11 @@ class SocialFeedAdministrationController extends BaseController {
     }
 
     /**
-     * @param Tokens $token
-     * @validate $token \Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokensValidator
+     * @param Token $token
+     * @validate $token \Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator
      * @return void
      */
-    public function saveTokenAction(Tokens $token) {
+    public function saveTokenAction(Token $token) {
         $args = $this->request->getArguments();
 
         if(count($args['credentials']) > 0) {
@@ -152,16 +152,15 @@ class SocialFeedAdministrationController extends BaseController {
     }
 
     /**
-     * @param Tokens $token
+     * @param Token $token
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function deleteTokenAction(Tokens $token) {
-        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult $configs */
-        $configs = $this->configRepository->findByToken($token);
+    public function deleteTokenAction(Token $token) {
+        $configuration = $this->configurationRepository->findByToken($token);
 
-        if($configs->count() == 0) {
+        if($configuration === NULL) {
             $this->tokenRepository->remove($token);
             $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
         } else {
@@ -172,30 +171,29 @@ class SocialFeedAdministrationController extends BaseController {
     }
 
     /**
-     * @param Config $config
+     * @param Configuration $configuration
      * @return void
      */
-    public function manageConfigAction(Config $config = NULL) {
+    public function manageConfigurationAction(Configuration $configuration = NULL) {
         $this->view->assignMultiple([
-            'configs' => $this->configRepository->findAll(),
             'tokens' => $this->tokenRepository->findAll(),
-            'config' => $config,
-            'isEditForm' => $config !== NULL
+            'config' => $configuration,
+            'isEditForm' => $configuration !== NULL
         ]);
     }
 
     /**
-     * @param Config $config
-     * @validate $config \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigValidator
+     * @param Configuration $configuration
+     * @validate $configuration \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator
      * @return void
      */
-    public function saveConfigAction(Config $config) {
-        if ($config->getUid()) {
-            $this->configRepository->update($config);
+    public function saveConfigurationAction(Configuration $configuration) {
+        if ($configuration->getUid()) {
+            $this->configurationRepository->update($configuration);
             $title = self::translate('pxasocialfeed_module.labels.edit');
             $message = self::translate('pxasocialfeed_module.labels.changesSaved');
         } else {
-            $this->configRepository->add($config);
+            $this->configurationRepository->add($configuration);
             $title = self::translate('pxasocialfeed_module.labels.create');
             $message = self::translate('pxasocialfeed_module.labels.successCreated');
         }
@@ -207,13 +205,13 @@ class SocialFeedAdministrationController extends BaseController {
     }
 
     /**
-     * @param Config $config
+     * @param Configuration $configuration
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function deleteConfigAction(Config $config) {
-        $this->configRepository->remove($config);
+    public function deleteConfigurationAction(Configuration $configuration) {
+        $this->configurationRepository->remove($configuration);
         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
         $this->redirect('index');
     }
@@ -221,12 +219,12 @@ class SocialFeedAdministrationController extends BaseController {
     /**
      * get access token
      *
-     * @param Tokens $token
+     * @param Token $token
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function addAccessTokenAction(Tokens $token) {
+    public function addAccessTokenAction(Token $token) {
         $code = GeneralUtility::_GP('code');
 
         $redirectUri = $this->uriBuilder->reset()
@@ -235,7 +233,7 @@ class SocialFeedAdministrationController extends BaseController {
 
         if (isset($code)) {
             /** @var HttpRequest $httpRequest */
-            $httpRequest = GeneralUtility::makeInstance('TYPO3\CMS\Core\Http\HttpRequest', 'https://api.instagram.com/oauth/access_token', HttpRequest::METHOD_POST);
+            $httpRequest = GeneralUtility::makeInstance(HttpRequest::class, 'https://api.instagram.com/oauth/access_token', HttpRequest::METHOD_POST);
 
             // set post parameters
             $httpRequest->addPostParameter('client_id', $token->getCredential('clientId'))
@@ -287,7 +285,7 @@ class SocialFeedAdministrationController extends BaseController {
 
             $actions = [
                 ['action' => 'index', 'label' => 'pxasocialfeed_module.action.indexAction'],
-                ['action' => 'manageConfig', 'label' => 'pxasocialfeed_module.action.manageConfigAction'],
+                ['action' => 'manageConfiguration', 'label' => 'pxasocialfeed_module.action.manageConfigAction'],
                 ['action' => 'manageToken', 'label' => 'pxasocialfeed_module.action.manageTokenAction'],
             ];
 

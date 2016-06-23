@@ -71,13 +71,13 @@
                 <source>Social Type</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config">
-                <source>Config</source>
+                <source>Configuration</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
                 <source>Social Id</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.config_name">
-                <source>Config Name</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.name">
+                <source>Configuration Name</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_pid">
                 <source>Feed Pid</source>
@@ -85,8 +85,8 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.executed">
                 <source>Executed</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_count">
-                <source>Feed Count</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.feeds_limit">
+                <source>Feed limit</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.token">
                 <source>Token</source>
@@ -107,6 +107,10 @@
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_plugin.flexform.config">
                 <source>Choose configuration for plugin</source>
+            </trans-unit>
+
+            <trans-unit id="scheduler.configs">
+                <source>Available configurations</source>
             </trans-unit>
         </body>
     </file>

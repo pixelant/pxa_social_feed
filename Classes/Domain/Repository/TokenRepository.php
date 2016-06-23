@@ -1,8 +1,6 @@
 <?php
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 
 /***************************************************************
  *
@@ -32,31 +30,12 @@ use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 /**
  * The repository for Feeds
  */
-class FeedsRepository extends AbstractRepository {
+class TokenRepository extends AbstractRepository {
 
     /**
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = array(
-        'postDate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+        'crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
     );
-
-    /**
-     * get feeds by config
-     *
-     * @param string $config
-     * @param int $limit
-     * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult
-     */
-    public function findFeedsByConfig($config = '', $limit = 0) {
-        $query = $this->createQuery();
-
-        if($config) {
-            $query->matching($query->in('config.uid', GeneralUtility::intExplode(',', $config, 1)));
-        }
-
-        $query->setLimit($limit);
-
-        return $query->execute();
-    }
 }

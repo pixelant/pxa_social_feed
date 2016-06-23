@@ -11,13 +11,13 @@
             <f:then>
                 <h4><f:translate key="pxasocialfeed_module.labels.{f:if(then: 'editConfig', else: 'addNewConfig', condition: isEditForm)}"/></h4>
 
-                <f:render partial="Backend/ValidationErrors" section="main" arguments="{for: 'config'}"/>
+                <f:render partial="Backend/ValidationErrors" section="main" arguments="{for: 'configuration'}"/>
 
-                <f:form action="saveConfig" name="config" object="{config}">
+                <f:form action="saveConfiguration" name="configuration" object="{config}">
                     <table class="table table-bordered">
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.form.config_name"/></td>
-                            <td><f:form.textfield property="configName" class="form-control"/></td>
+                            <td><f:form.textfield property="name" class="form-control"/></td>
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.form.social_id"/></td>
@@ -25,7 +25,7 @@
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.form.amount_of_feeds"/></td>
-                            <td><f:form.textfield property="feedCount" class="form-control"/></td>
+                            <td><f:form.textfield property="feedsLimit" class="form-control"/></td>
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.type"/></td>
@@ -44,7 +44,21 @@
                 <f:link.action class="btn btn-default" action="index"><f:translate key="pxasocialfeed_module.labels.back"/></f:link.action>
             </f:then>
             <f:else>
-                <h1 class="text-danger"><f:translate key="pxasocialfeed_module.labels.firstCreateToken"/></h1>
+                <div class="typo3-messages">
+                    <div class="alert alert-info">
+                        <div class="media">
+                            <div class="media-left">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-check fa-stack-1x"></i>
+                        </span>
+                            </div>
+                            <div class="media-body">
+                                <div class="alert-message"><f:translate key="pxasocialfeed_module.labels.firstCreateToken"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <f:link.action class="btn btn-success" action="manageToken"><f:translate key="pxasocialfeed_module.labels.create_new_token"/></f:link.action>
             </f:else>
         </f:if>

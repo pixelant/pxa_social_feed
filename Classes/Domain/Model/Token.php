@@ -31,7 +31,7 @@ use Pixelant\PxaSocialFeed\Controller\BaseController;
 /**
  * Tokens
  */
-class Tokens extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
     /**
      * facebook token

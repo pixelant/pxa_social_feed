@@ -1,6 +1,5 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
-     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
-     xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers">
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
 
     <f:layout name="Backend/Default" />
 
@@ -9,8 +8,10 @@
 
         <h1><f:translate key="pxasocialfeed_module.labels.listOfConfigs"/></h1>
         <f:render partial="Backend/ListOfConfigurations" section="list" arguments="{configs: configs}"/>
-        <f:link.action class="btn btn-default" action="manageConfig"><f:translate key="pxasocialfeed_module.labels.createNewConfig"/></f:link.action>
+        <f:link.action class="btn btn-default" action="manageConfiguration"><f:translate key="pxasocialfeed_module.labels.createNewConfig"/></f:link.action>
+
         <hr/>
+
         <h1><f:translate key="pxasocialfeed_module.labels.listOfTokens"/></h1>
         <f:render partial="Backend/ListOfTokens" section="list" arguments="{tokens: tokens}"/>
         <f:link.action class="btn btn-default" action="manageToken"><f:translate key="pxasocialfeed_module.labels.create_new_token"/></f:link.action>

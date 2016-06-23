@@ -33,6 +33,7 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -57,7 +58,7 @@ class TokenFieldsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVie
      */
     public function render() {
         /** @var \Pixelant\PxaSocialFeed\Utility\ConfigurationUtility $configurationUtility */
-        $configurationUtility = GeneralUtility::makeInstance('Pixelant\PxaSocialFeed\Utility\ConfigurationUtility');
+        $configurationUtility = GeneralUtility::makeInstance(ConfigurationUtility::class);
         $configuration = GeneralUtility::trimExplode(',', $configurationUtility->getConfiguration($this->arguments['type']));
 
         if(isset($this->arguments['as']) && $this->arguments['as']) {

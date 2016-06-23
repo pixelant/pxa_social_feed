@@ -20,19 +20,19 @@
                     <f:for each="{configs}" as="configItem">
                         <tr>
                             <td>{configItem.uid}</td>
-                            <td>{configItem.configName}</td>
+                            <td>{configItem.name}</td>
                             <td>{configItem.socialId}</td>
-                            <td>{configItem.feedCount}</td>
+                            <td>{configItem.feedsLimit}</td>
                             <td>{configItem.token.socialTypeDescription}</td>
                             <td>{configItem.token.uid}</td>
                             <td>{configItem.token.appId}</td>
                             <td>
-                                <f:link.action action="manageConfig" class="btn btn-default" arguments="{config: configItem}">
+                                <f:link.action action="manageConfiguration" class="btn btn-default" arguments="{configuration: configItem}">
                                     <f:translate key="pxasocialfeed_module.labels.editConfig"/>
                                 </f:link.action>
                             </td>
                             <td>
-                                <f:link.action action="deleteConfig" class="btn btn-danger  delete-action" arguments="{config: configItem}">
+                                <f:link.action action="deleteConfiguration" class="btn btn-danger  delete-action" arguments="{configuration: configItem}">
                                     <f:translate key="pxasocialfeed_module.labels.delete"/>
                                 </f:link.action>
                             </td>
@@ -41,7 +41,21 @@
                 </table>
             </f:then>
             <f:else>
-                <p class="text-info"><f:translate key="pxasocialfeed_module.labels.noConfigurationsFound"/></p>
+                <div class="typo3-messages">
+                    <div class="alert alert-info">
+                        <div class="media">
+                            <div class="media-left">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-check fa-stack-1x"></i>
+                        </span>
+                            </div>
+                            <div class="media-body">
+                                <div class="alert-message"><f:translate key="pxasocialfeed_module.labels.noConfigurationsFound"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </f:else>
         </f:if>
     </f:section>

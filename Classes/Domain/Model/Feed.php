@@ -30,7 +30,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
 /**
  * Feeds
  */
-class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Feed extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 
     /**
      * pid
@@ -88,26 +88,13 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	 */
 	protected $title = '';
 
-	/**
-	 * description
-	 *
-	 * @var string
-	 */
-	protected $description = '';
-
-	/**
-	 * externalUrl
-	 *
-	 * @var string
-	 */
-	protected $externalUrl = '';
         
-        /**
+    /**
 	 * token
 	 *
-	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Config
+	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
 	 */
-	protected $config = NULL;
+	protected $configuration = NULL;
 
 	/**
 	 * Returns the date
@@ -204,61 +191,23 @@ class Feeds extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 		$this->title = $title;
 	}
 
-	/**
-	 * Returns the description
-	 *
-	 * @return string $description
-	 */
-	public function getDescription() {
-		return $this->description;
-	}
-
-	/**
-	 * Sets the description
-	 *
-	 * @param string $description
-	 * @return void
-	 */
-	public function setDescription($description) {
-		$this->description = $description;
-	}
-
-	/**
-	 * Returns the externalUrl
-	 *
-	 * @return string $externalUrl
-	 */
-	public function getExternalUrl() {
-		return $this->externalUrl;
-	}
-
-	/**
-	 * Sets the externalUrl
-	 *
-	 * @param string $externalUrl
-	 * @return void
-	 */
-	public function setExternalUrl($externalUrl) {
-		$this->externalUrl = $externalUrl;
-	}
-        
-        /**
+    /**
 	 * Returns the config
 	 *
-	 * @return \Pixelant\PxaSocialFeed\Domain\Model\Config $config
+	 * @return \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration
 	 */
-	public function getConfig() {
-		return $this->config;
+	public function getConfiguration() {
+		return $this->configuration;
 	}
 
 	/**
 	 * Sets the token
 	 *
-	 * @param \Pixelant\PxaSocialFeed\Domain\Model\Config $config
+	 * @param \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration
 	 * @return void
 	 */
-	public function setConfig(\Pixelant\PxaSocialFeed\Domain\Model\Config $config) {
-		$this->config = $config;
+	public function setConfiguration(\Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration) {
+		$this->configuration = $configuration;
 	}
 
     /**

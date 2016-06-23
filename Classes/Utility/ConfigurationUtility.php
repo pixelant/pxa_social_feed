@@ -33,6 +33,8 @@ namespace Pixelant\PxaSocialFeed\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class ConfigurationUtility
@@ -55,8 +57,8 @@ class ConfigurationUtility {
      * initialize
      */
     public function __construct() {
-        $this->objectManager = GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-        $this->configurationManager = $this->objectManager->get('TYPO3\\CMS\\Extbase\\Configuration\\ConfigurationManagerInterface');
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
     }
 
     /**
@@ -66,11 +68,69 @@ class ConfigurationUtility {
      * @return string|array
      */
     public function getConfiguration($tokenType = 0) {
-        $configuration = $this->configurationManager->getConfiguration(\TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
+        $configuration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
         if($tokenType && array_key_exists($tokenType, $configuration['settings']['credentials'])) {
             return $configuration['settings']['credentials'][$tokenType];
         } else {
             return $configuration;
         }
+    }
+
+    /**
+     * generate html box
+     *
+     * @param array $selectedConfigs
+     * @return string
+     */
+    static public function getAvailabelConfigsSelectBox($selectedConfigs) {
+        $configs = self::getDbConnection()->exec_SELECTgetRows(
+            'uid,name',
+            'tx_pxasocialfeed_domain_model_configuration',
+            'hidden=0 AND deleted=0'
+        );
+
+        $selector = '<select class="form-control" name="tx_scheduler[configs][]" multiple>';
+
+        foreach ($configs as $config) {
+            $selectedAttribute = '';
+            if (is_array($selectedConfigs) && in_array($config['uid'], $selectedConfigs)) {
+                $selectedAttribute = ' selected="selected"';
+            }
+
+            $selector .= '<option value="' . $config['uid'] . '"' . $selectedAttribute . '>'
+                . $config['name']
+                . '</option>';
+        }
+
+        $selector .= '</select>';
+
+        return $selector;
+    }
+
+    /**
+     * @param array $configs
+     * @return string
+     */
+    static public function getSelectedConfigsInfo($configs) {
+        $configs = self::getDbConnection()->exec_SELECTgetRows(
+            'uid,name',
+            'tx_pxasocialfeed_domain_model_configuration',
+            'uid IN (' . implode(',', $configs) . ') AND hidden=0 AND deleted=0'
+        );
+
+        $info = 'Feeds: ';
+
+        foreach ($configs as $config) {
+            $info .= $config['name'] . ' [ID: ' . $config['uid'] . ']; ';
+        }
+
+        return $info;
+    }
+
+    /**
+     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     */
+    static public function getDbConnection() {
+        return $GLOBALS['TYPO3_DB'];
     }
 }

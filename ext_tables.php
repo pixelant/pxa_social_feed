@@ -18,7 +18,7 @@ $initBoot = function($_EXTKEY) {
             'pxasocialfeed',    // Submodule key
             '',                        // Position
             [
-                'SocialFeedAdministration' => 'index,manageConfig,manageToken,saveToken,deleteToken,addAccessToken,deleteConfig,saveConfig'
+                'SocialFeedAdministration' => 'index,manageConfiguration,manageToken,saveToken,deleteToken,addAccessToken,deleteConfiguration,saveConfiguration'
             ],
             [
                 'access' => 'user,group',
@@ -39,7 +39,7 @@ $initBoot = function($_EXTKEY) {
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue($pluginSignature . '_showfeed', 'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForm/SocialFeed.xml');
 
-    foreach (['feeds', 'tokens', 'config'] as $table) {
+    foreach (['feed', 'token', 'configuration'] as $table) {
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_pxasocialfeed_domain_model_' . $table);
         \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addLLrefForTCAdescr(
             'tx_pxasocialfeed_domain_model_' . $table, 'EXT:pxa_social_feed/Resources/Private/Language/locallang_csh_tx_pxasocialfeed_domain_model_' . $table . '.xlf');

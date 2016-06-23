@@ -110,7 +110,7 @@ class TwitterApi {
         $data = [];
 
         /** @var HttpRequest $httpRequest */
-        $httpRequest = GeneralUtility::makeInstance('TYPO3\CMS\Core\Http\HttpRequest', self::API_URL . '?' . $this->getGetFields(), HttpRequest::METHOD_GET);
+        $httpRequest = GeneralUtility::makeInstance(HttpRequest::class, self::API_URL . '?' . $this->getGetFields(), HttpRequest::METHOD_GET);
         $httpRequest->setHeader(['Authorization' => $this->getAuthHeader()]);
 
         /** @var \HTTP_Request2_Response $response */

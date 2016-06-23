@@ -12,23 +12,6 @@ plugin.tx_pxasocialfeed {
 	}
 }
 
-# Module configuration
-module.tx_pxasocialfeed {
-	settings {
-		credentials {
-			#facebook
-			1 = appId,appSecret
-			#instagram
-			2 = clientId,clientSecret
-			#instagram OAuth 2.0
-			3 = clientId,clientSecret
-			#twitter
-			4 = consumerKey,consumerSecret,accessToken,accessTokenSecret
-		}
-	}
-}
-
-
 page.includeCSS {
 	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/css/socialFeed.min.css
 }

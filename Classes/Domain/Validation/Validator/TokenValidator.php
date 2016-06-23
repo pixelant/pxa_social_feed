@@ -37,10 +37,10 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
 
 use Pixelant\PxaSocialFeed\Controller\BaseController;
-use Pixelant\PxaSocialFeed\Domain\Model\Tokens;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class TokensValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator {
+class TokenValidator extends AbstractValidator {
 
     /**
      * @var \Pixelant\PxaSocialFeed\Utility\ConfigurationUtility
@@ -51,7 +51,7 @@ class TokensValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractVa
     /**
      * Validates tokens
      *
-     * @param Tokens $token
+     * @param Token $token
      *
      * @return bool
      */

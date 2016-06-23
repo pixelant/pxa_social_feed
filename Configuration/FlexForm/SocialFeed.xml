@@ -10,7 +10,7 @@
                 </TCEforms>
                 <type>array</type>
                 <el>
-                    <settings.flexFeedsCount>
+                    <settings.feedsLimit>
                         <TCEforms>
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.amount_feeds</label>
                             <config>
@@ -18,9 +18,9 @@
                                 <size>30</size>
                             </config>
                         </TCEforms>
-                    </settings.flexFeedsCount>
+                    </settings.feedsLimit>
                     
-                    <settings.flexConfig>
+                    <settings.configuration>
                         <TCEforms>
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.config</label>
                             <config>
@@ -29,10 +29,10 @@
                                 <minitems>0</minitems>
                                 <maxitems>999</maxitems>
                                 <autoSizeMax>7</autoSizeMax>
-                                <foreign_table>tx_pxasocialfeed_domain_model_config</foreign_table>
+                                <foreign_table>tx_pxasocialfeed_domain_model_configuration</foreign_table>
                             </config>
                         </TCEforms>
-                    </settings.flexConfig>
+                    </settings.configuration>
                     
                 </el>
             </ROOT>

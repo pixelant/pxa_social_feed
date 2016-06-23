@@ -32,7 +32,21 @@
                 </table>
             </f:then>
             <f:else>
-                <p class="text-info"><f:translate key="pxasocialfeed_module.labels.noTokensFound"/></p>
+                <div class="typo3-messages">
+                    <div class="alert alert-info">
+                        <div class="media">
+                            <div class="media-left">
+                        <span class="fa-stack fa-lg">
+                            <i class="fa fa-circle fa-stack-2x"></i>
+                            <i class="fa fa-check fa-stack-1x"></i>
+                        </span>
+                            </div>
+                            <div class="media-body">
+                                <div class="alert-message"><f:translate key="pxasocialfeed_module.labels.noTokensFound"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </f:else>
         </f:if>
     </f:section>

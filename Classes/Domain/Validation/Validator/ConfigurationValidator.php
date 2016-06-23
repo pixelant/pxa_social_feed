@@ -37,26 +37,31 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
 
 use Pixelant\PxaSocialFeed\Controller\BaseController;
-use Pixelant\PxaSocialFeed\Domain\Model\Config;
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 
-class ConfigValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator {
+class ConfigurationValidator extends AbstractValidator {
 
     /**
      * Validates tokens
      *
-     * @param Config $config
+     * @param Configuration $configuration
      *
      * @return bool
      */
-    protected function isValid($config) {
-        if(is_object($config)) {
-            if(empty($config->getConfigName())) {
+    protected function isValid($configuration) {
+        // do trim
+        $this->trimObjectProperties($configuration);
+
+        if(is_object($configuration)) {
+            if(empty($configuration->getName())) {
                 $errorCode = 1456234619;
-            } elseif (empty($config->getSocialId())) {
+            } elseif (empty($configuration->getSocialId())) {
                 $errorCode = 1456234671;
-            } elseif(!$config->getFeedCount() || !is_int($config->getFeedCount())) {
+            } elseif(!$configuration->getFeedsLimit() || !is_int($configuration->getFeedsLimit())) {
                 $errorCode = 1456234832;
             }
+        } else {
+            $errorCode = 1466669831;
         }
 
         if(isset($errorCode)) {
