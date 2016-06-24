@@ -138,6 +138,11 @@ class SocialFeedAdministrationController extends BaseController {
         }
 
         if ($token->getUid()) {
+            // special check for instagram INSTAGRAM_OAUTH2, if updated, need to update auth token again.
+            if($token->getSocialType() == Token::INSTAGRAM_OAUTH2 && $token->_isDirty('serializedCredentials')) {
+                $token->setCredential('accessToken', '');
+            }
+
             $this->tokenRepository->update($token);
             $title = self::translate('pxasocialfeed_module.labels.edit');
             $message = self::translate('pxasocialfeed_module.labels.changesSaved');
@@ -148,6 +153,7 @@ class SocialFeedAdministrationController extends BaseController {
         }
 
         $this->addFlashMessage($message, $title, FlashMessage::OK);
+
         $this->redirect('index');
     }
 
@@ -254,6 +260,8 @@ class SocialFeedAdministrationController extends BaseController {
                         $this->tokenRepository->update($token);
 
                         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.access_tokenUpdated'), self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
+                    } elseif (isset($data['error'])) {
+                        $this->addFlashMessage($data['error_description'], self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
                     } else {
                         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorGettingsToken'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                     }
@@ -284,9 +292,9 @@ class SocialFeedAdministrationController extends BaseController {
             $menu->setIdentifier('pxa_social_feed');
 
             $actions = [
-                ['action' => 'index', 'label' => 'pxasocialfeed_module.action.indexAction'],
+                ['action' => 'index',               'label' => 'pxasocialfeed_module.action.indexAction'],
                 ['action' => 'manageConfiguration', 'label' => 'pxasocialfeed_module.action.manageConfigAction'],
-                ['action' => 'manageToken', 'label' => 'pxasocialfeed_module.action.manageTokenAction'],
+                ['action' => 'manageToken',         'label' => 'pxasocialfeed_module.action.manageTokenAction'],
             ];
 
             foreach ($actions as $action) {

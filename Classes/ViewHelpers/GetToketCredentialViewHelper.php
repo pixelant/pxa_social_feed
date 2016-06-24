@@ -32,6 +32,7 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 
 /**
  * Class GetToketCredentialViewHelper
@@ -46,7 +47,7 @@ class GetToketCredentialViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\Abst
      */
     public function initializeArguments() {
         $this->registerArgument('as', 'string', 'template variable name', FALSE, '');
-        $this->registerArgument('token', 'Pixelant\\PxaSocialFeed\\Domain\\Model\\Tokens', 'Token', TRUE, NULL);
+        $this->registerArgument('token', Token::class, 'Token', TRUE, NULL);
         $this->registerArgument('credential', 'string', 'Credential name', TRUE, '');
     }
 

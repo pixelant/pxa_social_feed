@@ -6,7 +6,7 @@
  * Time: 10:22
  */
 
-namespace Pixelant\PxaSocialFeed\Utility;
+namespace Pixelant\PxaSocialFeed\Utility\Task;
 
 
 /***************************************************************
@@ -44,7 +44,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
-class TaskUtility {
+class ImportTaskUtility {
 
     /**
      *  objectManager

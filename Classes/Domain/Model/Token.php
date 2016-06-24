@@ -121,7 +121,7 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @return void
      */
     public function setCredential($key = '', $value = '') {
-        if(!empty($key) && !empty($value)) {
+        if(!empty($key)) {
             $credentials = $this->getCredentials();
             $credentials[$key] = $value;
 

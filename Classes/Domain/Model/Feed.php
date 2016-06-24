@@ -82,7 +82,7 @@ class Feed extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
 	protected $image = '';
 
     /**
-     * pid
+     * likes
      *
      * @var int
      */

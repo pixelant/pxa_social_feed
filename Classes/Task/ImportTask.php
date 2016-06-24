@@ -27,7 +27,7 @@ namespace Pixelant\PxaSocialFeed\Task;
  ***************************************************************/
 
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
-use Pixelant\PxaSocialFeed\Utility\TaskUtility;
+use Pixelant\PxaSocialFeed\Utility\Task\ImportTaskUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
@@ -44,8 +44,8 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
      * @return bool
      */
     public function execute() {
-        /** @var \Pixelant\PxaSocialFeed\Utility\TaskUtility $taskUtility */
-        $taskUtility = GeneralUtility::makeInstance(TaskUtility::class);
+        /** @var \Pixelant\PxaSocialFeed\Utility\Task\ImportTaskUtility $taskUtility */
+        $taskUtility = GeneralUtility::makeInstance(ImportTaskUtility::class);
         return $taskUtility->run($this->getConfigs());
     }
 

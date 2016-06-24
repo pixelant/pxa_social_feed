@@ -51,7 +51,7 @@ class SelectViewHelper extends \TYPO3\CMS\Fluid\ViewHelpers\Form\SelectViewHelpe
         if (!is_array($value) && !$value instanceof \Traversable) {
             return $this->getOptionValueScalar($value);
         }
-        $selectedValues = array();
+        $selectedValues = [];
         foreach ($value as $selectedValueElement) {
             $selectedValues[] = $this->getOptionValueScalar($selectedValueElement);
         }

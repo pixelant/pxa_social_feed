@@ -36,9 +36,9 @@ class ConfigurationRepository extends AbstractRepository {
     /**
      * @var array $defaultOrderings
      */
-    protected $defaultOrderings = array(
+    protected $defaultOrderings = [
         'crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
-    );
+    ];
 
     /**
      * @param array $configurations

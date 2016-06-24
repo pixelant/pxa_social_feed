@@ -12,11 +12,20 @@ defined('TYPO3_MODE') or die();
 	[]
 );
 
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks']['Pixelant\\PxaSocialFeed\\Task\\ImportTask'] = [
+# Import task
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][\Pixelant\PxaSocialFeed\Task\ImportTask::class] = [
 	'extension'        => $_EXTKEY,
 	'title'            => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed.task.import.name',
 	'description'      => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed.task.import.description',
-    'additionalFields' => 'Pixelant\\PxaSocialFeed\\Task\\ImportTaskAdditionalFieldProvider'
+    'additionalFields' => \Pixelant\PxaSocialFeed\Task\ImportTaskAdditionalFieldProvider::class
+];
+
+# Clean up task
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][\Pixelant\PxaSocialFeed\Task\CleanUpTask::class] = [
+    'extension'        => $_EXTKEY,
+    'title'            => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed.task.cleanuptask.name',
+    'description'      => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed.task.cleanuptask.description',
+    'additionalFields' => \Pixelant\PxaSocialFeed\Task\CleanUpTaskAdditionalFieldProvider::class
 ];
 
 

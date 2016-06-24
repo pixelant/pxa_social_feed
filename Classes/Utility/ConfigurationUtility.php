@@ -128,6 +128,14 @@ class ConfigurationUtility {
     }
 
     /**
+     * @param int $days
+     * @return string
+     */
+    static public function getDaysInput($days = 0) {
+        return '<input type="text" name="tx_scheduler[days]" value="' . htmlspecialchars($days) . '" />';
+    }
+
+    /**
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
      */
     static public function getDbConnection() {
