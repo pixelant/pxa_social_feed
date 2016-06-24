@@ -1,0 +1,282 @@
+.tx-pxa-social-feed .social-feed-container {
+    position: relative;
+    width: 100%;
+    padding-left: 0;
+    list-style: none;
+    margin: 30px 0;
+    display: none;
+    -webkit-tap-highlight-color: transparent;
+    z-index: 1;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-loaded {
+    display: block;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-loading {
+    opacity: 0;
+    display: block;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-hidden {
+    opacity: 0;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-grab {
+    cursor: move;
+    cursor: -webkit-grab;
+    cursor: -o-grab;
+    cursor: -ms-grab;
+    cursor: grab;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-rtl {
+    direction: rtl;
+}
+
+.tx-pxa-social-feed .social-feed-container .owl-stage {
+    position: relative;
+    -ms-touch-action: pan-Y;
+}
+
+.tx-pxa-social-feed .social-feed-container .owl-stage:after {
+    content: '.';
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.tx-pxa-social-feed .social-feed-container .owl-stage-outer {
+    position: relative;
+    overflow: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+}
+
+.tx-pxa-social-feed .social-feed-container .item {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    -webkit-backface-visibility: hidden;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-refresh .item {
+    display: none;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-drag .item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.tx-pxa-social-feed .social-feed-container.owl-rtl .item {
+    float: right;
+}
+
+.tx-pxa-social-feed .social-feed-container a {
+    color: #646464;
+    text-decoration: none;
+}
+
+.tx-pxa-social-feed .social-feed-container a:hover {
+    text-decoration: none;
+}
+
+.tx-pxa-social-feed .social-feed-title {
+    height: 61px;
+}
+
+.tx-pxa-social-feed .social-feed-image-container {
+    position: relative;
+    margin: 10px auto 20px;
+    height: 0;
+    padding-bottom: 100%;
+    background-size: cover;
+}
+
+.tx-pxa-social-feed .social-feed-image-container.no-image {
+    background-color: #6f6f6f;
+}
+.tx-pxa-social-feed .social-feed-information {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    line-height: 28px;
+    padding: 0 10px 0 5px;
+    z-index: 1;
+}
+.tx-pxa-social-feed .social-feed-date {
+    padding-left: 2px;
+}
+.tx-pxa-social-feed .social-feed-date:before {
+    content: '|';
+    display: inline;
+    font-size: 16px;
+    padding-right: 3px;
+}
+.tx-pxa-social-feed .social-feed-icon {
+    position: relative;
+    bottom: 1px;
+}
+.tx-pxa-social-feed .social-feed-1 .social-feed-information {
+    background-color: #3D5C98;
+}
+
+.tx-pxa-social-feed .social-feed-2 .social-feed-information,
+.tx-pxa-social-feed .social-feed-3 .social-feed-information{
+    background-color: #4E84AA;
+}
+.tx-pxa-social-feed .social-feed-4 .social-feed-information{
+    background-color: #447da3;
+}
+
+.tx-pxa-social-feed .social-feed-message {
+    height: 100px;
+}
+
+.tx-pxa-social-feed .nav.disabled,
+.tx-pxa-social-feed .dots.disabled {
+    display: none;
+}
+
+.tx-pxa-social-feed .nav .prev,
+.tx-pxa-social-feed .nav .next,
+.tx-pxa-social-feed .dot {
+    cursor: pointer;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.tx-pxa-social-feed .dots {
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tx-pxa-social-feed .dots .dot {
+    display: inline-block;
+    zoom: 1;
+}
+
+.tx-pxa-social-feed .dots .dot span {
+    width: 10px;
+    height: 10px;
+    margin: 5px 3px;
+    background: #e4e4e4;
+    display: block;
+    -webkit-backface-visibility: visible;
+    transition: opacity 200ms ease;
+    border-radius: 30px;
+}
+
+.tx-pxa-social-feed .dots .dot.active span,
+.tx-pxa-social-feed .dots .dot:hover span {
+    background-color: #66bd29;
+}
+.social-feed-3 .social-feed-like-count,
+.social-feed-3 .social-feed-like-count{
+    background-color: #4E84AA;
+}
+.social-feed-1 .social-feed-like-count{
+    background-color: #3D5C98;
+}
+.social-feed-4 .social-feed-like-count{
+    background-color: #447da3;
+}
+.social-feed-like-count {
+    padding: 5px;
+    color:#ffffff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+.social-feed-like-count .like-icon {
+    position: relative;
+    bottom: 3px;
+}
+#social-feed-like-like-count-element {
+    padding-left: 2px;
+}
+.tx-pxa-social-feed .social-feed-image-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #6f6f6f;
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+.tx-pxa-social-feed .social-feed-image-container:after {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin-top: -10px;
+    margin-left: -10px;
+    background-image: url(../Icons/search.svg);
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+.tx-pxa-social-feed a:hover .social-feed-image-container:before {
+    opacity: .5;
+}
+
+.tx-pxa-social-feed a:hover .social-feed-image-container:after {
+    opacity: 1;
+}
+
+@media (max-width: 767px) {
+    .tx-pxa-social-feed {
+        margin: 0 -15px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .tx-pxa-social-feed .social-feed-container {
+        padding: 0 50px;
+    }
+    .tx-pxa-social-feed .owl-stage-outer {
+        z-index: 1;
+    }
+    .tx-pxa-social-feed .nav {
+        position: absolute;
+        text-align: center;
+        font-size: 64px;
+        font-weight: 700;
+        top: 50%;
+        left: 0;
+        right: 0;
+    }
+    .tx-pxa-social-feed .nav > div {
+        opacity: .8;
+    }
+    .tx-pxa-social-feed .nav > div:hover {
+        opacity: 1;
+    }
+    .tx-pxa-social-feed .nav > div.disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
+    .tx-pxa-social-feed .nav .prev {
+        float: left;
+    }
+
+    .tx-pxa-social-feed .nav .next {
+        float: right;
+    }
+}

@@ -8,7 +8,7 @@ jQuery(function ($) {
         loop: false,
         dots: true,
         nav: false,
-        navText: ["", ""],
+        navText: ["&lsaquo;", "&rsaquo;"],
         responsive: {
             0: {items: 1, stagePadding: 20, margin: 5},
             480: {items: 2, stagePadding: 25, margin: 10},
