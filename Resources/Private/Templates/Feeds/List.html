@@ -30,6 +30,16 @@
                 </li>
             </f:for>
         </ul>
+
+        <f:if condition="{settings.dateFormat}">
+            <f:then></f:then>
+            <f:else>
+                <div class="alert alert-danger">
+                    <h4 class="alert-title"><f:translate key="fe.error"/></h4>
+                    <div class="alert-message"><f:translate key="fe.no_date"/></div>
+                </div>
+            </f:else>
+        </f:if>
     </f:section>
 
 </div>

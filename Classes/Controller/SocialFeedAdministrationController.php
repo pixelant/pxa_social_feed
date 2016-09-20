@@ -217,7 +217,15 @@ class SocialFeedAdministrationController extends BaseController {
      * @return void
      */
     public function deleteConfigurationAction(Configuration $configuration) {
+        // remove all feeds
+        $feeds = $this->feedRepository->findByConfiguration($configuration->getUid());
+
+        foreach ($feeds as $feed) {
+            $this->feedRepository->remove($feed);
+        }
+
         $this->configurationRepository->remove($configuration);
+
         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
         $this->redirect('index');
     }
@@ -261,7 +269,7 @@ class SocialFeedAdministrationController extends BaseController {
 
                         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.access_tokenUpdated'), self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
                     } elseif (isset($data['error'])) {
-                        $this->addFlashMessage($data['error_description'], self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
+                        $this->addFlashMessage($data['error_description'], self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                     } else {
                         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorGettingsToken'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                     }
@@ -269,7 +277,7 @@ class SocialFeedAdministrationController extends BaseController {
                     $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorCommunication'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                 }
             } catch (\Exception $e) {
-                $this->addFlashMessage($e->getMessage(), 'Error', FlashMessage::ERROR);
+                $this->addFlashMessage($e->getMessage(), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
             }
         }
 

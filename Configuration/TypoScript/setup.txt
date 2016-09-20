@@ -16,12 +16,12 @@ plugin.tx_pxasocialfeed {
 }
 
 page.includeCSS {
-	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/Css/socialFeed.css
+	pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/Css/socialFeed.css
 }
 page.includeJSFooter {
-	pxa_cosial_feed_1 = EXT:pxa_social_feed/Resources/Public/JS/jquery.dotdotdot.min.js
-	pxa_cosial_feed_2 = EXT:pxa_social_feed/Resources/Public/JS/owl.carousel.min.js
-	pxa_cosial_feed_3 = EXT:pxa_social_feed/Resources/Public/JS/socialFeed.js
+	pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/JS/jquery.dotdotdot.min.js
+	pxa_social_feed_2 = EXT:pxa_social_feed/Resources/Public/JS/owl.carousel.min.js
+	pxa_social_feed_3 = EXT:pxa_social_feed/Resources/Public/JS/socialFeed.js
 }
 
 

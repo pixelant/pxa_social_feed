@@ -4,8 +4,6 @@ module.tx_pxasocialfeed {
         credentials {
             #facebook
             1 = appId,appSecret
-            #instagram
-            2 = clientId,clientSecret
             #instagram OAuth 2.0
             3 = clientId,clientSecret
             #twitter

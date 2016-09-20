@@ -41,6 +41,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class TwitterApi {
 
+    /**
+     * path to get twitter feed
+     */
     const API_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
 
     /**

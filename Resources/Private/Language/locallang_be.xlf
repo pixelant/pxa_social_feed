@@ -12,6 +12,24 @@
 			<trans-unit id="pi1_wiz_description">
             	<source>Facebook, Instagram and Twitter feed</source>
             </trans-unit>
+            <trans-unit id="plugin_title">
+                <source>Pxa Social Feed</source>
+            </trans-unit>
+            <trans-unit id="feedsLimit">
+                <source>Limit of feeds to display</source>
+            </trans-unit>
+            <trans-unit id="loadLikesCount">
+                <source>Show likes</source>
+            </trans-unit>
+            <trans-unit id="no">
+                <source>No</source>
+            </trans-unit>
+            <trans-unit id="yes">
+                <source>Yes</source>
+            </trans-unit>
+            <trans-unit id="feeds">
+                <source>Feeds configurations</source>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
