@@ -43,11 +43,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 class ConfigurationUtility {
 
     /**
-     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
-     */
-    protected $objectManager = NULL;
-
-    /**
      * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
      */
     protected $configurationManager = NULL;
@@ -57,8 +52,8 @@ class ConfigurationUtility {
      * initialize
      */
     public function __construct() {
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->configurationManager = $this->objectManager->get(ConfigurationManagerInterface::class);
+        /** @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface configurationManager */
+        $this->configurationManager = GeneralUtility::makeInstance(ObjectManager::class)->get(ConfigurationManagerInterface::class);
     }
 
     /**

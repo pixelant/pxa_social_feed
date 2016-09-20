@@ -36,7 +36,7 @@
                             <config>
                                 <type>select</type>                                
                                 <size>10</size>
-                                <minitems>0</minitems>
+                                <minitems>1</minitems>
                                 <maxitems>999</maxitems>
                                 <autoSizeMax>7</autoSizeMax>
                                 <foreign_table>tx_pxasocialfeed_domain_model_configuration</foreign_table>

@@ -62,9 +62,6 @@
             <trans-unit id="pxasocialfeed_module.labels.type.1">
                 <source>Facebook</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.2">
-                <source>Instagram</source>
-            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.type.3">
                 <source>Instagram (OAuth2)</source>
             </trans-unit>
@@ -201,7 +198,7 @@
                 <source>Error communication with server</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.errorGettingsToken">
-                <source>Error gettings access token</source>
+                <source>Error getting access token</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.access_tokenUpdated">
                 <source>Access token updated</source>

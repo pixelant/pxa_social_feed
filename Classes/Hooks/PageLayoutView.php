@@ -75,12 +75,12 @@ class PageLayoutView {
                 $additionalInfo .= sprintf('<b>%s</b>: %d<br>', $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true), $settings['feedsLimit']);
             }
 
-            if ($settings['loadLikesCount']) {
-                $additionalInfo .= sprintf('<b>%s</b>: %s<br>',
-                    $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount', true),
-                    $settings['loadLikesCount'] ? $this->getLanguageService()->sL(self::LLPATH . 'yes', true) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
-                );
-            }
+            // no if false
+            $additionalInfo .= sprintf('<b>%s</b>: %s<br>',
+                $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount', true),
+                $settings['loadLikesCount'] ? $this->getLanguageService()->sL(self::LLPATH . 'yes', true) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
+            );
+
 
             if ($settings['configuration']) {
                 $configurations = ConfigurationUtility::getDbConnection()->exec_SELECTgetRows(
