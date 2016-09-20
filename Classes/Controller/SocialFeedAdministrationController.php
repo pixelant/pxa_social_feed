@@ -10,7 +10,7 @@ namespace Pixelant\PxaSocialFeed\Controller;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use TYPO3\CMS\Core\Http\HttpRequest;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
@@ -246,21 +246,26 @@ class SocialFeedAdministrationController extends BaseController {
             ->uriFor('addAccessToken', ['token' => $token->getUid()]);
 
         if (isset($code)) {
-            /** @var HttpRequest $httpRequest */
-            $httpRequest = GeneralUtility::makeInstance(HttpRequest::class, 'https://api.instagram.com/oauth/access_token', HttpRequest::METHOD_POST);
-
-            // set post parameters
-            $httpRequest->addPostParameter('client_id', $token->getCredential('clientId'))
-                ->addPostParameter('client_secret', $token->getCredential('clientSecret'))
-                ->addPostParameter('grant_type', 'authorization_code')
-                ->addPostParameter('redirect_uri', $redirectUri)
-                ->addPostParameter('code', $code);
+            /** @var RequestFactory $httpRequest */
+            $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
 
             try {
-                /** @var \HTTP_Request2_Response $response */
-                $response = $httpRequest->send();
+                /** @var \Psr\Http\Message\ResponseInterface $response */
+                $response = $requestFactory->request(
+                    'https://api.instagram.com/oauth/access_token',
+                    'POST',
+                    [
+                        'form_params' => [
+                            'client_id' => $token->getCredential('clientId'),
+                            'client_secret' => $token->getCredential('clientSecret'),
+                            'grant_type' => 'authorization_code',
+                            'redirect_uri' => $redirectUri,
+                            'code' => $code
+                        ]
+                    ]
+                );
 
-                if ($response->getStatus() === 200) {
+                if ($response->getStatusCode() === 200) {
                     $data = json_decode($response->getBody(), TRUE);
 
                     if (isset($data['access_token'])) {

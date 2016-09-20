@@ -41,6 +41,16 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
 class GetToketCredentialViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
     /**
+     * @var boolean
+     */
+    protected $escapeChildren = FALSE;
+
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = FALSE;
+
+    /**
      * Initialize
      *
      * @return void
