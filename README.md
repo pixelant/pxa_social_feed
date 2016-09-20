@@ -1,4 +1,4 @@
-# README #
+# Pixelant #
 
 ### Pxa Social Feed ###
 
@@ -69,4 +69,4 @@ There are two scheduler tasks:
 Need only to set Frequency and choose configurations.
 
 #### Clean up obsolete entries ####
-Remove obsolete records for given number of days. It won't remove records if amount is less than limit in configuration.  
+Remove obsolete records for given number of days. It won't remove records if amount is less than limit in configuration.
