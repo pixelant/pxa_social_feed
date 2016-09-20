@@ -97,9 +97,7 @@ class ConfigurationUtility {
                 $selectedAttribute = ' selected="selected"';
             }
 
-            $selector .= '<option value="' . $config['uid'] . '"' . $selectedAttribute . '>'
-                . $config['name']
-                . '</option>';
+            $selector .= sprintf('<option value="%d"%s>%s</option>', $config['uid'], $selectedAttribute, $config['name']);
         }
 
         $selector .= '</select>';

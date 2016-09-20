@@ -39,11 +39,6 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     const FACEBOOK = 1;
 
     /**
-     * instagram  token
-     */
-    const INSTAGRAM = 2;
-
-    /**
      * instagram_oauth2
      */
     const INSTAGRAM_OAUTH2 = 3;

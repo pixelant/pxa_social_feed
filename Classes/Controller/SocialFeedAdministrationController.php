@@ -217,7 +217,15 @@ class SocialFeedAdministrationController extends BaseController {
      * @return void
      */
     public function deleteConfigurationAction(Configuration $configuration) {
+        // remove all feeds
+        $feeds = $this->feedRepository->findByConfiguration($configuration->getUid());
+
+        foreach ($feeds as $feed) {
+            $this->feedRepository->remove($feed);
+        }
+
         $this->configurationRepository->remove($configuration);
+
         $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
         $this->redirect('index');
     }

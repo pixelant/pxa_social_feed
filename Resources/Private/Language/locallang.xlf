@@ -4,6 +4,13 @@
           product-name="pxa_social_feed">
         <header/>
         <body>
+            <trans-unit id="fe.error">
+                <source>Error</source>
+            </trans-unit>
+            <trans-unit id="fe.no_date">
+                <source>Date format is not set, maybe TypoScript of extension is not included.</source>
+            </trans-unit>
+
             <!-- BE MODULE -->
             <!-- ACTIONS -->
             <trans-unit id="pxasocialfeed_module.action.indexAction">
@@ -66,7 +73,9 @@
             </trans-unit>
 
             <!-- labels for module token tab -->
-
+            <trans-unit id="pxasocialfeed_module.labels.get_instagram_hidden_tip">
+                <source>Please, update page to see token</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.general_info">
                 <source>General info</source>
             </trans-unit>

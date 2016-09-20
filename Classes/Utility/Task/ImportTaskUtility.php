@@ -91,10 +91,12 @@ class ImportTaskUtility {
                 switch ($configuration->getToken()->getSocialType()) {
                     case Token::FACEBOOK:
                         //getting data array from facebook graph api json result
-                        $url = 'https://graph.facebook.com/v2.6/' . $configuration->getSocialId() . '/posts/' .
-                            '?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time' .
-                            '&limit=' . $configuration->getFeedsLimit() .
-                            '&access_token=' . $configuration->getToken()->getCredential('appId') . '|' . $configuration->getToken()->getCredential('appSecret');
+                        $url = sprintf('https://graph.facebook.com/v2.6/%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
+                            $configuration->getSocialId(),
+                            $configuration->getFeedsLimit(),
+                            $configuration->getToken()->getCredential('appId'),
+                            $configuration->getToken()->getCredential('appSecret')
+                        );
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
 
@@ -105,11 +107,13 @@ class ImportTaskUtility {
                         }
 
                         break;
-                    case Token::INSTAGRAM:
                     case Token::INSTAGRAM_OAUTH2:
                         //getting data array from instagram api json result
-                        $url = 'https://api.instagram.com/v1/users/' . $configuration->getSocialId() . '/media/recent/';
-                        $url .= $configuration->getToken()->getSocialType() === Token::INSTAGRAM ? '?client_id=' . $configuration->getToken()->getCredential('clientId') : '?access_token=' . $configuration->getToken()->getCredential('accessToken');
+                        $url = sprintf('https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
+                            $configuration->getSocialId(),
+                            $configuration->getToken()->getCredential('accessToken'),
+                            $configuration->getFeedsLimit()
+                        );
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
 
@@ -241,6 +245,7 @@ class ImportTaskUtility {
                 $ig->setLikes($likes);
                 $this->feedRepository->update($ig);
             } else {
+                $ig->setLikes($likes);
                 $this->feedRepository->add($ig);
             }
         }

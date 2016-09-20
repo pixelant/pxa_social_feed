@@ -11,6 +11,10 @@ requirejs(['jquery', 'TYPO3/CMS/Backend/Modal', 'TYPO3/CMS/Backend/Severity'], f
             var selectSocialType = $(this).find(":selected").val();
             window.location.href=$("#social-type-url-" + selectSocialType).val();
         });
+        $("#get-instagram-toket").on("click", function(e){
+            $(this).hide();
+            $("#get-instagram-hidden-tip").show();
+        });
     };
     PxaSocialMedia.deleteAction = function(url) {
         var modal = Modal.confirm('Delete', 'Are you sure you want to delete this record ?', Severity.warning);
