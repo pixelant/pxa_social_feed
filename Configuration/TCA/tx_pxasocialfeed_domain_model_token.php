@@ -23,7 +23,10 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'app_id,app_secret,social_type,',
-        'iconfile' => 'EXT:pxa_social_feed/Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif',
+
+        'typeicon_classes' => [
+            'default' => 'ext-pxasocialfeed-model-icon'
+        ],
 
         'rootLevel' => 1,
         'hideTable' => 1

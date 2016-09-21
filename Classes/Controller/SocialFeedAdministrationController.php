@@ -11,9 +11,11 @@ namespace Pixelant\PxaSocialFeed\Controller;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Http\RequestFactory;
+use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 
@@ -246,47 +248,107 @@ class SocialFeedAdministrationController extends BaseController {
             ->uriFor('addAccessToken', ['token' => $token->getUid()]);
 
         if (isset($code)) {
-            /** @var RequestFactory $httpRequest */
-            $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
+            $version = $this->getTypo3Version();
+            if($version >= 8) {
+                $response = $this->sendRequestUsingRequestFactory($token, $redirectUri, $code);
+            } else {
+                $response = $this->sendRequestUsingHttpRequest($token, $redirectUri, $code);
+            }
 
-            try {
-                /** @var \Psr\Http\Message\ResponseInterface $response */
-                $response = $requestFactory->request(
-                    'https://api.instagram.com/oauth/access_token',
-                    'POST',
-                    [
-                        'form_params' => [
-                            'client_id' => $token->getCredential('clientId'),
-                            'client_secret' => $token->getCredential('clientSecret'),
-                            'grant_type' => 'authorization_code',
-                            'redirect_uri' => $redirectUri,
-                            'code' => $code
-                        ]
-                    ]
-                );
+            if($response !== NULL) {
+                $data = json_decode($response, TRUE);
 
-                if ($response->getStatusCode() === 200) {
-                    $data = json_decode($response->getBody(), TRUE);
+                if (isset($data['access_token'])) {
+                    $token->setCredential('accessToken', $data['access_token']);
+                    $this->tokenRepository->update($token);
 
-                    if (isset($data['access_token'])) {
-                        $token->setCredential('accessToken', $data['access_token']);
-                        $this->tokenRepository->update($token);
-
-                        $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.access_tokenUpdated'), self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
-                    } elseif (isset($data['error'])) {
-                        $this->addFlashMessage($data['error_description'], self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
-                    } else {
-                        $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorGettingsToken'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
-                    }
+                    $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.access_tokenUpdated'), self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
+                } elseif (isset($data['error'])) {
+                    $this->addFlashMessage($data['error_description'], self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                 } else {
-                    $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorCommunication'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+                    $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorGettingsToken'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
                 }
-            } catch (\Exception $e) {
-                $this->addFlashMessage($e->getMessage(), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
             }
         }
 
         $this->redirect('index');
+    }
+
+    /**
+     * send request to Instagram
+     *
+     * @param Token $token
+     * @param string $redirectUri
+     * @param string $code
+     * @return string|NULL
+     */
+    protected function sendRequestUsingRequestFactory(Token $token, $redirectUri, $code) {
+        /** @var RequestFactory $httpRequest */
+        $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
+
+        try {
+            /** @var \Psr\Http\Message\ResponseInterface $response */
+            $response = $requestFactory->request(
+                'https://api.instagram.com/oauth/access_token',
+                'POST',
+                [
+                    'form_params' => [
+                        'client_id' => $token->getCredential('clientId'),
+                        'client_secret' => $token->getCredential('clientSecret'),
+                        'grant_type' => 'authorization_code',
+                        'redirect_uri' => $redirectUri,
+                        'code' => $code
+                    ]
+                ]
+            );
+
+            if ($response->getStatusCode() === 200) {
+
+                return $response->getBody();
+            } else {
+                $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorCommunication'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+            }
+        } catch (\Exception $e) {
+            $this->addFlashMessage($e->getMessage(), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+        }
+
+        return NULL;
+    }
+
+    /**
+     * send request to Instagram
+     *
+     * @param Token $token
+     * @param string $redirectUri
+     * @param string $code
+     * @return string|NULL
+     */
+    protected function sendRequestUsingHttpRequest(Token $token, $redirectUri, $code) {
+        /** @var HttpRequest $httpRequest */
+        $httpRequest = GeneralUtility::makeInstance(HttpRequest::class, 'https://api.instagram.com/oauth/access_token', HttpRequest::METHOD_POST);
+
+        // set post parameters
+        $httpRequest->addPostParameter('client_id', $token->getCredential('clientId'))
+            ->addPostParameter('client_secret', $token->getCredential('clientSecret'))
+            ->addPostParameter('grant_type', 'authorization_code')
+            ->addPostParameter('redirect_uri', $redirectUri)
+            ->addPostParameter('code', $code);
+
+        try {
+            /** @var \HTTP_Request2_Response $response */
+            $response = $httpRequest->send();
+
+            if ($response->getStatus() === 200) {
+
+                $response->getBody();
+            } else {
+                $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorCommunication'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+            }
+        } catch (\Exception $e) {
+            $this->addFlashMessage($e->getMessage(), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+        }
+
+        return NULL;
     }
 
     /**
@@ -320,5 +382,15 @@ class SocialFeedAdministrationController extends BaseController {
 
             $this->view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
         }
+    }
+
+    /**
+     * get version of TYPO3
+     *
+     * @return int
+     */
+    protected function getTypo3Version() {
+        $version = VersionNumberUtility::convertVersionStringToArray(TYPO3_version);
+        return $version['version_main'];
     }
 }

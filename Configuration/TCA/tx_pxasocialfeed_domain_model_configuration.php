@@ -18,7 +18,10 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'config_name,social_id,executed,token,',
-        'iconfile' => 'EXT:pxa_social_feed/Resources/Public/Icons/tx_pxasocialfeed_domain_model_feeds.gif',
+
+        'typeicon_classes' => [
+            'default' => 'ext-pxasocialfeed-model-icon'
+        ],
 
         'rootLevel' => 1,
         'hideTable' => 1

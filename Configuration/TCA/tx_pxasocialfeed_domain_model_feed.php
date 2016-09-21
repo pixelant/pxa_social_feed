@@ -24,7 +24,10 @@ return [
             'endtime' => 'endtime',
         ],
         'searchFields' => 'post_url,message,image,title,config,',
-        'iconfile' => 'EXT:pxa_social_feed/Resources/Public/Icons/extention_icon.png',
+
+        'typeicon_classes' => [
+            'default' => 'ext-pxasocialfeed-model-icon'
+        ],
 
         'rootLevel' => 1
     ],

@@ -22,7 +22,7 @@ $initBoot = function($_EXTKEY) {
             ],
             [
                 'access' => 'user,group',
-                'icon' => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
+                'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/BE/feed.svg',
                 'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_be.xlf'
             ]
         );
