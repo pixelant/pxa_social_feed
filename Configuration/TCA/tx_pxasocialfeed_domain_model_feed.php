@@ -11,6 +11,7 @@ return [
     'ctrl' => [
         'title' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds',
         'label' => 'title',
+        'label_alt' => 'message,post_url',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
