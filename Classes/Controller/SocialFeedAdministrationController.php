@@ -340,7 +340,7 @@ class SocialFeedAdministrationController extends BaseController {
 
             if ($response->getStatus() === 200) {
 
-                $response->getBody();
+                return $response->getBody();
             } else {
                 $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorCommunication'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
             }

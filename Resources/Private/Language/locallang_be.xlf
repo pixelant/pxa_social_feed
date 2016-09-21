@@ -30,6 +30,9 @@
             <trans-unit id="feeds">
                 <source>Feeds configurations</source>
             </trans-unit>
+            <trans-unit id="unlimited">
+                <source>Unlimited</source>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

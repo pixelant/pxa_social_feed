@@ -115,8 +115,8 @@
             <trans-unit id="pxasocialfeed_module.labels.accessTokenSecret">
                 <source>Access Token Secret</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type">
-                <source>Type</source>
+            <trans-unit id="pxasocialfeed_module.labels.token">
+                <source>Token</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.button_delete">
                 <source>Delete Token</source>
