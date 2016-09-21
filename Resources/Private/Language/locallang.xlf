@@ -149,10 +149,16 @@
                 <source>Save</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.token_uid">
-                <source>Token UID</source>
+                <source>Token (#UID)</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.back">
                 <source>Back</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.configurations">
+                <source>Configurations</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.tokens">
+                <source>Tokens</source>
             </trans-unit>
 
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1463130121">

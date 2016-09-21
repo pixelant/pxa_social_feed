@@ -102,12 +102,14 @@ class SocialFeedAdministrationController extends BaseController {
     /**
      * index action to show all configurations and tokens
      *
+     * @param bool $activeTokenTab
      * @return void
      */
-    public function indexAction() {
+    public function indexAction($activeTokenTab = FALSE) {
         $this->view->assignMultiple([
             'tokens' => $this->tokenRepository->findAll(),
-            'configs' => $this->configurationRepository->findAll()
+            'configs' => $this->configurationRepository->findAll(),
+            'activeTokenTab' => $activeTokenTab
         ]);
     }
 
@@ -156,7 +158,7 @@ class SocialFeedAdministrationController extends BaseController {
 
         $this->addFlashMessage($message, $title, FlashMessage::OK);
 
-        $this->redirect('index');
+        $this->redirect('index', NULL, NULL, ['activeTokenTab' => TRUE]);
     }
 
     /**
@@ -175,7 +177,7 @@ class SocialFeedAdministrationController extends BaseController {
             $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.cantRemoveTokenConfigExist'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
         }
 
-        $this->redirect('index');
+        $this->redirect('index', NULL, NULL, ['activeTokenTab' => TRUE]);
     }
 
     /**

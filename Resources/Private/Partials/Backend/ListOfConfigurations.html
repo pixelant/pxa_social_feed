@@ -10,7 +10,6 @@
                         <td><f:translate key="pxasocialfeed_module.labels.form.config_name"/></td>
                         <td><f:translate key="pxasocialfeed_module.labels.form.social_id"/></td>
                         <td><f:translate key="pxasocialfeed_module.labels.form.amount_of_feeds"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.type"/></td>
                         <td><f:translate key="pxasocialfeed_module.labels.token_uid"/></td>
                         <td><f:translate key="pxasocialfeed_module.labels.app_id"/></td>
                         <td><f:translate key="pxasocialfeed_module.labels.edit"/></td>
@@ -23,8 +22,7 @@
                             <td>{configItem.name}</td>
                             <td>{configItem.socialId}</td>
                             <td>{configItem.feedsLimit}</td>
-                            <td>{configItem.token.socialTypeDescription}</td>
-                            <td>{configItem.token.uid}</td>
+                            <td>{configItem.token.socialTypeDescription} (#{configItem.token.uid})</td>
                             <td>{configItem.token.appId}</td>
                             <td>
                                 <f:link.action action="manageConfiguration" class="btn btn-default" arguments="{configuration: configItem}">
