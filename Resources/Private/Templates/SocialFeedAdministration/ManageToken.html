@@ -22,7 +22,7 @@
                             <td>
                                 <f:if condition="{isEditForm}">
                                     <f:then>
-                                        <f:form.textfield name="credentials[{field}]" class="form-control" value="{pxa:getToketCredential(token: token, credential: field)}"/>
+                                        <f:form.textfield name="credentials[{field}]" class="form-control" value="{pxa:getTokenCredential(token: token, credential: field)}"/>
                                     </f:then>
                                     <f:else>
                                         <f:form.textfield name="credentials[{field}]" class="form-control"/>

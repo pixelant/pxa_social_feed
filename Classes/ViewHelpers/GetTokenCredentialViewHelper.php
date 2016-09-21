@@ -35,10 +35,10 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 
 /**
- * Class GetToketCredentialViewHelper
+ * Class GetTokenCredentialViewHelper
  * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
-class GetToketCredentialViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class GetTokenCredentialViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
     /**
      * @var boolean

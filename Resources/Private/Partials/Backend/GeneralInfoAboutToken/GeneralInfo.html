@@ -5,15 +5,15 @@
     <f:section name="main">
         <pxa:tokenFields as="fields" type="{tokenItem.socialType}">
             <f:for each="{fields}" as="field">
-                <b><f:translate key="pxasocialfeed_module.labels.{field}"/></b>: <pxa:getToketCredential token="{tokenItem}" credential="{field}"/><br />
+                <b><f:translate key="pxasocialfeed_module.labels.{field}"/></b>: <pxa:getTokenCredential token="{tokenItem}" credential="{field}"/><br />
             </f:for>
         </pxa:tokenFields>
 
         <f:if condition="{tokenItem.socialType} == 3">
-            <f:if condition="{pxa:getToketCredential(token: tokenItem, credential: 'accessToken')}">
-                <f:then><b><f:translate key="pxasocialfeed_module.labels.accessToken"/></b>: <pxa:getToketCredential token="{tokenItem}" credential="accessToken"/></f:then>
+            <f:if condition="{pxa:getTokenCredential(token: tokenItem, credential: 'accessToken')}">
+                <f:then><b><f:translate key="pxasocialfeed_module.labels.accessToken"/></b>: <pxa:getTokenCredential token="{tokenItem}" credential="accessToken"/></f:then>
                 <f:else>
-                    <a class="btn btn-default" id="get-instagram-toket" target="_blank" href="https://api.instagram.com/oauth/authorize/?client_id={pxa:getToketCredential(token: tokenItem, credential: 'clientId')}&redirect_uri={f:uri.action(action:'addAccessToken', absolute:1, arguments: {token: tokenItem})->f:format.urlencode()}&response_type=code">
+                    <a class="btn btn-default" id="get-instagram-toket" target="_blank" href="https://api.instagram.com/oauth/authorize/?client_id={pxa:getTokenCredential(token: tokenItem, credential: 'clientId')}&redirect_uri={f:uri.action(action:'addAccessToken', absolute:1, arguments: {token: tokenItem})->f:format.urlencode()}&response_type=code">
                         <f:translate key="pxasocialfeed_module.labels.generateAccessToken"/>
                     </a>
                     <br>
