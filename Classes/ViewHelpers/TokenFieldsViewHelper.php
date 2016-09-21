@@ -43,6 +43,16 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TokenFieldsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
 
     /**
+     * @var boolean
+     */
+    protected $escapeChildren = FALSE;
+
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = FALSE;
+
+    /**
      * Initialize
      *
      * @return void

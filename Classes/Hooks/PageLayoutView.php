@@ -71,17 +71,16 @@ class PageLayoutView {
             // get settings array
             if ($settings['settings']) $settings = $settings['settings'];
 
-            if ($settings['feedsLimit']) {
-                $additionalInfo .= sprintf('<b>%s</b>: %d<br>', $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true), $settings['feedsLimit']);
-            }
+            // limit info
+            $additionalInfo .= sprintf('<b>%s</b>: %s<br>', $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true), $settings['feedsLimit'] ? $settings['feedsLimit'] : $this->getLanguageService()->sL(self::LLPATH . 'unlimited', true));
 
-            // no if false
+            // like show info
             $additionalInfo .= sprintf('<b>%s</b>: %s<br>',
                 $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount', true),
                 $settings['loadLikesCount'] ? $this->getLanguageService()->sL(self::LLPATH . 'yes', true) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
             );
 
-
+            // configurations info
             if ($settings['configuration']) {
                 $configurations = ConfigurationUtility::getDbConnection()->exec_SELECTgetRows(
                     'uid,name',
