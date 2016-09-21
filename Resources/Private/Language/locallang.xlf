@@ -160,6 +160,18 @@
             <trans-unit id="pxasocialfeed_module.labels.tokens">
                 <source>Tokens</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.inst_id_tooltip">
+                <source>Looks like it's a user name. Instagram User ID is required. Press button to fetch user ID.</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.inst_id_button">
+                <source>Get Instagram user ID</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.inst_id_ajax_fail">
+                <source>Failed to get Instagram user ID</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.inst_id_ajax_success">
+                <source>Instagram user ID saved.</source>
+            </trans-unit>
 
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1463130121">
                 <source>All fields are required</source>

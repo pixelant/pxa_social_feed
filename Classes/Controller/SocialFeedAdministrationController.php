@@ -250,8 +250,7 @@ class SocialFeedAdministrationController extends BaseController {
             ->uriFor('addAccessToken', ['token' => $token->getUid()]);
 
         if (isset($code)) {
-            $version = $this->getTypo3Version();
-            if($version >= 8) {
+            if($this->getTypo3Version() >= 8) {
                 $response = $this->sendRequestUsingRequestFactory($token, $redirectUri, $code);
             } else {
                 $response = $this->sendRequestUsingHttpRequest($token, $redirectUri, $code);
@@ -273,7 +272,7 @@ class SocialFeedAdministrationController extends BaseController {
             }
         }
 
-        $this->redirect('index');
+        $this->redirect('index', NULL, NULL, ['activeTokenTab' => TRUE]);
     }
 
     /**

@@ -20,7 +20,15 @@
                         <tr>
                             <td>{configItem.uid}</td>
                             <td>{configItem.name}</td>
-                            <td>{configItem.socialId}</td>
+                            <td>
+                                {configItem.socialId}
+                                <f:if condition="{configItem.token.socialType} == 3">
+                                    <f:comment>
+                                        If this is instagram and ID is not numeric, then it's just a user name and we need to get an ID
+                                    </f:comment>
+                                    <f:render partial="Backend/InstagramGetId" section="main" arguments="{configiguration: configItem}"/>
+                                </f:if>
+                            </td>
                             <td>{configItem.feedsLimit}</td>
                             <td>{configItem.token.socialTypeDescription} (#{configItem.token.uid})</td>
                             <td>{configItem.token.appId}</td>
