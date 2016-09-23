@@ -37,7 +37,7 @@
                     <f:else>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.type"/></td>
-                            <td><f:form.select id="select-social-type" property="socialType" options="{pxa:availableTokensTypes()}" class="form-control"/></td>
+                            <td><f:form.select id="select-social-type" property="socialType" options="{pxa:availableTokensTypes()}" value="{type}" class="form-control"/></td>
                             <f:for each="{pxa:availableTokensTypes()}" as="socialType" key="socialTypeId">
                                 <input type="hidden" id="social-type-url-{socialTypeId}" value="{f:uri.action(action: 'manageToken', arguments: {type: socialTypeId})}">
                             </f:for>
