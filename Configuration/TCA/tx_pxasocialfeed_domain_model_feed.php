@@ -33,10 +33,14 @@ return [
         'rootLevel' => 1
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier',
+        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier, starttime, endtime',
     ],
     'types' => [
-        '1' => ['showitem' => 'hidden;;1, post_date, title, post_url, message, image, likes, configuration, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => [
+            'showitem' => 'hidden, --palette--;;1, post_date, title, post_url, message, image, likes, configuration, 
+            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
+			--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access, starttime, endtime'
+        ],
     ],
     'palettes' => [
         '1' => ['showitem' => ''],

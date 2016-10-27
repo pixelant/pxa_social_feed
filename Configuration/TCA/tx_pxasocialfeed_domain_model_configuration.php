@@ -27,10 +27,10 @@ return [
         'hideTable' => 1
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden, config_name, social_id, token, feeds_limit',
+        'showRecordFieldList' => 'hidden, config_name, social_id, token, feeds_limit, starttime, endtime',
     ],
     'types' => [
-        '1' => ['showitem' => 'hidden;;1, config_name, social_id, token, feeds_limit, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'hidden, --palette--;;1, config_name, social_id, token, feeds_limit'],
     ],
     'palettes' => [
         '1' => ['showitem' => ''],
