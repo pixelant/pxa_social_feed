@@ -32,10 +32,10 @@ return [
         'hideTable' => 1
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden, serialized_credentials, social_type',
+        'showRecordFieldList' => 'hidden, serialized_credentials, social_type, starttime, endtime',
     ],
     'types' => [
-        '1' => ['showitem' => 'hidden;;1, social_type, --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access, starttime, endtime'],
+        '1' => ['showitem' => 'hidden, --palette--;;1, social_type'],
     ],
     'palettes' => [
         '1' => ['showitem' => ''],
