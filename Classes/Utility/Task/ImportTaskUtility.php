@@ -198,6 +198,7 @@ class ImportTaskUtility {
                 $twitterFeed->setLikes($likes);
                 $this->feedRepository->update($twitterFeed);
             } else {
+                $twitterFeed->setLikes($likes);
                 $this->feedRepository->add($twitterFeed);
             }
         }

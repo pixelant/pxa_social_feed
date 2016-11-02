@@ -33,6 +33,7 @@ namespace Pixelant\PxaSocialFeed\Utility;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -133,5 +134,15 @@ class ConfigurationUtility {
      */
     static public function getDbConnection() {
         return $GLOBALS['TYPO3_DB'];
+    }
+
+    /**
+     * get version of TYPO3
+     *
+     * @return int
+     */
+    static public function getTypo3Version() {
+        $version = VersionNumberUtility::convertVersionStringToArray(TYPO3_version);
+        return $version['version_main'];
     }
 }
