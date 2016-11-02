@@ -4,6 +4,7 @@ namespace Pixelant\PxaSocialFeed\Utility;
 
 use Pixelant\PxaFormEnhancement\Utility\Exception\ServerCommunicationException;
 use Pixelant\PxaSocialFeed\Controller\BaseController;
+use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -147,6 +148,13 @@ class RequestUtility {
         if (!empty($this->getPostParameters())) {
             foreach ($this->getPostParameters() as $postParameter => $postParameterValue) {
                 $httpRequest->addPostParameter($postParameter, $postParameterValue);
+            }
+        }
+
+        // set headers
+        if (!empty($this->getHeaders())) {
+            foreach ($this->getHeaders() as $header => $headerValue) {
+                $httpRequest->setHeader([$header => $headerValue]);
             }
         }
 
