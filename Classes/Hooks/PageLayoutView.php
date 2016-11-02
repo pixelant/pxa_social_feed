@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 20.09.16
- * Time: 11:37
- */
 
 namespace Pixelant\PxaSocialFeed\Hooks;
 

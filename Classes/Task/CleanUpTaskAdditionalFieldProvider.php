@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 24.06.16
- * Time: 10:45
- */
 
 namespace Pixelant\PxaSocialFeed\Task;
 

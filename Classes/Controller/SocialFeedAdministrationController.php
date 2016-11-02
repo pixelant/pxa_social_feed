@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 12.05.16
- * Time: 10:05
- */
 
 namespace Pixelant\PxaSocialFeed\Controller;
 

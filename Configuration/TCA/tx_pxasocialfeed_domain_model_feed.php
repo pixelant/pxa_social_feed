@@ -1,11 +1,5 @@
 <?php
 defined('TYPO3_MODE') or die();
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 14.05.16
- * Time: 10:59
- */
 
 return [
     'ctrl' => [

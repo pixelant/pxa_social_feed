@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 21.09.16
- * Time: 16:00
- */
 
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
