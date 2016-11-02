@@ -11,8 +11,6 @@ namespace Pixelant\PxaSocialFeed\Controller;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
-use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
