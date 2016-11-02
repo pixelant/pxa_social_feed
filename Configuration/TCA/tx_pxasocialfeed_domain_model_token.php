@@ -1,11 +1,6 @@
 <?php
 defined('TYPO3_MODE') or die();
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 14.05.16
- * Time: 11:06
- */
+
 return [
     'ctrl' => [
         'title' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens',

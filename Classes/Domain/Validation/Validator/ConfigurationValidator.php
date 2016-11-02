@@ -2,13 +2,6 @@
 
 namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
-    /**
-     * Created by PhpStorm.
-     * User: anjey
-     * Date: 27.11.15
-     * Time: 10:16
-     */
-
 /***************************************************************
  *
  *  Copyright notice

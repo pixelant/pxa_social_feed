@@ -1,12 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 06.06.16
- * Time: 16:36
- */
 
 namespace Pixelant\PxaSocialFeed\Task;
+
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

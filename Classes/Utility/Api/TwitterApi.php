@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anjey
- * Date: 13.05.16
- * Time: 14:23
- */
 
 namespace Pixelant\PxaSocialFeed\Utility\Api;
 
@@ -32,7 +26,7 @@ namespace Pixelant\PxaSocialFeed\Utility\Api;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-use TYPO3\CMS\Core\Http\HttpRequest;
+use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -112,15 +106,14 @@ class TwitterApi {
         }
         $data = [];
 
-        /** @var HttpRequest $httpRequest */
-        $httpRequest = GeneralUtility::makeInstance(HttpRequest::class, self::API_URL . '?' . $this->getGetFields(), HttpRequest::METHOD_GET);
-        $httpRequest->setHeader(['Authorization' => $this->getAuthHeader()]);
+        /** @var RequestUtility $requestUtility */
+        $requestUtility = GeneralUtility::makeInstance(RequestUtility::class, self::API_URL, RequestUtility::METHOD_GET);
+        $requestUtility->setGetParameters($this->getGetFields());
+        $requestUtility->setHeaders(['Authorization' => $this->getAuthHeader()]);
 
-        /** @var \HTTP_Request2_Response $response */
-        $response = $httpRequest->send();
-
-        if ($response->getStatus() === 200) {
-            $data = json_decode($response->getBody(), TRUE);
+        $response = $requestUtility->send();
+        if (!empty($response)) {
+            $data = json_decode($response, TRUE);
         }
 
         return $data;
@@ -141,14 +134,7 @@ class TwitterApi {
             'oauth_version'  => '1.0'
         ];
 
-        $getFields = GeneralUtility::trimExplode('&', $this->getGetFields());
-
-        foreach ($getFields as $field) {
-            $split = GeneralUtility::trimExplode('=', $field);
-            $oauth[$split[0]] = $split[1];
-        }
-
-        $sigBase = $this->buildSigBase($oauth);
+        $sigBase = $this->buildSigBase(array_merge($oauth, $this->getGetFields()));
         $sigKey = rawurlencode($this->consumerSecret) . '&' . rawurlencode($this->oauthAccessTokenSecret);
 
         $oauth['oauth_signature'] = base64_encode(hash_hmac('sha1', $sigBase, $sigKey, true));
@@ -188,7 +174,7 @@ class TwitterApi {
      * @return TwitterApi
      */
     public function setGetFields($fields = []) {
-        $this->getFields = substr(GeneralUtility::implodeArrayForUrl('', $fields), 1);
+        $this->getFields = $fields;
         return $this;
     }
 

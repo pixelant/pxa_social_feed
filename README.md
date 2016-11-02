@@ -29,7 +29,7 @@ Access tokens types:
 
     After Client Id and Client Secret are set **press button "Generate Access Token".** 
 
-    **IMPORTANT !!!** To get Access Token - Valid redirect URI should be "http://yoursiteurl.com/**typo3/index.php**"
+    **IMPORTANT !!!** To get Access Token - Valid redirect URI should be "http://yoursiteurl.com/typo3/index.php"
 
 * Twitter. [Obtaining access tokens](https://dev.twitter.com/oauth/overview)
 
