@@ -33,7 +33,6 @@ namespace Pixelant\PxaSocialFeed\Utility\Api;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
-use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
