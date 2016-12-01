@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: anjey
+ * Date: 24.06.16
+ * Time: 10:59
+ */
 
 namespace Pixelant\PxaSocialFeed\Utility\Task;
 
@@ -26,7 +32,16 @@ namespace Pixelant\PxaSocialFeed\Utility\Task;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Feed;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
+use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /**
  * Class CleanUpTaskUtility
@@ -50,11 +65,28 @@ class CleanUpTaskUtility {
     protected $dbConnection;
 
     /**
+     *  objectManager
+     *
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+     */
+    protected $objectManager;
+
+    /**
+     * API Urls
+     * @var array
+     */
+    protected $apiUrls = array(
+        Token::FACEBOOK => 'https://graph.facebook.com/v2.6/',
+        Token::INSTAGRAM => 'https://api.instagram.com/v1/',
+        Token::INSTAGRAM_OAUTH2 => 'https://api.instagram.com/v1/'
+    );
+
+    /**
      * initialize
      */
     public function __construct() {
-
         $this->dbConnection = $GLOBALS['TYPO3_DB'];
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
     }
 
     /**
@@ -66,6 +98,7 @@ class CleanUpTaskUtility {
     public function run($days) {
         $obsoleteEntries = $this->getObsoleteEntries($days);
         $this->deleteObsoleteEntries($obsoleteEntries);
+        $this->removeDeletedFeeds();
         
         return TRUE;
     }
@@ -162,4 +195,68 @@ class CleanUpTaskUtility {
             'uid IN (' . ltrim($uids, ',') . ') OR deleted=1'
         );
     }
+
+    /**
+     * @return void
+     */
+    private function removeDeletedFeeds() {
+        $configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
+        $feedRepository = $this->objectManager->get(FeedRepository::class);
+        $configurations = $configurationRepository->findAll();
+        foreach ($configurations as $configuration) {
+            $feeds = $feedRepository->findByConfiguration($configuration);
+            foreach ($feeds as $feed) {
+                $isFeedDeleted = false;
+                $isFeedDeleted = $this->isFeedDeleted($feed->getExternalIdentifier(), $configuration);
+                if ($isFeedDeleted === true) {
+                    $feedRepository->remove($feed);
+                }
+            }
+        }
+        $this->objectManager->get(PersistenceManager::class)->persistAll();
+    }
+
+    /**
+     * @param string        $externalIdentifier
+     * @param Configuration $configuration
+     * @return boolean
+     */
+    private function isFeedDeleted($externalIdentifier, Configuration $configuration) {
+        switch ($configuration->getToken()->getSocialType()) {
+            case Token::FACEBOOK:
+                $url = $this->apiUrls[$configuration->getToken()->getSocialType()] . $externalIdentifier .
+                   '?access_token=' . $configuration->getToken()->getCredential('appId') . '|' . $configuration->getToken()->getCredential('appSecret');
+                $data = json_decode(GeneralUtility::getUrl($url), true);
+                if (is_array($data)) {
+                    if ($data["id"] == $externalIdentifier) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                break;
+            case Token::INSTAGRAM:
+            case Token::INSTAGRAM_OAUTH2:
+                $url = $this->apiUrls[$configuration->getToken()->getSocialType()] . 'media/' . $externalIdentifier;
+                $url .= $configuration->getToken()->getSocialType() === Token::INSTAGRAM ? '?client_id=' . $configuration->getToken()->getCredential('clientId') : '?access_token=' . $configuration->getToken()->getCredential('accessToken');
+                $data = json_decode(GeneralUtility::getUrl($url), true);
+                if (is_array($data)) {
+                    if (is_array($data["data"]) && $data["data"]["id"] == $externalIdentifier) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+                break;
+            case Token::TWITTER:
+                // todo
+                return false;
+                break;
+            default:
+                throw new \UnexpectedValueException('Such social type is not valid', 1466690851);
+                break;
+        }
+        return false;
+    }
+
 }

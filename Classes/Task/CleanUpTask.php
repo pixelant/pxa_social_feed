@@ -55,7 +55,7 @@ class CleanUpTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
      * @return	string	Information to display
      */
     public function getAdditionalInformation() {
-        return 'Delete entries older than ' . $this->getDays() . ' days.';
+        return 'Delete entries older than ' . $this->getDays() . ' days or deleted at social media feed directly.';
     }
 
     /**
