@@ -71,7 +71,6 @@ class CleanUpTaskUtility {
      */
     protected $apiUrls = array(
         Token::FACEBOOK => 'https://graph.facebook.com/v2.6/',
-        Token::INSTAGRAM => 'https://api.instagram.com/v1/',
         Token::INSTAGRAM_OAUTH2 => 'https://api.instagram.com/v1/'
     );
 
@@ -229,7 +228,6 @@ class CleanUpTaskUtility {
                     }
                 }
                 break;
-            case Token::INSTAGRAM:
             case Token::INSTAGRAM_OAUTH2:
                 $url = $this->apiUrls[$configuration->getToken()->getSocialType()] . 'media/' . $externalIdentifier;
                 $url .= $configuration->getToken()->getSocialType() === Token::INSTAGRAM ? '?client_id=' . $configuration->getToken()->getCredential('clientId') : '?access_token=' . $configuration->getToken()->getCredential('accessToken');
