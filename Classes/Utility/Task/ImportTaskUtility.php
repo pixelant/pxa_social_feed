@@ -102,15 +102,23 @@ class ImportTaskUtility {
 
                         break;
                     case Token::INSTAGRAM_OAUTH2:
-                        //getting data array from instagram api json result
-                        $url = sprintf('https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
-                            $configuration->getSocialId(),
-                            $configuration->getToken()->getCredential('accessToken'),
-                            $configuration->getFeedsLimit()
-                        );
-
+                        // getting data array from instagram api json result
+						// in case of hashtag
+						if (substr($configuration->getSocialId(), 0, strlen('#')) === '#') {
+                            $url = sprintf('https://api.instagram.com/v1/tags/%s/media/recent/?access_token=%s&count=%d',
+                                str_replace('#', '', $configuration->getSocialId()),
+                                $configuration->getToken()->getCredential('accessToken'),
+                                $configuration->getFeedsLimit()
+                            );
+						// in case of user (instagram social ID)
+                        } else {
+                            $url = sprintf('https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
+                                $configuration->getSocialId(),
+                                $configuration->getToken()->getCredential('accessToken'),
+                                $configuration->getFeedsLimit()
+                            );
+                        }
                         $data = json_decode(GeneralUtility::getUrl($url), true);
-
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
