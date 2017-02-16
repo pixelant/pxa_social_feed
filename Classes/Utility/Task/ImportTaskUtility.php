@@ -102,15 +102,31 @@ class ImportTaskUtility {
 
                         break;
                     case Token::INSTAGRAM_OAUTH2:
-                        //getting data array from instagram api json result
-                        $url = sprintf('https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
-                            $configuration->getSocialId(),
+                        // getting data array from instagram api json result
+
+                        //predefine a format of request string;
+                        $urlFormat = 'https://api.instagram.com/v1/%s/%s/media/recent/?access_token=%s&count=%d';
+
+                        // hashtag used in configuration (leading '#' symbol): preparing values for 'tag' API call
+                        if (substr($configuration->getSocialId(), 0, strlen('#')) === '#') {
+                            $requestType = 'tags';
+                            $requestName = str_replace('#', '', $configuration->getSocialId());
+                        // user ID is used in configuration (no leading '#'): preparing values for 'users' API call
+                        } else {
+                            $requestType = 'users';
+                            $requestName = $configuration->getSocialId();
+                        }
+
+                        // creating an API call string from format and configs
+                        $url = sprintf($urlFormat,
+                            $requestType,
+                            $requestName,
                             $configuration->getToken()->getCredential('accessToken'),
                             $configuration->getFeedsLimit()
                         );
 
+                        // get response from Instagram, parse data and save result
                         $data = json_decode(GeneralUtility::getUrl($url), true);
-
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
