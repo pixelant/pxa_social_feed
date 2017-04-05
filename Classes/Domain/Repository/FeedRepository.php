@@ -4,7 +4,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
-use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 
 /***************************************************************
  *
@@ -44,13 +43,16 @@ class FeedRepository extends AbstractRepository {
     ];
 
     public function initializeObject() {
-        if (TYPO3_MODE === 'BE') {
+        if (TYPO3_MODE === 'BE' || TYPO3_MODE === 'CLI') {
             /** @var $defaultQuerySettings Typo3QuerySettings */
             $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
 
             // don't add fields from enablecolumns constraint
             $defaultQuerySettings->setIgnoreEnableFields(true);
             $defaultQuerySettings->setEnableFieldsToBeIgnored(['disabled']);
+
+            // respect Storage
+            $defaultQuerySettings->setRespectStoragePage(FALSE);
 
             $this->setDefaultQuerySettings($defaultQuerySettings);
         }
@@ -74,4 +76,27 @@ class FeedRepository extends AbstractRepository {
 
         return $query->execute();
     }
+
+    /**
+     * get feed by specific storage Pid and external identifier
+     *
+     * @param string $externalIdentifier
+     * @param int $pid
+     * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult
+     */
+    public function findOneByExternalIdentifier($externalIdentifier, $pid) {
+        $query = $this->createQuery();
+
+        $logicalAnd = [
+            $query->equals('pid', $pid),
+            $query->equals('externalIdentifier', $externalIdentifier)
+        ];
+
+        if($externalIdentifier) {
+            $query->matching($query->logicalAnd($logicalAnd));
+        }
+
+        return $query->execute()->getFirst();
+    }
+
 }

@@ -24,7 +24,6 @@ return [
             'default' => 'ext-pxasocialfeed-model-icon'
         ],
 
-        'rootLevel' => 1
     ],
     'interface' => [
         'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier, starttime, endtime',
