@@ -2,6 +2,8 @@
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QuerySettingsInterface;
+use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use \TYPO3\CMS\Extbase\Utility\DebuggerUtility as du;
 
 /***************************************************************
@@ -40,6 +42,19 @@ class FeedRepository extends AbstractRepository {
     protected $defaultOrderings = [
         'postDate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
     ];
+
+    public function initializeObject() {
+        if (TYPO3_MODE === 'BE') {
+            /** @var $defaultQuerySettings Typo3QuerySettings */
+            $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+
+            // don't add fields from enablecolumns constraint
+            $defaultQuerySettings->setIgnoreEnableFields(true);
+            $defaultQuerySettings->setEnableFieldsToBeIgnored(['disabled']);
+
+            $this->setDefaultQuerySettings($defaultQuerySettings);
+        }
+    }
 
     /**
      * get feeds by config
