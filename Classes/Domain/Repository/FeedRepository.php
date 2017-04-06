@@ -33,7 +33,7 @@ use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 /**
  * The repository for Feeds
  */
-class FeedRepository extends AbstractRepository {
+class FeedRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
 
     /**
      * @var array $defaultOrderings
@@ -43,19 +43,22 @@ class FeedRepository extends AbstractRepository {
     ];
 
     public function initializeObject() {
-        if (TYPO3_MODE === 'BE' || TYPO3_MODE === 'CLI') {
-            /** @var $defaultQuerySettings Typo3QuerySettings */
-            $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        
+        /** @var $defaultQuerySettings Typo3QuerySettings */
+        $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        
+        // respect Storage
+        $defaultQuerySettings->setRespectStoragePage(FALSE);
 
+        if (TYPO3_MODE === 'BE' || TYPO3_MODE === 'CLI') {
+            
             // don't add fields from enablecolumns constraint
             $defaultQuerySettings->setIgnoreEnableFields(true);
             $defaultQuerySettings->setEnableFieldsToBeIgnored(['disabled']);
 
-            // respect Storage
-            $defaultQuerySettings->setRespectStoragePage(FALSE);
-
-            $this->setDefaultQuerySettings($defaultQuerySettings);
         }
+
+        $this->setDefaultQuerySettings($defaultQuerySettings);
     }
 
     /**
