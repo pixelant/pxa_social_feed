@@ -1,11 +1,11 @@
 <?php
 
-namespace Pixelant\PxaFormEnhancement\Utility\Exception;
+namespace Pixelant\PxaSocialFeed\Utility\Exception;
 
 /**
  * An "Communication with Server error" exception
  *
- * @package Pixelant\PxaFormEnhancement\Utility\Exception
+ * @package Pixelant\PxaSocialFeed\Utility\Exception
  */
 class ServerCommunicationException extends \Exception
 {
