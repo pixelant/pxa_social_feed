@@ -61,6 +61,12 @@ class ImportTaskUtility
     protected $feedRepository;
 
     /**
+     * storage Pid
+     * @var int
+     */
+    protected $storagePid = 0;
+
+    /**
      * TaskUtility constructor.
      */
     public function __construct()
@@ -69,6 +75,8 @@ class ImportTaskUtility
 
         $this->configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
         $this->feedRepository = $this->objectManager->get(FeedRepository::class);
+
+        $this->storagePid = (int) unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['pxa_social_feed'])['storagePid'];
     }
 
     /**
@@ -197,7 +205,7 @@ class ImportTaskUtility
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            $twitterFeed = $this->feedRepository->findOneByExternalIdentifier($rawData['id_str']);
+            $twitterFeed = $this->feedRepository->findOneByExternalIdentifier($rawData['id_str'], $this->storagePid);
 
             if ($twitterFeed === null) {
                 /** @var Feed $twitterFeed */
@@ -225,6 +233,7 @@ class ImportTaskUtility
                 $this->feedRepository->update($twitterFeed);
             } else {
                 $twitterFeed->setLikes($likes);
+                $twitterFeed->setPid($this->storagePid);
                 $this->feedRepository->add($twitterFeed);
             }
         }
@@ -241,7 +250,7 @@ class ImportTaskUtility
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            $ig = $this->feedRepository->findOneByExternalIdentifier($rawData['id']);
+            $ig = $this->feedRepository->findOneByExternalIdentifier($rawData['id'], $this->storagePid);
 
             if ($ig === null) {
                 /** @var Feed $ig */
@@ -274,6 +283,7 @@ class ImportTaskUtility
                 $this->feedRepository->update($ig);
             } else {
                 $ig->setLikes($likes);
+                $ig->setPid($this->storagePid);
                 $this->feedRepository->add($ig);
             }
         }
@@ -290,7 +300,7 @@ class ImportTaskUtility
         //adding each record from array to database
         foreach ($data as $rawData) {
             /** @var Feed $feedItem */
-            if ($feedItem = $this->feedRepository->findOneByExternalIdentifier($rawData['id'])) {
+            if ($feedItem = $this->feedRepository->findOneByExternalIdentifier($rawData['id'], $this->storagePid)) {
                 if ($feedItem->getUpdateDate() < strtotime($rawData['updated_time'])) {
                     $this->setFacebookData($feedItem, $rawData);
                     $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
@@ -313,6 +323,7 @@ class ImportTaskUtility
             if ($feedItem->getUid()) {
                 $this->feedRepository->update($feedItem);
             } else {
+                $feedItem->setPid($this->storagePid);
                 $this->feedRepository->add($feedItem);
             }
         }

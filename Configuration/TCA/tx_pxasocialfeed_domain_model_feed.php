@@ -26,7 +26,6 @@ return [
             'default' => 'ext-pxasocialfeed-model-icon'
         ],
 
-        'rootLevel' => 1
     ],
     // @codingStandardsIgnoreStart
     'interface' => [

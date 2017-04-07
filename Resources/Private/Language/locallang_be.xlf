@@ -33,6 +33,9 @@
             <trans-unit id="unlimited">
                 <source>Unlimited</source>
             </trans-unit>
+            <trans-unit id="setStoragePid">
+                <source>Specify Storage Pid, if you need it.</source>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>

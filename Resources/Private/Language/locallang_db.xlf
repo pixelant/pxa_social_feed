@@ -5,7 +5,7 @@
         <header/>
         <body>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds">
-                <source>Feeds</source>
+                <source>Social Posts</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.social_type">
                 <source>Social Type</source>
