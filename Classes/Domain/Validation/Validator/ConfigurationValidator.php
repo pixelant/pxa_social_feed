@@ -28,11 +28,11 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  ***************************************************************/
 
 
-
 use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 
-class ConfigurationValidator extends AbstractValidator {
+class ConfigurationValidator extends AbstractValidator
+{
 
     /**
      * Validates tokens
@@ -41,24 +41,30 @@ class ConfigurationValidator extends AbstractValidator {
      *
      * @return bool
      */
-    protected function isValid($configuration) {
+    protected function isValid($configuration)
+    {
         // do trim
         $this->trimObjectProperties($configuration);
 
-        if(is_object($configuration)) {
-            if(empty($configuration->getName())) {
+        if (is_object($configuration)) {
+            if (empty($configuration->getName())) {
                 $errorCode = 1456234619;
             } elseif (empty($configuration->getSocialId())) {
                 $errorCode = 1456234671;
-            } elseif(!$configuration->getFeedsLimit() || !is_int($configuration->getFeedsLimit())) {
+            } elseif (!$configuration->getFeedsLimit() || !is_int($configuration->getFeedsLimit())) {
                 $errorCode = 1456234832;
             }
         } else {
             $errorCode = 1466669831;
         }
 
-        if(isset($errorCode)) {
-            $this->addError(BaseController::translate('pxasocialfeed_module.labels.errorcode.'.$errorCode), $errorCode);
+        if (isset($errorCode)) {
+            $this->addError(
+                BaseController::translate(
+                    'pxasocialfeed_module.labels.errorcode.' . $errorCode
+                ),
+                $errorCode
+            );
         }
 
         return (!isset($errorCode));

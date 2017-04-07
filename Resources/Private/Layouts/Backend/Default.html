@@ -1,9 +1,9 @@
-<f:be.pageRenderer
-        includeRequireJsModules="{0: 'TYPO3/CMS/Backend/Modal', 1: 'TYPO3/CMS/Backend/Severity', 2: 'TYPO3/CMS/Backend/Notification'}"
-        includeJsFiles="{
-			0: '../typo3conf/ext/pxa_social_feed/Resources/Public/JS/BE/be_module.js'
-		}"
-    />
 <div class="pxa-social-feed-be-adminnistration">
     <f:render section="content" />
 </div>
+
+<script type="text/javascript">
+    require(['TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule'], function (socialFeedModule) {
+        socialFeedModule.getInstance().run();
+    });
+</script>

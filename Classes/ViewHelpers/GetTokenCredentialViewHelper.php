@@ -27,45 +27,50 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class GetTokenCredentialViewHelper
  * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
-class GetTokenCredentialViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class GetTokenCredentialViewHelper extends AbstractViewHelper
+{
 
     /**
      * @var boolean
      */
-    protected $escapeChildren = FALSE;
+    protected $escapeChildren = false;
 
     /**
      * @var boolean
      */
-    protected $escapeOutput = FALSE;
+    protected $escapeOutput = false;
 
     /**
      * Initialize
      *
      * @return void
      */
-    public function initializeArguments() {
-        $this->registerArgument('as', 'string', 'template variable name', FALSE, '');
-        $this->registerArgument('token', Token::class, 'Token', TRUE, NULL);
-        $this->registerArgument('credential', 'string', 'Credential name', TRUE, '');
+    public function initializeArguments()
+    {
+        $this->registerArgument('as', 'string', 'template variable name', false, '');
+        $this->registerArgument('token', Token::class, 'Token', true, null);
+        $this->registerArgument('credential', 'string', 'Credential name', true, '');
     }
 
     /**
      * @return string
      * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception\InvalidVariableException
      */
-    public function render() {
+    public function render()
+    {
         $credential = '';
-        if(is_object($this->arguments['token'])) {
-            $credential = $this->arguments['token']->getCredential($this->arguments['credential']);
+        /** @var Token $token */
+        if ($token = $this->arguments['token']) {
+            $credential = $token->getCredential($this->arguments['credential']);
         }
 
-        if(isset($this->arguments['as']) && $this->arguments['as']) {
+        if (isset($this->arguments['as']) && $this->arguments['as']) {
             // add varibale to template
             $this->templateVariableContainer->add($this->arguments['as'], $credential);
             // render

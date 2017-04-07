@@ -1,6 +1,6 @@
 <?php
-namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
+namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
 /***************************************************************
  *
@@ -27,15 +27,18 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+
 /**
  * The repository for Feeds
  */
-class TokenRepository extends AbstractRepository {
+class TokenRepository extends AbstractRepository
+{
 
     /**
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = [
-        'crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+        'crdate' => QueryInterface::ORDER_DESCENDING
     ];
 }

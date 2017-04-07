@@ -39,7 +39,8 @@ use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 /**
  * SocialFeedAdministrationController
  */
-class SocialFeedAdministrationController extends BaseController {
+class SocialFeedAdministrationController extends BaseController
+{
 
     /**
      * configurationRepository
@@ -83,7 +84,8 @@ class SocialFeedAdministrationController extends BaseController {
      * @param ViewInterface $view
      * @return void
      */
-    protected function initializeView(ViewInterface $view) {
+    protected function initializeView(ViewInterface $view)
+    {
         /** @var BackendTemplateView $view */
         parent::initializeView($view);
 
@@ -97,7 +99,8 @@ class SocialFeedAdministrationController extends BaseController {
      * @param bool $activeTokenTab
      * @return void
      */
-    public function indexAction($activeTokenTab = FALSE) {
+    public function indexAction($activeTokenTab = false)
+    {
         $this->view->assignMultiple([
             'tokens' => $this->tokenRepository->findAll(),
             'configs' => $this->configurationRepository->findAll(),
@@ -110,11 +113,12 @@ class SocialFeedAdministrationController extends BaseController {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function manageTokenAction(Token $token = NULL) {
+    public function manageTokenAction(Token $token = null)
+    {
         $this->view->assignMultiple([
-            'type' => ($token === NULL ? ($this->request->hasArgument('type') ? $this->request->getArgument('type') : 1) : $token->getSocialType()),
+            'type' => ($token === null ? ($this->request->hasArgument('type') ? $this->request->getArgument('type') : 1) : $token->getSocialType()),
             'token' => $token,
-            'isEditForm' => $token !== NULL,
+            'isEditForm' => $token !== null,
             'tokens' => $this->tokenRepository->findAll()
         ]);
     }
@@ -124,18 +128,19 @@ class SocialFeedAdministrationController extends BaseController {
      * @validate $token \Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator
      * @return void
      */
-    public function saveTokenAction(Token $token) {
+    public function saveTokenAction(Token $token)
+    {
         $args = $this->request->getArguments();
 
-        if(count($args['credentials']) > 0) {
-            foreach($args['credentials'] as $key => $credential) {
+        if (count($args['credentials']) > 0) {
+            foreach ($args['credentials'] as $key => $credential) {
                 $token->setCredential($key, $credential);
             }
         }
 
         if ($token->getUid()) {
             // special check for instagram INSTAGRAM_OAUTH2, if updated, need to update auth token again.
-            if($token->getSocialType() == Token::INSTAGRAM_OAUTH2 && $token->_isDirty('serializedCredentials')) {
+            if ($token->getSocialType() == Token::INSTAGRAM_OAUTH2 && $token->_isDirty('serializedCredentials')) {
                 $token->setCredential('accessToken', '');
             }
 
@@ -150,7 +155,7 @@ class SocialFeedAdministrationController extends BaseController {
 
         $this->addFlashMessage($message, $title, FlashMessage::OK);
 
-        $this->redirect('index', NULL, NULL, ['activeTokenTab' => TRUE]);
+        $this->redirect('index', null, null, ['activeTokenTab' => true]);
     }
 
     /**
@@ -159,28 +164,38 @@ class SocialFeedAdministrationController extends BaseController {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function deleteTokenAction(Token $token) {
+    public function deleteTokenAction(Token $token)
+    {
         $configuration = $this->configurationRepository->findByToken($token);
 
-        if($configuration === NULL) {
+        if ($configuration === null) {
             $this->tokenRepository->remove($token);
-            $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
+            $this->addFlashMessage(
+                self::translate('pxasocialfeed_module.labels.removedSuccess'),
+                self::translate('pxasocialfeed_module.labels.removed'),
+                FlashMessage::OK
+            );
         } else {
-            $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.cantRemoveTokenConfigExist'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+            $this->addFlashMessage(
+                self::translate('pxasocialfeed_module.labels.cantRemoveTokenConfigExist'),
+                self::translate('pxasocialfeed_module.labels.error'),
+                FlashMessage::ERROR
+            );
         }
 
-        $this->redirect('index', NULL, NULL, ['activeTokenTab' => TRUE]);
+        $this->redirect('index', null, null, ['activeTokenTab' => true]);
     }
 
     /**
      * @param Configuration $configuration
      * @return void
      */
-    public function manageConfigurationAction(Configuration $configuration = NULL) {
+    public function manageConfigurationAction(Configuration $configuration = null)
+    {
         $this->view->assignMultiple([
             'tokens' => $this->tokenRepository->findAll(),
             'config' => $configuration,
-            'isEditForm' => $configuration !== NULL
+            'isEditForm' => $configuration !== null
         ]);
     }
 
@@ -189,7 +204,8 @@ class SocialFeedAdministrationController extends BaseController {
      * @validate $configuration \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator
      * @return void
      */
-    public function saveConfigurationAction(Configuration $configuration) {
+    public function saveConfigurationAction(Configuration $configuration)
+    {
         if ($configuration->getUid()) {
             $this->configurationRepository->update($configuration);
             $title = self::translate('pxasocialfeed_module.labels.edit');
@@ -212,7 +228,8 @@ class SocialFeedAdministrationController extends BaseController {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function deleteConfigurationAction(Configuration $configuration) {
+    public function deleteConfigurationAction(Configuration $configuration)
+    {
         // remove all feeds
         $feeds = $this->feedRepository->findByConfiguration($configuration->getUid());
 
@@ -222,7 +239,11 @@ class SocialFeedAdministrationController extends BaseController {
 
         $this->configurationRepository->remove($configuration);
 
-        $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.removedSuccess'), self::translate('pxasocialfeed_module.labels.removed'), FlashMessage::OK);
+        $this->addFlashMessage(
+            self::translate('pxasocialfeed_module.labels.removedSuccess'),
+            self::translate('pxasocialfeed_module.labels.removed'),
+            FlashMessage::OK
+        );
         $this->redirect('index');
     }
 
@@ -234,16 +255,21 @@ class SocialFeedAdministrationController extends BaseController {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    public function addAccessTokenAction(Token $token) {
+    public function addAccessTokenAction(Token $token)
+    {
         $code = GeneralUtility::_GP('code');
 
         $redirectUri = $this->uriBuilder->reset()
-            ->setCreateAbsoluteUri(TRUE)
+            ->setCreateAbsoluteUri(true)
             ->uriFor('addAccessToken', ['token' => $token->getUid()]);
 
         if (isset($code)) {
             /** @var RequestUtility $requestUtility */
-            $requestUtility = GeneralUtility::makeInstance(RequestUtility::class, 'https://api.instagram.com/oauth/access_token', RequestUtility::METHOD_POST);
+            $requestUtility = GeneralUtility::makeInstance(
+                RequestUtility::class,
+                'https://api.instagram.com/oauth/access_token',
+                RequestUtility::METHOD_POST
+            );
             $requestUtility->setPostParameters(
                 [
                     'client_id' => $token->getCredential('clientId'),
@@ -257,27 +283,43 @@ class SocialFeedAdministrationController extends BaseController {
             try {
                 $response = $requestUtility->send();
             } catch (\Exception $e) {
-                $response = NULL;
-                $this->addFlashMessage($e->getMessage(), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+                $response = null;
+                $this->addFlashMessage(
+                    $e->getMessage(),
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
             }
 
-            if($response !== NULL) {
-                $data = json_decode($response, TRUE);
+            if ($response !== null) {
+                $data = json_decode($response, true);
 
                 if (isset($data['access_token'])) {
                     $token->setCredential('accessToken', $data['access_token']);
                     $this->tokenRepository->update($token);
 
-                    $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.access_tokenUpdated'), self::translate('pxasocialfeed_module.labels.success'), FlashMessage::OK);
+                    $this->addFlashMessage(
+                        self::translate('pxasocialfeed_module.labels.access_tokenUpdated'),
+                        self::translate('pxasocialfeed_module.labels.success'),
+                        FlashMessage::OK
+                    );
                 } elseif (isset($data['error'])) {
-                    $this->addFlashMessage($data['error_description'], self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+                    $this->addFlashMessage(
+                        $data['error_description'],
+                        self::translate('pxasocialfeed_module.labels.error'),
+                        FlashMessage::ERROR
+                    );
                 } else {
-                    $this->addFlashMessage(self::translate('pxasocialfeed_module.labels.errorGettingsToken'), self::translate('pxasocialfeed_module.labels.error'), FlashMessage::ERROR);
+                    $this->addFlashMessage(
+                        self::translate('pxasocialfeed_module.labels.errorGettingsToken'),
+                        self::translate('pxasocialfeed_module.labels.error'),
+                        FlashMessage::ERROR
+                    );
                 }
             }
         }
 
-        $this->redirect('index', NULL, NULL, ['activeTokenTab' => TRUE]);
+        $this->redirect('index', null, null, ['activeTokenTab' => true]);
     }
 
     /**
@@ -285,9 +327,10 @@ class SocialFeedAdministrationController extends BaseController {
      *
      * @return void
      */
-    protected function createMenu() {
+    protected function createMenu()
+    {
         // if view was found
-        if($this->view->getModuleTemplate() !== NULL) {
+        if ($this->view->getModuleTemplate() !== null) {
             /** @var UriBuilder $uriBuilder */
             $uriBuilder = $this->objectManager->get(UriBuilder::class);
             $uriBuilder->setRequest($this->request);
@@ -296,9 +339,9 @@ class SocialFeedAdministrationController extends BaseController {
             $menu->setIdentifier('pxa_social_feed');
 
             $actions = [
-                ['action' => 'index',               'label' => 'pxasocialfeed_module.action.indexAction'],
+                ['action' => 'index', 'label' => 'pxasocialfeed_module.action.indexAction'],
                 ['action' => 'manageConfiguration', 'label' => 'pxasocialfeed_module.action.manageConfigAction'],
-                ['action' => 'manageToken',         'label' => 'pxasocialfeed_module.action.manageTokenAction'],
+                ['action' => 'manageToken', 'label' => 'pxasocialfeed_module.action.manageTokenAction'],
             ];
 
             foreach ($actions as $action) {

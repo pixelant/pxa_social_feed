@@ -1,6 +1,6 @@
 <?php
-namespace Pixelant\PxaSocialFeed\Domain\Model;
 
+namespace Pixelant\PxaSocialFeed\Domain\Model;
 
 /***************************************************************
  *
@@ -27,12 +27,13 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
  * Configuration
  */
-class Configuration extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Configuration extends AbstractEntity
+{
 
     /**
      * @var int
@@ -44,123 +45,133 @@ class Configuration extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      *
      * @var boolean
      */
-    protected $hidden = FALSE;
+    protected $hidden = false;
 
-	/**
-	 * socialId
-	 *
-	 * @var string
-	 */
-	protected $socialId = '';
+    /**
+     * socialId
+     *
+     * @var string
+     */
+    protected $socialId = '';
 
-	/**
-	 * name
-	 *
-	 * @var string
-	 */
-	protected $name = '';
+    /**
+     * name
+     *
+     * @var string
+     */
+    protected $name = '';
 
-	/**
-	 * $feedsLimit
-	 *
-	 * @var integer
-	 */
-	protected $feedsLimit = 0;
+    /**
+     * $feedsLimit
+     *
+     * @var integer
+     */
+    protected $feedsLimit = 0;
 
-	/**
-	 * token
-	 *
-	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
-	 */
-	protected $token = NULL;
+    /**
+     * token
+     *
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
+     */
+    protected $token = null;
 
-	/**
-	 * Returns the socialId
-	 *
-	 * @return string $socialId
-	 */
-	public function getSocialId() {
-		return $this->socialId;
-	}
+    /**
+     * Returns the socialId
+     *
+     * @return string $socialId
+     */
+    public function getSocialId()
+    {
+        return $this->socialId;
+    }
 
-	/**
-	 * Sets the socialId
-	 *
-	 * @param string $socialId
-	 * @return void
-	 */
-	public function setSocialId($socialId) {
-		$this->socialId = $socialId;
-	}
+    /**
+     * Sets the socialId
+     *
+     * @param string $socialId
+     * @return void
+     */
+    public function setSocialId($socialId)
+    {
+        $this->socialId = $socialId;
+    }
 
-	/**
-	 * Returns the name
-	 *
-	 * @return string $name
-	 */
-	public function getName() {
-		return $this->name;
-	}
+    /**
+     * Returns the name
+     *
+     * @return string $name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
-	/**
-	 * Sets the name
-	 *
-	 * @param string $name
-	 * @return void
-	 */
-	public function setName($name) {
-		$this->name = $name;
-	}
+    /**
+     * Sets the name
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
 
-	/**
-	 * Returns the $feedsLimit
-	 *
-	 * @return integer $feedsLimit
-	 */
-	public function getFeedsLimit() {
-		return $this->feedsLimit;
-	}
+    /**
+     * Returns the $feedsLimit
+     *
+     * @return integer $feedsLimit
+     */
+    public function getFeedsLimit()
+    {
+        return $this->feedsLimit;
+    }
 
-	/**
-	 * Sets the $feedsLimit
-	 *
-	 * @param integer $feedsLimit
-	 * @return void
-	 */
-	public function setFeedsLimit($feedsLimit) {
-		$this->feedsLimit = $feedsLimit;
-	}
+    /**
+     * Sets the $feedsLimit
+     *
+     * @param integer $feedsLimit
+     * @return void
+     */
+    public function setFeedsLimit($feedsLimit)
+    {
+        $this->feedsLimit = $feedsLimit;
+    }
 
-	/**
-	 * Returns the token
-	 *
-	 * @return \Pixelant\PxaSocialFeed\Domain\Model\Token $token
-	 */
-	public function getToken() {
-		return $this->token;
-	}
+    /**
+     * Returns the token
+     *
+     * @return \Pixelant\PxaSocialFeed\Domain\Model\Token $token
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
 
-	/**
-	 * Sets the token
-	 *
-	 * @param \Pixelant\PxaSocialFeed\Domain\Model\Token $token
-	 * @return void
-	 */
-	public function setToken(Token $token) {
-		$this->token = $token;
-	}
+    /**
+     * Sets the token
+     *
+     * @param \Pixelant\PxaSocialFeed\Domain\Model\Token $token
+     * @return void
+     */
+    public function setToken(Token $token)
+    {
+        $this->token = $token;
+    }
 
     /**
      * @return boolean
      */
-    public function isHidden() {
+    public function isHidden()
+    {
         return $this->hidden;
     }
 
     /**
      * @param boolean $hidden
      */
-    public function setHidden($hidden) {
+    public function setHidden($hidden)
+    {
         $this->hidden = $hidden;
     }
 }

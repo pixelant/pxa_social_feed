@@ -28,20 +28,23 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  ***************************************************************/
 
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\Repository;
 
-class AbstractRepository extends \TYPO3\CMS\Extbase\Persistence\Repository {
+class AbstractRepository extends Repository
+{
 
     /**
      * initialize default settings
      */
-    public function initializeObject() {
-        /** @var \TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings $defaultQuerySettings */
+    public function initializeObject()
+    {
+        /** @var Typo3QuerySettings $defaultQuerySettings */
         $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
 
         // don't add the pid constraint
-        $defaultQuerySettings->setRespectStoragePage(FALSE);
+        $defaultQuerySettings->setRespectStoragePage(false);
         // don't add sys_language_uid constraint
-        $defaultQuerySettings->setRespectSysLanguage(FALSE);
+        $defaultQuerySettings->setRespectSysLanguage(false);
 
         $this->setDefaultQuerySettings($defaultQuerySettings);
     }

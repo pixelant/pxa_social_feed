@@ -1,7 +1,10 @@
 <?php
+
 namespace Pixelant\PxaSocialFeed\Task;
+
 use Pixelant\PxaSocialFeed\Utility\Task\CleanUpTaskUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /***************************************************************
  *
@@ -27,9 +30,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-
-class CleanUpTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
+class CleanUpTask extends AbstractTask
+{
 
     /**
      * days limit
@@ -42,7 +44,8 @@ class CleanUpTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
      * execute scheduler task
      * @return bool
      */
-    public function execute() {
+    public function execute()
+    {
         /** @var CleanUpTaskUtility $cleanUpUtility */
         $cleanUpUtility = GeneralUtility::makeInstance(CleanUpTaskUtility::class);
         return $cleanUpUtility->run($this->getDays());
@@ -52,23 +55,26 @@ class CleanUpTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
      * Returns some additional information about indexing progress, shown in
      * the scheduler's task overview list.
      *
-     * @return	string	Information to display
+     * @return    string    Information to display
      */
-    public function getAdditionalInformation() {
+    public function getAdditionalInformation()
+    {
         return 'Delete entries older than ' . $this->getDays() . ' days.';
     }
 
     /**
      * @return int
      */
-    public function getDays() {
+    public function getDays()
+    {
         return $this->days;
     }
 
     /**
      * @param int $days
      */
-    public function setDays($days) {
+    public function setDays($days)
+    {
         $this->days = $days;
     }
 }

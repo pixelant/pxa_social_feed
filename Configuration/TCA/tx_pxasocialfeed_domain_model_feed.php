@@ -1,15 +1,17 @@
 <?php
 defined('TYPO3_MODE') or die();
 
+$ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:';
+
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds',
+        'title' => $ll . 'tx_pxasocialfeed_domain_model_feeds',
         'label' => 'title',
         'label_alt' => 'message,post_url',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
-        'dividers2tabs' => TRUE,
+        'dividers2tabs' => true,
         'default_sortby' => 'crdate DESC',
 
         'delete' => 'deleted',
@@ -26,6 +28,7 @@ return [
 
         'rootLevel' => 1
     ],
+    // @codingStandardsIgnoreStart
     'interface' => [
         'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier, starttime, endtime',
     ],
@@ -36,6 +39,7 @@ return [
 			--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access, starttime, endtime'
         ],
     ],
+    // @codingStandardsIgnoreEnd
     'palettes' => [
         '1' => ['showitem' => ''],
     ],
@@ -57,7 +61,6 @@ return [
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
-                'checkbox' => 0,
                 'default' => 0,
                 'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
@@ -73,7 +76,6 @@ return [
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
-                'checkbox' => 0,
                 'default' => 0,
                 'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
@@ -83,7 +85,7 @@ return [
 
         'post_date' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.date',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.date',
             'config' => [
                 'type' => 'input',
                 'size' => 15,
@@ -94,7 +96,7 @@ return [
         ],
         'post_url' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.post_url',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.post_url',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -103,7 +105,7 @@ return [
         ],
         'message' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.message',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.message',
             'config' => [
                 'type' => 'text',
                 'cols' => 40,
@@ -113,7 +115,7 @@ return [
         ],
         'image' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.image',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.image',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -122,7 +124,7 @@ return [
         ],
         'likes' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.likes',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.likes',
             'config' => [
                 'type' => 'input',
                 'size' => 4,
@@ -131,7 +133,7 @@ return [
         ],
         'title' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.title',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.title',
             'config' => [
                 'type' => 'input',
                 'size' => 30,
@@ -156,7 +158,7 @@ return [
         ],
         'configuration' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_feeds.config',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.config',
             'config' => [
                 'type' => 'select',
                 'foreign_table' => 'tx_pxasocialfeed_domain_model_configuration',

@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaSocialFeed\Task;
 
 /***************************************************************
@@ -29,8 +30,10 @@ namespace Pixelant\PxaSocialFeed\Task;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use Pixelant\PxaSocialFeed\Utility\Task\ImportTaskUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
-class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
+class ImportTask extends AbstractTask
+{
 
     /**
      * list of config uids
@@ -43,8 +46,9 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
      * execute scheduler task
      * @return bool
      */
-    public function execute() {
-        /** @var \Pixelant\PxaSocialFeed\Utility\Task\ImportTaskUtility $taskUtility */
+    public function execute()
+    {
+        /** @var ImportTaskUtility $taskUtility */
         $taskUtility = GeneralUtility::makeInstance(ImportTaskUtility::class);
         return $taskUtility->run($this->getConfigs());
     }
@@ -53,23 +57,26 @@ class ImportTask extends \TYPO3\CMS\Scheduler\Task\AbstractTask {
      * Returns some additional information about indexing progress, shown in
      * the scheduler's task overview list.
      *
-     * @return	string	Information to display
+     * @return    string    Information to display
      */
-    public function getAdditionalInformation() {
+    public function getAdditionalInformation()
+    {
         return ConfigurationUtility::getSelectedConfigsInfo($this->getConfigs());
     }
 
     /**
      * @return array
      */
-    public function getConfigs() {
+    public function getConfigs()
+    {
         return $this->configs;
     }
 
     /**
      * @param array $configs
      */
-    public function setConfigs($configs) {
+    public function setConfigs($configs)
+    {
         $this->configs = $configs;
     }
 }

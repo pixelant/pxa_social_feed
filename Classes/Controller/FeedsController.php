@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaSocialFeed\Controller;
 
 /***************************************************************
@@ -29,14 +30,16 @@ namespace Pixelant\PxaSocialFeed\Controller;
 /**
  * FeedsController
  */
-class FeedsController extends BaseController {
+class FeedsController extends BaseController
+{
 
     /**
      * action list
      *
      * @return void
      */
-    public function listAction() {
+    public function listAction()
+    {
         $limit = $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10;
 
         $feeds = $this->feedRepository->findFeedsByConfig($this->settings['configuration'], $limit);

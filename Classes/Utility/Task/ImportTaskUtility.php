@@ -2,7 +2,6 @@
 
 namespace Pixelant\PxaSocialFeed\Utility\Task;
 
-
 /***************************************************************
  *
  *  Copyright notice
@@ -38,7 +37,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
-class ImportTaskUtility {
+class ImportTaskUtility
+{
 
     /**
      *  objectManager
@@ -63,7 +63,8 @@ class ImportTaskUtility {
     /**
      * TaskUtility constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         $this->configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
@@ -76,8 +77,9 @@ class ImportTaskUtility {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \UnexpectedValueException
      */
-    public function run($configurationsUids) {
-        if(is_array($configurationsUids)) {
+    public function run($configurationsUids)
+    {
+        if (is_array($configurationsUids)) {
             $configurations = $this->configurationRepository->findByUids($configurationsUids);
 
             /** @var Configuration $configuration */
@@ -85,25 +87,32 @@ class ImportTaskUtility {
                 switch ($configuration->getToken()->getSocialType()) {
                     case Token::FACEBOOK:
                         //getting data array from facebook graph api json result
-                        $url = sprintf('https://graph.facebook.com/v2.6/%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
+                        // @codingStandardsIgnoreStart
+                        $url = sprintf(
+                            'https://graph.facebook.com/v2.6/%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
                             $configuration->getSocialId(),
                             $configuration->getFeedsLimit(),
                             $configuration->getToken()->getCredential('appId'),
                             $configuration->getToken()->getCredential('appSecret')
                         );
+                        // @codingStandardsIgnoreEnd
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
 
                         if (is_array($data)) {
                             $this->updateFacebookFeed($data['data'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException('Invalid data from FACEBOOK feed. Please, check credentials.', 1466682087);
+                            throw new \UnexpectedValueException(
+                                'Invalid data from FACEBOOK feed. Please, check credentials.',
+                                1466682087
+                            );
                         }
 
                         break;
                     case Token::INSTAGRAM_OAUTH2:
                         //getting data array from instagram api json result
-                        $url = sprintf('https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
+                        $url = sprintf(
+                            'https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
                             $configuration->getSocialId(),
                             $configuration->getToken()->getCredential('accessToken'),
                             $configuration->getFeedsLimit()
@@ -114,7 +123,10 @@ class ImportTaskUtility {
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException('Invalid data from INSTAGRAM feed. Please, check credentials.', 1466682066);
+                            throw new \UnexpectedValueException(
+                                'Invalid data from INSTAGRAM feed. Please, check credentials.',
+                                1466682066
+                            );
                         }
 
                         break;
@@ -137,10 +149,13 @@ class ImportTaskUtility {
 
                         $data = $twitterApi->setGetFields($fields)->performRequest();
 
-                        if(is_array($data)) {
+                        if (is_array($data)) {
                             $this->saveTwitterFeed($data, $configuration);
                         } else {
-                            throw new \UnexpectedValueException('Invalid data from Twitter feed. Please, check credentials.', 1466682071);
+                            throw new \UnexpectedValueException(
+                                'Invalid data from Twitter feed. Please, check credentials.',
+                                1466682071
+                            );
                         }
 
                         break;
@@ -154,7 +169,7 @@ class ImportTaskUtility {
             $this->objectManager->get(PersistenceManager::class)->persistAll();
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -162,20 +177,21 @@ class ImportTaskUtility {
      * @param Configuration $configuration
      * @return void
      */
-    private function saveTwitterFeed($data, Configuration $configuration) {
+    private function saveTwitterFeed($data, Configuration $configuration)
+    {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
             $twitterFeed = $this->feedRepository->findOneByExternalIdentifier($rawData['id_str']);
 
-            if($twitterFeed === NULL) {
+            if ($twitterFeed === null) {
                 /** @var Feed $twitterFeed */
                 $twitterFeed = $this->objectManager->get(Feed::class);
 
-                if(!empty($rawData['text'])) {
+                if (!empty($rawData['text'])) {
                     $twitterFeed->setMessage($rawData['text']);
                 }
-                if(isset($rawData['entities']['media'][0])) {
+                if (isset($rawData['entities']['media'][0])) {
                     $twitterFeed->setImage($rawData['entities']['media'][0]['media_url']);
                 }
 
@@ -186,9 +202,10 @@ class ImportTaskUtility {
             }
 
             //take likes of original tweet if it's retweet
-            $likes = isset($rawData['retweeted_status']) ? $rawData['retweeted_status']['favorite_count'] : $rawData['favorite_count'];
+            $likes = isset($rawData['retweeted_status']) ?
+                $rawData['retweeted_status']['favorite_count'] : $rawData['favorite_count'];
 
-            if($twitterFeed->getUid() && $likes != $twitterFeed->getLikes()) {
+            if ($twitterFeed->getUid() && $likes != $twitterFeed->getLikes()) {
                 $twitterFeed->setLikes($likes);
                 $this->feedRepository->update($twitterFeed);
             } else {
@@ -204,13 +221,14 @@ class ImportTaskUtility {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    private function saveInstagramFeed($data, Configuration $configuration) {
+    private function saveInstagramFeed($data, Configuration $configuration)
+    {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
             $ig = $this->feedRepository->findOneByExternalIdentifier($rawData['id']);
 
-            if($ig === NULL) {
+            if ($ig === null) {
                 /** @var Feed $ig */
                 $ig = $this->objectManager->get(Feed::class);
 
@@ -236,7 +254,7 @@ class ImportTaskUtility {
 
             $likes = intval($rawData['likes']['count']);
 
-            if($ig->getUid() && $likes != $ig->getLikes()) {
+            if ($ig->getUid() && $likes != $ig->getLikes()) {
                 $ig->setLikes($likes);
                 $this->feedRepository->update($ig);
             } else {
@@ -252,7 +270,8 @@ class ImportTaskUtility {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    private function updateFacebookFeed($data, Configuration $configuration) {
+    private function updateFacebookFeed($data, Configuration $configuration)
+    {
         //adding each record from array to database
         foreach ($data as $rawData) {
             /** @var Feed $feedItem */
@@ -276,7 +295,7 @@ class ImportTaskUtility {
 
             $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
 
-            if($feedItem->getUid()) {
+            if ($feedItem->getUid()) {
                 $this->feedRepository->update($feedItem);
             } else {
                 $this->feedRepository->add($feedItem);
@@ -288,7 +307,8 @@ class ImportTaskUtility {
      * @param Feed $feed
      * @param array $rawData
      */
-    private function setFacebookData(Feed $feed, $rawData) {
+    private function setFacebookData(Feed $feed, $rawData)
+    {
         if (isset($rawData['message'])) {
             $feed->setMessage($rawData['message']);
         }
