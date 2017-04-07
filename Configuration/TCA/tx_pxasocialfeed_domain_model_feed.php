@@ -24,8 +24,7 @@ return [
 
         'typeicon_classes' => [
             'default' => 'ext-pxasocialfeed-model-icon'
-        ],
-
+        ]
     ],
     // @codingStandardsIgnoreStart
     'interface' => [

@@ -94,6 +94,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.token">
                 <source>Token</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_storage">
+                <source>Feed storage</source>
+            </trans-unit>
 
             <trans-unit id="tx_pxasocialfeed.task.import.name">
                 <source>Social Feed Import</source>

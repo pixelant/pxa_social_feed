@@ -102,7 +102,7 @@ class Feed extends AbstractEntity
     /**
      * token
      *
-     * @var Configuration
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
      */
     protected $configuration = null;
 
@@ -214,7 +214,7 @@ class Feed extends AbstractEntity
     /**
      * Returns the config
      *
-     * @return Configuration $configuration
+     * @return \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration
      */
     public function getConfiguration()
     {
@@ -224,7 +224,7 @@ class Feed extends AbstractEntity
     /**
      * Sets the token
      *
-     * @param Configuration $configuration
+     * @param \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration
      * @return void
      */
     public function setConfiguration(Configuration $configuration)

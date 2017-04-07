@@ -27,6 +27,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
@@ -67,6 +68,13 @@ class Configuration extends AbstractEntity
      * @var integer
      */
     protected $feedsLimit = 0;
+
+    /**
+     * Storage of feed records
+     *
+     * @var int
+     */
+    protected $feedStorage = 0;
 
     /**
      * token
@@ -173,5 +181,43 @@ class Configuration extends AbstractEntity
     public function setHidden($hidden)
     {
         $this->hidden = $hidden;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFeedStorage()
+    {
+        return $this->feedStorage;
+    }
+
+    /**
+     * @param int $feedStorage
+     */
+    public function setFeedStorage($feedStorage)
+    {
+        $this->feedStorage = $feedStorage;
+    }
+
+    /**
+     * Get title of storage
+     *
+     * @return string
+     */
+    public function getStorageTitle()
+    {
+        static $title;
+
+        if ($title === null) {
+            $raw = BackendUtility::getRecord(
+                'pages',
+                $this->feedStorage,
+                'title'
+            );
+
+            $title = is_array($raw) ? $raw['title'] : '';
+        }
+
+        return $title;
     }
 }

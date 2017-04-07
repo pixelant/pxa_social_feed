@@ -130,6 +130,9 @@
             <trans-unit id="pxasocialfeed_module.labels.uid">
                 <source>UID</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.form.feed_storage">
+                <source>Storage</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.form.config_name">
                 <source>Configuration name</source>
             </trans-unit>
@@ -193,6 +196,9 @@
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1466669831">
                 <source>Something went wrong</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1491570246">
+                <source>Storage value is invalid</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.changesSaved">
                 <source>Changes saved successfully.</source>

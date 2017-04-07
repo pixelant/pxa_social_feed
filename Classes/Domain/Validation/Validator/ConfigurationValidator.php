@@ -53,6 +53,8 @@ class ConfigurationValidator extends AbstractValidator
                 $errorCode = 1456234671;
             } elseif (!$configuration->getFeedsLimit() || !is_int($configuration->getFeedsLimit())) {
                 $errorCode = 1456234832;
+            } elseif ((int)$configuration->getFeedStorage() === 0) {
+                $errorCode = 1491570246;
             }
         } else {
             $errorCode = 1466669831;

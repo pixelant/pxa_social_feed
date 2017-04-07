@@ -25,8 +25,7 @@ return [
             'default' => 'ext-pxasocialfeed-model-icon'
         ],
 
-        'rootLevel' => 1,
-        'hideTable' => 1
+        'rootLevel' => 1
     ],
     'interface' => [
         'showRecordFieldList' => 'hidden, serialized_credentials, social_type, starttime, endtime',

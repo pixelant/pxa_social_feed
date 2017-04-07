@@ -25,14 +25,13 @@ return [
             'default' => 'ext-pxasocialfeed-model-icon'
         ],
 
-        'rootLevel' => 1,
-        'hideTable' => 1
+        'rootLevel' => 1
     ],
     'interface' => [
-        'showRecordFieldList' => 'hidden, config_name, social_id, token, feeds_limit, starttime, endtime',
+        'showRecordFieldList' => 'hidden, config_name, social_id, token, feeds_limit, feed_storage, starttime, endtime',
     ],
     'types' => [
-        '1' => ['showitem' => 'hidden, --palette--;;1, config_name, social_id, token, feeds_limit'],
+        '1' => ['showitem' => 'hidden, --palette--;;1, config_name, social_id, token, feeds_limit, feed_storage'],
     ],
     'palettes' => [
         '1' => ['showitem' => ''],
@@ -102,6 +101,15 @@ return [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim'
+            ],
+        ],
+        'feed_storage' => [
+            'exclude' => 1,
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_config.feed_storage',
+            'config' => [
+                'type' => 'input',
+                'size' => 10,
+                'eval' => 'int,required'
             ],
         ],
         'token' => [
