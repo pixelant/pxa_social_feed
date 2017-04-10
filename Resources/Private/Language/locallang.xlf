@@ -59,6 +59,9 @@
             <trans-unit id="pxasocialfeed_module.labels.editConfig">
                 <source>Edit configuration</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.type">
+                <source>Source</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.type.1">
                 <source>Facebook</source>
             </trans-unit>

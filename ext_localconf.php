@@ -7,8 +7,7 @@ call_user_func(
             'Pixelant.' . $_EXTKEY,
             'Showfeed',
             [
-                'Feeds' => 'list',
-
+                'Feeds' => 'list'
             ],
             // non-cacheable actions
             []

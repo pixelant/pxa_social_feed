@@ -125,7 +125,7 @@ class Token extends AbstractEntity
     {
         if (!empty($key)) {
             $credentials = $this->getCredentials();
-            $credentials[$key] = $value;
+            $credentials[$key] = trim($value);
 
             $this->setSerializedCredentials(serialize($credentials));
         }
