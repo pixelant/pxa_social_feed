@@ -106,10 +106,13 @@ class SocialFeedAdministrationController extends BaseController
      */
     public function indexAction($activeTokenTab = false)
     {
+        $tokens = $this->tokenRepository->findAll();
+
         $this->view->assignMultiple([
-            'tokens' => $this->tokenRepository->findAll(),
+            'tokens' => $tokens,
             'configs' => $this->configurationRepository->findAll(),
-            'activeTokenTab' => $activeTokenTab
+            'activeTokenTab' => $activeTokenTab,
+            'isTokensValid' => $this->isTokensValid($tokens)
         ]);
     }
 
@@ -120,8 +123,10 @@ class SocialFeedAdministrationController extends BaseController
      */
     public function manageTokenAction(Token $token = null)
     {
+        $predefinedType = $this->request->hasArgument('type') ? $this->request->getArgument('type') : 1;
+
         $this->view->assignMultiple([
-            'type' => ($token === null ? ($this->request->hasArgument('type') ? $this->request->getArgument('type') : 1) : $token->getSocialType()),
+            'type' => ($token === null ? $predefinedType : $token->getSocialType()),
             'token' => $token,
             'isEditForm' => $token !== null,
             'tokens' => $this->tokenRepository->findAll()
@@ -384,6 +389,29 @@ class SocialFeedAdministrationController extends BaseController
             $feedItem->setPid($newStorage);
             $this->feedRepository->update($feedItem);
         }
+    }
+
+    /**
+     * Check if instagram tokens has access token
+     * @TODO more check is needed for other tokens ?
+     *
+     * @param $tokens
+     * @return bool
+     */
+    protected function isTokensValid($tokens)
+    {
+        $isValid = true;
+
+        /** @var Token $token */
+        foreach ($tokens as $token) {
+            if ($token->getSocialType() === Token::INSTAGRAM_OAUTH2
+                && empty($token->getCredential('accessToken'))) {
+                $isValid = false;
+                break;
+            }
+        }
+
+        return $isValid;
     }
 
     /**
