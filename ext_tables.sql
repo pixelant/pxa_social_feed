@@ -16,6 +16,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feed (
   update_date int(11) unsigned DEFAULT '0' NOT NULL,
   configuration int(11) unsigned DEFAULT '0',
 
+  type varchar(100) NOT NULL DEFAULT '0',
   tstamp int(11) unsigned DEFAULT '0' NOT NULL,
   crdate int(11) unsigned DEFAULT '0' NOT NULL,
   cruser_id int(11) unsigned DEFAULT '0' NOT NULL,

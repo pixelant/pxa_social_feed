@@ -217,6 +217,8 @@ class ImportTaskUtility
                 $twitterFeed->setPostDate($date);
                 $twitterFeed->setConfiguration($configuration);
                 $twitterFeed->setExternalIdentifier($rawData['id_str']);
+                $twitterFeed->setPid($configuration->getFeedStorage());
+                $twitterFeed->setType((string)Token::TWITTER);
             }
 
             //take likes of original tweet if it's retweet
@@ -228,7 +230,6 @@ class ImportTaskUtility
                 $this->feedRepository->update($twitterFeed);
             } else {
                 $twitterFeed->setLikes($likes);
-                $twitterFeed->setPid($configuration->getFeedStorage());
                 $this->feedRepository->add($twitterFeed);
             }
         }
@@ -245,41 +246,45 @@ class ImportTaskUtility
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            $ig = $this->feedRepository->findOneByExternalIdentifier($rawData['id'], $configuration->getFeedStorage());
+            $instagram = $this->feedRepository->findOneByExternalIdentifier(
+                $rawData['id'],
+                $configuration->getFeedStorage()
+            );
 
-            if ($ig === null) {
-                /** @var Feed $ig */
-                $ig = $this->objectManager->get(Feed::class);
+            if ($instagram === null) {
+                /** @var Feed $instagram */
+                $instagram = $this->objectManager->get(Feed::class);
 
                 if (isset($rawData['images']['standard_resolution']['url'])) {
-                    $ig->setImage($rawData['images']['standard_resolution']['url']);
+                    $instagram->setImage($rawData['images']['standard_resolution']['url']);
                 }
 
                 if (isset($rawData['location']['name']) && !empty($rawData['location']['name'])) {
-                    $ig->setMessage($rawData['location']['name']);
+                    $instagram->setMessage($rawData['location']['name']);
                 } elseif (isset($rawData['caption']['text']) && !empty($rawData['caption']['text'])) {
-                    $ig->setMessage($rawData['caption']['text']);
+                    $instagram->setMessage($rawData['caption']['text']);
                 }
 
-                $ig->setPostUrl($rawData['link']);
+                $instagram->setPostUrl($rawData['link']);
 
-                $dt = new \DateTime();
-                $dt->setTimestamp($rawData['created_time']);
+                $dateTime = new \DateTime();
+                $dateTime->setTimestamp($rawData['created_time']);
 
-                $ig->setPostDate($dt);
-                $ig->setConfiguration($configuration);
-                $ig->setExternalIdentifier($rawData['id']);
+                $instagram->setPostDate($dateTime);
+                $instagram->setConfiguration($configuration);
+                $instagram->setExternalIdentifier($rawData['id']);
+                $instagram->setPid($configuration->getFeedStorage());
+                $instagram->setType((string)Token::INSTAGRAM_OAUTH2);
             }
 
             $likes = intval($rawData['likes']['count']);
 
-            if ($ig->getUid() && $likes != $ig->getLikes()) {
-                $ig->setLikes($likes);
-                $this->feedRepository->update($ig);
+            if ($instagram->getUid() && $likes != $instagram->getLikes()) {
+                $instagram->setLikes($likes);
+                $this->feedRepository->update($instagram);
             } else {
-                $ig->setLikes($likes);
-                $ig->setPid($configuration->getFeedStorage());
-                $this->feedRepository->add($ig);
+                $instagram->setLikes($likes);
+                $this->feedRepository->add($instagram);
             }
         }
     }
@@ -294,35 +299,36 @@ class ImportTaskUtility
     {
         //adding each record from array to database
         foreach ($data as $rawData) {
-            /** @var Feed $feedItem */
-            if ($feedItem = $this->feedRepository->findOneByExternalIdentifier(
+            /** @var Feed $facebookItem */
+            if ($facebookItem = $this->feedRepository->findOneByExternalIdentifier(
                 $rawData['id'],
                 $configuration->getFeedStorage()
             )) {
-                if ($feedItem->getUpdateDate() < strtotime($rawData['updated_time'])) {
-                    $this->setFacebookData($feedItem, $rawData);
-                    $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
+                if ($facebookItem->getUpdateDate() < strtotime($rawData['updated_time'])) {
+                    $this->setFacebookData($facebookItem, $rawData);
+                    $facebookItem->setUpdateDate(strtotime($rawData['updated_time']));
                 }
             } else {
                 /** @var Feed $feedItem */
-                $feedItem = $this->objectManager->get(Feed::class);
-                $this->setFacebookData($feedItem, $rawData);
+                $facebookItem = $this->objectManager->get(Feed::class);
+                $this->setFacebookData($facebookItem, $rawData);
 
                 $post_array = GeneralUtility::trimExplode('_', $rawData['id'], 1);
-                $feedItem->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
-                $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
-                $feedItem->setConfiguration($configuration);
-                $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
-                $feedItem->setExternalIdentifier($rawData['id']);
+                $facebookItem->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
+                $facebookItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
+                $facebookItem->setConfiguration($configuration);
+                $facebookItem->setUpdateDate(strtotime($rawData['updated_time']));
+                $facebookItem->setExternalIdentifier($rawData['id']);
+                $facebookItem->setPid($configuration->getFeedStorage());
+                $facebookItem->setType((string)Token::FACEBOOK);
             }
 
-            $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
+            $facebookItem->setLikes(intval($rawData['likes']['summary']['total_count']));
 
-            if ($feedItem->getUid()) {
-                $this->feedRepository->update($feedItem);
+            if ($facebookItem->getUid()) {
+                $this->feedRepository->update($facebookItem);
             } else {
-                $feedItem->setPid($configuration->getFeedStorage());
-                $this->feedRepository->add($feedItem);
+                $this->feedRepository->add($facebookItem);
             }
         }
     }

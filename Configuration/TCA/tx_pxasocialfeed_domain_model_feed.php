@@ -14,33 +14,38 @@ return [
         'dividers2tabs' => true,
         'default_sortby' => 'crdate DESC',
 
+        'type' => 'type',
+        'typeicon_column' => 'type',
+        'typeicon_classes' => [
+            'default' => 'ext-pxasocialfeed-model-icon',
+            '1' => 'ext-pxasocialfeed-model-icon-facebook',
+            '2' => 'ext-pxasocialfeed-model-icon-instagram',
+            '3' => 'ext-pxasocialfeed-model-icon-twitter'
+        ],
+
         'delete' => 'deleted',
         'enablecolumns' => [
             'disabled' => 'hidden',
             'starttime' => 'starttime',
             'endtime' => 'endtime',
         ],
-        'searchFields' => 'post_url,message,image,title,config,',
-
-        'typeicon_classes' => [
-            'default' => 'ext-pxasocialfeed-model-icon'
-        ]
+        'searchFields' => 'post_url,message,image,title,config,'
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier, starttime, endtime',
+        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier, starttime, endtime, type',
     ],
     'types' => [
-        '1' => [
-            'showitem' => 'hidden, --palette--;;1, post_date, title, post_url, message, image, likes, configuration, 
-            --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,
-			--palette--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:palette.access, starttime, endtime'
-        ],
+        '0' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
+        '1' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
+        '2' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
+        '3' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
+    ],
+    'palettes' => [
+        'core' => ['showitem' =>'hidden'],
+        'main' => ['showitem' => 'post_date, --linebreak--, title, --linebreak--, post_url, --linebreak--, message, --linebreak--, image, --linebreak--, likes, --linebreak--, configuration']
     ],
     // @codingStandardsIgnoreEnd
-    'palettes' => [
-        '1' => ['showitem' => ''],
-    ],
     'columns' => [
         'hidden' => [
             'exclude' => 1,
@@ -79,7 +84,22 @@ return [
                 ],
             ],
         ],
-
+        'type' => [
+            'exclude' => 0,
+            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_tca.xlf:pages.doktype_formlabel',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'items' => [
+                    [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.1', 1, 'ext-pxasocialfeed-model-icon-facebook'],
+                    [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.2', 2, 'ext-pxasocialfeed-model-icon-instagram'],
+                    [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.3', 3, 'ext-pxasocialfeed-model-icon-twitter'],
+                ],
+                'showIconTable' => true,
+                'size' => 1,
+                'maxitems' => 1,
+            ]
+        ],
         'post_date' => [
             'exclude' => 1,
             'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.date',

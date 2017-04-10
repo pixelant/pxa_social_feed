@@ -97,6 +97,15 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_storage">
                 <source>Feed storage</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.1">
+                <source>Facebook</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.2">
+                <source>Instagram</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.3">
+                <source>Twitter</source>
+            </trans-unit>
 
             <trans-unit id="tx_pxasocialfeed.task.import.name">
                 <source>Social Feed Import</source>

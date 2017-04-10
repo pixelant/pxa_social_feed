@@ -1,2 +1,0 @@
-# cat=basic/enable/101; type=integer; label=LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:setStoragePid
-storagePid = 0

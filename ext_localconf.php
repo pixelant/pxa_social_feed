@@ -46,7 +46,10 @@ call_user_func(
         if (TYPO3_MODE === 'BE') {
             $icons = [
                 'ext-pxasocialfeed-wizard-icon' => 'feed.svg',
-                'ext-pxasocialfeed-model-icon' => 'feed.svg'
+                'ext-pxasocialfeed-model-icon' => 'feed.svg',
+                'ext-pxasocialfeed-model-icon-facebook' => 'facebook.svg',
+                'ext-pxasocialfeed-model-icon-instagram' => 'instagram.svg',
+                'ext-pxasocialfeed-model-icon-twitter' => 'twitter.svg'
             ];
             /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
             $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(

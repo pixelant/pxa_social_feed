@@ -98,6 +98,12 @@ class Feed extends AbstractEntity
      */
     protected $title = '';
 
+    /**
+     * type
+     *
+     * @var string
+     */
+    protected $type = '';
 
     /**
      * token
@@ -278,5 +284,21 @@ class Feed extends AbstractEntity
     public function setLikes($likes)
     {
         $this->likes = $likes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 }

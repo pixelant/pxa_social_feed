@@ -43,12 +43,12 @@ class Token extends AbstractEntity
     /**
      * instagram_oauth2
      */
-    const INSTAGRAM_OAUTH2 = 3;
+    const INSTAGRAM_OAUTH2 = 2;
 
     /**
      * twitter token
      */
-    const TWITTER = 4;
+    const TWITTER = 3;
 
     /**
      * pid

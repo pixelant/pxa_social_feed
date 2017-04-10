@@ -62,10 +62,10 @@
             <trans-unit id="pxasocialfeed_module.labels.type.1">
                 <source>Facebook</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.3">
+            <trans-unit id="pxasocialfeed_module.labels.type.2">
                 <source>Instagram (OAuth2)</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.4">
+            <trans-unit id="pxasocialfeed_module.labels.type.3">
                 <source>Twitter</source>
             </trans-unit>
 
