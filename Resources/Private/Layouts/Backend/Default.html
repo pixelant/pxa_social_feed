@@ -4,6 +4,8 @@
 
 <script type="text/javascript">
     require(['TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule'], function (socialFeedModule) {
-        socialFeedModule.getInstance().run();
+        socialFeedModule.getInstance(
+            <f:format.htmlentitiesDecode>{inlineSettings}</f:format.htmlentitiesDecode>
+        ).run();
     });
 </script>

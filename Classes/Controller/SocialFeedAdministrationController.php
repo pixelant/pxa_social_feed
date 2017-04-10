@@ -5,6 +5,7 @@ namespace Pixelant\PxaSocialFeed\Controller;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
@@ -91,6 +92,9 @@ class SocialFeedAdministrationController extends BaseController
 
         // create select box menu
         $this->createMenu();
+
+        // after view is ready assign inline settings
+        $this->addInlineSettings();
     }
 
     /**
@@ -354,5 +358,17 @@ class SocialFeedAdministrationController extends BaseController
 
             $this->view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
         }
+    }
+
+    /**
+     * Generate settings for JS
+     */
+    protected function addInlineSettings()
+    {
+        $settings = [
+            'browserUrl' => BackendUtility::getModuleUrl('wizard_element_browser')
+        ];
+
+        $this->view->assign('inlineSettings', json_encode($settings));
     }
 }

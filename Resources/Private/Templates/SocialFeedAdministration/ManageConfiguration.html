@@ -29,7 +29,9 @@
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.form.feed_storage"/></td>
-                            <td><f:form.textfield property="feedStorage" class="form-control"/></td>
+                            <td>
+                                <f:render partial="Backend/Typo3WinBrowserEditor" arguments="{configuration: config}"/>
+                            </td>
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.token"/></td>

@@ -206,18 +206,12 @@ class Configuration extends AbstractEntity
      */
     public function getStorageTitle()
     {
-        static $title;
+        $raw = BackendUtility::getRecord(
+            'pages',
+            $this->feedStorage,
+            'title'
+        );
 
-        if ($title === null) {
-            $raw = BackendUtility::getRecord(
-                'pages',
-                $this->feedStorage,
-                'title'
-            );
-
-            $title = is_array($raw) ? $raw['title'] : '';
-        }
-
-        return $title;
+        return is_array($raw) ? $raw['title'] : '';
     }
 }
