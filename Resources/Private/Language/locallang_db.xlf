@@ -133,6 +133,9 @@
             <trans-unit id="tx_pxasocialfeed_plugin.flexform.loadLikesCount">
                 <source>Load likes count</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_plugin.flexform.load_type">
+                <source>Load type</source>
+            </trans-unit>
 
             <trans-unit id="scheduler.configs">
                 <source>Available configurations</source>

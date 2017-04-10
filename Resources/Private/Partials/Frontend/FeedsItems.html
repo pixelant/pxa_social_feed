@@ -1,0 +1,28 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<ul class="social-feed-container owl-carousel">
+    <f:for each="{feeds}" as="feed">
+        <li class="social-feed-{feed.configuration.token.socialType}">
+            <a href="{feed.postUrl}" target="_blank">
+                <f:if condition="{feed.title}">
+                    <h3 class="social-feed-title">{feed.title}</h3>
+                </f:if>
+
+                <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.image)}" style="{f:if(else: '', then: 'background-image:url({feed.image});', condition: feed.image)}">
+                    <div class="social-feed-information">
+                        <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/type-{feed.configuration.token.socialType}-icon.svg" class="social-feed-icon" width="17"/>
+                        <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
+                    </div>
+                    <f:if condition="{settings.loadLikesCount}">
+                                <span class="social-feed-like-count">
+                                    <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/like.svg" class="like-icon" alt="like" width="17"/>
+                                    <span class="social-feed-like-like-count-element">{feed.likes}</span>
+                                </span>
+                    </f:if>
+                </div>
+
+                <p class="social-feed-message">{feed.message -> f:format.raw()}</p>
+            </a>
+        </li>
+    </f:for>
+</ul>
+</html>

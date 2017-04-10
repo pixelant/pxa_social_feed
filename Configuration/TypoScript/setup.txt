@@ -1,25 +1,55 @@
 plugin.tx_pxasocialfeed {
-	view {
-		templateRootPaths {
-			10 = {$plugin.tx_pxasocialfeed.view.templateRootPath}
-		}
-		partialRootPaths {
-			10 = {$plugin.tx_pxasocialfeed.view.partialRootPath}
-		}
-		layoutRootPaths {
-			10 = {$plugin.tx_pxasocialfeed.view.layoutRootPath}
-		}
-	}
+    view {
+        templateRootPaths {
+            10 = {$plugin.tx_pxasocialfeed.view.templateRootPath}
+        }
+
+        partialRootPaths {
+            10 = {$plugin.tx_pxasocialfeed.view.partialRootPath}
+        }
+
+        layoutRootPaths {
+            10 = {$plugin.tx_pxasocialfeed.view.layoutRootPath}
+        }
+    }
+
     settings {
         dateFormat = %d-%m-%y
     }
 }
 
 page.includeCSS {
-	pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/Css/socialFeed.css
+    pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/Css/socialFeed.css
 }
+
 page.includeJSFooter {
-	pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/JavaScript/jquery.dotdotdot.min.js
-	pxa_social_feed_2 = EXT:pxa_social_feed/Resources/Public/JavaScript/owl.carousel.min.js
-	pxa_social_feed_3 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
+    pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/JavaScript/jquery.dotdotdot.min.js
+    pxa_social_feed_2 = EXT:pxa_social_feed/Resources/Public/JavaScript/owl.carousel.min.js
+    pxa_social_feed_3 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
 }
+
+[globalVar = GP:type=7378121]
+    pxaAjaxFeedLoad = PAGE
+    pxaAjaxFeedLoad {
+        typeNum = 7378121
+        config {
+            disableAllHeaderCode = 1
+        }
+
+        5 = USER_INT
+        5 {
+            userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+            vendorName = Pixelant
+            extensionName = PxaSocialFeed
+            pluginName = Showfeed
+
+            switchableControllerActions {
+                Feeds {
+                    1 = loadFeedAjax
+                }
+            }
+
+            settings =< plugin.tx_pxasocialfeed.settings
+        }
+    }
+[end]

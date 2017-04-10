@@ -46,4 +46,41 @@ class FeedsController extends BaseController
 
         $this->view->assign('feeds', $feeds);
     }
+
+    /**
+     *
+     */
+    public function listAjaxAction()
+    {
+        $this->view->assignMultiple([
+            'configurations' => $this->settings['configuration'],
+            'feedsLimit' => $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10
+        ]);
+    }
+
+    /**
+     * Load feed with ajax
+     *
+     * @param string $configurations
+     * @param int $limit
+     */
+    public function loadFeedAjaxAction($configurations, $limit = 0)
+    {
+        $limit = $limit ? $limit : 10;
+
+        $feeds = $this->feedRepository->findFeedsByConfig($configurations, $limit);
+
+        $this->view->assign('feeds', $feeds);
+
+        header('Content-Type: application/json');
+
+        echo json_encode(
+            [
+                'success' => true,
+                'html' => $this->view->render()
+            ]
+        );
+
+        exit(0);
+    }
 }

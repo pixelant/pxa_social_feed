@@ -7,10 +7,12 @@ call_user_func(
             'Pixelant.' . $_EXTKEY,
             'Showfeed',
             [
-                'Feeds' => 'list'
+                'Feeds' => 'list, loadFeedAjax, listAjax'
             ],
             // non-cacheable actions
-            []
+            [
+                'Feeds' => 'list, loadFeedAjax'
+            ]
         );
 
         $ll = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_db.xlf:';
