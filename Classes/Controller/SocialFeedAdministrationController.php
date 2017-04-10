@@ -3,6 +3,7 @@
 namespace Pixelant\PxaSocialFeed\Controller;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -211,6 +212,16 @@ class SocialFeedAdministrationController extends BaseController
     public function saveConfigurationAction(Configuration $configuration)
     {
         if ($configuration->getUid()) {
+            if ($this->request->hasArgument('migrateRecords')
+                && (int)$this->request->getArgument('migrateRecords') === 1
+                && $configuration->_isDirty('feedStorage')
+            ) {
+                $this->migrateFeedsToNewStorage(
+                    $configuration,
+                    $configuration->getFeedStorage()
+                );
+            }
+
             $this->configurationRepository->update($configuration);
             $title = self::translate('pxasocialfeed_module.labels.edit');
             $message = self::translate('pxasocialfeed_module.labels.changesSaved');
@@ -357,6 +368,21 @@ class SocialFeedAdministrationController extends BaseController
             }
 
             $this->view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry()->addMenu($menu);
+        }
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @param int $newStorage
+     */
+    protected function migrateFeedsToNewStorage(Configuration $configuration, $newStorage)
+    {
+        $feedItems = $this->feedRepository->findByConfiguration($configuration);
+
+        /** @var Feed $feedItem */
+        foreach ($feedItems as $feedItem) {
+            $feedItem->setPid($newStorage);
+            $this->feedRepository->update($feedItem);
         }
     }
 

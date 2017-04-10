@@ -49,7 +49,8 @@ define(['jquery',
                 instagramGetUserIdButton: '#get-inst-user-id',
                 winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
                 feedsStorageInput: '[data-identifier="feeds-storage-input"]',
-                feedsStorageTitle: '[data-identifier="feed-storage-title"]'
+                feedsStorageTitle: '[data-identifier="feed-storage-title"]',
+                migrateRecordsWrapper: '.migrate-records-wrapper'
             };
 
             /**
@@ -258,6 +259,8 @@ define(['jquery',
                 $(_getDomElementIdentifier('feedsStorageTitle'))
                     .text(elName)
                     .closest('.table-fit').removeClass('hidden');
+
+                $(_getDomElementIdentifier('migrateRecordsWrapper')).slideDown();
             };
 
             /**

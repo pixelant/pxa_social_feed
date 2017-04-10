@@ -42,7 +42,6 @@ return [
         '1' => ['showitem' => ''],
     ],
     'columns' => [
-
         'hidden' => [
             'exclude' => 1,
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
@@ -163,6 +162,11 @@ return [
                 'minitems' => 0,
                 'maxitems' => 1,
                 'renderType' => 'selectSingleBox'
+            ]
+        ],
+        'pid' => [
+            'config' => [
+                'type' => 'passthrough'
             ]
         ]
     ]

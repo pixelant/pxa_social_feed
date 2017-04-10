@@ -73,6 +73,9 @@
             <trans-unit id="pxasocialfeed_module.labels.pages">
                 <source>Pages</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.migrate_records">
+                <source>Migrate records to new storage</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.get_instagram_hidden_tip">
                 <source>Please, update page to see token</source>
             </trans-unit>

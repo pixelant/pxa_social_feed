@@ -18,7 +18,17 @@
                     <span><f:translate key="pxasocialfeed_module.labels.pages"/></span>
                 </a>
 
-                <div class="table-fit{f:if(condition: '{configuration.storageTitle}', then: '', else: ' hidden')}" style="margin-top: 10px;">
+                <f:if condition="{isEditForm}">
+                    <div class="form-group migrate-records-wrapper" style="display: none;">
+                        <div class="checkbox">
+                            <label>
+                                <f:form.checkbox name="migrateRecords" value="1" /> <f:translate key="pxasocialfeed_module.labels.migrate_records"/>
+                            </label>
+                        </div>
+                    </div>
+                </f:if>
+
+                <div class="table-fit{f:if(condition: '{isEditForm}', then: '', else: ' hidden')}" style="margin-top: 10px;">
                     <table class="table table-white">
                         <tbody>
                         <tr>
