@@ -26,13 +26,14 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class isNumericViewHelper
  * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
-class IsNumericViewHelper extends AbstractViewHelper
+class NeedInstagramIdViewHelper extends AbstractViewHelper
 {
 
     /**
@@ -43,6 +44,6 @@ class IsNumericViewHelper extends AbstractViewHelper
      */
     public function render($value)
     {
-        return is_numeric($value);
+        return !is_numeric($value) && !GeneralUtility::isFirstPartOfStr($value, '#');
     }
 }

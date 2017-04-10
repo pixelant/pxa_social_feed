@@ -3,13 +3,11 @@
      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers">
 
     <f:section name="main">
-        <f:if condition="{pxa:isNumeric(value: configiguration.socialId)}">
-            <f:else>
+        <f:if condition="{pxa:needInstagramId(value: configiguration.socialId)}">
                 <br>
                 <button data-uid="{configiguration.uid}" id="get-inst-user-id" data-placement="top" title="{f:translate(key: 'pxasocialfeed_module.labels.inst_id_tooltip')}" class="tooltip-hold btn btn-default">
                     <f:translate key="pxasocialfeed_module.labels.inst_id_button"/>
                 </button>
-            </f:else>
         </f:if>
     </f:section>
 </div>
