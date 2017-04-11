@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-
 /***************************************************************
  *
  *  Copyright notice
@@ -33,17 +32,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class RequestUtility {
+class RequestUtility
+{
 
     /**
      * get request method
      */
-    CONST METHOD_GET = 'GET';
+    const METHOD_GET = 'GET';
 
     /**
      * post request method
      */
-    CONST METHOD_POST = 'POST';
+    const METHOD_POST = 'POST';
 
     /**
      * get parameters for request
@@ -82,7 +82,8 @@ class RequestUtility {
      * @param string $requestUrl
      * @param string $requestMethod
      */
-    public function __construct($requestUrl = '', $requestMethod = '') {
+    public function __construct($requestUrl = '', $requestMethod = '')
+    {
         $this->requestUrl = $requestUrl;
 
         if (!empty($requestMethod)) {
@@ -95,7 +96,8 @@ class RequestUtility {
      *
      * @return NULL|string
      */
-    public function send() {
+    public function send()
+    {
         if (ConfigurationUtility::getTypo3Version() >= 8) {
             return $this->sendRequestUsingRequestFactory();
         } else {
@@ -107,7 +109,8 @@ class RequestUtility {
      * @return string
      * @throws ServerCommunicationException
      */
-    protected function sendRequestUsingRequestFactory() {
+    protected function sendRequestUsingRequestFactory()
+    {
         /** @var RequestFactory $requestFactory */
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
 
@@ -132,7 +135,10 @@ class RequestUtility {
         if ($response->getStatusCode() === 200) {
             return $response->getBody();
         } else {
-            throw new ServerCommunicationException(BaseController::translate('pxasocialfeed_module.labels.errorCommunication'), 1478084292);
+            throw new ServerCommunicationException(
+                BaseController::translate('pxasocialfeed_module.labels.errorCommunication'),
+                1478084292
+            );
         }
     }
 
@@ -140,9 +146,14 @@ class RequestUtility {
      * @return string
      * @throws ServerCommunicationException
      */
-    protected function sendRequestUsingHttpRequest() {
+    protected function sendRequestUsingHttpRequest()
+    {
         /** @var HttpRequest $httpRequest */
-        $httpRequest = GeneralUtility::makeInstance(HttpRequest::class, $this->getRequestUrlWithGetParameters(), $this->requestMethod);
+        $httpRequest = GeneralUtility::makeInstance(
+            HttpRequest::class,
+            $this->getRequestUrlWithGetParameters(),
+            $this->requestMethod
+        );
 
         // set post parameters
         if (!empty($this->getPostParameters())) {
@@ -164,7 +175,10 @@ class RequestUtility {
         if ($response->getStatus() === 200) {
             return $response->getBody();
         } else {
-            throw new ServerCommunicationException(BaseController::translate('pxasocialfeed_module.labels.errorCommunication'), 1478084292);
+            throw new ServerCommunicationException(
+                BaseController::translate('pxasocialfeed_module.labels.errorCommunication'),
+                1478084292
+            );
         }
     }
 
@@ -173,7 +187,8 @@ class RequestUtility {
      *
      * @return string
      */
-    protected function getRequestUrlWithGetParameters() {
+    protected function getRequestUrlWithGetParameters()
+    {
         if (!empty($this->getGetParameters())) {
             return $this->requestUrl . '?' . http_build_query($this->getGetParameters());
         }
@@ -184,42 +199,48 @@ class RequestUtility {
     /**
      * @return array
      */
-    public function getGetParameters() {
+    public function getGetParameters()
+    {
         return $this->getParameters;
     }
 
     /**
      * @param array $getParameters
      */
-    public function setGetParameters(array $getParameters) {
+    public function setGetParameters(array $getParameters)
+    {
         $this->getParameters = $getParameters;
     }
 
     /**
      * @return array
      */
-    public function getPostParameters() {
+    public function getPostParameters()
+    {
         return $this->postParameters;
     }
 
     /**
      * @param array $postParameters
      */
-    public function setPostParameters(array $postParameters) {
+    public function setPostParameters(array $postParameters)
+    {
         $this->postParameters = $postParameters;
     }
 
     /**
      * @return array
      */
-    public function getHeaders() {
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
     /**
      * @param array $headers
      */
-    public function setHeaders(array $headers) {
+    public function setHeaders(array $headers)
+    {
         $this->headers = $headers;
     }
 }

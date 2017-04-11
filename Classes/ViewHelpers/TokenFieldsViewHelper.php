@@ -29,43 +29,50 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class TokenFieldsViewHelper
  * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
-class TokenFieldsViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper {
+class TokenFieldsViewHelper extends AbstractViewHelper
+{
 
     /**
      * @var boolean
      */
-    protected $escapeChildren = FALSE;
+    protected $escapeChildren = false;
 
     /**
      * @var boolean
      */
-    protected $escapeOutput = FALSE;
+    protected $escapeOutput = false;
 
     /**
      * Initialize
      *
      * @return void
      */
-    public function initializeArguments() {
-        $this->registerArgument('as', 'string', 'template variable name', FALSE, '');
-        $this->registerArgument('type', 'int', 'type of token', TRUE, 1);
+    public function initializeArguments()
+    {
+        $this->registerArgument('as', 'string', 'template variable name', false, '');
+        $this->registerArgument('type', 'int', 'type of token', true, 1);
     }
 
     /**
      * @return array|mixed
      * @throws \TYPO3\CMS\Fluid\Core\ViewHelper\Exception\InvalidVariableException
      */
-    public function render() {
-        /** @var \Pixelant\PxaSocialFeed\Utility\ConfigurationUtility $configurationUtility */
+    public function render()
+    {
+        /** @var ConfigurationUtility $configurationUtility */
         $configurationUtility = GeneralUtility::makeInstance(ConfigurationUtility::class);
-        $configuration = GeneralUtility::trimExplode(',', $configurationUtility->getConfiguration($this->arguments['type']));
+        $configuration = GeneralUtility::trimExplode(
+            ',',
+            $configurationUtility->getConfiguration($this->arguments['type'])
+        );
 
-        if(isset($this->arguments['as']) && $this->arguments['as']) {
+        if (isset($this->arguments['as']) && $this->arguments['as']) {
             // add varibale to template
             $this->templateVariableContainer->add($this->arguments['as'], $configuration);
             // render

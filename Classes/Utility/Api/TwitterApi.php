@@ -33,7 +33,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class TwitterApi
  * @package Pixelant\PxaSocialFeed\Utility\Api
  */
-class TwitterApi {
+class TwitterApi
+{
 
     /**
      * path to get twitter feed
@@ -68,7 +69,7 @@ class TwitterApi {
     /**
      * request these fields from twitter
      *
-     * @var string
+     * @var array
      */
     protected $getFields = '';
 
@@ -80,11 +81,17 @@ class TwitterApi {
      * @param string $oauthAccessTokenSecret
      * @throws \Exception
      */
-    public function __construct($consumerKey = '', $consumerSecret = '', $oauthAccessToken = '', $oauthAccessTokenSecret = '') {
-        if(empty($consumerKey)
+    public function __construct(
+        $consumerKey = '',
+        $consumerSecret = '',
+        $oauthAccessToken = '',
+        $oauthAccessTokenSecret = ''
+    ) {
+        if (empty($consumerKey)
             || empty($consumerSecret)
             || empty($oauthAccessToken)
-            || empty($oauthAccessTokenSecret)) {
+            || empty($oauthAccessTokenSecret)
+        ) {
             throw new \Exception('Not valid credentials', 1463139018);
         }
 
@@ -100,20 +107,25 @@ class TwitterApi {
      * @return array
      * @throws \Exception
      */
-    public function performRequest() {
-        if(empty($this->getFields)) {
+    public function performRequest()
+    {
+        if (empty($this->getFields)) {
             throw new \Exception('Get fields could not be empty', 1463139019);
         }
         $data = [];
 
         /** @var RequestUtility $requestUtility */
-        $requestUtility = GeneralUtility::makeInstance(RequestUtility::class, self::API_URL, RequestUtility::METHOD_GET);
+        $requestUtility = GeneralUtility::makeInstance(
+            RequestUtility::class,
+            self::API_URL,
+            RequestUtility::METHOD_GET
+        );
         $requestUtility->setGetParameters($this->getGetFields());
         $requestUtility->setHeaders(['Authorization' => $this->getAuthHeader()]);
 
         $response = $requestUtility->send();
         if (!empty($response)) {
-            $data = json_decode($response, TRUE);
+            $data = json_decode($response, true);
         }
 
         return $data;
@@ -124,14 +136,15 @@ class TwitterApi {
      *
      * @return string
      */
-    protected function getAuthHeader() {
+    protected function getAuthHeader()
+    {
         $oauth = [
             'oauth_consumer_key' => $this->consumerKey,
             'oauth_nonce' => md5(mt_rand()),
             'oauth_signature_method' => 'HMAC-SHA1',
             'oauth_token' => $this->oauthAccessToken,
             'oauth_timestamp' => time(),
-            'oauth_version'  => '1.0'
+            'oauth_version' => '1.0'
         ];
 
         $sigBase = $this->buildSigBase(array_merge($oauth, $this->getGetFields()));
@@ -142,7 +155,7 @@ class TwitterApi {
         $header = 'OAuth ';
         $headerValues = [];
 
-        foreach($oauth as $key => $value) {
+        foreach ($oauth as $key => $value) {
             $headerValues[] = $key . '="' . rawurlencode($value) . '"';
         }
 
@@ -158,11 +171,12 @@ class TwitterApi {
      *
      * @return string Built base string
      */
-    private function buildSigBase($oauth) {
+    private function buildSigBase($oauth)
+    {
         ksort($oauth);
         $urlParts = [];
 
-        foreach($oauth as $key => $value) {
+        foreach ($oauth as $key => $value) {
             $urlParts[] = $key . '=' . $value;
         }
 
@@ -173,15 +187,17 @@ class TwitterApi {
      * @param array $fields
      * @return TwitterApi
      */
-    public function setGetFields($fields = []) {
+    public function setGetFields($fields = [])
+    {
         $this->getFields = $fields;
         return $this;
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getGetFields() {
+    public function getGetFields()
+    {
         return $this->getFields;
     }
 }

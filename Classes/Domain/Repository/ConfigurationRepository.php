@@ -1,6 +1,6 @@
 <?php
-namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
+namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
 /***************************************************************
  *
@@ -27,24 +27,28 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
 /**
  * The repository for Feeds
  */
-class ConfigurationRepository extends AbstractRepository {
+class ConfigurationRepository extends AbstractRepository
+{
 
     /**
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = [
-        'crdate' => \TYPO3\CMS\Extbase\Persistence\QueryInterface::ORDER_DESCENDING
+        'crdate' => QueryInterface::ORDER_DESCENDING
     ];
 
     /**
      * @param array $configurations
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
-    public function findByUids($configurations = []) {
+    public function findByUids($configurations = [])
+    {
         $query = $this->createQuery();
 
         $query->matching($query->in('uid', $configurations));
@@ -54,12 +58,15 @@ class ConfigurationRepository extends AbstractRepository {
 
     /**
      * @param mixed $token
-     * @return \Pixelant\PxaSocialFeed\Domain\Model\Configuration|NULL
+     * @return Configuration|object|NULL
      */
-    public function findByToken($token) {
+    public function findByToken($token)
+    {
         $query = $this->createQuery();
         $query->setLimit(1);
 
-        return $query->matching($query->equals('token', $token))->execute()->getFirst();
+        return $query->matching(
+            $query->equals('token', $token)
+        )->execute()->getFirst();
     }
 }

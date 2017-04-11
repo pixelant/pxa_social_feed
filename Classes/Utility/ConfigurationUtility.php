@@ -26,6 +26,7 @@ namespace Pixelant\PxaSocialFeed\Utility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -35,20 +36,35 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * Class ConfigurationUtility
  * @package Pixelant\PxaSocialFeed\Utility
  */
-class ConfigurationUtility {
+class ConfigurationUtility implements SingletonInterface
+{
 
     /**
      * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
      */
-    protected $configurationManager = NULL;
+    protected $configurationManager = null;
+
+    /**
+     * Plugin configuration
+     *
+     * @var array
+     */
+    protected $configuration = [];
 
     /**
      * ConfigurationUtility constructor.
      * initialize
      */
-    public function __construct() {
-        /** @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface configurationManager */
-        $this->configurationManager = GeneralUtility::makeInstance(ObjectManager::class)->get(ConfigurationManagerInterface::class);
+    public function __construct()
+    {
+        /** @var ConfigurationManagerInterface configurationManager */
+        $this->configurationManager = GeneralUtility::makeInstance(
+            ObjectManager::class
+        )->get(ConfigurationManagerInterface::class);
+
+        $this->configuration = $this->configurationManager->getConfiguration(
+            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
+        );
     }
 
     /**
@@ -57,12 +73,12 @@ class ConfigurationUtility {
      * @param int $tokenType
      * @return string|array
      */
-    public function getConfiguration($tokenType = 0) {
-        $configuration = $this->configurationManager->getConfiguration(ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK);
-        if($tokenType && array_key_exists($tokenType, $configuration['settings']['credentials'])) {
-            return $configuration['settings']['credentials'][$tokenType];
+    public function getConfiguration($tokenType = 0)
+    {
+        if ($tokenType && array_key_exists($tokenType, $this->configuration['settings']['credentials'])) {
+            return $this->configuration['settings']['credentials'][$tokenType];
         } else {
-            return $configuration;
+            return $this->configuration;
         }
     }
 
@@ -72,7 +88,8 @@ class ConfigurationUtility {
      * @param array $selectedConfigs
      * @return string
      */
-    static public function getAvailabelConfigsSelectBox($selectedConfigs) {
+    public static function getAvailabelConfigsSelectBox($selectedConfigs)
+    {
         $configs = self::getDbConnection()->exec_SELECTgetRows(
             'uid,name',
             'tx_pxasocialfeed_domain_model_configuration',
@@ -87,7 +104,12 @@ class ConfigurationUtility {
                 $selectedAttribute = ' selected="selected"';
             }
 
-            $selector .= sprintf('<option value="%d"%s>%s</option>', $config['uid'], $selectedAttribute, $config['name']);
+            $selector .= sprintf(
+                '<option value="%d"%s>%s</option>',
+                $config['uid'],
+                $selectedAttribute,
+                $config['name']
+            );
         }
 
         $selector .= '</select>';
@@ -99,7 +121,8 @@ class ConfigurationUtility {
      * @param array $configs
      * @return string
      */
-    static public function getSelectedConfigsInfo($configs) {
+    public static function getSelectedConfigsInfo($configs)
+    {
         $configs = self::getDbConnection()->exec_SELECTgetRows(
             'uid,name',
             'tx_pxasocialfeed_domain_model_configuration',
@@ -119,14 +142,16 @@ class ConfigurationUtility {
      * @param int $days
      * @return string
      */
-    static public function getDaysInput($days = 0) {
+    public static function getDaysInput($days = 0)
+    {
         return '<input type="text" name="tx_scheduler[days]" value="' . htmlspecialchars($days) . '" />';
     }
 
     /**
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection
      */
-    static public function getDbConnection() {
+    public static function getDbConnection()
+    {
         return $GLOBALS['TYPO3_DB'];
     }
 
@@ -135,7 +160,8 @@ class ConfigurationUtility {
      *
      * @return int
      */
-    static public function getTypo3Version() {
+    public static function getTypo3Version()
+    {
         $version = VersionNumberUtility::convertVersionStringToArray(TYPO3_version);
         return $version['version_main'];
     }

@@ -5,7 +5,7 @@
         <header/>
         <body>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds">
-                <source>Feeds</source>
+                <source>Social Posts</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.social_type">
                 <source>Social Type</source>
@@ -94,6 +94,18 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.token">
                 <source>Token</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_storage">
+                <source>Feed storage</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.1">
+                <source>Facebook</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.2">
+                <source>Instagram</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.3">
+                <source>Twitter</source>
+            </trans-unit>
 
             <trans-unit id="tx_pxasocialfeed.task.import.name">
                 <source>Social Feed Import</source>
@@ -120,6 +132,9 @@
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_plugin.flexform.loadLikesCount">
                 <source>Load likes count</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_plugin.flexform.load_type">
+                <source>Load type</source>
             </trans-unit>
 
             <trans-unit id="scheduler.configs">

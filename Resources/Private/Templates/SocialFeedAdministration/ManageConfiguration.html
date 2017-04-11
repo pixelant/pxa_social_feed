@@ -28,6 +28,12 @@
                             <td><f:form.textfield property="feedsLimit" class="form-control"/></td>
                         </tr>
                         <tr>
+                            <td><f:translate key="pxasocialfeed_module.labels.form.feed_storage"/></td>
+                            <td>
+                                <f:render partial="Backend/Typo3WinBrowserEditor" arguments="{configuration: config, isEditForm: isEditForm}"/>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.token"/></td>
                             <td><f:form.select property="token" options="{tokens}" optionLabelField="selectBoxLabel" class="form-control"/></td>
                         </tr>

@@ -5,9 +5,9 @@ module.tx_pxasocialfeed {
             #facebook
             1 = appId,appSecret
             #instagram OAuth 2.0
-            3 = clientId,clientSecret
+            2 = clientId,clientSecret
             #twitter
-            4 = consumerKey,consumerSecret,accessToken,accessTokenSecret
+            3 = consumerKey,consumerSecret,accessToken,accessTokenSecret
         }
     }
 }

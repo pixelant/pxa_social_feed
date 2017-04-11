@@ -59,17 +59,26 @@
             <trans-unit id="pxasocialfeed_module.labels.editConfig">
                 <source>Edit configuration</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.type">
+                <source>Source</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.type.1">
                 <source>Facebook</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.3">
+            <trans-unit id="pxasocialfeed_module.labels.type.2">
                 <source>Instagram (OAuth2)</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.4">
+            <trans-unit id="pxasocialfeed_module.labels.type.3">
                 <source>Twitter</source>
             </trans-unit>
 
             <!-- labels for module token tab -->
+            <trans-unit id="pxasocialfeed_module.labels.pages">
+                <source>Pages</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.migrate_records">
+                <source>Migrate records to new storage</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.get_instagram_hidden_tip">
                 <source>Please, update page to see token</source>
             </trans-unit>
@@ -129,6 +138,9 @@
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.uid">
                 <source>UID</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.form.feed_storage">
+                <source>Storage</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.form.config_name">
                 <source>Configuration name</source>
@@ -193,6 +205,9 @@
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.errorcode.1466669831">
                 <source>Something went wrong</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.errorcode.1491570246">
+                <source>Storage value is invalid</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.changesSaved">
                 <source>Changes saved successfully.</source>

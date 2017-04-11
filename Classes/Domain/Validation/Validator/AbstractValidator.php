@@ -1,5 +1,7 @@
 <?php
 
+namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -25,17 +27,16 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
-
-
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
-class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator {
+class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator
+{
 
     /**
      * @param mixed $value
      */
-    protected function isValid($value) {
+    protected function isValid($value)
+    {
         // called in child objects
     }
 
@@ -43,12 +44,13 @@ class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator\Abstract
      * @param \TYPO3\CMS\Extbase\DomainObject\AbstractEntity $object
      * @return void
      */
-    protected function trimObjectProperties($object) {
-        if(is_object($object) && $object instanceof \TYPO3\CMS\Extbase\DomainObject\AbstractEntity) {
+    protected function trimObjectProperties($object)
+    {
+        if (is_object($object) && $object instanceof \TYPO3\CMS\Extbase\DomainObject\AbstractEntity) {
             $getTableProperties = ObjectAccess::getGettableProperties($object);
 
             foreach ($getTableProperties as $property => $value) {
-                if(is_string($value) && ObjectAccess::isPropertySettable($object, $property)) {
+                if (is_string($value) && ObjectAccess::isPropertySettable($object, $property)) {
                     ObjectAccess::setProperty($object, $property, trim($value));
                 }
             }

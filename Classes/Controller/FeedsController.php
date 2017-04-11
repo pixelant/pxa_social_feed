@@ -1,4 +1,5 @@
 <?php
+
 namespace Pixelant\PxaSocialFeed\Controller;
 
 /***************************************************************
@@ -29,18 +30,61 @@ namespace Pixelant\PxaSocialFeed\Controller;
 /**
  * FeedsController
  */
-class FeedsController extends BaseController {
+class FeedsController extends BaseController
+{
 
     /**
-     * action list
+     * List action
      *
      * @return void
      */
-    public function listAction() {
+    public function listAction()
+    {
         $limit = $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10;
 
         $feeds = $this->feedRepository->findFeedsByConfig($this->settings['configuration'], $limit);
 
         $this->view->assign('feeds', $feeds);
+    }
+
+    /**
+     * List ajax action
+     * Prepare view for later ajax request
+     *
+     * @return void
+     */
+    public function listAjaxAction()
+    {
+        $this->view->assignMultiple([
+            'configurations' => $this->settings['configuration'],
+            'feedsLimit' => $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10
+        ]);
+    }
+
+    /**
+     * Load feed with ajax
+     *
+     * @param string $configurations
+     * @param int $limit
+     * @return void
+     */
+    public function loadFeedAjaxAction($configurations, $limit = 0)
+    {
+        $limit = $limit ? $limit : 10;
+
+        $feeds = $this->feedRepository->findFeedsByConfig($configurations, $limit);
+
+        $this->view->assign('feeds', $feeds);
+
+        header('Content-Type: application/json');
+
+        echo json_encode(
+            [
+                'success' => true,
+                'html' => $this->view->render()
+            ]
+        );
+
+        exit(0);
     }
 }

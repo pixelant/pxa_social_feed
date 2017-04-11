@@ -35,7 +35,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
-class SocialFeedAjaxController {
+class SocialFeedAjaxController
+{
 
     /**
      * url to get user id
@@ -60,9 +61,12 @@ class SocialFeedAjaxController {
     /**
      * SocialFeedAjaxController constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         /** @var ConfigurationRepository $configurationRepository */
-        $this->configurationRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(ConfigurationRepository::class);
+        $this->configurationRepository = GeneralUtility::makeInstance(
+            ObjectManager::class
+        )->get(ConfigurationRepository::class);
 
         $this->postData['configuration'] = (int)GeneralUtility::_POST('configuration');
     }
@@ -76,16 +80,17 @@ class SocialFeedAjaxController {
      * @param ResponseInterface $response the response object
      * @return ResponseInterface returns a 500 error or a valid JSON response
      */
-    public function loadInstUserId(ServerRequestInterface $request, ResponseInterface $response) {
+    public function loadInstUserId(ServerRequestInterface $request, ResponseInterface $response)
+    {
 
-        if($this->postData['configuration']) {
+        if ($this->postData['configuration']) {
             /** @var Configuration $configuration */
             $configuration = $this->configurationRepository->findByUid($this->postData['configuration']);
 
-            if($configuration !== NULL
+            if ($configuration !== null
                 && $configuration->getToken()->getCredential('accessToken')
-                && ($userId = $this->getInstagramUserId($configuration))) {
-
+                && ($userId = $this->getInstagramUserId($configuration))
+            ) {
                 $configuration->setSocialId($userId);
 
                 $this->configurationRepository->update($configuration);
@@ -102,7 +107,7 @@ class SocialFeedAjaxController {
             }
         }
 
-        if(!isset($result)) {
+        if (!isset($result)) {
             $result = [
                 'action' => 'error',
                 'title' => BaseController::translate('pxasocialfeed_module.labels.error'),
@@ -124,7 +129,8 @@ class SocialFeedAjaxController {
      * @param Configuration $configuration
      * @return string
      */
-    protected function getInstagramUserId(Configuration $configuration) {
+    protected function getInstagramUserId(Configuration $configuration)
+    {
         $response = GeneralUtility::getUrl(sprintf(
             self::URL,
             $configuration->getSocialId(),
@@ -132,8 +138,8 @@ class SocialFeedAjaxController {
         ));
 
         $response = json_decode($response, true);
-        
-        if(is_array($response) && $response['meta']['code'] == 200) {
+
+        if (is_array($response) && $response['meta']['code'] === 200) {
             $data = current($response['data']);
 
             return $data['id'];

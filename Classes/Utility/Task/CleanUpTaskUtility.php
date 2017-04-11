@@ -32,7 +32,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class CleanUpTaskUtility
  * @package Pixelant\PxaSocialFeed\Utility\Task
  */
-class CleanUpTaskUtility {
+class CleanUpTaskUtility
+{
 
     /**
      * table with records
@@ -52,8 +53,8 @@ class CleanUpTaskUtility {
     /**
      * initialize
      */
-    public function __construct() {
-
+    public function __construct()
+    {
         $this->dbConnection = $GLOBALS['TYPO3_DB'];
     }
 
@@ -63,21 +64,23 @@ class CleanUpTaskUtility {
      * @param int $days
      * @return boolean
      */
-    public function run($days) {
+    public function run($days)
+    {
         $obsoleteEntries = $this->getObsoleteEntries($days);
         $this->deleteObsoleteEntries($obsoleteEntries);
-        
-        return TRUE;
+
+        return true;
     }
 
     /**
      * @param int $days
      * @return array
      */
-    protected function getObsoleteEntries($days) {
+    protected function getObsoleteEntries($days)
+    {
         /** @var \DateTime $obsoleteDate */
         $obsoleteDate = GeneralUtility::makeInstance(\DateTime::class)->modify('-' . $days . ' days');
-        
+
         $records = $this->dbConnection->exec_SELECTgetRows(
             'uid,configuration,crdate',
             self::TABLE_FEED,
@@ -93,7 +96,8 @@ class CleanUpTaskUtility {
      * @param array $records
      * @return array
      */
-    protected function groupByConfigrations($records) {
+    protected function groupByConfigrations($records)
+    {
         $recordsByConfiguration = [];
 
         foreach ($records as $record) {
@@ -104,11 +108,11 @@ class CleanUpTaskUtility {
         // check if limit allow to delete
         foreach ($recordsByConfiguration as $uid => $records) {
             $limit = intval($this->getLimitForConfiguration($uid));
-            if($limit > 0) {
+            if ($limit > 0) {
                 $allForConfiguration = $this->countAllInConfiguration($uid);
                 $toRemove = count($records['records']);
 
-                if($allForConfiguration - $limit < $toRemove) {
+                if ($allForConfiguration - $limit < $toRemove) {
                     $toRemove = $allForConfiguration - $limit;
 
                     $records['records'] = array_slice($records['records'], 0, $toRemove);
@@ -125,7 +129,8 @@ class CleanUpTaskUtility {
      * @param int $confUid
      * @return int
      */
-    protected function getLimitForConfiguration($confUid) {
+    protected function getLimitForConfiguration($confUid)
+    {
         $configuration = $this->dbConnection->exec_SELECTgetSingleRow(
             'feeds_limit',
             self::TABLE_CONFIGURATION,
@@ -139,7 +144,8 @@ class CleanUpTaskUtility {
      * @param int $confUid
      * @return mixed
      */
-    protected function countAllInConfiguration($confUid) {
+    protected function countAllInConfiguration($confUid)
+    {
         return $this->dbConnection->exec_SELECTcountRows(
             'configuration',
             self::TABLE_FEED,
@@ -151,7 +157,8 @@ class CleanUpTaskUtility {
      * @param $obsoleteEntries
      * @return void
      */
-    protected function deleteObsoleteEntries($obsoleteEntries) {
+    protected function deleteObsoleteEntries($obsoleteEntries)
+    {
         $uids = '';
         foreach ($obsoleteEntries as $obsoleteEntry) {
             $uids .= ',' . $obsoleteEntry['uid'];

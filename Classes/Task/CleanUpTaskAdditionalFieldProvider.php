@@ -27,20 +27,28 @@ namespace Pixelant\PxaSocialFeed\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * Class CleanUpAdditionalFieldProvider
  * @package Pixelant\PxaSocialFeed\Task
  */
-class CleanUpTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
+class CleanUpTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
+{
 
     /**
      * @param array $taskInfo
      * @param \Pixelant\PxaSocialFeed\Task\CleanUpTask $task
-     * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject
+     * @param SchedulerModuleController $parentObject
      * @return array
      */
-    public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
+    public function getAdditionalFields(
+        array &$taskInfo,
+        $task,
+        SchedulerModuleController $parentObject
+    ) {
         $additionalFields = [];
 
         if ($parentObject->CMD == 'add') {
@@ -52,9 +60,9 @@ class CleanUpTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\Additio
         }
 
         $additionalFields['configs'] = [
-            'code'     =>  ConfigurationUtility::getDaysInput($taskInfo['days']),
-            'label'    => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:scheduler.days',
-            'cshKey'   => '',
+            'code' => ConfigurationUtility::getDaysInput($taskInfo['days']),
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:scheduler.days',
+            'cshKey' => '',
             'cshLabel' => ''
         ];
 
@@ -63,17 +71,20 @@ class CleanUpTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\Additio
 
     /**
      * @param array $submittedData
-     * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject
+     * @param SchedulerModuleController $parentObject
      * @return bool
      */
-    public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
+    public function validateAdditionalFields(
+        array &$submittedData,
+        SchedulerModuleController $parentObject
+    ) {
         // nothing to validate, just list of uids
-        $valid = FALSE;
+        $valid = false;
 
-        if(!isset($submittedData['days']) && !intval($submittedData['days'])) {
+        if (!isset($submittedData['days']) && !intval($submittedData['days'])) {
             $parentObject->addMessage('Bad days value', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
         } else {
-            $valid = TRUE;
+            $valid = true;
         }
 
         return $valid;
@@ -83,7 +94,8 @@ class CleanUpTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\Additio
      * @param array $submittedData
      * @param \Pixelant\PxaSocialFeed\Task\CleanUpTask $task
      */
-    public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
+    {
         $task->setDays($submittedData['days']);
     }
 }
