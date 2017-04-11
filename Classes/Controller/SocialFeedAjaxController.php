@@ -139,7 +139,7 @@ class SocialFeedAjaxController
 
         $response = json_decode($response, true);
 
-        if (is_array($response) && $response['meta']['code'] == 200) {
+        if (is_array($response) && $response['meta']['code'] === 200) {
             $data = current($response['data']);
 
             return $data['id'];

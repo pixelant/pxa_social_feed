@@ -34,7 +34,7 @@ class FeedsController extends BaseController
 {
 
     /**
-     * action list
+     * List action
      *
      * @return void
      */
@@ -48,7 +48,10 @@ class FeedsController extends BaseController
     }
 
     /**
+     * List ajax action
+     * Prepare view for later ajax request
      *
+     * @return void
      */
     public function listAjaxAction()
     {
@@ -63,6 +66,7 @@ class FeedsController extends BaseController
      *
      * @param string $configurations
      * @param int $limit
+     * @return void
      */
     public function loadFeedAjaxAction($configurations, $limit = 0)
     {
