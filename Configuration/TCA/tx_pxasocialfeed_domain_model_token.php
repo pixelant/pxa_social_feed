@@ -1,14 +1,16 @@
 <?php
 defined('TYPO3_MODE') or die();
 
+$ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:';
+
 return [
     'ctrl' => [
-        'title' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens',
+        'title' => $ll . 'tx_pxasocialfeed_domain_model_tokens',
         'label' => 'app_id',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'cruser_id' => 'cruser_id',
-        'dividers2tabs' => TRUE,
+        'dividers2tabs' => true,
         'default_sortby' => 'crdate DESC',
 
         'delete' => 'deleted',
@@ -23,8 +25,7 @@ return [
             'default' => 'ext-pxasocialfeed-model-icon'
         ],
 
-        'rootLevel' => 1,
-        'hideTable' => 1
+        'rootLevel' => 1
     ],
     'interface' => [
         'showRecordFieldList' => 'hidden, serialized_credentials, social_type, starttime, endtime',
@@ -53,7 +54,6 @@ return [
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
-                'checkbox' => 0,
                 'default' => 0,
                 'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
@@ -69,7 +69,6 @@ return [
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
-                'checkbox' => 0,
                 'default' => 0,
                 'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
@@ -78,7 +77,7 @@ return [
         ],
         'social_type' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens.social_type',
+            'label' => $ll . 'tx_pxasocialfeed_domain_model_tokens.social_type',
             'config' => [
                 'type' => 'input',
                 'size' => 4,

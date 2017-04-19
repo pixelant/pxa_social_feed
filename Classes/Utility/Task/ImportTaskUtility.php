@@ -2,7 +2,6 @@
 
 namespace Pixelant\PxaSocialFeed\Utility\Task;
 
-
 /***************************************************************
  *
  *  Copyright notice
@@ -38,7 +37,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
-class ImportTaskUtility {
+class ImportTaskUtility
+{
 
     /**
      *  objectManager
@@ -63,7 +63,8 @@ class ImportTaskUtility {
     /**
      * TaskUtility constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
         $this->configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
@@ -76,8 +77,9 @@ class ImportTaskUtility {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \UnexpectedValueException
      */
-    public function run($configurationsUids) {
-        if(is_array($configurationsUids)) {
+    public function run($configurationsUids)
+    {
+        if (is_array($configurationsUids)) {
             $configurations = $this->configurationRepository->findByUids($configurationsUids);
 
             /** @var Configuration $configuration */
@@ -85,36 +87,61 @@ class ImportTaskUtility {
                 switch ($configuration->getToken()->getSocialType()) {
                     case Token::FACEBOOK:
                         //getting data array from facebook graph api json result
-                        $url = sprintf('https://graph.facebook.com/v2.6/%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
+                        // @codingStandardsIgnoreStart
+                        $url = sprintf(
+                            'https://graph.facebook.com/v2.9/%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
                             $configuration->getSocialId(),
                             $configuration->getFeedsLimit(),
                             $configuration->getToken()->getCredential('appId'),
                             $configuration->getToken()->getCredential('appSecret')
                         );
+                        // @codingStandardsIgnoreEnd
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
 
                         if (is_array($data)) {
                             $this->updateFacebookFeed($data['data'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException('Invalid data from FACEBOOK feed. Please, check credentials.', 1466682087);
+                            throw new \UnexpectedValueException(
+                                'Invalid data from FACEBOOK feed. Please, check credentials.',
+                                1466682087
+                            );
                         }
 
                         break;
                     case Token::INSTAGRAM_OAUTH2:
-                        //getting data array from instagram api json result
-                        $url = sprintf('https://api.instagram.com/v1/users/%s/media/recent/?access_token=%s&count=%d',
-                            $configuration->getSocialId(),
+                        // getting data array from instagram api json result
+                        //predefine a format of request string;
+                        $urlFormat = 'https://api.instagram.com/v1/%s/%s/media/recent/?access_token=%s&count=%d';
+
+                        // hashtag used in configuration (leading '#' symbol): preparing values for 'tag' API call
+                        if (GeneralUtility::isFirstPartOfStr($configuration->getSocialId(), '#')) {
+                            $requestType = 'tags';
+                            $requestName = str_replace('#', '', $configuration->getSocialId());
+                            // user ID is used in configuration (no leading '#'): preparing values for 'users' API call
+                        } else {
+                            $requestType = 'users';
+                            $requestName = $configuration->getSocialId();
+                        }
+
+                        // creating an API call string from format and configs
+                        $url = sprintf(
+                            $urlFormat,
+                            $requestType,
+                            $requestName,
                             $configuration->getToken()->getCredential('accessToken'),
                             $configuration->getFeedsLimit()
                         );
 
+                        // get response from Instagram, parse data and save result
                         $data = json_decode(GeneralUtility::getUrl($url), true);
-
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException('Invalid data from INSTAGRAM feed. Please, check credentials.', 1466682066);
+                            throw new \UnexpectedValueException(
+                                'Invalid data from INSTAGRAM feed. Please, check credentials.',
+                                1466682066
+                            );
                         }
 
                         break;
@@ -135,12 +162,15 @@ class ImportTaskUtility {
                             $configuration->getToken()->getCredential('accessTokenSecret')
                         );
 
-                        $data = $twitterApi->setGetFields($fields)->performRequest();
+                        $data = $twitterApi->setGetFields($fields)->performFetchRequest();
 
-                        if(is_array($data)) {
+                        if (is_array($data)) {
                             $this->saveTwitterFeed($data, $configuration);
                         } else {
-                            throw new \UnexpectedValueException('Invalid data from Twitter feed. Please, check credentials.', 1466682071);
+                            throw new \UnexpectedValueException(
+                                'Invalid data from Twitter feed. Please, check credentials.',
+                                1466682071
+                            );
                         }
 
                         break;
@@ -154,7 +184,7 @@ class ImportTaskUtility {
             $this->objectManager->get(PersistenceManager::class)->persistAll();
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -162,20 +192,24 @@ class ImportTaskUtility {
      * @param Configuration $configuration
      * @return void
      */
-    private function saveTwitterFeed($data, Configuration $configuration) {
+    private function saveTwitterFeed($data, Configuration $configuration)
+    {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            $twitterFeed = $this->feedRepository->findOneByExternalIdentifier($rawData['id_str']);
+            $twitterFeed = $this->feedRepository->findOneByExternalIdentifier(
+                $rawData['id_str'],
+                $configuration->getFeedStorage()
+            );
 
-            if($twitterFeed === NULL) {
+            if ($twitterFeed === null) {
                 /** @var Feed $twitterFeed */
                 $twitterFeed = $this->objectManager->get(Feed::class);
 
-                if(!empty($rawData['text'])) {
+                if (!empty($rawData['text'])) {
                     $twitterFeed->setMessage($rawData['text']);
                 }
-                if(isset($rawData['entities']['media'][0])) {
+                if (isset($rawData['entities']['media'][0])) {
                     $twitterFeed->setImage($rawData['entities']['media'][0]['media_url']);
                 }
 
@@ -183,12 +217,15 @@ class ImportTaskUtility {
                 $twitterFeed->setPostDate($date);
                 $twitterFeed->setConfiguration($configuration);
                 $twitterFeed->setExternalIdentifier($rawData['id_str']);
+                $twitterFeed->setPid($configuration->getFeedStorage());
+                $twitterFeed->setType((string)Token::TWITTER);
             }
 
             //take likes of original tweet if it's retweet
-            $likes = isset($rawData['retweeted_status']) ? $rawData['retweeted_status']['favorite_count'] : $rawData['favorite_count'];
+            $likes = isset($rawData['retweeted_status']) ?
+                $rawData['retweeted_status']['favorite_count'] : $rawData['favorite_count'];
 
-            if($twitterFeed->getUid() && $likes != $twitterFeed->getLikes()) {
+            if ($twitterFeed->getUid() && $likes != $twitterFeed->getLikes()) {
                 $twitterFeed->setLikes($likes);
                 $this->feedRepository->update($twitterFeed);
             } else {
@@ -204,44 +241,50 @@ class ImportTaskUtility {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    private function saveInstagramFeed($data, Configuration $configuration) {
+    private function saveInstagramFeed($data, Configuration $configuration)
+    {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
         foreach ($data as $rawData) {
-            $ig = $this->feedRepository->findOneByExternalIdentifier($rawData['id']);
+            $instagram = $this->feedRepository->findOneByExternalIdentifier(
+                $rawData['id'],
+                $configuration->getFeedStorage()
+            );
 
-            if($ig === NULL) {
-                /** @var Feed $ig */
-                $ig = $this->objectManager->get(Feed::class);
+            if ($instagram === null) {
+                /** @var Feed $instagram */
+                $instagram = $this->objectManager->get(Feed::class);
 
                 if (isset($rawData['images']['standard_resolution']['url'])) {
-                    $ig->setImage($rawData['images']['standard_resolution']['url']);
+                    $instagram->setImage($rawData['images']['standard_resolution']['url']);
                 }
 
                 if (isset($rawData['location']['name']) && !empty($rawData['location']['name'])) {
-                    $ig->setMessage($rawData['location']['name']);
+                    $instagram->setMessage($rawData['location']['name']);
                 } elseif (isset($rawData['caption']['text']) && !empty($rawData['caption']['text'])) {
-                    $ig->setMessage($rawData['caption']['text']);
+                    $instagram->setMessage($rawData['caption']['text']);
                 }
 
-                $ig->setPostUrl($rawData['link']);
+                $instagram->setPostUrl($rawData['link']);
 
-                $dt = new \DateTime();
-                $dt->setTimestamp($rawData['created_time']);
+                $dateTime = new \DateTime();
+                $dateTime->setTimestamp($rawData['created_time']);
 
-                $ig->setPostDate($dt);
-                $ig->setConfiguration($configuration);
-                $ig->setExternalIdentifier($rawData['id']);
+                $instagram->setPostDate($dateTime);
+                $instagram->setConfiguration($configuration);
+                $instagram->setExternalIdentifier($rawData['id']);
+                $instagram->setPid($configuration->getFeedStorage());
+                $instagram->setType((string)Token::INSTAGRAM_OAUTH2);
             }
 
             $likes = intval($rawData['likes']['count']);
 
-            if($ig->getUid() && $likes != $ig->getLikes()) {
-                $ig->setLikes($likes);
-                $this->feedRepository->update($ig);
+            if ($instagram->getUid() && $likes != $instagram->getLikes()) {
+                $instagram->setLikes($likes);
+                $this->feedRepository->update($instagram);
             } else {
-                $ig->setLikes($likes);
-                $this->feedRepository->add($ig);
+                $instagram->setLikes($likes);
+                $this->feedRepository->add($instagram);
             }
         }
     }
@@ -252,34 +295,40 @@ class ImportTaskUtility {
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
-    private function updateFacebookFeed($data, Configuration $configuration) {
+    private function updateFacebookFeed($data, Configuration $configuration)
+    {
         //adding each record from array to database
         foreach ($data as $rawData) {
-            /** @var Feed $feedItem */
-            if ($feedItem = $this->feedRepository->findOneByExternalIdentifier($rawData['id'])) {
-                if ($feedItem->getUpdateDate() < strtotime($rawData['updated_time'])) {
-                    $this->setFacebookData($feedItem, $rawData);
-                    $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
+            /** @var Feed $facebookItem */
+            if ($facebookItem = $this->feedRepository->findOneByExternalIdentifier(
+                $rawData['id'],
+                $configuration->getFeedStorage()
+            )) {
+                if ($facebookItem->getUpdateDate() < strtotime($rawData['updated_time'])) {
+                    $this->setFacebookData($facebookItem, $rawData);
+                    $facebookItem->setUpdateDate(strtotime($rawData['updated_time']));
                 }
             } else {
                 /** @var Feed $feedItem */
-                $feedItem = $this->objectManager->get(Feed::class);
-                $this->setFacebookData($feedItem, $rawData);
+                $facebookItem = $this->objectManager->get(Feed::class);
+                $this->setFacebookData($facebookItem, $rawData);
 
                 $post_array = GeneralUtility::trimExplode('_', $rawData['id'], 1);
-                $feedItem->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
-                $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
-                $feedItem->setConfiguration($configuration);
-                $feedItem->setUpdateDate(strtotime($rawData['updated_time']));
-                $feedItem->setExternalIdentifier($rawData['id']);
+                $facebookItem->setPostUrl('https://facebook.com/' . $post_array[0] . '/posts/' . $post_array[1]);
+                $facebookItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
+                $facebookItem->setConfiguration($configuration);
+                $facebookItem->setUpdateDate(strtotime($rawData['updated_time']));
+                $facebookItem->setExternalIdentifier($rawData['id']);
+                $facebookItem->setPid($configuration->getFeedStorage());
+                $facebookItem->setType((string)Token::FACEBOOK);
             }
 
-            $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
+            $facebookItem->setLikes(intval($rawData['likes']['summary']['total_count']));
 
-            if($feedItem->getUid()) {
-                $this->feedRepository->update($feedItem);
+            if ($facebookItem->getUid()) {
+                $this->feedRepository->update($facebookItem);
             } else {
-                $this->feedRepository->add($feedItem);
+                $this->feedRepository->add($facebookItem);
             }
         }
     }
@@ -288,7 +337,8 @@ class ImportTaskUtility {
      * @param Feed $feed
      * @param array $rawData
      */
-    private function setFacebookData(Feed $feed, $rawData) {
+    private function setFacebookData(Feed $feed, $rawData)
+    {
         if (isset($rawData['message'])) {
             $feed->setMessage($rawData['message']);
         }

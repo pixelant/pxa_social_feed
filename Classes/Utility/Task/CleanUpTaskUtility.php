@@ -28,20 +28,17 @@ namespace Pixelant\PxaSocialFeed\Utility\Task;
  ***************************************************************/
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
-use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
-use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
-use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 /**
  * Class CleanUpTaskUtility
  * @package Pixelant\PxaSocialFeed\Utility\Task
  */
-class CleanUpTaskUtility {
+class CleanUpTaskUtility
+{
 
     /**
      * table with records
@@ -66,18 +63,10 @@ class CleanUpTaskUtility {
     protected $objectManager;
 
     /**
-     * API Urls
-     * @var array
-     */
-    protected $apiUrls = array(
-        Token::FACEBOOK => 'https://graph.facebook.com/v2.6/',
-        Token::INSTAGRAM_OAUTH2 => 'https://api.instagram.com/v1/'
-    );
-
-    /**
      * initialize
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->dbConnection = $GLOBALS['TYPO3_DB'];
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
     }
@@ -88,22 +77,24 @@ class CleanUpTaskUtility {
      * @param int $days
      * @return boolean
      */
-    public function run($days) {
+    public function run($days)
+    {
         $obsoleteEntries = $this->getObsoleteEntries($days);
         $this->deleteObsoleteEntries($obsoleteEntries);
         $this->removeDeletedFeeds();
-        
-        return TRUE;
+
+        return true;
     }
 
     /**
      * @param int $days
      * @return array
      */
-    protected function getObsoleteEntries($days) {
+    protected function getObsoleteEntries($days)
+    {
         /** @var \DateTime $obsoleteDate */
         $obsoleteDate = GeneralUtility::makeInstance(\DateTime::class)->modify('-' . $days . ' days');
-        
+
         $records = $this->dbConnection->exec_SELECTgetRows(
             'uid,configuration,crdate',
             self::TABLE_FEED,
@@ -112,14 +103,15 @@ class CleanUpTaskUtility {
             'crdate ASC'
         );
 
-        return $this->groupByConfigrations($records);
+        return $this->groupByConfigurations($records);
     }
 
     /**
      * @param array $records
      * @return array
      */
-    protected function groupByConfigrations($records) {
+    protected function groupByConfigurations($records)
+    {
         $recordsByConfiguration = [];
 
         foreach ($records as $record) {
@@ -130,11 +122,11 @@ class CleanUpTaskUtility {
         // check if limit allow to delete
         foreach ($recordsByConfiguration as $uid => $records) {
             $limit = intval($this->getLimitForConfiguration($uid));
-            if($limit > 0) {
+            if ($limit > 0) {
                 $allForConfiguration = $this->countAllInConfiguration($uid);
                 $toRemove = count($records['records']);
 
-                if($allForConfiguration - $limit < $toRemove) {
+                if ($allForConfiguration - $limit < $toRemove) {
                     $toRemove = $allForConfiguration - $limit;
 
                     $records['records'] = array_slice($records['records'], 0, $toRemove);
@@ -151,7 +143,8 @@ class CleanUpTaskUtility {
      * @param int $confUid
      * @return int
      */
-    protected function getLimitForConfiguration($confUid) {
+    protected function getLimitForConfiguration($confUid)
+    {
         $configuration = $this->dbConnection->exec_SELECTgetSingleRow(
             'feeds_limit',
             self::TABLE_CONFIGURATION,
@@ -165,7 +158,8 @@ class CleanUpTaskUtility {
      * @param int $confUid
      * @return mixed
      */
-    protected function countAllInConfiguration($confUid) {
+    protected function countAllInConfiguration($confUid)
+    {
         return $this->dbConnection->exec_SELECTcountRows(
             'configuration',
             self::TABLE_FEED,
@@ -177,7 +171,8 @@ class CleanUpTaskUtility {
      * @param $obsoleteEntries
      * @return void
      */
-    protected function deleteObsoleteEntries($obsoleteEntries) {
+    protected function deleteObsoleteEntries($obsoleteEntries)
+    {
         $uids = '';
         foreach ($obsoleteEntries as $obsoleteEntry) {
             $uids .= ',' . $obsoleteEntry['uid'];
@@ -190,65 +185,90 @@ class CleanUpTaskUtility {
     }
 
     /**
+     * Remove feed entries which were not found
+     *
      * @return void
      */
-    private function removeDeletedFeeds() {
-        $configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
-        $feedRepository = $this->objectManager->get(FeedRepository::class);
-        $configurations = $configurationRepository->findAll();
+    private function removeDeletedFeeds()
+    {
+        $configurations = $this->objectManager->get(ConfigurationRepository::class)->findAll();
+        $feedsToRemove = [];
+        $twitterFeeds = [];
+
+        /** @var Configuration $configuration */
         foreach ($configurations as $configuration) {
-            $feeds = $feedRepository->findByConfiguration($configuration);
-            foreach ($feeds as $feed) {
-                $isFeedDeleted = false;
-                $isFeedDeleted = $this->isFeedDeleted($feed->getExternalIdentifier(), $configuration);
-                if ($isFeedDeleted === true) {
-                    $feedRepository->remove($feed);
+            $feeds = $this->dbConnection->exec_SELECTgetRows(
+                'uid,external_identifier',
+                self::TABLE_FEED,
+                'configuration=' . $configuration->getUid()
+            );
+
+            if ($configuration->getToken()->getSocialType() !== Token::TWITTER) {
+                foreach ($feeds as $feed) {
+                    if ($this->isFeedDeleted($feed['external_identifier'], $configuration)) {
+                        $feedsToRemove[] = $feed;
+                    }
                 }
+            } else {
+                // save twitter feeds
+                $twitterFeeds = array_merge($twitterFeeds, $feeds);
             }
+
+            $this->checkTwitterFeeds($twitterFeeds);
         }
-        $this->objectManager->get(PersistenceManager::class)->persistAll();
+
+        $this->deleteObsoleteEntries($feedsToRemove);
     }
 
     /**
-     * @param string        $externalIdentifier
+     * @param string $externalIdentifier
      * @param Configuration $configuration
      * @return boolean
      */
-    private function isFeedDeleted($externalIdentifier, Configuration $configuration) {
+    private function isFeedDeleted($externalIdentifier, Configuration $configuration)
+    {
         switch ($configuration->getToken()->getSocialType()) {
             case Token::FACEBOOK:
-                $url = $this->apiUrls[$configuration->getToken()->getSocialType()] . $externalIdentifier .
-                   '?access_token=' . $configuration->getToken()->getCredential('appId') . '|' . $configuration->getToken()->getCredential('appSecret');
+                $url = sprintf(
+                    'https://graph.facebook.com/v2.9/%s?access_token=%s|%s',
+                    $externalIdentifier,
+                    $configuration->getToken()->getCredential('appId'),
+                    $configuration->getToken()->getCredential('appSecret')
+                );
+
                 $data = json_decode(GeneralUtility::getUrl($url), true);
-                if (is_array($data)) {
-                    if ($data["id"] == $externalIdentifier) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
+
+                return (isset($data['id']) && $data['id'] == $externalIdentifier);
                 break;
             case Token::INSTAGRAM_OAUTH2:
-                $url = $this->apiUrls[$configuration->getToken()->getSocialType()] . 'media/' . $externalIdentifier;
-                $url .= $configuration->getToken()->getSocialType() === Token::INSTAGRAM ? '?client_id=' . $configuration->getToken()->getCredential('clientId') : '?access_token=' . $configuration->getToken()->getCredential('accessToken');
+                $url = sprintf(
+                    'https://api.instagram.com/v1/media/%s?access_token=%s',
+                    $externalIdentifier,
+                    $configuration->getToken()->getCredential('accessToken')
+                );
+
                 $data = json_decode(GeneralUtility::getUrl($url), true);
-                if (is_array($data)) {
-                    if (is_array($data["data"]) && $data["data"]["id"] == $externalIdentifier) {
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-                break;
-            case Token::TWITTER:
-                // todo
-                return false;
+
+                return (isset($data['data']['id']) && $data['data']['id'] == $externalIdentifier);
                 break;
             default:
                 throw new \UnexpectedValueException('Such social type is not valid', 1466690851);
                 break;
         }
-        return false;
     }
 
+    /**
+     * @param array $twitterFeeds
+     * @return array feeds to remove
+     */
+    private function checkTwitterFeeds($twitterFeeds)
+    {
+        do {
+            // twitter limit
+            $feeds = array_slice($twitterFeeds, 0, 99);
+            $twitterFeeds = array_slice($twitterFeeds, 99);
+
+
+        } while (count($twitterFeeds) > 0);
+    }
 }

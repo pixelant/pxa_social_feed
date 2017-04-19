@@ -9,7 +9,7 @@
             </f:for>
         </pxa:tokenFields>
 
-        <f:if condition="{tokenItem.socialType} == 3">
+        <f:if condition="{tokenItem.socialType} == 2">
             <f:if condition="{pxa:getTokenCredential(token: tokenItem, credential: 'accessToken')}">
                 <f:then><b><f:translate key="pxasocialfeed_module.labels.accessToken"/></b>: <pxa:getTokenCredential token="{tokenItem}" credential="accessToken"/></f:then>
                 <f:else>

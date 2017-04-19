@@ -33,7 +33,8 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 /**
  * BaseController
  */
-class BaseController extends ActionController {
+class BaseController extends ActionController
+{
 
     /**
      * feedRepository
@@ -49,7 +50,8 @@ class BaseController extends ActionController {
      * @param string $label
      * @return NULL|string
      */
-    static public function translate($label = '') {
+    public static function translate($label = '')
+    {
         return LocalizationUtility::translate($label, 'pxa_social_feed');
     }
 }

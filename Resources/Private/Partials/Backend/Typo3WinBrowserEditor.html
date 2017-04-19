@@ -1,0 +1,53 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<div class="form-editor">
+    <div class="t3-form-control-group form-group">
+        <div class="t3-form-controls">
+            <f:form.textfield property="feedStorage" class="form-control" data="{identifier: 'feeds-storage-input', insert-target: ''}"/>
+            <div class="help-block">
+                <a href="#" class="btn btn-default" data-identifier="browse-feeds-storage" data-url="{addInlineSettings.FormEditor.typo3WinBrowserUrl}">
+                    <span class="t3js-icon icon icon-size-small icon-state-default icon-mimetypes-x-content-text"
+                          data-identifier="mimetypes-x-content-text">
+                        <span class="icon-markup">
+                            <span class="t3js-icon icon icon-size-small icon-state-default icon-apps-pagetree-page-default">
+                                <span class="icon-markup">
+                                    <f:image src="EXT:core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-page-default.svg"/>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                    <span><f:translate key="pxasocialfeed_module.labels.pages"/></span>
+                </a>
+
+                <f:if condition="{isEditForm}">
+                    <div class="form-group migrate-records-wrapper" style="display: none;">
+                        <div class="checkbox">
+                            <label>
+                                <f:form.checkbox name="migrateRecords" value="1" /> <f:translate key="pxasocialfeed_module.labels.migrate_records"/>
+                            </label>
+                        </div>
+                    </div>
+                </f:if>
+
+                <div class="table-fit{f:if(condition: '{isEditForm}', then: '', else: ' hidden')}" style="margin-top: 10px;">
+                    <table class="table table-white">
+                        <tbody>
+                        <tr>
+                            <td class="col-icon">
+                                <span class="t3js-icon icon icon-size-small icon-state-default icon-apps-pagetree-page-default">
+                                    <span class="icon-markup">
+                                        <f:image src="EXT:core/Resources/Public/Icons/T3Icons/apps/apps-filetree-folder-default.svg"/>
+                                    </span>
+                                </span>
+                            </td>
+                            <td class="col-title">
+                                <span data-identifier="feed-storage-title">{configuration.storageTitle}</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

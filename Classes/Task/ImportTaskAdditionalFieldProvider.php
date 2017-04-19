@@ -3,7 +3,10 @@
 namespace Pixelant\PxaSocialFeed\Task;
 
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
+use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /***************************************************************
  *
@@ -29,20 +32,24 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
-class ImportTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface {
+class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
+{
 
     /**
      * @param array $taskInfo
-     * @param \Pixelant\PxaSocialFeed\Task\ImportTask $task
-     * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject
+     * @param ImportTask $task
+     * @param SchedulerModuleController $parentObject
      * @return array
      */
-    public function getAdditionalFields(array &$taskInfo, $task, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
+    public function getAdditionalFields(
+        array &$taskInfo,
+        $task,
+        SchedulerModuleController $parentObject
+    ) {
         $additionalFields = [];
 
         if ($parentObject->CMD == 'add') {
-            $taskInfo['configs'] = NULL;
+            $taskInfo['configs'] = null;
         }
 
         if ($parentObject->CMD == 'edit') {
@@ -50,9 +57,9 @@ class ImportTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\Addition
         }
 
         $additionalFields['configs'] = [
-            'code'     =>  ConfigurationUtility::getAvailabelConfigsSelectBox($taskInfo['configs']),
-            'label'    => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:scheduler.configs',
-            'cshKey'   => '',
+            'code' => ConfigurationUtility::getAvailabelConfigsSelectBox($taskInfo['configs']),
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:scheduler.configs',
+            'cshKey' => '',
             'cshLabel' => ''
         ];
 
@@ -61,17 +68,20 @@ class ImportTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\Addition
 
     /**
      * @param array $submittedData
-     * @param \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject
+     * @param SchedulerModuleController $parentObject
      * @return bool
      */
-    public function validateAdditionalFields(array &$submittedData, \TYPO3\CMS\Scheduler\Controller\SchedulerModuleController $parentObject) {
+    public function validateAdditionalFields(
+        array &$submittedData,
+        SchedulerModuleController $parentObject
+    ) {
         // nothing to validate, just list of uids
-        $valid = FALSE;
+        $valid = false;
 
-        if(!isset($submittedData['configs'])) {
-            $parentObject->addMessage('Wrong configurations select', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
+        if (!isset($submittedData['configs'])) {
+            $parentObject->addMessage('Wrong configurations select', FlashMessage::ERROR);
         } else {
-            $valid = TRUE;
+            $valid = true;
         }
 
         return $valid;
@@ -79,9 +89,10 @@ class ImportTaskAdditionalFieldProvider implements \TYPO3\CMS\Scheduler\Addition
 
     /**
      * @param array $submittedData
-     * @param \Pixelant\PxaSocialFeed\Task\ImportTask $task
+     * @param ImportTask $task
      */
-    public function saveAdditionalFields(array $submittedData, \TYPO3\CMS\Scheduler\Task\AbstractTask $task) {
+    public function saveAdditionalFields(array $submittedData, AbstractTask $task)
+    {
         $task->setConfigs($submittedData['configs']);
     }
 }

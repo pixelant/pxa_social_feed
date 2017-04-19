@@ -45,6 +45,7 @@ In configuration there are next fields:
 * Configuration name - *just a custom name*
 * Social ID - *ID of account where to fetch feed (for example, "pixelant.net" - Pixelant ID on a facebook)*
 * Limit - *minimum number of records to keep and fetch from feed at once*
+* Storage - *specify folder where to save feed items*
 * Token - *choose access token*
 
 #### Add plugin on a page. ####

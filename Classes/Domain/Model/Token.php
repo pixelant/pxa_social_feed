@@ -1,6 +1,6 @@
 <?php
-namespace Pixelant\PxaSocialFeed\Domain\Model;
 
+namespace Pixelant\PxaSocialFeed\Domain\Model;
 
 /***************************************************************
  *
@@ -27,11 +27,13 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaSocialFeed\Controller\BaseController;
+use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 
 /**
  * Tokens
  */
-class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
+class Token extends AbstractEntity
+{
 
     /**
      * facebook token
@@ -41,12 +43,12 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     /**
      * instagram_oauth2
      */
-    const INSTAGRAM_OAUTH2 = 3;
+    const INSTAGRAM_OAUTH2 = 2;
 
     /**
      * twitter token
      */
-    const TWITTER = 4;
+    const TWITTER = 3;
 
     /**
      * pid
@@ -72,14 +74,16 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
     /**
      * @return string
      */
-    public function getSerializedCredentials() {
+    public function getSerializedCredentials()
+    {
         return $this->serializedCredentials;
     }
 
     /**
      * @param string $serializedCredentials
      */
-    public function setSerializedCredentials($serializedCredentials) {
+    public function setSerializedCredentials($serializedCredentials)
+    {
         $this->serializedCredentials = $serializedCredentials;
     }
 
@@ -88,7 +92,8 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      *
      * @return array
      */
-    public function getCredentials() {
+    public function getCredentials()
+    {
         return unserialize($this->getSerializedCredentials());
     }
 
@@ -98,10 +103,11 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @param string $key
      * @return string
      */
-    public function getCredential($key = '') {
+    public function getCredential($key = '')
+    {
         $credentials = $this->getCredentials();
 
-        if(!empty($key) && isset($credentials[$key])) {
+        if (!empty($key) && isset($credentials[$key])) {
             return $credentials[$key];
         }
 
@@ -115,10 +121,11 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @param string $value
      * @return void
      */
-    public function setCredential($key = '', $value = '') {
-        if(!empty($key)) {
+    public function setCredential($key = '', $value = '')
+    {
+        if (!empty($key)) {
             $credentials = $this->getCredentials();
-            $credentials[$key] = $value;
+            $credentials[$key] = trim($value);
 
             $this->setSerializedCredentials(serialize($credentials));
         }
@@ -129,7 +136,8 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      *
      * @return integer $socialType
      */
-    public function getSocialType() {
+    public function getSocialType()
+    {
         return $this->socialType;
     }
 
@@ -139,7 +147,8 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * @param integer $socialType
      * @return void
      */
-    public function setSocialType($socialType) {
+    public function setSocialType($socialType)
+    {
         $this->socialType = $socialType;
     }
 
@@ -148,7 +157,8 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      *
      * @return string
      */
-    public function getSocialTypeDescription() {
+    public function getSocialTypeDescription()
+    {
         return BaseController::translate('pxasocialfeed_module.labels.type.' . $this->getSocialType());
     }
 
@@ -156,7 +166,8 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      * get value for select box
      * @return string
      */
-    public function getSelectBoxLabel() {
+    public function getSelectBoxLabel()
+    {
         return $this->getUid() . ': ' . $this->getSocialTypeDescription();
     }
 
@@ -165,7 +176,8 @@ class Token extends \TYPO3\CMS\Extbase\DomainObject\AbstractEntity {
      *
      * @return array
      */
-    static public function getAllConstant() {
+    public static function getAllConstant()
+    {
         $oClass = new \ReflectionClass(__CLASS__);
         return $oClass->getConstants();
     }

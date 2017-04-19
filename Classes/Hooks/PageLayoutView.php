@@ -33,7 +33,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class PageLayoutView
  * @package Pixelant\PxaSocialFeed\Hooks
  */
-class PageLayoutView {
+class PageLayoutView
+{
 
     /**
      * Path to the locallang file
@@ -46,7 +47,8 @@ class PageLayoutView {
      * @param array $params
      * @return string
      */
-    public function getExtensionInformation($params) {
+    public function getExtensionInformation($params)
+    {
         $info = '<strong>' . $this->getLanguageService()->sL(self::LLPATH . 'plugin_title', true) . '</strong><br>';
         $additionalInfo = '';
 
@@ -63,15 +65,28 @@ class PageLayoutView {
             }
 
             // get settings array
-            if ($settings['settings']) $settings = $settings['settings'];
+            if ($settings['settings']) {
+                $settings = $settings['settings'];
+            }
 
             // limit info
-            $additionalInfo .= sprintf('<b>%s</b>: %s<br>', $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true), $settings['feedsLimit'] ? $settings['feedsLimit'] : $this->getLanguageService()->sL(self::LLPATH . 'unlimited', true));
+            $additionalInfo .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true),
+                $settings['feedsLimit'] ? $settings['feedsLimit'] : $this->getLanguageService()->sL(
+                    self::LLPATH . 'unlimited',
+                    true
+                )
+            );
 
             // like show info
-            $additionalInfo .= sprintf('<b>%s</b>: %s<br>',
+            $additionalInfo .= sprintf(
+                '<b>%s</b>: %s<br>',
                 $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount', true),
-                $settings['loadLikesCount'] ? $this->getLanguageService()->sL(self::LLPATH . 'yes', true) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
+                $settings['loadLikesCount'] ? $this->getLanguageService()->sL(
+                    self::LLPATH . 'yes',
+                    true
+                ) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
             );
 
             // configurations info
@@ -87,7 +102,10 @@ class PageLayoutView {
                     $feeds[] = $configuration['name'];
                 }
 
-                $additionalInfo .= '<b>' . $this->getLanguageService()->sL(self::LLPATH . 'feeds', true) . ':</b> ' . implode(', ', $feeds);
+                $additionalInfo .= '<b>' . $this->getLanguageService()->sL(
+                    self::LLPATH . 'feeds',
+                    true
+                ) . ':</b> ' . implode(', ', $feeds);
             }
         }
 
@@ -98,7 +116,8 @@ class PageLayoutView {
      *
      * @return \TYPO3\CMS\Lang\LanguageService
      */
-    protected function getLanguageService() {
+    protected function getLanguageService()
+    {
         return $GLOBALS['LANG'];
     }
 
@@ -110,13 +129,16 @@ class PageLayoutView {
      * @param $settings
      * @return void
      */
-    protected function flexFormToArray($field, $value, &$settings) {
+    protected function flexFormToArray($field, $value, &$settings)
+    {
         $fieldNameParts = GeneralUtility::trimExplode('.', $field);
         if (count($fieldNameParts) > 1) {
             $name = $fieldNameParts[0];
             unset($fieldNameParts[0]);
 
-            if (!isset($settings[$name])) $settings[$name] = [];
+            if (!isset($settings[$name])) {
+                $settings[$name] = [];
+            }
 
             $this->flexFormToArray(implode('.', $fieldNameParts), $value, $settings[$name]);
         } else {

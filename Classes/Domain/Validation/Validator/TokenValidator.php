@@ -28,12 +28,12 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  ***************************************************************/
 
 
-
 use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class TokenValidator extends AbstractValidator {
+class TokenValidator extends AbstractValidator
+{
 
     /**
      * @var \Pixelant\PxaSocialFeed\Utility\ConfigurationUtility
@@ -48,18 +48,27 @@ class TokenValidator extends AbstractValidator {
      *
      * @return bool
      */
-    protected function isValid($token) {
-        $credentialsFields = GeneralUtility::trimExplode(',', $this->configurationUtility->getConfiguration($token->getSocialType()));
+    protected function isValid($token)
+    {
+        $credentialsFields = GeneralUtility::trimExplode(
+            ',',
+            $this->configurationUtility->getConfiguration($token->getSocialType())
+        );
         $args = GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedpxasocialfeed');
 
-        foreach($credentialsFields as $field) {
-            if(!isset($args['credentials'][$field]) || trim($args['credentials'][$field]) == '') {
+        foreach ($credentialsFields as $field) {
+            if (!isset($args['credentials'][$field]) || trim($args['credentials'][$field]) == '') {
                 $errorCode = 1463130121;
             }
         }
 
-        if(isset($errorCode)) {
-            $this->addError(BaseController::translate('pxasocialfeed_module.labels.errorcode.'.$errorCode), $errorCode);
+        if (isset($errorCode)) {
+            $this->addError(
+                BaseController::translate(
+                    'pxasocialfeed_module.labels.errorcode.' . $errorCode
+                ),
+                $errorCode
+            );
         }
 
         return (!isset($errorCode));
