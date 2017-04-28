@@ -124,6 +124,7 @@ class TwitterApi
     /**
      * perform request to api
      *
+     * @param string $url
      * @return array
      * @throws \Exception
      */

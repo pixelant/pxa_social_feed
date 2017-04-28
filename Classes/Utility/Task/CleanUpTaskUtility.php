@@ -32,6 +32,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CleanUpTaskUtility
@@ -56,11 +57,19 @@ class CleanUpTaskUtility
     protected $dbConnection;
 
     /**
+     *  objectManager
+     *
+     * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+     */
+    protected $objectManager;
+
+    /**
      * initialize
      */
     public function __construct()
     {
         $this->dbConnection = $GLOBALS['TYPO3_DB'];
+        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
     }
 
     /**
@@ -73,6 +82,7 @@ class CleanUpTaskUtility
     {
         $obsoleteEntries = $this->getObsoleteEntries($days);
         $this->deleteObsoleteEntries($obsoleteEntries);
+        $this->removeDeletedFeeds();
 
         return true;
     }
@@ -94,14 +104,14 @@ class CleanUpTaskUtility
             'crdate ASC'
         );
 
-        return $this->groupByConfigrations($records);
+        return $this->groupByConfigurations($records);
     }
 
     /**
      * @param array $records
      * @return array
      */
-    protected function groupByConfigrations($records)
+    protected function groupByConfigurations($records)
     {
         $recordsByConfiguration = [];
 
@@ -251,6 +261,7 @@ class CleanUpTaskUtility
     }
 
     /**
+     * <<<<<<< HEAD
      * @param Configuration $configuration
      * @param array $twitterFeeds
      * @param array &$feedsToRemove
@@ -288,7 +299,6 @@ class CleanUpTaskUtility
                         $feedsToRemove[] = $feedListItem;
                     }
                 }
-
             } while (count($twitterFeeds) > 0);
         }
     }
