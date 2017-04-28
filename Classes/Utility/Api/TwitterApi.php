@@ -39,7 +39,7 @@ class TwitterApi
     /**
      * path to get twitter feed
      */
-    const API_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+    const API_FETCH_URL = 'https://api.twitter.com/1.1/';
 
     /**
      * consumer key
@@ -105,9 +105,29 @@ class TwitterApi
      * perform request to api
      *
      * @return array
+     */
+    public function performFetchRequest()
+    {
+        return $this->performRequest(self::API_FETCH_URL . 'statuses/user_timeline.json');
+    }
+
+    /**
+     * perform request to api
+     *
+     * @return array
+     */
+    public function performStatusesLookup()
+    {
+        return $this->performRequest(self::API_FETCH_URL . 'statuses/lookup.json');
+    }
+
+    /**
+     * perform request to api
+     *
+     * @return array
      * @throws \Exception
      */
-    public function performRequest()
+    protected function performRequest($url)
     {
         if (empty($this->getFields)) {
             throw new \Exception('Get fields could not be empty', 1463139019);
@@ -117,11 +137,11 @@ class TwitterApi
         /** @var RequestUtility $requestUtility */
         $requestUtility = GeneralUtility::makeInstance(
             RequestUtility::class,
-            self::API_URL,
+            $url,
             RequestUtility::METHOD_GET
         );
         $requestUtility->setGetParameters($this->getGetFields());
-        $requestUtility->setHeaders(['Authorization' => $this->getAuthHeader()]);
+        $requestUtility->setHeaders(['Authorization' => $this->getAuthHeader($url)]);
 
         $response = $requestUtility->send();
         if (!empty($response)) {
@@ -134,9 +154,10 @@ class TwitterApi
     /**
      * Get Authorization header
      *
+     * @param string $url
      * @return string
      */
-    protected function getAuthHeader()
+    protected function getAuthHeader($url)
     {
         $oauth = [
             'oauth_consumer_key' => $this->consumerKey,
@@ -147,7 +168,7 @@ class TwitterApi
             'oauth_version' => '1.0'
         ];
 
-        $sigBase = $this->buildSigBase(array_merge($oauth, $this->getGetFields()));
+        $sigBase = $this->buildSigBase(array_merge($oauth, $this->getGetFields()), $url);
         $sigKey = rawurlencode($this->consumerSecret) . '&' . rawurlencode($this->oauthAccessTokenSecret);
 
         $oauth['oauth_signature'] = base64_encode(hash_hmac('sha1', $sigBase, $sigKey, true));
@@ -168,19 +189,20 @@ class TwitterApi
      * Private method to generate the base string
      *
      * @param array $oauth
-     *
+     * @param string $url
      * @return string Built base string
      */
-    private function buildSigBase($oauth)
+    private function buildSigBase($oauth, $url)
     {
         ksort($oauth);
         $urlParts = [];
 
         foreach ($oauth as $key => $value) {
-            $urlParts[] = $key . '=' . $value;
+            $urlParts[] = $key . '=' . rawurlencode($value);
         }
 
-        return 'GET' . '&' . rawurlencode(self::API_URL) . '&' . rawurlencode(implode('&', $urlParts));
+        return 'GET' . '&' . rawurlencode($url) . '&'
+            . rawurlencode(implode('&', $urlParts));
     }
 
     /**

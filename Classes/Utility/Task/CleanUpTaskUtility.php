@@ -26,6 +26,11 @@ namespace Pixelant\PxaSocialFeed\Utility\Task;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -164,9 +169,144 @@ class CleanUpTaskUtility
             $uids .= ',' . $obsoleteEntry['uid'];
         }
 
+        $where = '';
+        if (!empty($uids)) {
+            $where .= 'uid IN (' . ltrim($uids, ',') . ') OR ';
+        }
+        $where .= 'deleted=1';
+
         $this->dbConnection->exec_DELETEquery(
             self::TABLE_FEED,
-            'uid IN (' . ltrim($uids, ',') . ') OR deleted=1'
+            $where
         );
+    }
+
+    /**
+     * Remove feed entries which were not found
+     *
+     * @return void
+     */
+    private function removeDeletedFeeds()
+    {
+        $configurations = $this->objectManager->get(ConfigurationRepository::class)->findAll();
+        $feedsToRemove = [];
+
+        /** @var Configuration $configuration */
+        foreach ($configurations as $configuration) {
+            $feeds = $this->dbConnection->exec_SELECTgetRows(
+                'uid,external_identifier',
+                self::TABLE_FEED,
+                'configuration=' . $configuration->getUid()
+            );
+
+            if ($configuration->getToken()->getSocialType() !== Token::TWITTER) {
+                foreach ($feeds as $feed) {
+                    if ($this->isFeedDeleted($feed['external_identifier'], $configuration)) {
+                        $feedsToRemove[] = $feed;
+                    }
+                }
+            } else {
+                $this->checkTwitterFeeds($configuration, $feeds, $feedsToRemove);
+            }
+        }
+
+        $this->deleteObsoleteEntries($feedsToRemove);
+    }
+
+    /**
+     * @param string $externalIdentifier
+     * @param Configuration $configuration
+     * @return boolean
+     */
+    private function isFeedDeleted($externalIdentifier, Configuration $configuration)
+    {
+        switch ($configuration->getToken()->getSocialType()) {
+            case Token::FACEBOOK:
+                $url = sprintf(
+                    ImportTaskUtility::FACEBOOK_API_URL . '%s?access_token=%s|%s',
+                    $externalIdentifier,
+                    $configuration->getToken()->getCredential('appId'),
+                    $configuration->getToken()->getCredential('appSecret')
+                );
+
+                $data = json_decode(GeneralUtility::getUrl($url), true);
+
+                return !(isset($data['id']) && $data['id'] == $externalIdentifier);
+                break;
+            case Token::INSTAGRAM_OAUTH2:
+                $url = sprintf(
+                    ImportTaskUtility::INSTAGRAM_API_URL . 'media/%s?access_token=%s',
+                    $externalIdentifier,
+                    $configuration->getToken()->getCredential('accessToken')
+                );
+
+                $data = json_decode(GeneralUtility::getUrl($url), true);
+
+                return !(isset($data['data']['id']) && $data['data']['id'] == $externalIdentifier);
+                break;
+            default:
+                throw new \UnexpectedValueException('Such social type is not valid', 1466690851);
+                break;
+        }
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @param array $twitterFeeds
+     * @param array &$feedsToRemove
+     */
+    private function checkTwitterFeeds(Configuration $configuration, $twitterFeeds, &$feedsToRemove)
+    {
+        if (!empty($twitterFeeds)) {
+            do {
+                // twitter limit
+                $feedsList = array_slice($twitterFeeds, 0, 99);
+                $twitterFeeds = array_slice($twitterFeeds, 99);
+
+                $fields = [
+                    'id' => $this->getListOfArrayField('external_identifier', $feedsList),
+                    'include_entities' => 'false',
+                    'trim_user' => 1,
+                    'map' => 'false'
+                ];
+
+                /** @var TwitterApi $twitterApi */
+                $twitterApi = GeneralUtility::makeInstance(
+                    TwitterApi::class,
+                    $configuration->getToken()->getCredential('consumerKey'),
+                    $configuration->getToken()->getCredential('consumerSecret'),
+                    $configuration->getToken()->getCredential('accessToken'),
+                    $configuration->getToken()->getCredential('accessTokenSecret')
+                );
+
+                $data = $twitterApi->setGetFields($fields)->performStatusesLookup();
+
+                $availableItems = $this->getListOfArrayField('id_str', $data);
+
+                foreach ($feedsList as $feedListItem) {
+                    if (!GeneralUtility::inList($availableItems, $feedListItem['external_identifier'])) {
+                        $feedsToRemove[] = $feedListItem;
+                    }
+                }
+
+            } while (count($twitterFeeds) > 0);
+        }
+    }
+
+    /**
+     * Get list of array field
+     *
+     * @param string $field
+     * @param array $listArray
+     * @return string
+     */
+    private function getListOfArrayField($field, $listArray = [])
+    {
+        $list = [];
+        foreach ($listArray as $item) {
+            $list[] = $item[$field];
+        }
+
+        return implode(',', $list);
     }
 }
