@@ -59,7 +59,7 @@ class CleanUpTask extends AbstractTask
      */
     public function getAdditionalInformation()
     {
-        return 'Delete entries older than ' . $this->getDays() . ' days.';
+        return 'Delete entries older than ' . $this->getDays() . ' days or deleted at social media feed directly.';
     }
 
     /**

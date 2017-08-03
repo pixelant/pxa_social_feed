@@ -39,6 +39,9 @@ use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
 class ImportTaskUtility
 {
+    const FACEBOOK_API_URL = 'https://graph.facebook.com/v2.9/';
+
+    const INSTAGRAM_API_URL = 'https://api.instagram.com/v1/';
 
     /**
      *  objectManager
@@ -89,7 +92,7 @@ class ImportTaskUtility
                         //getting data array from facebook graph api json result
                         // @codingStandardsIgnoreStart
                         $url = sprintf(
-                            'https://graph.facebook.com/v2.6/%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
+                            self::FACEBOOK_API_URL . '%s/posts/?fields=likes.summary(true).limit(0),message,attachments,created_time,updated_time&limit=%d&access_token=%s|%s',
                             $configuration->getSocialId(),
                             $configuration->getFeedsLimit(),
                             $configuration->getToken()->getCredential('appId'),
@@ -112,7 +115,7 @@ class ImportTaskUtility
                     case Token::INSTAGRAM_OAUTH2:
                         // getting data array from instagram api json result
                         //predefine a format of request string;
-                        $urlFormat = 'https://api.instagram.com/v1/%s/%s/media/recent/?access_token=%s&count=%d';
+                        $urlFormat = self::INSTAGRAM_API_URL . '%s/%s/media/recent/?access_token=%s&count=%d';
 
                         // hashtag used in configuration (leading '#' symbol): preparing values for 'tag' API call
                         if (GeneralUtility::isFirstPartOfStr($configuration->getSocialId(), '#')) {
@@ -153,7 +156,7 @@ class ImportTaskUtility
                             'include_rts' => 1
                         ];
 
-                        /** @var \Pixelant\PxaSocialFeed\Utility\Api\TwitterApi $twitterApi */
+                        /** @var TwitterApi $twitterApi */
                         $twitterApi = GeneralUtility::makeInstance(
                             TwitterApi::class,
                             $configuration->getToken()->getCredential('consumerKey'),
@@ -162,7 +165,7 @@ class ImportTaskUtility
                             $configuration->getToken()->getCredential('accessTokenSecret')
                         );
 
-                        $data = $twitterApi->setGetFields($fields)->performRequest();
+                        $data = $twitterApi->setGetFields($fields)->performFetchRequest();
 
                         if (is_array($data)) {
                             $this->saveTwitterFeed($data, $configuration);
