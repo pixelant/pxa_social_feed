@@ -21,7 +21,11 @@
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.form.social_id"/></td>
-                            <td><f:form.textfield property="socialId" class="form-control"/></td>
+                            <td><f:form.textfield
+                                    property="socialId"
+                                    title="{f:translate(key: 'pxasocialfeed_module.labels.form.social_id_tooltip')}"
+                                    class="form-control tooltip-hold"
+                                    data="{placement: 'left'}"/></td>
                         </tr>
                         <tr>
                             <td><f:translate key="pxasocialfeed_module.labels.form.amount_of_feeds"/></td>

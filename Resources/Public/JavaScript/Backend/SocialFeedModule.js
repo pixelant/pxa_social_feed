@@ -156,7 +156,7 @@ define(['jquery',
             }
 
             /**
-             * Instagram toket get button
+             * Instagram token get button
              * @private
              */
             function _getInstagramToketClick() {

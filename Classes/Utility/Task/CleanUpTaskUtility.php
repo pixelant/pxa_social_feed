@@ -241,7 +241,8 @@ class CleanUpTaskUtility
 
                 $data = json_decode(GeneralUtility::getUrl($url), true);
 
-                return !(isset($data['id']) && $data['id'] == $externalIdentifier);
+
+                return (!isset($data['id']) || $data['id'] !== $externalIdentifier);
                 break;
             case Token::INSTAGRAM_OAUTH2:
                 $url = sprintf(
@@ -252,7 +253,7 @@ class CleanUpTaskUtility
 
                 $data = json_decode(GeneralUtility::getUrl($url), true);
 
-                return !(isset($data['data']['id']) && $data['data']['id'] == $externalIdentifier);
+                return (!isset($data['data']['id']) || $data['data']['id'] !== $externalIdentifier);
                 break;
             default:
                 throw new \UnexpectedValueException('Such social type is not valid', 1466690851);

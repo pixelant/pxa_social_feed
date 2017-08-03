@@ -44,13 +44,6 @@ class SocialFeedAjaxController
     const URL = 'https://api.instagram.com/v1/users/search?q=%s&access_token=%s';
 
     /**
-     * post data
-     *
-     * @var array
-     */
-    protected $postData = [];
-
-    /**
      * configurationRepository
      *
      * @var \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository
@@ -67,8 +60,6 @@ class SocialFeedAjaxController
         $this->configurationRepository = GeneralUtility::makeInstance(
             ObjectManager::class
         )->get(ConfigurationRepository::class);
-
-        $this->postData['configuration'] = (int)GeneralUtility::_POST('configuration');
     }
 
     /**
@@ -82,10 +73,9 @@ class SocialFeedAjaxController
      */
     public function loadInstUserId(ServerRequestInterface $request, ResponseInterface $response)
     {
-
-        if ($this->postData['configuration']) {
+        if ($configurationUid = (int)$request->getParsedBody()['configuration']) {
             /** @var Configuration $configuration */
-            $configuration = $this->configurationRepository->findByUid($this->postData['configuration']);
+            $configuration = $this->configurationRepository->findByUid($configurationUid);
 
             if ($configuration !== null
                 && $configuration->getToken()->getCredential('accessToken')

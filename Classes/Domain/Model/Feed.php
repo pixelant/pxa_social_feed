@@ -165,6 +165,21 @@ class Feed extends AbstractEntity
     }
 
     /**
+     * Returns the message decoded
+     *
+     * @return string $message
+     */
+    public function getDecodedMessage()
+    {
+        return json_decode(
+            sprintf(
+                '"%s"',
+                $this->message
+            )
+        );
+    }
+
+    /**
      * Sets the message
      *
      * @param string $message
