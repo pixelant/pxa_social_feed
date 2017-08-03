@@ -146,7 +146,10 @@
                 <source>Configuration name</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.form.social_id">
-                <source>Social ID/Instagram hashtag (with starting #)</source>
+                <source>Social ID</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.form.social_id_tooltip">
+                <source>Either Facebook, or Twitter, or Instagram ID, or Instagram hashtag (with starting #)</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.form.amount_of_feeds">
                 <source>Limit</source>
