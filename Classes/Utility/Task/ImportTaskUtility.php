@@ -343,7 +343,8 @@ class ImportTaskUtility
     private function setFacebookData(Feed $feed, $rawData)
     {
         if (isset($rawData['message'])) {
-            $feed->setMessage($rawData['message']);
+
+            $feed->setMessage($this->encodeMessage($rawData['message']));
         }
 
         if (isset($rawData['attachments']['data'][0]['media']['image']['src'])) {
@@ -354,5 +355,17 @@ class ImportTaskUtility
         if (isset($rawData['attachments']['data'][0]['title'])) {
             $feed->setTitle($rawData['attachments']['data'][0]['title']);
         }
+    }
+
+    /**
+     * Use json_encode to get emoji character convert to unicode
+     * @TODO is there better way to do this ?
+     *
+     * @param $message
+     * @return bool|string
+     */
+    private function encodeMessage($message)
+    {
+        return substr(json_encode($message), 1, -1);
     }
 }

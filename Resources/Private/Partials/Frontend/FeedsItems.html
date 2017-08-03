@@ -13,14 +13,19 @@
                         <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
                     </div>
                     <f:if condition="{settings.loadLikesCount}">
-                                <span class="social-feed-like-count">
-                                    <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/like.svg" class="like-icon" alt="like" width="17"/>
-                                    <span class="social-feed-like-like-count-element">{feed.likes}</span>
-                                </span>
+                        <span class="social-feed-like-count">
+                            <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/like.svg" class="like-icon" alt="like" width="17"/>
+                            <span class="social-feed-like-like-count-element">{feed.likes}</span>
+                        </span>
                     </f:if>
                 </div>
 
-                <p class="social-feed-message">{feed.message -> f:format.raw()}</p>
+                <p class="social-feed-message">
+                    <f:if condition="{feed.configuration.token.socialType} == 1">
+                        <f:then>{feed.decodedMessage -> f:format.raw()}</f:then>
+                        <f:else>{feed.message -> f:format.raw()}</f:else>
+                    </f:if>
+                </p>
             </a>
         </li>
     </f:for>
