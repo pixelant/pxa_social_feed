@@ -218,6 +218,7 @@ class ImportTaskUtility
 
                 $date = new \DateTime($rawData['created_at']);
                 $twitterFeed->setPostDate($date);
+                $twitterFeed->setPostUrl('https://twitter.com/' . $configuration->getSocialId() . '/status/' . $rawData['id_str']);
                 $twitterFeed->setConfiguration($configuration);
                 $twitterFeed->setExternalIdentifier($rawData['id_str']);
                 $twitterFeed->setPid($configuration->getFeedStorage());
