@@ -17,7 +17,7 @@
                                 <type>select</type>
                                 <items>
                                     <numIndex index="0">
-                                        <numIndex index="0">Standart</numIndex>
+                                        <numIndex index="0">Standard</numIndex>
                                         <numIndex index="1">Feeds->list</numIndex>
                                     </numIndex>
                                     <numIndex index="1">
