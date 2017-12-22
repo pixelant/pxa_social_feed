@@ -8,6 +8,8 @@ module.tx_pxasocialfeed {
             2 = clientId,clientSecret
             #twitter
             3 = consumerKey,consumerSecret,accessToken,accessTokenSecret
+            #youtube
+            4 = apiKey
         }
     }
 }

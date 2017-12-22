@@ -10,7 +10,7 @@
 				<source></source>
 			</trans-unit>
 			<trans-unit id="pi1_wiz_description">
-            	<source>Facebook, Instagram and Twitter feed</source>
+            	<source>Facebook, Instagram, YouTube and Twitter feed</source>
             </trans-unit>
             <trans-unit id="plugin_title">
                 <source>Pxa Social Feed</source>

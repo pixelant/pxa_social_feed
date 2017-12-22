@@ -51,6 +51,11 @@ class Token extends AbstractEntity
     const TWITTER = 3;
 
     /**
+     * youtube token
+     */
+    const YOUTUBE = 4;
+
+    /**
      * pid
      *
      * @var int

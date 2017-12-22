@@ -106,6 +106,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.3">
                 <source>Twitter</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.4">
+                <source>Youtube</source>
+            </trans-unit>
 
             <trans-unit id="tx_pxasocialfeed.task.import.name">
                 <source>Social Feed Import</source>
