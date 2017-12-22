@@ -20,7 +20,8 @@ return [
             'default' => 'ext-pxasocialfeed-model-icon',
             '1' => 'ext-pxasocialfeed-model-icon-facebook',
             '2' => 'ext-pxasocialfeed-model-icon-instagram',
-            '3' => 'ext-pxasocialfeed-model-icon-twitter'
+            '3' => 'ext-pxasocialfeed-model-icon-twitter',
+            '4' => 'ext-pxasocialfeed-model-icon-youtube',
         ],
 
         'delete' => 'deleted',
@@ -40,6 +41,7 @@ return [
         '1' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
         '2' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
         '3' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
+        '4' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
     ],
     'palettes' => [
         'core' => ['showitem' =>'hidden'],
@@ -94,6 +96,7 @@ return [
                     [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.1', 1, 'ext-pxasocialfeed-model-icon-facebook'],
                     [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.2', 2, 'ext-pxasocialfeed-model-icon-instagram'],
                     [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.3', 3, 'ext-pxasocialfeed-model-icon-twitter'],
+                    [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.4', 4, 'ext-pxasocialfeed-model-icon-youtube'],
                 ],
                 'showIconTable' => true,
                 'size' => 1,
