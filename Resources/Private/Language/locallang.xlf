@@ -71,6 +71,9 @@
             <trans-unit id="pxasocialfeed_module.labels.type.3">
                 <source>Twitter</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.type.4">
+                <source>Youtube</source>
+            </trans-unit>
 
             <!-- labels for module token tab -->
             <trans-unit id="pxasocialfeed_module.labels.pages">
@@ -124,6 +127,9 @@
             <trans-unit id="pxasocialfeed_module.labels.accessTokenSecret">
                 <source>Access Token Secret</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.apiKey">
+                <source>API Key</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.token">
                 <source>Token</source>
             </trans-unit>
@@ -149,7 +155,7 @@
                 <source>Social ID</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.form.social_id_tooltip">
-                <source>Either Facebook / Twitter / Instagram ID or Instagram hashtag (with starting #)</source>
+                <source>Either Facebook / Twitter / Instagram / YouTube ID or Instagram hashtag (with starting #)</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.form.amount_of_feeds">
                 <source>Limit</source>

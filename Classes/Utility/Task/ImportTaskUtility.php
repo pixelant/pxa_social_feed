@@ -43,6 +43,8 @@ class ImportTaskUtility
 
     const INSTAGRAM_API_URL = 'https://api.instagram.com/v1/';
 
+    const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/';
+
     /**
      *  objectManager
      *
@@ -176,6 +178,25 @@ class ImportTaskUtility
                             );
                         }
 
+                        break;
+                    case Token::YOUTUBE:
+                        $url = \sprintf(
+                            self::YOUTUBE_API_URL . 'search?order=date&part=snippet&maxResults=%d&channelId=%s&key=%s',
+                            $configuration->getFeedsLimit(),
+                            $configuration->getSocialId(),
+                            $configuration->getToken()->getCredential('apiKey')
+                        );
+
+                        $data = json_decode(GeneralUtility::getUrl($url), true);
+                        
+                        if (is_array($data)) {
+                            $this->updateYoutubeFeed($data['items'], $configuration);
+                        } else {
+                            throw new \UnexpectedValueException(
+                                'Invalid data from YOUTUBE feed. Please, check credentials.',
+                                1513954811
+                            );
+                        }
                         break;
                     default:
                         throw new \UnexpectedValueException('Such social type is not valid', 1466690851);
@@ -355,6 +376,42 @@ class ImportTaskUtility
         }
         if (isset($rawData['attachments']['data'][0]['title'])) {
             $feed->setTitle($rawData['attachments']['data'][0]['title']);
+        }
+    }
+
+    /**
+     * @param $data
+     * @param Configuration $configuration
+     */
+    private function updateYoutubeFeed($data, Configuration $configuration)
+    {
+        foreach ($data as $rawData) {
+            if ($youtubeItem = $this->feedRepository->findOneByExternalIdentifier(
+                $rawData['id']['videoId'],
+                $configuration->getFeedStorage()
+            )) {
+//                TODO: Is there something to update?
+            } else {
+                /** @var Feed $youtubeItem */
+                $youtubeItem = $this->objectManager->get(Feed::class);
+                $youtubeItem->setExternalIdentifier($rawData['id']['videoId']);
+                $youtubeItem->setPostDate(new \DateTime($rawData['snippet']['publishedAt']));
+                $youtubeItem->setPostUrl(
+                    \sprintf(
+                        'https://www.youtube.com/watch?v=%s',
+                        $youtubeItem->getExternalIdentifier()
+                    )
+                );
+                $youtubeItem->setMessage($rawData['snippet']['description']);
+                $youtubeItem->setImage($rawData['snippet']['thumbnails']['high']['url']);
+                $youtubeItem->setTitle($rawData['snippet']['title']);
+                $youtubeItem->setUpdateDate($youtubeItem->getPostDate()->format('U'));
+                $youtubeItem->setConfiguration($configuration);
+                $youtubeItem->setType((string)Token::YOUTUBE);
+                $youtubeItem->setPid($configuration->getFeedStorage());
+
+                $this->feedRepository->add($youtubeItem);
+            }
         }
     }
 

@@ -50,7 +50,8 @@ call_user_func(
                 'ext-pxasocialfeed-model-icon' => 'feed.svg',
                 'ext-pxasocialfeed-model-icon-facebook' => 'facebook.svg',
                 'ext-pxasocialfeed-model-icon-instagram' => 'instagram.svg',
-                'ext-pxasocialfeed-model-icon-twitter' => 'twitter.svg'
+                'ext-pxasocialfeed-model-icon-twitter' => 'twitter.svg',
+                'ext-pxasocialfeed-model-icon-youtube' => 'youtube.svg',
             ];
             /** @var \TYPO3\CMS\Core\Imaging\IconRegistry $iconRegistry */
             $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
