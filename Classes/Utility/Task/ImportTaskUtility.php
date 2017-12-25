@@ -180,7 +180,7 @@ class ImportTaskUtility
 
                         break;
                     case Token::YOUTUBE:
-                        $url = \sprintf(
+                        $url = sprintf(
                             self::YOUTUBE_API_URL . 'search?order=date&part=snippet&maxResults=%d&channelId=%s&key=%s',
                             $configuration->getFeedsLimit(),
                             $configuration->getSocialId(),
@@ -239,7 +239,9 @@ class ImportTaskUtility
 
                 $date = new \DateTime($rawData['created_at']);
                 $twitterFeed->setPostDate($date);
-                $twitterFeed->setPostUrl('https://twitter.com/' . $configuration->getSocialId() . '/status/' . $rawData['id_str']);
+                $twitterFeed->setPostUrl(
+                    'https://twitter.com/' . $configuration->getSocialId() . '/status/' . $rawData['id_str']
+                );
                 $twitterFeed->setConfiguration($configuration);
                 $twitterFeed->setExternalIdentifier($rawData['id_str']);
                 $twitterFeed->setPid($configuration->getFeedStorage());

@@ -3,7 +3,7 @@
   "description": "Allow to add facebook, instagram and twitter news feed on site.",
   "type": "typo3-cms-extension",
   "license": "GPL-2.0+",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "autoload": {
     "psr-4": {
       "Pixelant\\PxaSocialFeed\\": "Classes/"
