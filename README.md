@@ -2,13 +2,13 @@
 
 ### Pxa Social Feed ###
 
-Allow to add facebook, instagram and twitter feeds on site.
+Allow to add facebook, instagram, twitter and youtube feeds on site.
 
 ### How to setup ? ###
 
 There are 4 main steps how to make it work:
 
-* Configure access tokens and feeds configuration for facebook, instagram and twitter in BE module.
+* Configure access tokens and feeds configuration for facebook, instagram, twitter and youtube in BE module.
 * Add FE plugin on page.
 * Include extension TypoScript in TS template of site
 * Configure scheduler task
@@ -37,6 +37,10 @@ Access tokens types:
     2. Consumer Secret
     3. Access Token
     4. Access Token Secret
+    
+* Youtube. Read about how to get API key. [developers page](https://developers.google.com/youtube/v3/getting-started)
+
+    1. Api Key 
 
 
 #### Create configurations using BE module. ####
