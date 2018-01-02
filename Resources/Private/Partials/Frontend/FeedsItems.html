@@ -21,10 +21,7 @@
                 </div>
 
                 <p class="social-feed-message">
-                    <f:if condition="{feed.configuration.token.socialType} == 1">
-                        <f:then>{feed.decodedMessage -> f:format.raw()}</f:then>
-                        <f:else>{feed.message -> f:format.raw()}</f:else>
-                    </f:if>
+                    <f:format.raw>{feed.message -> f:format.nl2br()}</f:format.raw>
                 </p>
             </a>
         </li>
