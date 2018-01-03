@@ -1,4 +1,6 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers"
+      data-namespace-typo3-fluid="true">
 <ul class="social-feed-container owl-carousel">
     <f:for each="{feeds}" as="feed">
         <li class="social-feed-{feed.configuration.token.socialType}">
@@ -19,14 +21,13 @@
                         </span>
                     </f:if>
                 </div>
-
-                <p class="social-feed-message">
-                    <f:if condition="{feed.configuration.token.socialType} == 1">
-                        <f:then>{feed.decodedMessage -> f:format.raw()}</f:then>
-                        <f:else>{feed.message -> f:format.raw()}</f:else>
-                    </f:if>
-                </p>
             </a>
+            <p class="social-feed-message">
+                <f:if condition="{feed.configuration.token.socialType} == 1">
+                    <f:then>{feed.decodedMessage -> pxa:parseMessage(type:feed.configuration.token.socialType) -> f:format.raw()}</f:then>
+                    <f:else>{feed.message -> pxa:parseMessage(type:feed.configuration.token.socialType) -> f:format.raw()}</f:else>
+                </f:if>
+            </p>
         </li>
     </f:for>
 </ul>
