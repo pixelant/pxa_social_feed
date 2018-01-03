@@ -58,10 +58,15 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
      */
     public static function parseFeedMessage($text, $type)
     {
-        $url = '~(?:(https?)://([^\s<]+)|(www\.[^\s<]+?\.[^\s<]+))(?<![\.,:])~i';
+        //Convert urls to links
         $text = preg_replace(
-            $url,
-            '<a href="$0" target="_blank" title="$0">$0</a>',
+            '$(\s|^)(https?://[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
+            ' <a href="$2" target="_blank">$2</a> ',
+            $text
+        );
+        $text = preg_replace(
+            '$(\s|^)(www\.[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
+            '<a target="_blank" href="http://$2"  target="_blank">$2</a> ',
             $text
         );
 
