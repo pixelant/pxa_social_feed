@@ -33,6 +33,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
+use Pixelant\PxaSocialFeed\Utility\LoggerUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
@@ -89,6 +90,11 @@ class ImportTaskUtility
 
             /** @var Configuration $configuration */
             foreach ($configurations as $configuration) {
+                LoggerUtility::logImportFeed(
+                    'Feed import started',
+                    $configuration,
+                    LoggerUtility::INFO
+                );
                 switch ($configuration->getToken()->getSocialType()) {
                     case Token::FACEBOOK:
                         //getting data array from facebook graph api json result
@@ -107,9 +113,10 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->updateFacebookFeed($data['data'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException(
+                            LoggerUtility::logImportFeed(
                                 'Invalid data from FACEBOOK feed. Please, check credentials.',
-                                1466682087
+                                $configuration,
+                                LoggerUtility::ERROR
                             );
                         }
 
@@ -143,9 +150,10 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException(
+                            LoggerUtility::logImportFeed(
                                 'Invalid data from INSTAGRAM feed. Please, check credentials.',
-                                1466682066
+                                $configuration,
+                                LoggerUtility::ERROR
                             );
                         }
 
@@ -172,9 +180,10 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->saveTwitterFeed($data, $configuration);
                         } else {
-                            throw new \UnexpectedValueException(
+                            LoggerUtility::logImportFeed(
                                 'Invalid data from Twitter feed. Please, check credentials.',
-                                1466682071
+                                $configuration,
+                                LoggerUtility::ERROR
                             );
                         }
 
@@ -192,14 +201,19 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->updateYoutubeFeed($data['items'], $configuration);
                         } else {
-                            throw new \UnexpectedValueException(
+                            LoggerUtility::logImportFeed(
                                 'Invalid data from YOUTUBE feed. Please, check credentials.',
-                                1513954811
+                                $configuration,
+                                LoggerUtility::ERROR
                             );
                         }
                         break;
                     default:
-                        throw new \UnexpectedValueException('Such social type is not valid', 1466690851);
+                        LoggerUtility::logImportFeed(
+                            'Such social type is not valid',
+                            $configuration,
+                            LoggerUtility::ERROR
+                        );
                         break;
                 }
             }
