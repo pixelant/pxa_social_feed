@@ -2,6 +2,9 @@
 
 namespace Pixelant\PxaSocialFeed\Utility;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -39,18 +42,27 @@ class LoggerUtility
     const ERROR = 1;
 
     /**
-     * @param $message
-     * @param $feedConfig
-     * @param $errorType
+     * Log error
+     *
+     * @param string $message
+     * @param Configuration $feedConfig
+     * @param int $errorType
      */
-    public static function logImportFeed($message, $feedConfig, $errorType)
+    public static function logImportFeed($message, Configuration $feedConfig, $errorType)
     {
+        if (TYPO3_MODE !== 'BE') {
+            return;
+        }
+
         $messageHeader = 'Info';
-        if ($errorType == self::ERROR) {
+        if ($errorType === self::ERROR) {
             $messageHeader = 'Error';
         }
 
-        $GLOBALS['BE_USER']->simplelog(
+        /** @var BackendUserAuthentication $beUser */
+        $beUser = $GLOBALS['BE_USER'];
+
+        $beUser->simplelog(
             $messageHeader . ': ' . $message . ' ( ' . $feedConfig->getName() . ' )',
             'pxa_social_feed',
             (int)$errorType
