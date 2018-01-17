@@ -1,16 +1,20 @@
 <?php
+
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class ParseMessageViewHelper
  * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
-class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper
+class ParseMessageViewHelper extends AbstractViewHelper
 {
 
-    use \TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+    use CompileWithRenderStatic;
 
     /**
      * @var boolean
@@ -35,17 +39,21 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return mixed|void
+     * @return string
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
-        $message = $arguments['message'] ? $arguments['message'] : $renderChildrenClosure();
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ) {
+        $message = $arguments['message'] ?: $renderChildrenClosure();
         $type = $arguments['type'];
-        if (!in_array($type, \Pixelant\PxaSocialFeed\Domain\Model\Token::getAllConstant())) {
+
+        if (!in_array($type, Token::getAllConstant())) {
             throw new \RuntimeException('Unsupported Feed type', 1514908474);
         }
         if (!$message) {
-            return;
+            return '';
         }
 
         return self::parseFeedMessage($message, $type);
@@ -66,12 +74,12 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
         );
         $text = preg_replace(
             '$(\s|^)(www\.[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
-            '<a target="_blank" href="http://$2"  target="_blank">$2</a> ',
+            '<a href="http://$2" target="_blank">$2</a> ',
             $text
         );
 
         switch ($type) {
-            case \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK:
+            case Token::FACEBOOK:
                 //Convert hashtags to facebook searches in <a> links
                 $text = preg_replace(
                     "/#([A-Za-z0-9\/\.]*)/",
@@ -79,7 +87,7 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
                     $text
                 );
                 break;
-            case \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER:
+            case Token::TWITTER:
                 //Convert hashtags to twitter searches in <a> links
                 $text = preg_replace(
                     "/#([A-Za-z0-9\/\.]*)/",
@@ -94,7 +102,7 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
                     $text
                 );
                 break;
-            case \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM_OAUTH2:
+            case Token::INSTAGRAM_OAUTH2:
                 //Convert hashtags to instagram searches in <a> links
                 $text = preg_replace(
                     "/#([A-Za-z0-9\/\.]*)/",
@@ -108,7 +116,7 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
                     $text
                 );
                 break;
-            case \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE:
+            case Token::YOUTUBE:
                 //Convert hashtags to youtube searches in <a> links
                 $text = preg_replace(
                     "/#([A-Za-z0-9\/\.]*)/",
@@ -123,6 +131,7 @@ class ParseMessageViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractVi
                 );
                 break;
         }
+
         return $text;
     }
 }
