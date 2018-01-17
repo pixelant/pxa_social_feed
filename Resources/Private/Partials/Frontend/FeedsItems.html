@@ -21,13 +21,10 @@
                         </span>
                     </f:if>
                 </div>
+                <p class="social-feed-message">
+                    <f:format.raw>{feed.message -> pxa:parseMessage(type: feed.configuration.token.socialType) -> f:format.nl2br()}</f:format.raw>
+                </p>
             </a>
-            <p class="social-feed-message">
-                <f:if condition="{feed.configuration.token.socialType} == 1">
-                    <f:then>{feed.decodedMessage -> pxa:parseMessage(type:feed.configuration.token.socialType) -> f:format.raw()}</f:then>
-                    <f:else>{feed.message -> pxa:parseMessage(type:feed.configuration.token.socialType) -> f:format.raw()}</f:else>
-                </f:if>
-            </p>
         </li>
     </f:for>
 </ul>
