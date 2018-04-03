@@ -301,9 +301,9 @@ class ImportTaskUtility
                 }
 
                 if (isset($rawData['location']['name']) && !empty($rawData['location']['name'])) {
-                    $instagram->setMessage($rawData['location']['name']);
+                    $instagram->setMessage($this->encodeMessage($rawData['location']['name']));
                 } elseif (isset($rawData['caption']['text']) && !empty($rawData['caption']['text'])) {
-                    $instagram->setMessage($rawData['caption']['text']);
+                    $instagram->setMessage($this->encodeMessage($rawData['caption']['text']));
                 }
 
                 $instagram->setPostUrl($rawData['link']);
@@ -381,7 +381,6 @@ class ImportTaskUtility
     private function setFacebookData(Feed $feed, $rawData)
     {
         if (isset($rawData['message'])) {
-
             $feed->setMessage($this->encodeMessage($rawData['message']));
         }
 
@@ -406,14 +405,14 @@ class ImportTaskUtility
                 $rawData['id']['videoId'],
                 $configuration->getFeedStorage()
             )) {
-//                TODO: Is there something to update?
+                // TODO: Is there something to update?
             } else {
                 /** @var Feed $youtubeItem */
                 $youtubeItem = $this->objectManager->get(Feed::class);
                 $youtubeItem->setExternalIdentifier($rawData['id']['videoId']);
                 $youtubeItem->setPostDate(new \DateTime($rawData['snippet']['publishedAt']));
                 $youtubeItem->setPostUrl(
-                    \sprintf(
+                    sprintf(
                         'https://www.youtube.com/watch?v=%s',
                         $youtubeItem->getExternalIdentifier()
                     )
