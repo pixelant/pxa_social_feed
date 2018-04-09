@@ -14,7 +14,7 @@
             <!-- BE MODULE -->
             <!-- ACTIONS -->
             <trans-unit id="pxasocialfeed_module.action.indexAction">
-                <source>List of tokes and configurations</source>
+                <source>List of tokens and configurations</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.action.manageConfigAction">
                 <source>Create new / Edit configuration</source>
