@@ -162,6 +162,7 @@ class ImportTaskUtility
                         $fields = [
                             'screen_name' => $configuration->getSocialId(),
                             'count' => $configuration->getFeedsLimit(),
+                            'tweet_mode' => 'extended',
                             'exclude_replies' => 1,
                             'include_rts' => 1
                         ];
@@ -246,6 +247,9 @@ class ImportTaskUtility
 
                 if (!empty($rawData['text'])) {
                     $twitterFeed->setMessage($rawData['text']);
+                }
+                if (!empty($rawData['full_text'])) {
+                    $twitterFeed->setMessage($rawData['full_text']);
                 }
                 if (isset($rawData['entities']['media'][0])) {
                     $twitterFeed->setImage($rawData['entities']['media'][0]['media_url']);
