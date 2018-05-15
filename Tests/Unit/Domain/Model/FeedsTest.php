@@ -33,226 +33,247 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
-	/**
-	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Feeds
-	 */
-	protected $subject = NULL;
+class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+{
+    /**
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Feeds
+     */
+    protected $subject = null;
 
-	protected function setUp() {
-		$this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Feeds();
-	}
+    protected function setUp()
+    {
+        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Feeds();
+    }
 
-	protected function tearDown() {
-		unset($this->subject);
-	}
+    protected function tearDown()
+    {
+        unset($this->subject);
+    }
 
-	/**
-	 * @test
-	 */
-	public function getSocialTypeReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getSocialType()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getSocialTypeReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getSocialType()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setSocialTypeForStringSetsSocialType() {
-		$this->subject->setSocialType('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setSocialTypeForStringSetsSocialType()
+    {
+        $this->subject->setSocialType('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'socialType',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'socialType',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getDateReturnsInitialValueForDateTime() {
-		$this->assertEquals(
-			NULL,
-			$this->subject->getPostDate()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getDateReturnsInitialValueForDateTime()
+    {
+        $this->assertEquals(
+            null,
+            $this->subject->getPostDate()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setDateForDateTimeSetsDate() {
-		$dateTimeFixture = new \DateTime();
-		$this->subject->setPostDate($dateTimeFixture);
+    /**
+     * @test
+     */
+    public function setDateForDateTimeSetsDate()
+    {
+        $dateTimeFixture = new \DateTime();
+        $this->subject->setPostDate($dateTimeFixture);
 
-		$this->assertAttributeEquals(
-			$dateTimeFixture,
-			'date',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            $dateTimeFixture,
+            'date',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getPostUrlReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getPostUrl()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getPostUrlReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getPostUrl()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setPostUrlForStringSetsPostUrl() {
-		$this->subject->setPostUrl('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setPostUrlForStringSetsPostUrl()
+    {
+        $this->subject->setPostUrl('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'postUrl',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'postUrl',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getMessageReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getMessage()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getMessageReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getMessage()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setMessageForStringSetsMessage() {
-		$this->subject->setMessage('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setMessageForStringSetsMessage()
+    {
+        $this->subject->setMessage('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'message',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'message',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getImageReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getImage()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getImageReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getImage()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setImageForStringSetsImage() {
-		$this->subject->setImage('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setImageForStringSetsImage()
+    {
+        $this->subject->setImage('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'image',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'image',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getTitleReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getTitle()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getTitleReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getTitle()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setTitleForStringSetsTitle() {
-		$this->subject->setTitle('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setTitleForStringSetsTitle()
+    {
+        $this->subject->setTitle('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'title',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'title',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getDescriptionReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getDescription()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getDescriptionReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getDescription()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setDescriptionForStringSetsDescription() {
-		$this->subject->setDescription('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setDescriptionForStringSetsDescription()
+    {
+        $this->subject->setDescription('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'description',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'description',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getExternalUrlReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getExternalUrl()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getExternalUrlReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getExternalUrl()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setExternalUrlForStringSetsExternalUrl() {
-		$this->subject->setExternalUrl('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setExternalUrlForStringSetsExternalUrl()
+    {
+        $this->subject->setExternalUrl('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'externalUrl',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'externalUrl',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getConfigReturnsInitialValueForConfig() {
-		$this->assertEquals(
-			NULL,
-			$this->subject->getConfig()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getConfigReturnsInitialValueForConfig()
+    {
+        $this->assertEquals(
+            null,
+            $this->subject->getConfig()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setConfigForConfigSetsConfig() {
-		$configFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
-		$this->subject->setConfig($configFixture);
+    /**
+     * @test
+     */
+    public function setConfigForConfigSetsConfig()
+    {
+        $configFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
+        $this->subject->setConfig($configFixture);
 
-		$this->assertAttributeEquals(
-			$configFixture,
-			'config',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            $configFixture,
+            'config',
+            $this->subject
+        );
+    }
 }

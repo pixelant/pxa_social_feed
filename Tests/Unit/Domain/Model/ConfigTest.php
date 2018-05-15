@@ -33,156 +33,171 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
-	/**
-	 * @var \Pixelant\PxaSocialFeed\Domain\Model\Config
-	 */
-	protected $subject = NULL;
+class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+{
+    /**
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Config
+     */
+    protected $subject = null;
 
-	protected function setUp() {
-		$this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
-	}
+    protected function setUp()
+    {
+        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
+    }
 
-	protected function tearDown() {
-		unset($this->subject);
-	}
+    protected function tearDown()
+    {
+        unset($this->subject);
+    }
 
-	/**
-	 * @test
-	 */
-	public function getSocialIdReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getSocialId()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getSocialIdReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getSocialId()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setSocialIdForStringSetsSocialId() {
-		$this->subject->setSocialId('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setSocialIdForStringSetsSocialId()
+    {
+        $this->subject->setSocialId('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'socialId',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'socialId',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getConfigNameReturnsInitialValueForString() {
-		$this->assertSame(
-			'',
-			$this->subject->getConfigName()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getConfigNameReturnsInitialValueForString()
+    {
+        $this->assertSame(
+            '',
+            $this->subject->getConfigName()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setConfigNameForStringSetsConfigName() {
-		$this->subject->setConfigName('Conceived at T3CON10');
+    /**
+     * @test
+     */
+    public function setConfigNameForStringSetsConfigName()
+    {
+        $this->subject->setConfigName('Conceived at T3CON10');
 
-		$this->assertAttributeEquals(
-			'Conceived at T3CON10',
-			'configName',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            'Conceived at T3CON10',
+            'configName',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getFeedPidReturnsInitialValueForInteger() {
-		$this->assertSame(
-			0,
-			$this->subject->getFeedPid()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getFeedPidReturnsInitialValueForInteger()
+    {
+        $this->assertSame(
+            0,
+            $this->subject->getFeedPid()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setFeedPidForIntegerSetsFeedPid() {
-		$this->subject->setFeedPid(12);
+    /**
+     * @test
+     */
+    public function setFeedPidForIntegerSetsFeedPid()
+    {
+        $this->subject->setFeedPid(12);
 
-		$this->assertAttributeEquals(
-			12,
-			'feedPid',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            12,
+            'feedPid',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getExecutedReturnsInitialValueForInteger() {
-		$this->assertSame(
-			0,
-			$this->subject->getExecuted()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getExecutedReturnsInitialValueForInteger()
+    {
+        $this->assertSame(
+            0,
+            $this->subject->getExecuted()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setExecutedForIntegerSetsExecuted() {
-		$this->subject->setExecuted(12);
+    /**
+     * @test
+     */
+    public function setExecutedForIntegerSetsExecuted()
+    {
+        $this->subject->setExecuted(12);
 
-		$this->assertAttributeEquals(
-			12,
-			'executed',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            12,
+            'executed',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getFeedCountReturnsInitialValueForInteger() {
-		$this->assertSame(
-			0,
-			$this->subject->getFeedCount()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getFeedCountReturnsInitialValueForInteger()
+    {
+        $this->assertSame(
+            0,
+            $this->subject->getFeedCount()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setFeedCountForIntegerSetsFeedCount() {
-		$this->subject->setFeedCount(12);
+    /**
+     * @test
+     */
+    public function setFeedCountForIntegerSetsFeedCount()
+    {
+        $this->subject->setFeedCount(12);
 
-		$this->assertAttributeEquals(
-			12,
-			'feedCount',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            12,
+            'feedCount',
+            $this->subject
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function getTokenReturnsInitialValueForTokens() {
-		$this->assertEquals(
-			NULL,
-			$this->subject->getToken()
-		);
-	}
+    /**
+     * @test
+     */
+    public function getTokenReturnsInitialValueForTokens()
+    {
+        $this->assertEquals(
+            null,
+            $this->subject->getToken()
+        );
+    }
 
-	/**
-	 * @test
-	 */
-	public function setTokenForTokensSetsToken() {
-		$tokenFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Tokens();
-		$this->subject->setToken($tokenFixture);
+    /**
+     * @test
+     */
+    public function setTokenForTokensSetsToken()
+    {
+        $tokenFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Tokens();
+        $this->subject->setToken($tokenFixture);
 
-		$this->assertAttributeEquals(
-			$tokenFixture,
-			'token',
-			$this->subject
-		);
-	}
+        $this->assertAttributeEquals(
+            $tokenFixture,
+            'token',
+            $this->subject
+        );
+    }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Pixelant\PxaSocialFeed\Task;
 
 /***************************************************************

@@ -1,5 +1,6 @@
 <?php
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Controller;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -27,36 +28,52 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Controller;
  * Test case for class Pixelant\PxaSocialFeed\Controller\FeedsController.
  *
  */
-class FeedsControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase {
+class FeedsControllerTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+{
 
-	/**
-	 * @var \Pixelant\PxaSocialFeed\Controller\FeedsController
-	 */
-	protected $subject = NULL;
+    /**
+     * @var \Pixelant\PxaSocialFeed\Controller\FeedsController
+     */
+    protected $subject = null;
 
-	protected function setUp() {
-		$this->subject = $this->getMock('Pixelant\\PxaSocialFeed\\Controller\\FeedsController', array('redirect', 'forward', 'addFlashMessage'), array(), '', FALSE);
-	}
+    protected function setUp()
+    {
+        $this->subject = $this->getMock(
+            'Pixelant\\PxaSocialFeed\\Controller\\FeedsController',
+            array('redirect', 'forward', 'addFlashMessage'),
+            array(),
+            '',
+            false
+        );
+    }
 
-	protected function tearDown() {
-		unset($this->subject);
-	}
+    protected function tearDown()
+    {
+        unset($this->subject);
+    }
 
-	/**
-	 * @test
-	 */
-	public function listActionFetchesAllFeedssFromRepositoryAndAssignsThemToView() {
+    /**
+     * @test
+     */
+    public function listActionFetchesAllFeedssFromRepositoryAndAssignsThemToView()
+    {
 
-		$allFeedss = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', FALSE);
+        $allFeedss = $this->getMock('TYPO3\\CMS\\Extbase\\Persistence\\ObjectStorage', array(), array(), '', false);
 
-		$feedsRepository = $this->getMock('Pixelant\\PxaSocialFeed\\Domain\\Repository\\FeedsRepository', array('findAll'), array(), '', FALSE);
-		$feedsRepository->expects($this->once())->method('findAll')->will($this->returnValue($allFeedss));
-		$this->inject($this->subject, 'feedsRepository', $feedsRepository);
+        $feedsRepository = $this->getMock(
+            'Pixelant\\PxaSocialFeed\\Domain\\Repository\\FeedsRepository',
+            array('findAll'),
+            array(),
+            '',
+            false
+        );
+        $feedsRepository->expects($this->once())->method('findAll')->will($this->returnValue($allFeedss));
+        $this->inject($this->subject, 'feedsRepository', $feedsRepository);
 
-		$view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
-		$view->expects($this->once())->method('assign')->with('feedss', $allFeedss);
-		$this->inject($this->subject, 'view', $view);
+        $view = $this->getMock('TYPO3\\CMS\\Extbase\\Mvc\\View\\ViewInterface');
+        $view->expects($this->once())->method('assign')->with('feedss', $allFeedss);
+        $this->inject($this->subject, 'view', $view);
 
-		$this->subject->listAction();
-	}
+        $this->subject->listAction();
+    }
 }
