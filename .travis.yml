@@ -25,4 +25,4 @@ before_install:
 
 script:
   # Run full test suite and linting of the code base
-  # - composer tests:all
+  - composer tests:all
