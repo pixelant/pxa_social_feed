@@ -27,22 +27,22 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 /**
- * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Config.
+ * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Configuration.
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ConfigurationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var \Pixelant\PxaSocialFeed\Domain\Model\Config
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
      */
     protected $subject = null;
 
     protected function setUp()
     {
-        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
+        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Configuration();
     }
 
     protected function tearDown()
@@ -78,24 +78,24 @@ class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getConfigNameReturnsInitialValueForString()
+    public function getNameReturnsInitialValueForString()
     {
         $this->assertSame(
             '',
-            $this->subject->getConfigName()
+            $this->subject->getName()
         );
     }
 
     /**
      * @test
      */
-    public function setConfigNameForStringSetsConfigName()
+    public function setNameForStringSetsConfigurationName()
     {
-        $this->subject->setConfigName('Conceived at T3CON10');
+        $this->subject->setName('Conceived at T3CON10');
 
         $this->assertAttributeEquals(
             'Conceived at T3CON10',
-            'configName',
+            'name',
             $this->subject
         );
     }
@@ -103,49 +103,24 @@ class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getFeedPidReturnsInitialValueForInteger()
+    public function getPidReturnsInitialValueForInteger()
     {
         $this->assertSame(
             0,
-            $this->subject->getFeedPid()
+            $this->subject->getPid()
         );
     }
 
     /**
      * @test
      */
-    public function setFeedPidForIntegerSetsFeedPid()
+    public function setPidForIntegerSetsFeedPid()
     {
-        $this->subject->setFeedPid(12);
+        $this->subject->setPid(12);
 
         $this->assertAttributeEquals(
             12,
-            'feedPid',
-            $this->subject
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getExecutedReturnsInitialValueForInteger()
-    {
-        $this->assertSame(
-            0,
-            $this->subject->getExecuted()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function setExecutedForIntegerSetsExecuted()
-    {
-        $this->subject->setExecuted(12);
-
-        $this->assertAttributeEquals(
-            12,
-            'executed',
+            'pid',
             $this->subject
         );
     }
@@ -157,20 +132,20 @@ class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $this->assertSame(
             0,
-            $this->subject->getFeedCount()
+            $this->subject->getFeedsLimit()
         );
     }
 
     /**
      * @test
      */
-    public function setFeedCountForIntegerSetsFeedCount()
+    public function setFeedsLimitForIntegerSetsFeedsLimit()
     {
-        $this->subject->setFeedCount(12);
+        $this->subject->setFeedsLimit(12);
 
         $this->assertAttributeEquals(
             12,
-            'feedCount',
+            'feedsLimit',
             $this->subject
         );
     }
@@ -191,7 +166,7 @@ class ConfigTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setTokenForTokensSetsToken()
     {
-        $tokenFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Tokens();
+        $tokenFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Token();
         $this->subject->setToken($tokenFixture);
 
         $this->assertAttributeEquals(

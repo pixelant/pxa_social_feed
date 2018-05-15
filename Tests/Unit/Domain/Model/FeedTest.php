@@ -27,22 +27,22 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  ***************************************************************/
 
 /**
- * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Feeds.
+ * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Feed.
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class FeedTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var \Pixelant\PxaSocialFeed\Domain\Model\Feeds
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Feed
      */
     protected $subject = null;
 
     protected function setUp()
     {
-        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Feeds();
+        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Feed();
     }
 
     protected function tearDown()
@@ -57,7 +57,7 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     {
         $this->assertSame(
             '',
-            $this->subject->getSocialType()
+            $this->subject->getType()
         );
     }
 
@@ -66,11 +66,11 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
      */
     public function setSocialTypeForStringSetsSocialType()
     {
-        $this->subject->setSocialType('Conceived at T3CON10');
+        $this->subject->setType('Conceived at T3CON10');
 
         $this->assertAttributeEquals(
             'Conceived at T3CON10',
-            'socialType',
+            'type',
             $this->subject
         );
     }
@@ -96,7 +96,7 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 
         $this->assertAttributeEquals(
             $dateTimeFixture,
-            'date',
+            'postDate',
             $this->subject
         );
     }
@@ -204,24 +204,24 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getDescriptionReturnsInitialValueForString()
+    public function getExternalIdentifierReturnsInitialValueForString()
     {
         $this->assertSame(
             '',
-            $this->subject->getDescription()
+            $this->subject->getExternalIdentifier()
         );
     }
 
     /**
      * @test
      */
-    public function setDescriptionForStringSetsDescription()
+    public function setExternalIdentifierForStringSetsExternalIdentifier()
     {
-        $this->subject->setDescription('Conceived at T3CON10');
+        $this->subject->setExternalIdentifier('Conceived at T3CON10');
 
         $this->assertAttributeEquals(
             'Conceived at T3CON10',
-            'description',
+            'externalIdentifier',
             $this->subject
         );
     }
@@ -229,50 +229,25 @@ class FeedsTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getExternalUrlReturnsInitialValueForString()
-    {
-        $this->assertSame(
-            '',
-            $this->subject->getExternalUrl()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function setExternalUrlForStringSetsExternalUrl()
-    {
-        $this->subject->setExternalUrl('Conceived at T3CON10');
-
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'externalUrl',
-            $this->subject
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getConfigReturnsInitialValueForConfig()
+    public function getConfigurationReturnsInitialValueForConfiguration()
     {
         $this->assertEquals(
             null,
-            $this->subject->getConfig()
+            $this->subject->getConfiguration()
         );
     }
 
     /**
      * @test
      */
-    public function setConfigForConfigSetsConfig()
+    public function setConfigurationForConfigSetsConfig()
     {
-        $configFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Config();
-        $this->subject->setConfig($configFixture);
+        $configurationFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Configuration();
+        $this->subject->setConfiguration($configurationFixture);
 
         $this->assertAttributeEquals(
-            $configFixture,
-            'config',
+            $configurationFixture,
+            'configuration',
             $this->subject
         );
     }

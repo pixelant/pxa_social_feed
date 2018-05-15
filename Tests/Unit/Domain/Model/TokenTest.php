@@ -26,78 +26,30 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+
 /**
- * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Tokens.
+ * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Token.
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class TokensTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class TokenTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
 {
     /**
-     * @var \Pixelant\PxaSocialFeed\Domain\Model\Tokens
+     * @var Token
      */
     protected $subject = null;
 
     protected function setUp()
     {
-        $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Tokens();
+        $this->subject = new Token();
     }
 
     protected function tearDown()
     {
         unset($this->subject);
-    }
-
-    /**
-     * @test
-     */
-    public function getAppIdReturnsInitialValueForString()
-    {
-        $this->assertSame(
-            '',
-            $this->subject->getAppId()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function setAppIdForStringSetsAppId()
-    {
-        $this->subject->setAppId('Conceived at T3CON10');
-
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'appId',
-            $this->subject
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function getAppSecretReturnsInitialValueForString()
-    {
-        $this->assertSame(
-            '',
-            $this->subject->getAppSecret()
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function setAppSecretForStringSetsAppSecret()
-    {
-        $this->subject->setAppSecret('Conceived at T3CON10');
-
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'appSecret',
-            $this->subject
-        );
     }
 
     /**
