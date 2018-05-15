@@ -1,4 +1,5 @@
 # Pixelant #
+[![Build Status](https://travis-ci.org/pixelant/pxa_social_feed.svg?branch=master)](https://travis-ci.org/pixelant/pxa_social_feed)
 
 ### Pxa Social Feed ###
 
