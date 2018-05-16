@@ -191,7 +191,8 @@ class ImportTaskUtility
                         break;
                     case Token::YOUTUBE:
                         $url = sprintf(
-                            self::YOUTUBE_API_URL . 'search?order=date&part=snippet&type=video&maxResults=%d&channelId=%s&key=%s',
+                            self::YOUTUBE_API_URL .
+                                'search?order=date&part=snippet&type=video&maxResults=%d&channelId=%s&key=%s',
                             $configuration->getFeedsLimit(),
                             $configuration->getSocialId(),
                             $configuration->getToken()->getCredential('apiKey')
