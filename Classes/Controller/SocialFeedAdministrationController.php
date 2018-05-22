@@ -2,9 +2,12 @@
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -337,6 +340,101 @@ class SocialFeedAdministrationController extends BaseController
                     );
                 }
             }
+        }
+
+        $this->redirect('index', null, null, ['activeTokenTab' => true]);
+    }
+
+    /**
+     * @param Token $token
+     * @throws FacebookSDKException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    public function addOAuthAccessTokenAction(Token $token)
+    {
+        //TODO: find a better way
+        session_start();
+
+        $fb = FacebookSDKUtility::getFacebook($token);
+
+        $helper = $fb->getRedirectLoginHelper();
+
+        try {
+            $accessToken = $helper->getAccessToken();
+        } catch (FacebookResponseException $e) {
+            // When Graph returns an error
+            $this->addFlashMessage(
+                'Graph returned an error: ' . $e->getMessage(),
+                self::translate('pxasocialfeed_module.labels.error'),
+                FlashMessage::ERROR
+            );
+        } catch (FacebookSDKException $e) {
+            // When validation fails or other local issues
+            $this->addFlashMessage(
+                'Facebook SDK returned an error: ' . $e->getMessage(),
+                self::translate('pxasocialfeed_module.labels.error'),
+                FlashMessage::ERROR
+            );
+        }
+
+        if (! isset($accessToken)) {
+            if ($helper->getError()) {
+                $this->addFlashMessage(
+                    'Authorization failed: ' . $helper->getError(),
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
+                // $helper could provide more detailed info
+                // $helper->getErrorCode()
+                // $helper->getErrorReason()
+                // $helper->getErrorDescription()
+            } else {
+                $this->addFlashMessage(
+                    'Authorization failed: Bad request',
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
+            }
+            exit;
+        }
+
+        // The OAuth 2.0 client handler helps us manage access tokens
+        $oAuth2Client = $fb->getOAuth2Client();
+
+        // Get the access token metadata from /debug_token
+        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
+
+        // Validation (these will throw FacebookSDKException's when they fail)
+        $tokenMetadata->validateAppId($token->getCredential('appId'));
+
+        // If you know the user ID this access token belongs to, you can validate it here
+        $tokenMetadata->validateExpiration();
+
+        if (! $accessToken->isLongLived()) {
+            // Exchanges a short-lived access token for a long-lived one
+            try {
+                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+            } catch (FacebookSDKException $e) {
+                $this->addFlashMessage(
+                    'Error getting long-lived access token: ' . $helper->getMessage(),
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
+            }
+        }
+
+        if ($accessToken->getValue()) {
+            $token->setCredential('accessToken', $accessToken->getValue());
+            $this->tokenRepository->update($token);
+
+            $this->addFlashMessage(
+                self::translate('pxasocialfeed_module.labels.access_tokenUpdated'),
+                self::translate('pxasocialfeed_module.labels.success'),
+                FlashMessage::OK
+            );
         }
 
         $this->redirect('index', null, null, ['activeTokenTab' => true]);

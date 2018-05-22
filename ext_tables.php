@@ -19,7 +19,7 @@ call_user_func(
                 'pxasocialfeed',    // Submodule key
                 '',                        // Position
                 [// @codingStandardsIgnoreStart
-                    'SocialFeedAdministration' => 'index,manageConfiguration,manageToken,saveToken,deleteToken,addAccessToken,deleteConfiguration,saveConfiguration'
+                    'SocialFeedAdministration' => 'index,manageConfiguration,manageToken,saveToken,deleteToken,addAccessToken,deleteConfiguration,saveConfiguration,addOAuthAccessToken'
                 ],// @codingStandardsIgnoreEnd
                 [
                     'access' => 'user,group',

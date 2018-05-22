@@ -10,6 +10,9 @@ module.tx_pxasocialfeed {
             3 = consumerKey,consumerSecret,accessToken,accessTokenSecret
             #youtube
             4 = apiKey
+            #facebook OAuth
+            5 = appId,appSecret
         }
+        facebookGraphVersion = v3.0
     }
 }
