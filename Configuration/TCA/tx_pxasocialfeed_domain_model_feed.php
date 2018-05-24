@@ -34,7 +34,7 @@ return [
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, likes, title, configuration, update_date, external_identifier, starttime, endtime, type',
+        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, media_type, likes, title, configuration, update_date, external_identifier, starttime, endtime, type',
     ],
     'types' => [
         '0' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
@@ -191,6 +191,14 @@ return [
             'config' => [
                 'type' => 'passthrough'
             ]
+        ],
+        'media_type' => [
+            'exclude' => 1,
+            'label' => 'Media type',
+            'config' => [
+                'type' => 'input',
+                'eval' => 'trim'
+            ],
         ]
     ]
 ];

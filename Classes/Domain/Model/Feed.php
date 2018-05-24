@@ -36,6 +36,16 @@ class Feed extends AbstractEntity
 {
 
     /**
+     * image media type
+     */
+    const IMAGE = 1;
+
+    /**
+     * video media type
+     */
+    const VIDEO = 2;
+
+    /**
      * pid
      *
      * @var int
@@ -111,6 +121,13 @@ class Feed extends AbstractEntity
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
      */
     protected $configuration = null;
+
+    /**
+     * media type
+     *
+     * @var int
+     */
+    protected $mediaType = self::IMAGE;
 
     /**
      * Returns the date
@@ -317,5 +334,26 @@ class Feed extends AbstractEntity
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * Returns the mediaType
+     *
+     * @return int $mediaType
+     */
+    public function getMediaType()
+    {
+        return $this->mediaType;
+    }
+
+    /**
+     * Sets the mediaType
+     *
+     * @param int $mediaType
+     * @return void
+     */
+    public function setMediaType($mediaType)
+    {
+        $this->mediaType = $mediaType;
     }
 }
