@@ -75,7 +75,8 @@ class TokenGenerationUrlViewHelper extends AbstractViewHelper
         
         $helper = $fb->getRedirectLoginHelper();
 
-        $permissions = ['email']; // Optional permissions
+        //TODO: make configurable
+        $permissions = ['manage_pages','instagram_basic','instagram_manage_insights'];
 
         return $helper->getLoginUrl($this->arguments['redirectUri'], $permissions);
     }
