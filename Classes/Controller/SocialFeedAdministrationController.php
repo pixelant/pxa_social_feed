@@ -11,6 +11,7 @@ use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -97,8 +98,27 @@ class SocialFeedAdministrationController extends BaseController
         // create select box menu
         $this->createMenu();
 
-        // after view is ready assign inline settings
-        $this->addInlineSettings();
+        $pageRenderer = $this->view->getModuleTemplate()
+            ? $this->view->getModuleTemplate()->getPageRenderer()
+            : GeneralUtility::makeInstance(PageRenderer::class);
+
+        $pageRenderer->addRequireJsConfiguration(
+            [
+                'paths' => [
+                    'jquery' => 'sysext/core/Resources/Public/JavaScript/Contrib/jquery/',
+                    'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
+                ],
+                'shim' => [
+                    'deps' => ['jquery'],
+                    'clipboard' => ['exports' => 'ClipboardJS'],
+                ],
+            ]
+        );
+
+        $pageRenderer->loadRequireJsModule(
+            'TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule',
+            "function(socialFeedModule) { socialFeedModule.getInstance({$this->getInlineSettings()}).run() }"
+        );
     }
 
     /**
@@ -542,13 +562,13 @@ class SocialFeedAdministrationController extends BaseController
     /**
      * Generate settings for JS
      */
-    protected function addInlineSettings()
+    protected function getInlineSettings()
     {
         $settings = [
             'browserUrl' => BackendUtility::getModuleUrl('wizard_element_browser')
         ];
 
-        $this->view->assign('inlineSettings', json_encode($settings));
+        return json_encode($settings);
     }
 
     /**

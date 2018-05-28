@@ -17,7 +17,15 @@
                 </f:then>
                 <f:else>
                     <f:alias map="{redirectUri: '{f:uri.action(action:\'addAccessToken\', absolute:1, arguments: {token: tokenItem})}'}">
-                        <p>Redirect url: {redirectUri}</p>
+                        <div class="redirect-uri-wrapper">
+                            <div class="redirect-uri-label"><b><f:translate key="pxasocialfeed_module.labels.redirectUri"/></b>:</div>
+                            <div class="redirect-uri-value"><span id="redirect-uri-holder" class="redirect-uri">{redirectUri}</span></div>
+                            <div class="redirect-uri-button">
+                                <button id="copy-redirect-uri-button" data-clipboard-target="#redirect-uri-holder" class="btn btn-default btn-xs">
+                                    <f:translate key="pxasocialfeed_module.labels.copyToClipboard"/>
+                                </button>
+                            </div>
+                        </div>
                         <a class="btn btn-default" id="get-instagram-toket get-oAuth-token" target="_blank" href="{pxa:tokenGenerationUrl(token: tokenItem, redirectUri: redirectUri)}">
                             <f:translate key="pxasocialfeed_module.labels.generateAccessToken"/>
                         </a>

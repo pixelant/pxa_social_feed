@@ -41,6 +41,12 @@
             <trans-unit id="pxasocialfeed_module.labels.generateAccessToken">
                 <source>Generate access token</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.redirectUri">
+                <source>Redirect uri</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.copyToClipboard">
+                <source>Copy to clipboard</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.firstCreateToken">
                 <source>No tokens were found, please, first create some.</source>
             </trans-unit>
