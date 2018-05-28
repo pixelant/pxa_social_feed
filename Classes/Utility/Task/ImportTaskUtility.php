@@ -213,6 +213,7 @@ class ImportTaskUtility
                         }
                         break;
                     case Token::FACEBOOK_OAUTH2:
+                        /** @var FacebookSDKUtility $facebookSDKUtility */
                         $facebookSDKUtility = GeneralUtility::makeInstance(
                             FacebookSDKUtility::class,
                             $configuration->getToken()
@@ -233,7 +234,15 @@ class ImportTaskUtility
                         }
 
                         // Get media
-                        $media  = $facebookSDKUtility->getInstagramFeed($instagramAccountId);
+                        try {
+                            $media  = $facebookSDKUtility->getInstagramFeed($instagramAccountId, $configuration->getFeedsLimit());
+                        } catch (\Exception $e) {
+                            LoggerUtility::logImportFeed(
+                                $e->getMessage(),
+                                $configuration,
+                                LoggerUtility::ERROR
+                            );
+                        }
 
                         // Write media to database
                         $this->saveGraphInstagramFeed($media['data'], $configuration);

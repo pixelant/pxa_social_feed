@@ -71,13 +71,9 @@ class TokenGenerationUrlViewHelper extends AbstractViewHelper
         //TODO: find a better way
         session_start();
 
-        $fb = FacebookSDKUtility::getFacebook($this->arguments['token']);
-        
-        $helper = $fb->getRedirectLoginHelper();
+        /** @var Token $token */
+        $token = $this->arguments['token'];
 
-        //TODO: make configurable
-        $permissions = ['manage_pages','instagram_basic','instagram_manage_insights'];
-
-        return $helper->getLoginUrl($this->arguments['redirectUri'], $permissions);
+        return $token->getTokenGenerationUri($this->arguments['redirectUri']);
     }
 }

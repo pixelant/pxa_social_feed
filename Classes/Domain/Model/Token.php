@@ -29,6 +29,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
 use Facebook\Facebook;
 use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Controller\SocialFeedAdministrationController;
+use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
@@ -211,5 +212,31 @@ class Token extends AbstractEntity
     public function getIsOAuthToken()
     {
         return in_array($this->getSocialType(), $this->oAuthSocialTypes);
+    }
+
+    /**
+     * @param $returnUri
+     * @return string
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function getTokenGenerationUri($returnUri)
+    {
+        switch ($this->getSocialType()) {
+            case self::INSTAGRAM_OAUTH2:
+                $uri = 'https://api.instagram.com/oauth/authorize/';
+                $uri .= '?client_id=' . $this->getCredential('clientId');
+                $uri .= '&redirect_uri=' . urlencode($returnUri);
+                $uri .= '&response_type=code&scope=public_content';
+                return $uri;
+            case self::FACEBOOK_OAUTH2:
+                $fb = FacebookSDKUtility::getFacebook($this);
+
+                $helper = $fb->getRedirectLoginHelper();
+
+                //TODO: make configurable
+                $permissions = ['manage_pages','instagram_basic','instagram_manage_insights'];
+
+                return $helper->getLoginUrl($returnUri, $permissions);
+        }
     }
 }
