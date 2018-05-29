@@ -235,7 +235,10 @@ class ImportTaskUtility
 
                         // Get media
                         try {
-                            $media  = $facebookSDKUtility->getInstagramFeed($instagramAccountId, $configuration->getFeedsLimit());
+                            $media  = $facebookSDKUtility->getInstagramFeed(
+                                $instagramAccountId,
+                                $configuration->getFeedsLimit()
+                            );
                         } catch (\Exception $e) {
                             LoggerUtility::logImportFeed(
                                 $e->getMessage(),
