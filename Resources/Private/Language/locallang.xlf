@@ -81,7 +81,7 @@
                 <source>Youtube</source>
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.type.5">
-                <source>Facebook (OAuth2)</source>
+                <source>Facebook OAuth2 (Instagram)</source>
             </trans-unit>
 
             <!-- labels for module token tab -->
