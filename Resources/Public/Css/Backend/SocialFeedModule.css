@@ -1,0 +1,10 @@
+.redirect-uri-wrapper div{
+    display: inline-flex;
+}
+
+.redirect-uri {
+    width: 800px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow:ellipsis;
+}

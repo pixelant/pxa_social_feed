@@ -2,12 +2,16 @@
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
@@ -94,8 +98,27 @@ class SocialFeedAdministrationController extends BaseController
         // create select box menu
         $this->createMenu();
 
-        // after view is ready assign inline settings
-        $this->addInlineSettings();
+        $pageRenderer = $this->view->getModuleTemplate()
+            ? $this->view->getModuleTemplate()->getPageRenderer()
+            : GeneralUtility::makeInstance(PageRenderer::class);
+
+        $pageRenderer->addRequireJsConfiguration(
+            [
+                'paths' => [
+                    'jquery' => 'sysext/core/Resources/Public/JavaScript/Contrib/jquery/',
+                    'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
+                ],
+                'shim' => [
+                    'deps' => ['jquery'],
+                    'clipboard' => ['exports' => 'ClipboardJS'],
+                ],
+            ]
+        );
+
+        $pageRenderer->loadRequireJsModule(
+            'TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule',
+            "function(socialFeedModule) { socialFeedModule.getInstance({$this->getInlineSettings()}).run() }"
+        );
     }
 
     /**
@@ -165,7 +188,7 @@ class SocialFeedAdministrationController extends BaseController
 
         $this->addFlashMessage($message, $title, FlashMessage::OK);
 
-        $this->redirect('index', null, null, ['activeTokenTab' => true]);
+        $this->redirectToIndex();
     }
 
     /**
@@ -193,7 +216,7 @@ class SocialFeedAdministrationController extends BaseController
             );
         }
 
-        $this->redirect('index', null, null, ['activeTokenTab' => true]);
+        $this->redirectToIndex();
     }
 
     /**
@@ -271,17 +294,43 @@ class SocialFeedAdministrationController extends BaseController
      * get access token
      *
      * @param Token $token
+     * @return void
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
      * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     * @throws FacebookSDKException
      */
     public function addAccessTokenAction(Token $token)
+    {
+        switch ($token->getSocialType()) {
+            case Token::INSTAGRAM_OAUTH2:
+                $this->getInstagramAccessToken($token);
+                break;
+            case Token::FACEBOOK_OAUTH2:
+                $this->getFacebookAccessToken($token);
+                break;
+        }
+    }
+
+    /**
+     * get instagram access token
+     *
+     * @param Token $token
+     * @param string $redirectAction
+     * @return void
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    protected function getInstagramAccessToken(Token $token, $redirectAction = 'addAccessToken')
     {
         $code = GeneralUtility::_GP('code');
 
         $redirectUri = $this->uriBuilder->reset()
             ->setCreateAbsoluteUri(true)
-            ->uriFor('addAccessToken', ['token' => $token->getUid()]);
+            ->uriFor($redirectAction, ['token' => $token->getUid()]);
 
         if (isset($code)) {
             /** @var RequestUtility $requestUtility */
@@ -339,7 +388,103 @@ class SocialFeedAdministrationController extends BaseController
             }
         }
 
-        $this->redirect('index', null, null, ['activeTokenTab' => true]);
+        $this->redirectToIndex();
+    }
+
+    /**
+     * get facebook access token
+     *
+     * @param Token $token
+     * @throws FacebookSDKException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    protected function getFacebookAccessToken(Token $token)
+    {
+        //TODO: find a better way
+        session_start();
+
+        $fb = FacebookSDKUtility::getFacebook($token);
+
+        $helper = $fb->getRedirectLoginHelper();
+
+        try {
+            $accessToken = $helper->getAccessToken();
+        } catch (FacebookResponseException $e) {
+            // When Graph returns an error
+            $this->addFlashMessage(
+                'Graph returned an error: ' . $e->getMessage(),
+                self::translate('pxasocialfeed_module.labels.error'),
+                FlashMessage::ERROR
+            );
+            $this->redirectToIndex();
+        } catch (FacebookSDKException $e) {
+            // When validation fails or other local issues
+            $this->addFlashMessage(
+                'Facebook SDK returned an error: ' . $e->getMessage(),
+                self::translate('pxasocialfeed_module.labels.error'),
+                FlashMessage::ERROR
+            );
+            $this->redirectToIndex();
+        }
+
+        if (! isset($accessToken)) {
+            if ($helper->getError()) {
+                $this->addFlashMessage(
+                    'Authorization failed: ' . $helper->getError(),
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
+            } else {
+                $this->addFlashMessage(
+                    'Authorization failed: Bad request',
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
+            }
+            $this->redirectToIndex();
+        }
+
+        // The OAuth 2.0 client handler helps us manage access tokens
+        $oAuth2Client = $fb->getOAuth2Client();
+
+        // Get the access token metadata from /debug_token
+        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
+
+        // Validation (these will throw FacebookSDKException's when they fail)
+        $tokenMetadata->validateAppId($token->getCredential('appId'));
+
+        // If you know the user ID this access token belongs to, you can validate it here
+        $tokenMetadata->validateExpiration();
+
+        if (! $accessToken->isLongLived()) {
+            // Exchanges a short-lived access token for a long-lived one
+            try {
+                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
+            } catch (FacebookSDKException $e) {
+                $this->addFlashMessage(
+                    'Error getting long-lived access token: ' . $helper->getMessage(),
+                    self::translate('pxasocialfeed_module.labels.error'),
+                    FlashMessage::ERROR
+                );
+                $this->redirectToIndex();
+            }
+        }
+
+        if ($accessToken->getValue()) {
+            $token->setCredential('accessToken', $accessToken->getValue());
+            $this->tokenRepository->update($token);
+
+            $this->addFlashMessage(
+                self::translate('pxasocialfeed_module.labels.access_tokenUpdated'),
+                self::translate('pxasocialfeed_module.labels.success'),
+                FlashMessage::OK
+            );
+        }
+
+        $this->redirectToIndex();
     }
 
     /**
@@ -417,12 +562,21 @@ class SocialFeedAdministrationController extends BaseController
     /**
      * Generate settings for JS
      */
-    protected function addInlineSettings()
+    protected function getInlineSettings()
     {
         $settings = [
             'browserUrl' => BackendUtility::getModuleUrl('wizard_element_browser')
         ];
 
-        $this->view->assign('inlineSettings', json_encode($settings));
+        return json_encode($settings);
+    }
+
+    /**
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     */
+    protected function redirectToIndex()
+    {
+        $this->redirect('index', null, null, ['activeTokenTab' => true]);
     }
 }

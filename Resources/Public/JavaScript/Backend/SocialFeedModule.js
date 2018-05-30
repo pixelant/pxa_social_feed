@@ -6,10 +6,11 @@ var setFormValueFromBrowseWin;
 define(['jquery',
     'TYPO3/CMS/Backend/Modal',
     'TYPO3/CMS/Backend/Severity',
-    'TYPO3/CMS/Backend/Notification'
-], function ($, Modal, Severity, Notification) {
+    'TYPO3/CMS/Backend/Notification',
+    'clipboard'
+], function ($, Modal, Severity, Notification, clipboard) {
 
-    return (function ($, Modal, Severity, Notification) {
+    return (function ($, Modal, Severity, Notification, clipboard) {
 
         /**
          * @private
@@ -50,7 +51,8 @@ define(['jquery',
                 winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
                 feedsStorageInput: '[data-identifier="feeds-storage-input"]',
                 feedsStorageTitle: '[data-identifier="feed-storage-title"]',
-                migrateRecordsWrapper: '.migrate-records-wrapper'
+                migrateRecordsWrapper: '.migrate-records-wrapper',
+                copyRedirectUriButton: '#copy-redirect-uri-button'
             };
 
             /**
@@ -77,6 +79,7 @@ define(['jquery',
                 _getInstagramToketClick();
                 _loadInstagramUserIdButton();
                 _winStorageBrowser();
+                _getRedirectUriButtonClick();
             }
 
             /**
@@ -164,6 +167,14 @@ define(['jquery',
                     $(this).hide();
                     $(_getDomElementIdentifier('instagramTokenTip')).show();
                 });
+            }
+
+            /**
+             * Copy redirect uri to clipboard
+             * @private
+             */
+            function _getRedirectUriButtonClick() {
+                new clipboard(_getDomElementIdentifier('copyRedirectUriButton'));
             }
 
             /**
@@ -289,5 +300,5 @@ define(['jquery',
             }
         }
 
-    })($, Modal, Severity, Notification);
+    })($, Modal, Severity, Notification, clipboard);
 });

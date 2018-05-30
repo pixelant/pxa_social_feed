@@ -41,6 +41,12 @@
             <trans-unit id="pxasocialfeed_module.labels.generateAccessToken">
                 <source>Generate access token</source>
             </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.redirectUri">
+                <source>Redirect uri</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.copyToClipboard">
+                <source>Copy to clipboard</source>
+            </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.firstCreateToken">
                 <source>No tokens were found, please, first create some.</source>
             </trans-unit>
@@ -73,6 +79,9 @@
             </trans-unit>
             <trans-unit id="pxasocialfeed_module.labels.type.4">
                 <source>Youtube</source>
+            </trans-unit>
+            <trans-unit id="pxasocialfeed_module.labels.type.5">
+                <source>Facebook OAuth2 (Instagram)</source>
             </trans-unit>
 
             <!-- labels for module token tab -->

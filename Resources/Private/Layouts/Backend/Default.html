@@ -1,11 +1,6 @@
+<link rel="stylesheet" type="text/css"
+      href="{f:uri.resource(path:'Css/Backend/SocialFeedModule.css')}" />
+
 <div class="pxa-social-feed-be-adminnistration">
     <f:render section="content" />
 </div>
-
-<script type="text/javascript">
-    require(['TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule'], function (socialFeedModule) {
-        socialFeedModule.getInstance(
-            <f:format.htmlentitiesDecode>{inlineSettings}</f:format.htmlentitiesDecode>
-        ).run();
-    });
-</script>

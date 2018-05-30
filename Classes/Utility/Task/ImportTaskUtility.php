@@ -32,6 +32,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
+use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use Pixelant\PxaSocialFeed\Utility\LoggerUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -82,6 +83,7 @@ class ImportTaskUtility
      * @return bool
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \UnexpectedValueException
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function run($configurationsUids)
     {
@@ -210,6 +212,45 @@ class ImportTaskUtility
                             );
                         }
                         break;
+                    case Token::FACEBOOK_OAUTH2:
+                        /** @var FacebookSDKUtility $facebookSDKUtility */
+                        $facebookSDKUtility = GeneralUtility::makeInstance(
+                            FacebookSDKUtility::class,
+                            $configuration->getToken()
+                        );
+
+                        // Get instagram app account
+                        try {
+                            $instagramAccountId = $facebookSDKUtility->getInstagramIdFromFacebookPageId(
+                                $configuration->getSocialId()
+                            );
+                        } catch (\Exception $e) {
+                            LoggerUtility::logImportFeed(
+                                $e->getMessage(),
+                                $configuration,
+                                LoggerUtility::ERROR
+                            );
+                            break;
+                        }
+
+                        // Get media
+                        try {
+                            $media  = $facebookSDKUtility->getInstagramFeed(
+                                $instagramAccountId,
+                                $configuration->getFeedsLimit()
+                            );
+                        } catch (\Exception $e) {
+                            LoggerUtility::logImportFeed(
+                                $e->getMessage(),
+                                $configuration,
+                                LoggerUtility::ERROR
+                            );
+                        }
+
+                        // Write media to database
+                        $this->saveGraphInstagramFeed($media['data'], $configuration);
+
+                        break;
                     default:
                         LoggerUtility::logImportFeed(
                             'Such social type is not valid',
@@ -330,6 +371,73 @@ class ImportTaskUtility
                 $this->feedRepository->update($instagram);
             } else {
                 $instagram->setLikes($likes);
+                $this->feedRepository->add($instagram);
+            }
+        }
+    }
+
+    private function saveGraphInstagramFeed($data, Configuration $configuration)
+    {
+        //adding each rawData from array to database
+        // @TODO: is there a update date ? to update feed item if it was changed ?
+        foreach ($data as $rawData) {
+            $instagram = $this->feedRepository->findOneByExternalIdentifier(
+                $rawData['id'],
+                $configuration->getFeedStorage()
+            );
+
+            if ($instagram === null) {
+                /** @var Feed $instagram */
+                $instagram = $this->objectManager->get(Feed::class);
+
+                $media = $rawData['media_url'] ? $rawData['media_url'] : '';
+
+                if ($rawData['media_type'] === 'VIDEO') {
+                    $media = $rawData['thumbnail_url'] ? $rawData['thumbnail_url'] : $rawData['media_url'];
+                }
+
+                $instagram->setImage($media);
+
+                // Set media type
+                $instagram->setMediaType(
+                    $rawData['media_type'] === 'VIDEO' ? Feed::VIDEO : Feed::IMAGE
+                );
+
+                // Set message
+                $instagram->setMessage(
+                    $rawData['caption'] ? $rawData['caption'] : ''
+                );
+
+                // Set url
+                $instagram->setPostUrl($rawData['permalink']);
+
+                // Set time
+                $dateTime = new \DateTime();
+                $dateTime->setTimestamp(strtotime($rawData['timestamp']));
+
+                $instagram->setPostDate($dateTime);
+
+                // Set configuration
+                $instagram->setConfiguration($configuration);
+
+                // Set external identifier
+                $instagram->setExternalIdentifier($rawData['id']);
+
+                // Set pid
+                $instagram->setPid($configuration->getFeedStorage());
+
+                // Set type
+                $instagram->setType((string)Token::FACEBOOK_OAUTH2);
+            }
+
+            // Set likes
+            $likes = intval($rawData['like_count']);
+            $instagram->setLikes($likes);
+
+            // Add/update
+            if ($instagram->getUid() && $likes != $instagram->getLikes()) {
+                $this->feedRepository->update($instagram);
+            } else {
                 $this->feedRepository->add($instagram);
             }
         }

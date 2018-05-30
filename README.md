@@ -28,7 +28,7 @@ Access tokens types:
     1. Client Id
     2. Client Secret
 
-    After Client Id and Client Secret are set **press button "Generate Access Token".** 
+    After Client Id and Client Secret are set, **press Generate Access Token" button.** 
 
     **IMPORTANT !!!** To get Access Token - Valid redirect URI should be "http://yoursiteurl.com/typo3/index.php"
 
@@ -43,12 +43,24 @@ Access tokens types:
 
     1. Api Key 
 
+* Facebook OAuth (Instagram). Create new app to get credentials. [developers page](https://developers.facebook.com/apps) 
+
+    1. Client Id
+    2. Client Secret
+
+    After Client Id and Client Secret are set, **press "Generate Access Token" button.** 
+
+    If facebook app requires redirect uri - it is displayed and could be copied in the backend module above the **Generate Access Token** button.
 
 #### Create configurations using BE module. ####
 In configuration there are next fields:
 
 * Configuration name - *just a custom name*
-* Social ID - *ID of account where to fetch feed (for example, "pixelant.net" - Pixelant ID on a facebook) or Instagram hashtag (with starting #)*
+* Social ID - ID of account where to fetch feed from. For example:
+  * Facebook page id, like **30674257397** (a https://www.facebook.com/typo3/ page id)
+  * Instagram account id, like **561765545** (Resultify page id)     
+  * Instagram hashtag, like **#typo3**
+  * In case of using 'Facebook OAuth (Instagram)' token - facebook page id which instagram account is connected to   
 * Limit - *minimum number of records to keep and fetch from feed at once*
 * Storage - *specify folder where to save feed items*
 * Token - *choose access token*
