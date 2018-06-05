@@ -18,7 +18,7 @@ jQuery(function ($) {
         }
     };
 
-    $('.social-feed-container').owlCarousel(defaultOwlOptions);
+    $('.social-feed-container.owl-carousel').owlCarousel(defaultOwlOptions);
     $('.social-feed-container .social-feed-title, .social-feed-container .social-feed-message').dotdotdot({
         watch: true
     });
