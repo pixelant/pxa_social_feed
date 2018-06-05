@@ -14,7 +14,7 @@ jQuery(function ($) {
             480: {items: 2, stagePadding: 25, margin: 10},
             768: {items: 3, margin: 15},
             1024: {items: 3, margin: 30},
-            1200: {items: 4, margin: 22.5, nav: true}
+            1200: {items: 4, margin: 22.49, nav: true}
         }
     };
 
