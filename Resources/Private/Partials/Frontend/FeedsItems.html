@@ -2,7 +2,12 @@
       xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
-<ul class="social-feed-container owl-carousel">
+<f:variable name="presentation">owl-carousel</f:variable>
+<f:if condition="{settings.presentation}">
+	<f:variable name="presentation">{settings.presentation}</f:variable>
+</f:if>
+
+<ul class="social-feed-container {presentation}">
     <f:for each="{feeds}" as="feed">
         <li class="social-feed-item social-feed-{feed.configuration.token.socialType}">
             <a href="{feed.postUrl}" target="_blank">

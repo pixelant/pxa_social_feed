@@ -19,6 +19,11 @@ jQuery(function ($) {
     };
 
     $('.social-feed-container.owl-carousel').owlCarousel(defaultOwlOptions);
+
+    $('.social-feed-container.masonry').masonry({
+      itemSelector: '.social-feed-item',
+    });
+
     $('.social-feed-container .social-feed-title, .social-feed-container .social-feed-message').dotdotdot({
         watch: true
     });
@@ -31,7 +36,10 @@ jQuery(function ($) {
             .done(function (data) {
                 if (data.success) {
                     $this.html(data.html);
-                    $this.find('.social-feed-container').owlCarousel(defaultOwlOptions);
+                    $this.find('.social-feed-container.owl-carousel').owlCarousel(defaultOwlOptions);
+                    $this.find('.social-feed-container.masonry').masonry({
+                        itemSelector: '.social-feed-item',
+                    });
                     $this.find('.social-feed-container .social-feed-title, .social-feed-container .social-feed-message').dotdotdot({
                         watch: true
                     });
