@@ -347,9 +347,9 @@ class ImportTaskUtility
                 }
 
                 if (isset($rawData['location']['name']) && !empty($rawData['location']['name'])) {
-                    $instagram->setMessage($this->encodeMessage($rawData['location']['name']));
+                    $instagram->setMessage($rawData['location']['name']);
                 } elseif (isset($rawData['caption']['text']) && !empty($rawData['caption']['text'])) {
-                    $instagram->setMessage($this->encodeMessage($rawData['caption']['text']));
+                    $instagram->setMessage($rawData['caption']['text']);
                 }
 
                 $instagram->setPostUrl($rawData['link']);
