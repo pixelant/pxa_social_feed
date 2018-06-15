@@ -48,6 +48,25 @@
                         </TCEforms>
                     </settings.presentation>
 
+                    <settings.partial>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial</label>
+                            <config>
+                                <type>select</type>
+                                <items>
+                                    <numIndex index="0">
+                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial.0</numIndex>
+                                        <numIndex index="1">FeedItemCard</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1">
+                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial.1</numIndex>
+                                        <numIndex index="1">FeedItemDynamic</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.partial>
+
                     <settings.feedsLimit>
                         <TCEforms>
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.amount_feeds</label>

@@ -141,6 +141,15 @@
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_plugin.flexform.presentation">
                 <source>Presentation</source>
+            </trans-unit>tx_pxasocialfeed_plugin.flexform.partial
+            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial">
+                <source>Appearance of feed items</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial.0">
+                <source>Card</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial.1">
+                <source>Dynamic</source>
             </trans-unit>
 
             <trans-unit id="scheduler.configs">
