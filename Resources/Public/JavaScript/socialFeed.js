@@ -20,8 +20,10 @@ jQuery(function ($) {
 
     $('.social-feed-container.owl-carousel').owlCarousel(defaultOwlOptions);
 
-    $('.social-feed-container.masonry').masonry({
-      itemSelector: '.social-feed-item',
+    $(window).on('load', function() {
+        $('.social-feed-container.masonry').masonry({
+            itemSelector: '.social-feed-item',
+        });
     });
 
     $('.social-feed-container .social-feed-title, .social-feed-container .social-feed-message').dotdotdot({
