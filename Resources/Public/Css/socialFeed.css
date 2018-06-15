@@ -1,215 +1,22 @@
-/* general styling */
+/* ajax loader */
 
-.tx-pxa-social-feed .social-feed-container {
-    list-style: none;
-    padding-left: 0;
-}
-
-.tx-pxa-social-feed .social-feed-container .item {
+.tx-pxa-social-feed .load-ajax-feed-wrapper {
     position: relative;
-    min-height: 1px;
-    float: left;
-    -webkit-backface-visibility: hidden;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
 }
 
-.tx-pxa-social-feed .social-feed-container a {
-    color: #646464;
-    text-decoration: none;
-}
-
-.tx-pxa-social-feed .social-feed-container a:hover {
-    text-decoration: none;
-}
-
-.tx-pxa-social-feed .social-feed-title {
-    height: 61px;
-}
-
-.tx-pxa-social-feed .social-feed-image-container {
+.tx-pxa-social-feed .feed-loading-overlay {
     position: relative;
-    margin: 10px auto 20px;
-    height: 0;
-    padding-bottom: 100%;
-    background-size: cover;
-}
-
-.tx-pxa-social-feed .social-feed-image-container.no-image {
-    background-color: #6f6f6f;
-}
-
-.tx-pxa-social-feed .social-feed-information {
-    position: absolute;
-    top: 0;
-    left: 0;
-    color: #fff;
-    line-height: 28px;
-    padding: 0 10px 0 5px;
-    z-index: 1;
-}
-
-.tx-pxa-social-feed .social-feed-date {
-    padding-left: 2px;
-}
-
-.tx-pxa-social-feed .social-feed-date:before {
-    content: '|';
-    display: inline;
-    font-size: 16px;
-    padding-right: 3px;
-}
-
-.tx-pxa-social-feed .social-feed-icon {
-    position: relative;
-    bottom: 1px;
-}
-
-.tx-pxa-social-feed .social-feed-1 .social-feed-information {
-    background-color: #3D5C98;
-}
-
-.tx-pxa-social-feed .social-feed-2 .social-feed-information,
-.tx-pxa-social-feed .social-feed-3 .social-feed-information{
-    background-color: #4E84AA;
-}
-
-.tx-pxa-social-feed .social-feed-4 .social-feed-information{
-    background-color: #447da3;
-}
-
-.tx-pxa-social-feed .social-feed-message {
-    height: 100px;
-}
-
-.tx-pxa-social-feed .nav.disabled,
-.tx-pxa-social-feed .dots.disabled {
-    display: none;
-}
-
-.tx-pxa-social-feed .nav .prev,
-.tx-pxa-social-feed .nav .next,
-.tx-pxa-social-feed .dot {
-    cursor: pointer;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.tx-pxa-social-feed .dots {
-    text-align: center;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.tx-pxa-social-feed .dots .dot {
-    display: inline-block;
-    zoom: 1;
-}
-
-.tx-pxa-social-feed .dots .dot span {
-    width: 10px;
-    height: 10px;
-    margin: 5px 3px;
-    background: #e4e4e4;
-    display: block;
-    -webkit-backface-visibility: visible;
-    transition: opacity 200ms ease;
-    border-radius: 30px;
-}
-
-.tx-pxa-social-feed .dots .dot.active span,
-.tx-pxa-social-feed .dots .dot:hover span {
-    background-color: #66bd29;
-}
-
-.social-feed-3 .social-feed-like-count,
-.social-feed-3 .social-feed-like-count{
-    background-color: #4E84AA;
-}
-
-.social-feed-1 .social-feed-like-count{
-    background-color: #3D5C98;
-}
-
-.social-feed-4 .social-feed-like-count{
-    background-color: #447da3;
-}
-
-.social-feed-like-count {
-    padding: 5px;
-    color:#ffffff;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-}
-
-.social-feed-like-count .like-icon {
-    position: relative;
-    bottom: 3px;
-}
-
-#social-feed-like-like-count-element {
-    padding-left: 2px;
-}
-
-.tx-pxa-social-feed .social-feed-image-container:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    background-color: #6f6f6f;
-    opacity: 0;
-    transition: opacity .4s;
 }
 
-.tx-pxa-social-feed .social-feed-image-container:after {
-    content: '';
-    position: absolute;
-    display: inline-block;
-    top: 50%;
-    left: 50%;
-    width: 30px;
-    height: 30px;
-    margin-top: -10px;
-    margin-left: -10px;
-    background-image: url(../Icons/search.svg);
-    opacity: 0;
-    transition: opacity .4s;
-}
-
-.tx-pxa-social-feed a:hover .social-feed-image-container:before {
-    opacity: .5;
-}
-
-.tx-pxa-social-feed a:hover .social-feed-image-container:after {
-    opacity: 1;
-}
-
-.animated-loader {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+.tx-pxa-social-feed .animated-loader {
     width: 62px;
-    height:62px;
-    margin: 0;
+    height: 62px;
+    margin: 0 auto;
 }
 
-.load-ajax-feed-wrapper {
-    position: relative;
-}
-.feed-loading-overlay {
-    position: absolute;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,255,255,.5);
-}
-
-.animated-loader .wBall {
+.tx-pxa-social-feed .animated-loader .wBall {
     position: absolute;
     width: 59px;
     height: 59px;
@@ -226,7 +33,7 @@
     -moz-animation: orbit 6.96s infinite;
 }
 
-.animated-loader .wBall .wInnerBall{
+.tx-pxa-social-feed .animated-loader .wBall .wInnerBall{
     position: absolute;
     width: 8px;
     height: 8px;
@@ -236,7 +43,7 @@
     border-radius: 8px;
 }
 
-.animated-loader #wBall_1 {
+.tx-pxa-social-feed .animated-loader #wBall_1 {
     animation-delay: 1.52s;
     -o-animation-delay: 1.52s;
     -ms-animation-delay: 1.52s;
@@ -244,7 +51,7 @@
     -moz-animation-delay: 1.52s;
 }
 
-.animated-loader #wBall_2 {
+.tx-pxa-social-feed .animated-loader #wBall_2 {
     animation-delay: 0.3s;
     -o-animation-delay: 0.3s;
     -ms-animation-delay: 0.3s;
@@ -252,7 +59,7 @@
     -moz-animation-delay: 0.3s;
 }
 
-.animated-loader #wBall_3 {
+.tx-pxa-social-feed .animated-loader #wBall_3 {
     animation-delay: 0.61s;
     -o-animation-delay: 0.61s;
     -ms-animation-delay: 0.61s;
@@ -260,7 +67,7 @@
     -moz-animation-delay: 0.61s;
 }
 
-.animated-loader #wBall_4 {
+.tx-pxa-social-feed .animated-loader #wBall_4 {
     animation-delay: 0.91s;
     -o-animation-delay: 0.91s;
     -ms-animation-delay: 0.91s;
@@ -268,7 +75,7 @@
     -moz-animation-delay: 0.91s;
 }
 
-.animated-loader #wBall_5 {
+.tx-pxa-social-feed .animated-loader #wBall_5 {
     animation-delay: 1.22s;
     -o-animation-delay: 1.22s;
     -ms-animation-delay: 1.22s;
@@ -546,6 +353,64 @@
     }
 }
 
+/* general styling */
+
+.tx-pxa-social-feed .social-feed-container {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tx-pxa-social-feed .social-feed-container .item {
+    position: relative;
+    min-height: 1px;
+    float: left;
+    -webkit-backface-visibility: hidden;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+.tx-pxa-social-feed .nav.disabled,
+.tx-pxa-social-feed .dots.disabled {
+    display: none;
+}
+
+.tx-pxa-social-feed .nav .prev,
+.tx-pxa-social-feed .nav .next,
+.tx-pxa-social-feed .dot {
+    cursor: pointer;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.tx-pxa-social-feed .dots {
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tx-pxa-social-feed .dots .dot {
+    display: inline-block;
+    zoom: 1;
+}
+
+.tx-pxa-social-feed .dots .dot span {
+    width: 10px;
+    height: 10px;
+    margin: 5px 3px;
+    background: #e4e4e4;
+    display: block;
+    -webkit-backface-visibility: visible;
+    transition: opacity 200ms ease;
+    border-radius: 30px;
+}
+
+.tx-pxa-social-feed .dots .dot.active span,
+.tx-pxa-social-feed .dots .dot:hover span {
+    background-color: #66bd29;
+}
+
 @media (max-width: 767px) {
     .tx-pxa-social-feed {
         margin: 0 -15px;
@@ -582,7 +447,7 @@
     }
 }
 
-/* owl-carousel styling */
+/* presentation - owl-carousel styling */
 
 .tx-pxa-social-feed .social-feed-container.owl-carousel {
     display: none;
@@ -662,7 +527,7 @@
     }
 }
 
-/* masonry styling */
+/* presentation - masonry styling */
 
 .tx-pxa-social-feed .social-feed-container.masonry {
     overflow: hidden;
@@ -705,3 +570,135 @@
         width: 25%;
     }
 }
+
+
+/* appearance of feed items - card */
+
+.social-feed-feeditemcard .social-feed-message {
+    height: 100px;
+    color: #555555;
+}
+
+.social-feed-feeditemcard .social-feed-message a,
+.social-feed-feeditemcard .social-feed-message a:hover {
+    color: #646464;
+    text-decoration: none;
+}
+
+.social-feed-feeditemcard .social-feed-title {
+    height: 61px;
+}
+
+.social-feed-feeditemcard .social-feed-image-container {
+    position: relative;
+    margin: 10px auto 20px;
+    height: 0;
+    padding-bottom: 100%;
+    background-size: cover;
+}
+
+.social-feed-feeditemcard .social-feed-image-container.no-image {
+    background-color: #6f6f6f;
+}
+
+.social-feed-feeditemcard .social-feed-image-container:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #6f6f6f;
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+.social-feed-feeditemcard .social-feed-image-container:after {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    left: 50%;
+    width: 30px;
+    height: 30px;
+    margin-top: -10px;
+    margin-left: -10px;
+    background-image: url(../Icons/search.svg);
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+.social-feed-feeditemcard li > span:hover .social-feed-image-container:before {
+    opacity: .5;
+}
+
+.social-feed-feeditemcard li > span:hover .social-feed-image-container:after {
+    opacity: 1;
+}
+
+.social-feed-feeditemcard .social-feed-information {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    line-height: 28px;
+    padding: 0 10px 0 5px;
+    z-index: 1;
+}
+
+.social-feed-feeditemcard .social-feed-date {
+    padding-left: 2px;
+}
+
+.social-feed-feeditemcard .social-feed-date:before {
+    content: '|';
+    display: inline;
+    font-size: 16px;
+    padding-right: 3px;
+}
+
+.social-feed-feeditemcard .social-feed-icon {
+    position: relative;
+    bottom: 1px;
+    width: 17px;
+    height: auto;
+}
+
+.social-feed-feeditemcard .social-feed-1 .social-feed-information,
+.social-feed-feeditemcard .social-feed-1 .social-feed-like-count {
+    background-color: #3D5C98;
+}
+
+.social-feed-feeditemcard .social-feed-2 .social-feed-information,
+.social-feed-feeditemcard .social-feed-3 .social-feed-information,
+.social-feed-feeditemcard .social-feed-2 .social-feed-like-count,
+.social-feed-feeditemcard .social-feed-3 .social-feed-like-count {
+    background-color: #4E84AA;
+}
+
+.social-feed-feeditemcard .social-feed-4 .social-feed-information,
+.social-feed-feeditemcard .social-feed-4 .social-feed-like-count {
+    background-color: #447da3;
+}
+
+.social-feed-feeditemcard .social-feed-like-count {
+    padding: 5px;
+    color: #ffffff;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.social-feed-feeditemcard .social-feed-like-count .like-icon {
+    width: 17px;
+    height: auto;
+    position: relative;
+    bottom: 3px;
+}
+
+.social-feed-feeditemcard .social-feed-like-like-count-element {
+    padding-left: 2px;
+}
+
+/* appearance of feed items - dynamic */
+
