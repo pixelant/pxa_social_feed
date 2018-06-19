@@ -26,7 +26,8 @@ page.includeJSFooter {
     pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/JavaScript/jquery.dotdotdot.min.js
     pxa_social_feed_2 = EXT:pxa_social_feed/Resources/Public/JavaScript/owl.carousel.min.js
     pxa_social_feed_3 = EXT:pxa_social_feed/Resources/Public/JavaScript/masonry.pkgd.min.js
-    pxa_social_feed_4 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
+    pxa_social_feed_4 = EXT:pxa_social_feed/Resources/Public/JavaScript/imagesloaded.pkgd.min.js
+    pxa_social_feed_5 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
 }
 
 [globalVar = GP:type=7378121]
