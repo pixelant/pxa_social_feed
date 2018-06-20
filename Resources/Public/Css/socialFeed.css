@@ -602,6 +602,7 @@
     height: 0;
     padding-bottom: 100%;
     background-size: cover;
+    background-position: center;
 }
 
 .social-feed-feeditemcard .social-feed-image-container.no-image {
