@@ -36,6 +36,15 @@
             <trans-unit id="setStoragePid">
                 <source>Specify Storage Pid, if you need it.</source>
             </trans-unit>
+            <trans-unit id="presentation">
+                <source>Presentation</source>
+            </trans-unit>
+            <trans-unit id="appearanceFeedItem">
+                <source>Appearance of feed items</source>
+            </trans-unit>
+            <trans-unit id="loadType">
+                <source>Load feed (directly or AJAX)</source>
+            </trans-unit>
 		</body>
 	</file>
 </xliff>
