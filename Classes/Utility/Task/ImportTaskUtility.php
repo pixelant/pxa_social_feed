@@ -322,22 +322,20 @@ class ImportTaskUtility
                 $instagram->setType((string)Token::INSTAGRAM_OAUTH2);
             }
 
-            $likes = intval($rawData['likes']['count']);
-            $image = $rawData['images']['standard_resolution']['url'];
+            if ($instagram->getUid()) {
+                $likes = intval($rawData['likes']['count']);
+                $image = $rawData['images']['standard_resolution']['url'];
 
-            if ($instagram->getUid() && $likes != $instagram->getLikes()) {
-                $instagram->setLikes($likes);
+                if ($likes != $instagram->getLikes()) {
+                    $instagram->setLikes($likes);
+                }
+                if ($image != $instagram->getImage()) {
+                    $instagram->setImage($image);
+                }
+
                 $this->feedRepository->update($instagram);
             } else {
                 $instagram->setLikes($likes);
-                $this->feedRepository->add($instagram);
-            }
-
-            if ($instagram->getUid() && $image != $instagram->getImage()) {
-                $instagram->setImage($image);
-                $this->feedRepository->update($instagram);
-            } else {
-                $instagram->setImage($image);
                 $this->feedRepository->add($instagram);
             }
         }
