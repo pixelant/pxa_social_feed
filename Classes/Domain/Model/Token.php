@@ -124,16 +124,30 @@ class Token extends AbstractEntity
      *
      * @param string $key
      * @return string
+     * @throws \Facebook\Exceptions\FacebookSDKException
      */
     public function getCredential($key = '')
     {
         $credentials = $this->getCredentials();
 
-        if (!empty($key) && isset($credentials[$key])) {
-            return $credentials[$key];
+        if (empty($key) || empty($credentials[$key])) {
+            return '';
         }
 
-        return '';
+        $value = $credentials[$key];
+
+        // Check if token is not expired
+        if ($key === 'accessToken' && $this->getSocialType() === self::FACEBOOK_OAUTH2) {
+            /** @var Facebook $facebookSDKUtility */
+            $facebookSDKUtility = FacebookSDKUtility::getFacebook($this);
+            try {
+                $facebookSDKUtility->get('me', $value);
+            } catch (\Exception $e) {
+                return '';
+            }
+        }
+
+        return $value;
     }
 
     /**
