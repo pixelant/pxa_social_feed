@@ -35,6 +35,9 @@ use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use Pixelant\PxaSocialFeed\Utility\LoggerUtility;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
@@ -90,6 +93,9 @@ class ImportTaskUtility
      */
     public function run($configurationsUids)
     {
+
+        $errors = false;
+
         if (is_array($configurationsUids)) {
             $configurations = $this->configurationRepository->findByUids($configurationsUids);
 
@@ -118,6 +124,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->updateFacebookFeed($data['data'], $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from FACEBOOK feed. Please, check credentials.',
                                 $configuration,
@@ -155,6 +162,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from INSTAGRAM feed. Please, check credentials.',
                                 $configuration,
@@ -186,6 +194,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->saveTwitterFeed($data, $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from Twitter feed. Please, check credentials.',
                                 $configuration,
@@ -208,6 +217,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->updateYoutubeFeed($data['items'], $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from YOUTUBE feed. Please, check credentials.',
                                 $configuration,
@@ -218,11 +228,17 @@ class ImportTaskUtility
                     case Token::FACEBOOK_OAUTH2:
                         $media = $this->getInstagramFeedUsingGraphApi($configuration);
 
+                        if (!$media) {
+                            $errors = true;
+                            break;
+                        }
+
                         // Write media to database
                         $this->saveGraphInstagramFeed($media['data'], $configuration);
 
                         break;
                     default:
+                        $errors = true;
                         LoggerUtility::logImportFeed(
                             'Such social type is not valid',
                             $configuration,
@@ -238,6 +254,23 @@ class ImportTaskUtility
 
             // save all
             $this->objectManager->get(PersistenceManager::class)->persistAll();
+        }
+
+        if ($errors) {
+            /** @var FlashMessage $message */
+            $message = GeneralUtility::makeInstance(
+                FlashMessage::class,
+                'The task has finished running, but there were some errors during its execution.
+                    Please check logs for more info',
+                '',
+                FlashMessage::WARNING
+            );
+
+            $flashMessageService = $this->objectManager->get(FlashMessageService::class);
+
+            /** @var FlashMessageQueue $messageQueue */
+            $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
+            $messageQueue->addMessage($message);
         }
 
         return true;
@@ -292,6 +325,11 @@ class ImportTaskUtility
             // TODO: make it work with other feed types
             if ($token->getSocialType() === Token::FACEBOOK_OAUTH2) {
                 $media = $this->getInstagramFeedUsingGraphApi($configuration, $externalLimit);
+
+                if (!$media) {
+                    continue;
+                }
+
                 $keys = array_column($media['data'], 'id');
                 $values = array_values($media['data']);
                 $media = array_combine($keys, $values);
@@ -470,8 +508,13 @@ class ImportTaskUtility
                 $configuration->getSocialId()
             );
         } catch (\Exception $e) {
+            $errorMsg = $e->getMessage() === 'You must provide an access token.'
+                ? 'The access token is not generated, not valid or expired. Please open the social feed back-end module
+                    and try to generate a token.'
+                : $e->getMessage();
+
             LoggerUtility::logImportFeed(
-                $e->getMessage(),
+                $errorMsg,
                 $configuration,
                 LoggerUtility::ERROR
             );
