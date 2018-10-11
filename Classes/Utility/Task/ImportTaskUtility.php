@@ -35,9 +35,14 @@ use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
 use Pixelant\PxaSocialFeed\Utility\LoggerUtility;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 class ImportTaskUtility
 {
@@ -84,9 +89,13 @@ class ImportTaskUtility
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \UnexpectedValueException
      * @throws \Facebook\Exceptions\FacebookSDKException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     public function run($configurationsUids)
     {
+
+        $errors = false;
+
         if (is_array($configurationsUids)) {
             $configurations = $this->configurationRepository->findByUids($configurationsUids);
 
@@ -115,6 +124,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->updateFacebookFeed($data['data'], $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from FACEBOOK feed. Please, check credentials.',
                                 $configuration,
@@ -152,6 +162,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->saveInstagramFeed($data['data'], $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from INSTAGRAM feed. Please, check credentials.',
                                 $configuration,
@@ -183,6 +194,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->saveTwitterFeed($data, $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from Twitter feed. Please, check credentials.',
                                 $configuration,
@@ -205,6 +217,7 @@ class ImportTaskUtility
                         if (is_array($data)) {
                             $this->updateYoutubeFeed($data['items'], $configuration);
                         } else {
+                            $errors = true;
                             LoggerUtility::logImportFeed(
                                 'Invalid data from YOUTUBE feed. Please, check credentials.',
                                 $configuration,
@@ -213,38 +226,11 @@ class ImportTaskUtility
                         }
                         break;
                     case Token::FACEBOOK_OAUTH2:
-                        /** @var FacebookSDKUtility $facebookSDKUtility */
-                        $facebookSDKUtility = GeneralUtility::makeInstance(
-                            FacebookSDKUtility::class,
-                            $configuration->getToken()
-                        );
+                        $media = $this->getInstagramFeedUsingGraphApi($configuration);
 
-                        // Get instagram app account
-                        try {
-                            $instagramAccountId = $facebookSDKUtility->getInstagramIdFromFacebookPageId(
-                                $configuration->getSocialId()
-                            );
-                        } catch (\Exception $e) {
-                            LoggerUtility::logImportFeed(
-                                $e->getMessage(),
-                                $configuration,
-                                LoggerUtility::ERROR
-                            );
+                        if (!$media) {
+                            $errors = true;
                             break;
-                        }
-
-                        // Get media
-                        try {
-                            $media  = $facebookSDKUtility->getInstagramFeed(
-                                $instagramAccountId,
-                                $configuration->getFeedsLimit()
-                            );
-                        } catch (\Exception $e) {
-                            LoggerUtility::logImportFeed(
-                                $e->getMessage(),
-                                $configuration,
-                                LoggerUtility::ERROR
-                            );
                         }
 
                         // Write media to database
@@ -252,6 +238,7 @@ class ImportTaskUtility
 
                         break;
                     default:
+                        $errors = true;
                         LoggerUtility::logImportFeed(
                             'Such social type is not valid',
                             $configuration,
@@ -261,11 +248,101 @@ class ImportTaskUtility
                 }
             }
 
+            // Update existing feeds
+            // Only works for facebook graph api instagram feed
+            $this->updateExistingFeed($configurations);
+
             // save all
             $this->objectManager->get(PersistenceManager::class)->persistAll();
         }
 
+        if ($errors) {
+            /** @var FlashMessage $message */
+            $message = GeneralUtility::makeInstance(
+                FlashMessage::class,
+                'The task has finished running, but there were some errors during its execution.
+                    Please check logs for more info',
+                '',
+                FlashMessage::WARNING
+            );
+
+            $flashMessageService = $this->objectManager->get(FlashMessageService::class);
+
+            /** @var FlashMessageQueue $messageQueue */
+            $messageQueue = $flashMessageService->getMessageQueueByIdentifier();
+            $messageQueue->addMessage($message);
+        }
+
         return true;
+    }
+
+    /**
+     * @param QueryResultInterface $configurations
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
+     */
+    protected function updateExistingFeed(QueryResultInterface $configurations)
+    {
+        $externalLimit = 500;
+
+        // Update existing feed (only for instagram through facebook api currently)
+        $allFeed = $this->feedRepository->findAll()->toArray();
+
+        $groupedFeed = [];
+
+        /** @var Configuration $configuration */
+        $configurationUids = array_map(function ($configuration) {
+            return $configuration->getUid();
+        }, $configurations->toArray());
+
+        // Group and filter feed to minimize number of calls to the API
+        /** @var Feed $feed */
+        foreach ($allFeed as $feed) {
+            $configurationUid = $feed->getConfiguration()->getUid();
+
+            if (!in_array($configurationUid, $configurationUids)) {
+                continue;
+            }
+
+            if (empty($groupedFeed[$configurationUid])) {
+                $groupedFeed[$configurationUid] = [
+                    'configuration' => $feed->getConfiguration()
+                ];
+            }
+
+            $groupedFeed[$configurationUid]['feeds'][] = $feed;
+        }
+
+        // Update feed
+        foreach ($groupedFeed as $configurationUid => $feedGroup) {
+            /**
+             * @var Configuration $configuration
+             * @var Feed[] $feeds
+             */
+            extract($feedGroup, null);
+            $token = $configuration->getToken();
+
+            // TODO: make it work with other feed types
+            if ($token->getSocialType() === Token::FACEBOOK_OAUTH2) {
+                $media = $this->getInstagramFeedUsingGraphApi($configuration, $externalLimit);
+
+                if (!$media) {
+                    continue;
+                }
+
+                $keys = array_column($media['data'], 'id');
+                $values = array_values($media['data']);
+                $media = array_combine($keys, $values);
+            }
+
+            foreach ($feeds as $feed) {
+                $id = $feed->getExternalIdentifier();
+                if (!empty($media[$id])) {
+                    $feed = $this->populateGraphInstagramFeed($feed, $media[$id]);
+                    $this->feedRepository->update($feed);
+                }
+            }
+        }
     }
 
     /**
@@ -376,6 +453,10 @@ class ImportTaskUtility
         }
     }
 
+    /**
+     * @param $data
+     * @param Configuration $configuration
+     */
     private function saveGraphInstagramFeed($data, Configuration $configuration)
     {
         //adding each rawData from array to database
@@ -386,42 +467,13 @@ class ImportTaskUtility
                 $configuration->getFeedStorage()
             );
 
+            // Create new instagram feed
             if ($instagram === null) {
                 /** @var Feed $instagram */
                 $instagram = $this->objectManager->get(Feed::class);
 
-                $media = $rawData['media_url'] ? $rawData['media_url'] : '';
-
-                if ($rawData['media_type'] === 'VIDEO') {
-                    $media = $rawData['thumbnail_url'] ? $rawData['thumbnail_url'] : $rawData['media_url'];
-                }
-
-                $instagram->setImage($media);
-
-                // Set media type
-                $instagram->setMediaType(
-                    $rawData['media_type'] === 'VIDEO' ? Feed::VIDEO : Feed::IMAGE
-                );
-
-                // Set message
-                $instagram->setMessage(
-                    $rawData['caption'] ? $rawData['caption'] : ''
-                );
-
-                // Set url
-                $instagram->setPostUrl($rawData['permalink']);
-
-                // Set time
-                $dateTime = new \DateTime();
-                $dateTime->setTimestamp(strtotime($rawData['timestamp']));
-
-                $instagram->setPostDate($dateTime);
-
                 // Set configuration
                 $instagram->setConfiguration($configuration);
-
-                // Set external identifier
-                $instagram->setExternalIdentifier($rawData['id']);
 
                 // Set pid
                 $instagram->setPid($configuration->getFeedStorage());
@@ -430,17 +482,104 @@ class ImportTaskUtility
                 $instagram->setType((string)Token::FACEBOOK_OAUTH2);
             }
 
-            // Set likes
-            $likes = intval($rawData['like_count']);
-            $instagram->setLikes($likes);
+            // Add/update instagram feed data gotten from facebook
+            $instagram = $this->populateGraphInstagramFeed($instagram, $rawData);
 
             // Add/update
-            if ($instagram->getUid() && $likes != $instagram->getLikes()) {
-                $this->feedRepository->update($instagram);
-            } else {
-                $this->feedRepository->add($instagram);
-            }
+            $this->feedRepository->{$instagram->_isNew() ? 'add' : 'update'}($instagram);
         }
+    }
+
+    /**
+     * @param Configuration $configuration
+     * @return array|bool
+     */
+    protected function getInstagramFeedUsingGraphApi(Configuration $configuration, int $limit = null)
+    {
+        /** @var FacebookSDKUtility $facebookSDKUtility */
+        $facebookSDKUtility = GeneralUtility::makeInstance(
+            FacebookSDKUtility::class,
+            $configuration->getToken()
+        );
+
+        // Get instagram app account
+        try {
+            $instagramAccountId = $facebookSDKUtility->getInstagramIdFromFacebookPageId(
+                $configuration->getSocialId()
+            );
+        } catch (\Exception $e) {
+            $errorMsg = $e->getMessage() === 'You must provide an access token.'
+                ? 'The access token is not generated, not valid or expired. Please open the social feed back-end module
+                    and try to generate a token.'
+                : $e->getMessage();
+
+            LoggerUtility::logImportFeed(
+                $errorMsg,
+                $configuration,
+                LoggerUtility::ERROR
+            );
+            return false;
+        }
+
+        // Get media
+        try {
+            $media  = $facebookSDKUtility->getInstagramFeed(
+                $instagramAccountId,
+                $limit ?? $configuration->getFeedsLimit()
+            );
+        } catch (\Exception $e) {
+            LoggerUtility::logImportFeed(
+                $e->getMessage(),
+                $configuration,
+                LoggerUtility::ERROR
+            );
+            return false;
+        }
+
+        return $media;
+    }
+
+    /**
+     * @param $record
+     * @param $data
+     * @return Feed
+     */
+    public function populateGraphInstagramFeed(Feed $record, array $data)
+    {
+        $media = $data['media_url'] ? $data['media_url'] : '';
+
+        if ($data['media_type'] === 'VIDEO') {
+            $media = $data['thumbnail_url'] ? $data['thumbnail_url'] : $data['media_url'];
+        }
+
+        $record->setImage($media);
+
+        // Set media type
+        $record->setMediaType(
+            $data['media_type'] === 'VIDEO' ? Feed::VIDEO : Feed::IMAGE
+        );
+
+        // Set message
+        $record->setMessage(
+            $data['caption'] ? $data['caption'] : ''
+        );
+
+        // Set url
+        $record->setPostUrl($data['permalink']);
+
+        // Set time
+        $dateTime = new \DateTime();
+        $dateTime->setTimestamp(strtotime($data['timestamp']));
+
+        $record->setPostDate($dateTime);
+
+        // Set external identifier
+        $record->setExternalIdentifier($data['id']);
+
+        // Set likes
+        $record->setLikes((int)$data['like_count']);
+
+        return $record;
     }
 
     /**
