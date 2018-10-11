@@ -134,33 +134,10 @@ class ImportTaskUtility
 
                         break;
                     case Token::INSTAGRAM_OAUTH2:
-                        // getting data array from instagram api json result
-                        //predefine a format of request string;
-                        $urlFormat = self::INSTAGRAM_API_URL . '%s/%s/media/recent/?access_token=%s&count=%d';
+                        $data = $this->getInstagramFeed($configuration);
 
-                        // hashtag used in configuration (leading '#' symbol): preparing values for 'tag' API call
-                        if (GeneralUtility::isFirstPartOfStr($configuration->getSocialId(), '#')) {
-                            $requestType = 'tags';
-                            $requestName = str_replace('#', '', $configuration->getSocialId());
-                            // user ID is used in configuration (no leading '#'): preparing values for 'users' API call
-                        } else {
-                            $requestType = 'users';
-                            $requestName = $configuration->getSocialId();
-                        }
-
-                        // creating an API call string from format and configs
-                        $url = sprintf(
-                            $urlFormat,
-                            $requestType,
-                            $requestName,
-                            $configuration->getToken()->getCredential('accessToken'),
-                            $configuration->getFeedsLimit()
-                        );
-
-                        // get response from Instagram, parse data and save result
-                        $data = json_decode(GeneralUtility::getUrl($url), true);
                         if (is_array($data)) {
-                            $this->saveInstagramFeed($data['data'], $configuration);
+                            $this->saveInstagramFeed($data, $configuration);
                         } else {
                             $errors = true;
                             LoggerUtility::logImportFeed(
@@ -278,12 +255,13 @@ class ImportTaskUtility
 
     /**
      * @param QueryResultInterface $configurations
+     * @throws \Facebook\Exceptions\FacebookSDKException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
     protected function updateExistingFeed(QueryResultInterface $configurations)
     {
-        $externalLimit = 500;
+        $externalLimit = 200;
 
         // Update existing feed (only for instagram through facebook api currently)
         $allFeed = $this->feedRepository->findAll()->toArray();
@@ -323,24 +301,56 @@ class ImportTaskUtility
             $token = $configuration->getToken();
 
             // TODO: make it work with other feed types
-            if ($token->getSocialType() === Token::FACEBOOK_OAUTH2) {
-                $media = $this->getInstagramFeedUsingGraphApi($configuration, $externalLimit);
 
-                if (!$media) {
-                    continue;
-                }
+            switch ($token->getSocialType()) {
+                case Token::FACEBOOK:
+                    break;
+                case Token::INSTAGRAM_OAUTH2:
+                    $data = $this->getInstagramFeed($configuration, $externalLimit);
 
-                $keys = array_column($media['data'], 'id');
-                $values = array_values($media['data']);
-                $media = array_combine($keys, $values);
-            }
+                    if (empty($data)) {
+                        break;
+                    }
 
-            foreach ($feeds as $feed) {
-                $id = $feed->getExternalIdentifier();
-                if (!empty($media[$id])) {
-                    $feed = $this->populateGraphInstagramFeed($feed, $media[$id]);
-                    $this->feedRepository->update($feed);
-                }
+                    $keys = array_column($data, 'id');
+                    $values = array_values($data);
+                    $data = array_combine($keys, $values);
+
+                    foreach ($feeds as $feed) {
+                        $id = $feed->getExternalIdentifier();
+                        if (!empty($data[$id])) {
+                            $feed = $this->populateInstagramFeed($feed, $data[$id]);
+                            $this->feedRepository->update($feed);
+                        }
+                    }
+
+                    break;
+                case Token::TWITTER:
+                    break;
+                case Token::YOUTUBE:
+                    break;
+                case Token::FACEBOOK_OAUTH2:
+                    $media = $this->getInstagramFeedUsingGraphApi($configuration, $externalLimit);
+
+                    if (!$media) {
+                        break;
+                    }
+
+                    $keys = array_column($media['data'], 'id');
+                    $values = array_values($media['data']);
+                    $media = array_combine($keys, $values);
+
+                    foreach ($feeds as $feed) {
+                        $id = $feed->getExternalIdentifier();
+                        if (!empty($media[$id])) {
+                            $feed = $this->populateGraphInstagramFeed($feed, $media[$id]);
+                            $this->feedRepository->update($feed);
+                        }
+                    }
+
+                    break;
+                default:
+                    break;
             }
         }
     }
@@ -409,6 +419,7 @@ class ImportTaskUtility
     {
         //adding each rawData from array to database
         // @TODO: is there a update date ? to update feed item if it was changed ?
+
         foreach ($data as $rawData) {
             $instagram = $this->feedRepository->findOneByExternalIdentifier(
                 $rawData['id'],
@@ -419,37 +430,21 @@ class ImportTaskUtility
                 /** @var Feed $instagram */
                 $instagram = $this->objectManager->get(Feed::class);
 
-                if (isset($rawData['images']['standard_resolution']['url'])) {
-                    $instagram->setImage($rawData['images']['standard_resolution']['url']);
-                }
-
-                if (isset($rawData['location']['name']) && !empty($rawData['location']['name'])) {
-                    $instagram->setMessage($rawData['location']['name']);
-                } elseif (isset($rawData['caption']['text']) && !empty($rawData['caption']['text'])) {
-                    $instagram->setMessage($rawData['caption']['text']);
-                }
-
-                $instagram->setPostUrl($rawData['link']);
-
                 $dateTime = new \DateTime();
                 $dateTime->setTimestamp($rawData['created_time']);
-
                 $instagram->setPostDate($dateTime);
+
                 $instagram->setConfiguration($configuration);
                 $instagram->setExternalIdentifier($rawData['id']);
                 $instagram->setPid($configuration->getFeedStorage());
                 $instagram->setType((string)Token::INSTAGRAM_OAUTH2);
             }
 
-            $likes = intval($rawData['likes']['count']);
+            // Add/update instagram feed data gotten from facebook
+            $this->populateInstagramFeed($instagram, $rawData);
 
-            if ($instagram->getUid() && $likes != $instagram->getLikes()) {
-                $instagram->setLikes($likes);
-                $this->feedRepository->update($instagram);
-            } else {
-                $instagram->setLikes($likes);
-                $this->feedRepository->add($instagram);
-            }
+            // Add/update
+            $this->feedRepository->{$instagram->_isNew() ? 'add' : 'update'}($instagram);
         }
     }
 
@@ -540,6 +535,79 @@ class ImportTaskUtility
     }
 
     /**
+     * @param Configuration $configuration
+     * @param int $limit
+     * @return array
+     * @throws \Facebook\Exceptions\FacebookSDKException
+     */
+    public function getInstagramFeed(Configuration $configuration, int $limit = null)
+    {
+        // getting data array from instagram api json result
+        //predefine a format of request string;
+        $urlFormat = self::INSTAGRAM_API_URL . '%s/%s/media/recent/?access_token=%s&count=%d';
+
+        // Limit
+        $limit = $limit ?? $configuration->getFeedsLimit();
+
+        // hashtag used in configuration (leading '#' symbol): preparing values for 'tag' API call
+        if (GeneralUtility::isFirstPartOfStr($configuration->getSocialId(), '#')) {
+            $requestType = 'tags';
+            $requestName = str_replace('#', '', $configuration->getSocialId());
+            // user ID is used in configuration (no leading '#'): preparing values for 'users' API call
+        } else {
+            $requestType = 'users';
+            $requestName = $configuration->getSocialId();
+        }
+
+        // creating an API call string from format and configs
+        $url = sprintf(
+            $urlFormat,
+            $requestType,
+            $requestName,
+            $configuration->getToken()->getCredential('accessToken'),
+            $limit
+        );
+
+        $feedItems = [];
+        $maxRuns = 5;
+
+        // Make few api calls (up to $maxRuns) and get the feed
+        for ($i = 0; $i < $maxRuns; $i++) {
+            $data = $this->getInstagramFeedResponse($url);
+            $feedItems = array_merge($feedItems, $data['feed']);
+            if (count($feedItems) >= $limit) {
+                break;
+            }
+            $url = $data['next_page'];
+        }
+
+        // Remove feeds above limit
+        $feedItems = array_slice($feedItems, 0, $limit);
+
+        return $feedItems;
+    }
+
+    /**
+     * @param string $url
+     * @return array
+     */
+    protected function getInstagramFeedResponse(string $url)
+    {
+        if (empty($url)) {
+            return [
+                'next_page' => '',
+                'feed' => []
+            ];
+        }
+
+        $data = json_decode(GeneralUtility::getUrl($url), true);
+        return [
+            'next_page' => $data['pagination']['next_url'],
+            'feed' => $data['data']
+        ];
+    }
+
+    /**
      * @param $record
      * @param $data
      * @return Feed
@@ -578,6 +646,34 @@ class ImportTaskUtility
 
         // Set likes
         $record->setLikes((int)$data['like_count']);
+
+        return $record;
+    }
+
+    /**
+     * @param $record
+     * @param $data
+     * @return Feed
+     */
+    public function populateInstagramFeed(Feed $record, array $data)
+    {
+        // Image
+        if (isset($data['images']['standard_resolution']['url'])) {
+            $record->setImage($data['images']['standard_resolution']['url']);
+        }
+
+        // Message
+        if (isset($data['location']['name']) && !empty($data['location']['name'])) {
+            $record->setMessage($data['location']['name']);
+        } elseif (isset($data['caption']['text']) && !empty($data['caption']['text'])) {
+            $record->setMessage($data['caption']['text']);
+        }
+
+        // Url
+        $record->setPostUrl($data['link']);
+
+        // Likes
+        $record->setLikes((int)$data['likes']['count']);
 
         return $record;
     }
