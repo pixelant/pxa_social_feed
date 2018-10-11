@@ -56,7 +56,6 @@ class PageLayoutView
             $flexformData = GeneralUtility::xml2array($params['row']['pi_flexform']);
 
             $settings = [];
-
             if (is_array($flexformData['data']['sDEF']['lDEF'])) {
                 $rawSettings = $flexformData['data']['sDEF']['lDEF'];
                 foreach ($rawSettings as $field => $rawSetting) {
@@ -66,8 +65,33 @@ class PageLayoutView
 
             // get settings array
             if ($settings['settings']) {
-                $settings = $settings['settings'];
+                $settings = \TYPO3\CMS\Extbase\Utility\ArrayUtility::arrayMergeRecursiveOverrule(
+                    $settings,
+                    $settings['settings']
+                );
+                unset($settings['settings']);
             }
+
+            // load type info
+            $additionalInfo .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->getLanguageService()->sL(self::LLPATH . 'loadType', true),
+                $settings['switchableControllerActions']
+            );
+
+            // presentation info
+            $additionalInfo .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->getLanguageService()->sL(self::LLPATH . 'presentation', true),
+                $settings['presentation']
+            );
+
+            // appearance of feed items info
+            $additionalInfo .= sprintf(
+                '<b>%s</b>: %s<br>',
+                $this->getLanguageService()->sL(self::LLPATH . 'appearanceFeedItem', true),
+                $settings['partial']
+            );
 
             // limit info
             $additionalInfo .= sprintf(
@@ -131,6 +155,7 @@ class PageLayoutView
      */
     protected function flexFormToArray($field, $value, &$settings)
     {
+
         $fieldNameParts = GeneralUtility::trimExplode('.', $field);
         if (count($fieldNameParts) > 1) {
             $name = $fieldNameParts[0];

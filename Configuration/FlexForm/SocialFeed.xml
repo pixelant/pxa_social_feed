@@ -29,6 +29,44 @@
                         </TCEforms>
                     </switchableControllerActions>
 
+                    <settings.presentation>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.presentation</label>
+                            <config>
+                                <type>select</type>
+                                <items>
+                                    <numIndex index="0">
+                                        <numIndex index="0">Owl Carousel</numIndex>
+                                        <numIndex index="1">owl-carousel</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1">
+                                        <numIndex index="0">Masonry grid layout</numIndex>
+                                        <numIndex index="1">masonry</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.presentation>
+
+                    <settings.partial>
+                        <TCEforms>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial</label>
+                            <config>
+                                <type>select</type>
+                                <items>
+                                    <numIndex index="0">
+                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial.0</numIndex>
+                                        <numIndex index="1">FeedItemCard</numIndex>
+                                    </numIndex>
+                                    <numIndex index="1">
+                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial.1</numIndex>
+                                        <numIndex index="1">FeedItemDynamic</numIndex>
+                                    </numIndex>
+                                </items>
+                            </config>
+                        </TCEforms>
+                    </settings.partial>
+
                     <settings.feedsLimit>
                         <TCEforms>
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.amount_feeds</label>
@@ -53,7 +91,7 @@
                         <TCEforms>
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.config</label>
                             <config>
-                                <type>select</type>                                
+                                <type>select</type>
                                 <size>10</size>
                                 <minitems>1</minitems>
                                 <maxitems>999</maxitems>
@@ -62,7 +100,7 @@
                             </config>
                         </TCEforms>
                     </settings.configuration>
-                    
+
                 </el>
             </ROOT>
         </sDEF>

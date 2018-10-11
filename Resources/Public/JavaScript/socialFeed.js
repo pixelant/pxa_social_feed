@@ -14,13 +14,29 @@ jQuery(function ($) {
             480: {items: 2, stagePadding: 25, margin: 10},
             768: {items: 3, margin: 15},
             1024: {items: 3, margin: 30},
-            1200: {items: 4, margin: 22.5, nav: true}
+            1200: {items: 4, margin: 22.49, nav: true}
         }
     };
 
-    $('.social-feed-container').owlCarousel(defaultOwlOptions);
+    $('.social-feed-container.owl-carousel').owlCarousel(defaultOwlOptions);
+
+    $('.social-feed-container.masonry').masonry({
+        itemSelector: '.social-feed-item',
+    }).imagesLoaded(function() {
+        $('.social-feed-container.masonry').masonry({
+            itemSelector: '.social-feed-item',
+        });
+    });
+
     $('.social-feed-container .social-feed-title, .social-feed-container .social-feed-message').dotdotdot({
         watch: true
+    });
+
+    $('.social-feed-container .social-feed-item').click(function() {
+        var url = $(this).attr('data-posturl');
+        if (url) {
+            window.open(url, '_blank');
+        }
     });
 
     $('[data-identifier="pxa-load-ajax-feed"]').each(function () {
@@ -31,10 +47,26 @@ jQuery(function ($) {
             .done(function (data) {
                 if (data.success) {
                     $this.html(data.html);
-                    $this.find('.social-feed-container').owlCarousel(defaultOwlOptions);
+                    $this.find('.social-feed-container.owl-carousel').owlCarousel(defaultOwlOptions);
+
+                    $this.find('.social-feed-container.masonry').masonry({
+                        itemSelector: '.social-feed-item',
+                    }).imagesLoaded(function() {
+                        $this.find('.social-feed-container.masonry').masonry({
+                            itemSelector: '.social-feed-item',
+                        });
+                    });
+
                     $this.find('.social-feed-container .social-feed-title, .social-feed-container .social-feed-message').dotdotdot({
                         watch: true
                     });
+
+                    $this.find('.social-feed-item').click(function() {
+                        var url = $(this).attr('data-posturl');
+                        if (url) {
+                            window.open(url, '_blank');
+                        }
+                    })
                 }
             });
     });
