@@ -190,7 +190,7 @@ class ImportTaskUtility
                         );
 
                         $data = json_decode(GeneralUtility::getUrl($url), true);
-                        
+
                         if (is_array($data)) {
                             $this->updateYoutubeFeed($data['items'], $configuration);
                         } else {
@@ -573,6 +573,9 @@ class ImportTaskUtility
 
         // Make few api calls (up to $maxRuns) and get the feed
         for ($i = 0; $i < $maxRuns; $i++) {
+            if (!$url) {
+                break;
+            }
             $data = $this->getInstagramFeedResponse($url);
             $feedItems = array_merge($feedItems, $data['feed']);
             if (count($feedItems) >= $limit) {
