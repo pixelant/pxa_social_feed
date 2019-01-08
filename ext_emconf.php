@@ -6,7 +6,7 @@
 
 $EM_CONF[$_EXTKEY] = [
     'title' => 'Pxa Social Feed',
-    'description' => 'Allow to add facebook, instagram and twitter news feed on site.',
+    'description' => 'Add Facebook, Instagram, and Twitter feeds to your site.',
     'category' => 'plugin',
     'author' => 'Pixelant',
     'author_email' => 'info@pixelant.net',
