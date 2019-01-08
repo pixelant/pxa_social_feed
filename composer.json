@@ -9,6 +9,14 @@
       "Facebook\\": "Resources/Private/Libraries/facebook/graph-sdk/src/Facebook/"
     }
   },
+  "authors": [
+    {
+      "name": "Pixelant",
+      "email": "info@pixelant.net",
+      "homepage": "https://www.pixelant.net",
+      "role": "Developer"
+    }
+  ],
   "replace": {
     "pxa_social_feed": "self.version",
     "typo3-ter/pxa_social_feed": "self.version"
