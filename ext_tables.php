@@ -3,12 +3,6 @@ defined('TYPO3_MODE') or die();
 
 call_user_func(
     function ($_EXTKEY) {
-        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-            $_EXTKEY,
-            'Showfeed',
-            'Pxa Social Feed'
-        );
-
         if (TYPO3_MODE === 'BE') {
             /**
              * Registers a Backend Module
@@ -28,16 +22,6 @@ call_user_func(
                 ]
             );
         }
-
-        // @codingStandardsIgnoreStart
-        $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['pxasocialfeed_showfeed'] = 'pages,recursive,layout,select_key';
-        $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['pxasocialfeed_showfeed'] = 'pi_flexform';
-        // @codingStandardsIgnoreEnd
-
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-            'pxasocialfeed_showfeed',
-            'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForm/SocialFeed.xml'
-        );
 
         foreach (['feed', 'token', 'configuration'] as $table) {
             \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages(
