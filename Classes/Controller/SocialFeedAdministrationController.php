@@ -7,6 +7,8 @@ use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -16,6 +18,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 /***************************************************************
  *
@@ -49,24 +52,17 @@ class SocialFeedAdministrationController extends BaseController
 {
 
     /**
-     * configurationRepository
-     *
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository
-     * @inject
+     * @var ConfigurationRepository
      */
     protected $configurationRepository;
 
     /**
-     * tokenRepository
-     *
      * @var \Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository
-     * @inject
      */
     protected $tokenRepository;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     * @inject
+     * @var PersistenceManagerInterface
      */
     protected $persistenceManager;
 
@@ -83,6 +79,30 @@ class SocialFeedAdministrationController extends BaseController
      * @var BackendTemplateView
      */
     protected $defaultViewObjectName = BackendTemplateView::class;
+
+    /**
+     * @param ConfigurationRepository $configurationRepository
+     */
+    public function injectConfigurationRepository(ConfigurationRepository $configurationRepository)
+    {
+        $this->configurationRepository = $configurationRepository;
+    }
+
+    /**
+     * @param TokenRepository $tokenRepository
+     */
+    public function injectTokenRepository(TokenRepository $tokenRepository)
+    {
+        $this->tokenRepository = $tokenRepository;
+    }
+
+    /**
+     * @param PersistenceManagerInterface $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
+    {
+        $this->persistenceManager = $persistenceManager;
+    }
 
     /**
      * Set up the doc header properly here

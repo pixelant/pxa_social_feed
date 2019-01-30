@@ -2,6 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
+use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -39,10 +40,17 @@ class BaseController extends ActionController
     /**
      * feedRepository
      *
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository
-     * @inject
+     * @var FeedRepository
      */
     protected $feedRepository;
+
+    /**
+     * @param FeedRepository $feedRepository
+     */
+    public function injectFeedRepository(FeedRepository $feedRepository)
+    {
+        $this->feedRepository = $feedRepository;
+    }
 
     /**
      * get label translation
@@ -52,6 +60,6 @@ class BaseController extends ActionController
      */
     public static function translate($label = '')
     {
-        return LocalizationUtility::translate($label, 'pxa_social_feed');
+        return LocalizationUtility::translate($label, 'PxaSocialFeed');
     }
 }
