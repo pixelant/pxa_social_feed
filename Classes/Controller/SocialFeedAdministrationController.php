@@ -19,6 +19,7 @@ use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 
 /***************************************************************
  *
@@ -583,11 +584,11 @@ class SocialFeedAdministrationController extends BaseController
      */
     protected function getInlineSettings()
     {
-        $settings = [
-            'browserUrl' => BackendUtility::getModuleUrl('wizard_element_browser')
-        ];
+        $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
 
-        return json_encode($settings);
+        return json_encode([
+            'browserUrl' => (string)$uriBuilder->buildUriFromRoute('wizard_element_browser')
+        ]);
     }
 
     /**
