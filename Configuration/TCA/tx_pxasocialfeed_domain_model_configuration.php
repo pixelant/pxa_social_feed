@@ -47,13 +47,13 @@ return [
         ],
         'starttime' => [
             'exclude' => 1,
-            'l10n_mode' => 'mergeIfNotBlank',
+            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
             'config' => [
                 'type' => 'input',
                 'size' => 13,
-                'max' => 20,
                 'eval' => 'datetime',
+                'renderType' => 'inputDateTime',
                 'default' => 0,
                 'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
@@ -62,13 +62,13 @@ return [
         ],
         'endtime' => [
             'exclude' => 1,
-            'l10n_mode' => 'mergeIfNotBlank',
+            'l10n_mode' => 'exclude',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
             'config' => [
                 'type' => 'input',
                 'size' => 13,
-                'max' => 20,
                 'eval' => 'datetime',
+                'renderType' => 'inputDateTime',
                 'default' => 0,
                 'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
