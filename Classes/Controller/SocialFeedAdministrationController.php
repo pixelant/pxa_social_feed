@@ -105,7 +105,6 @@ class SocialFeedAdministrationController extends BaseController
         $pageRenderer->addRequireJsConfiguration(
             [
                 'paths' => [
-                    'jquery' => 'sysext/core/Resources/Public/JavaScript/Contrib/jquery/',
                     'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
                 ],
                 'shim' => [
