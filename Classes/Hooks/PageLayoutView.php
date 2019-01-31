@@ -69,11 +69,7 @@ class PageLayoutView
 
             // get settings array
             if ($settings['settings']) {
-                //ArrayUtility::mergeRecursiveWithOverrule()
-                $settings = \TYPO3\CMS\Extbase\Utility\ArrayUtility::arrayMergeRecursiveOverrule(
-                    $settings,
-                    $settings['settings']
-                );
+                ArrayUtility::mergeRecursiveWithOverrule($settings, $settings['settings']);
                 unset($settings['settings']);
             }
 
