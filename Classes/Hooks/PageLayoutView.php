@@ -30,6 +30,7 @@ namespace Pixelant\PxaSocialFeed\Hooks;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -52,7 +53,7 @@ class PageLayoutView
      */
     public function getExtensionInformation($params)
     {
-        $info = '<strong>' . $this->getLanguageService()->sL(self::LLPATH . 'plugin_title', true) . '</strong><br>';
+        $info = '<strong>' . $this->getLanguageService()->sL(self::LLPATH . 'plugin_title') . '</strong><br>';
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxasocialfeed_showfeed') {
@@ -68,6 +69,7 @@ class PageLayoutView
 
             // get settings array
             if ($settings['settings']) {
+                //ArrayUtility::mergeRecursiveWithOverrule()
                 $settings = \TYPO3\CMS\Extbase\Utility\ArrayUtility::arrayMergeRecursiveOverrule(
                     $settings,
                     $settings['settings']
@@ -78,42 +80,40 @@ class PageLayoutView
             // load type info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'loadType', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'loadType'),
                 $settings['switchableControllerActions']
             );
 
             // presentation info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'presentation', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'presentation'),
                 $settings['presentation']
             );
 
             // appearance of feed items info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'appearanceFeedItem', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'appearanceFeedItem'),
                 $settings['partial']
             );
 
             // limit info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit'),
                 $settings['feedsLimit'] ? $settings['feedsLimit'] : $this->getLanguageService()->sL(
-                    self::LLPATH . 'unlimited',
-                    true
+                    self::LLPATH . 'unlimited'
                 )
             );
 
             // like show info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount'),
                 $settings['loadLikesCount'] ? $this->getLanguageService()->sL(
-                    self::LLPATH . 'yes',
-                    true
-                ) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
+                    self::LLPATH . 'yes'
+                ) : $this->getLanguageService()->sL(self::LLPATH . 'no')
             );
 
             // configurations info
@@ -140,10 +140,11 @@ class PageLayoutView
                     $feeds[] = $configuration;
                 }
 
-                $additionalInfo .= '<b>' . $this->getLanguageService()->sL(
-                        self::LLPATH . 'feeds',
-                        true
-                    ) . ':</b> ' . implode(', ', $feeds);
+                $additionalInfo .= sprintf(
+                    '<b>%s:</b> %s',
+                    $this->getLanguageService()->sL(self::LLPATH . 'feeds'),
+                    implode(', ', $feeds)
+                );
             }
         }
 
