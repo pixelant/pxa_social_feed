@@ -16,5 +16,5 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['pxasocialfee
 // Add flexform
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
     'pxasocialfeed_showfeed',
-    'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForm/SocialFeed.xml'
+    'FILE:EXT:pxa_social_feed/Configuration/FlexForm/SocialFeed.xml'
 );
