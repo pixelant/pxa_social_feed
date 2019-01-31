@@ -35,6 +35,8 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
 class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
 
+    use AdditionalFieldProviderTrait;
+
     /**
      * @param array $taskInfo
      * @param ImportTask $task
@@ -48,11 +50,11 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
     ) {
         $additionalFields = [];
 
-        if ($parentObject->CMD == 'add') {
+        if ($this->getAction($parentObject) == 'add') {
             $taskInfo['configs'] = null;
         }
 
-        if ($parentObject->CMD == 'edit') {
+        if ($this->getAction($parentObject) == 'edit') {
             $taskInfo['configs'] = $task->getConfigs();
         }
 
@@ -79,7 +81,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         $valid = false;
 
         if (!isset($submittedData['configs'])) {
-            $parentObject->addMessage('Wrong configurations select', FlashMessage::ERROR);
+            $this->addMessage('Wrong configurations select', FlashMessage::ERROR);
         } else {
             $valid = true;
         }

@@ -37,6 +37,7 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  */
 class CleanUpTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
+    use AdditionalFieldProviderTrait;
 
     /**
      * @param array $taskInfo
@@ -51,11 +52,11 @@ class CleanUpTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
     ) {
         $additionalFields = [];
 
-        if ($parentObject->CMD == 'add') {
+        if ($this->getAction($parentObject) == 'add') {
             $taskInfo['days'] = 0;
         }
 
-        if ($parentObject->CMD == 'edit') {
+        if ($this->getAction($parentObject) == 'edit') {
             $taskInfo['days'] = $task->getDays();
         }
 
@@ -82,7 +83,7 @@ class CleanUpTaskAdditionalFieldProvider implements AdditionalFieldProviderInter
         $valid = false;
 
         if (!isset($submittedData['days']) && !intval($submittedData['days'])) {
-            $parentObject->addMessage('Bad days value', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
+            $this->addMessage('Bad days value', \TYPO3\CMS\Core\Messaging\FlashMessage::ERROR);
         } else {
             $valid = true;
         }
