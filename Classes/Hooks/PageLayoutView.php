@@ -26,7 +26,10 @@ namespace Pixelant\PxaSocialFeed\Hooks;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -115,21 +118,32 @@ class PageLayoutView
 
             // configurations info
             if ($settings['configuration']) {
-                $configurations = ConfigurationUtility::getDbConnection()->exec_SELECTgetRows(
-                    'uid,name',
-                    'tx_pxasocialfeed_domain_model_configuration',
-                    'uid IN (' . $settings['configuration'] . ') AND hidden=0 AND deleted=0'
-                );
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                    ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
+
+                $statement = $queryBuilder
+                    ->select('name')
+                    ->from('tx_pxasocialfeed_domain_model_configuration')
+                    ->where(
+                        $queryBuilder->expr()->in(
+                            'uid',
+                            $queryBuilder->createNamedParameter(
+                                GeneralUtility::intExplode(',', $settings['configuration']),
+                                Connection::PARAM_INT_ARRAY
+                            )
+                        )
+                    )
+                    ->execute();
 
                 $feeds = [];
-                foreach ($configurations as $configuration) {
-                    $feeds[] = $configuration['name'];
+                while ($configuration = $statement->fetchColumn(0)) {
+                    $feeds[] = $configuration;
                 }
 
                 $additionalInfo .= '<b>' . $this->getLanguageService()->sL(
-                    self::LLPATH . 'feeds',
-                    true
-                ) . ':</b> ' . implode(', ', $feeds);
+                        self::LLPATH . 'feeds',
+                        true
+                    ) . ':</b> ' . implode(', ', $feeds);
             }
         }
 

@@ -26,6 +26,9 @@ namespace Pixelant\PxaSocialFeed\Utility;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
@@ -90,15 +93,16 @@ class ConfigurationUtility implements SingletonInterface
      */
     public static function getAvailabelConfigsSelectBox($selectedConfigs)
     {
-        $configs = self::getDbConnection()->exec_SELECTgetRows(
-            'uid,name',
-            'tx_pxasocialfeed_domain_model_configuration',
-            'hidden=0 AND deleted=0'
-        );
-
         $selector = '<select class="form-control" name="tx_scheduler[configs][]" multiple>';
 
-        foreach ($configs as $config) {
+        $statement = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxasocialfeed_domain_model_configuration')
+            ->select(
+                ['uid', 'name'],
+                'tx_pxasocialfeed_domain_model_configuration'
+            );
+
+        while ($config = $statement->fetch()) {
             $selectedAttribute = '';
             if (is_array($selectedConfigs) && in_array($config['uid'], $selectedConfigs)) {
                 $selectedAttribute = ' selected="selected"';
@@ -123,16 +127,28 @@ class ConfigurationUtility implements SingletonInterface
      */
     public static function getSelectedConfigsInfo($configs)
     {
-        $configs = self::getDbConnection()->exec_SELECTgetRows(
-            'uid,name',
-            'tx_pxasocialfeed_domain_model_configuration',
-            'uid IN (' . implode(',', $configs) . ') AND hidden=0 AND deleted=0'
-        );
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
+
+        $statement = $queryBuilder
+            ->select('uid', 'name')
+            ->from('tx_pxasocialfeed_domain_model_configuration')
+            ->where(
+                $queryBuilder->expr()->in(
+                    'uid',
+                    $queryBuilder->createNamedParameter(
+                        $configs,
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            )
+            ->execute();
 
         $info = 'Feeds: ';
 
-        foreach ($configs as $config) {
+        while ($config = $statement->fetch()) {
             $info .= $config['name'] . ' [ID: ' . $config['uid'] . ']; ';
+
         }
 
         return $info;
@@ -145,14 +161,6 @@ class ConfigurationUtility implements SingletonInterface
     public static function getDaysInput($days = 0)
     {
         return '<input type="text" name="tx_scheduler[days]" value="' . htmlspecialchars($days) . '" />';
-    }
-
-    /**
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-     */
-    public static function getDbConnection()
-    {
-        return $GLOBALS['TYPO3_DB'];
     }
 
     /**
