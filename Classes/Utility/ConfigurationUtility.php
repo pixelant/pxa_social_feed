@@ -31,7 +31,6 @@ use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -160,17 +159,6 @@ class ConfigurationUtility implements SingletonInterface
      */
     public static function getDaysInput($days = 0)
     {
-        return '<input type="text" name="tx_scheduler[days]" value="' . htmlspecialchars($days) . '" />';
-    }
-
-    /**
-     * get version of TYPO3
-     *
-     * @return int
-     */
-    public static function getTypo3Version()
-    {
-        $version = VersionNumberUtility::convertVersionStringToArray(TYPO3_version);
-        return $version['version_main'];
+        return '<input type="text" class="form-control" name="tx_scheduler[days]" value="' . htmlspecialchars($days) . '" />';
     }
 }
