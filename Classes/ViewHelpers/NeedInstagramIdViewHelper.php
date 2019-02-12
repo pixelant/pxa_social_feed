@@ -37,13 +37,22 @@ class NeedInstagramIdViewHelper extends AbstractViewHelper
 {
 
     /**
+     * Register arguments
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('value', 'string', 'Instagram id', true);
+    }
+
+    /**
      * check if value is numeric
      *
-     * @param mixed $value
      * @return bool
      */
-    public function render($value)
+    public function render()
     {
+        $value = $this->arguments['value'];
+
         return !is_numeric($value) && !GeneralUtility::isFirstPartOfStr($value, '#');
     }
 }
