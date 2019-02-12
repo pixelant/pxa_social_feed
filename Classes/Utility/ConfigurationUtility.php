@@ -147,7 +147,6 @@ class ConfigurationUtility implements SingletonInterface
 
         while ($config = $statement->fetch()) {
             $info .= $config['name'] . ' [ID: ' . $config['uid'] . ']; ';
-
         }
 
         return $info;
@@ -159,6 +158,9 @@ class ConfigurationUtility implements SingletonInterface
      */
     public static function getDaysInput($days = 0)
     {
-        return '<input type="text" class="form-control" name="tx_scheduler[days]" value="' . htmlspecialchars($days) . '" />';
+        return sprintf(
+            '<input type="text" class="form-control" name="tx_scheduler[days]" value="%s" />',
+            htmlspecialchars($days)
+        );
     }
 }
