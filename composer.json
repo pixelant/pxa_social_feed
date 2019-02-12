@@ -18,7 +18,7 @@
   ],
   "replace": {
     "pxa_social_feed": "self.version",
-    "typo3-ter/pxa_social_feed": "self.version"
+    "typo3-ter/pxa-social-feed": "self.version"
   },
   "require": {
     "typo3/cms-core": ">=8.7.0 <=9.5.99",
