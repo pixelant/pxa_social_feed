@@ -111,7 +111,7 @@ class ImportTaskUtility
                         //getting data array from facebook graph api json result
                         // @codingStandardsIgnoreStart
                         $url = sprintf(
-                            self::FACEBOOK_API_URL . '%s/posts/?fields=likes.summary(true).limit(0),message,full_picture,attachments,created_time,is_expired,is_hidden,is_published,updated_time,privacy&limit=%d&access_token=%s|%s',
+                            self::FACEBOOK_API_URL . '%s/posts/?fields=likes.summary(true).limit(0),message,full_picture,created_time,is_expired,is_hidden,is_published,updated_time,privacy&limit=%d&access_token=%s|%s',
                             $configuration->getSocialId(),
                             $configuration->getFeedsLimit(),
                             $configuration->getToken()->getCredential('appId'),
@@ -735,13 +735,11 @@ class ImportTaskUtility
             $feed->setMessage($this->encodeMessage($rawData['message']));
         }
 
-        if (isset($rawData['attachments']['data'][0]['media']['image']['src'])) {
-            $feed->setImage($rawData['attachments']['data'][0]['media']['image']['src']);
-        } elseif (isset($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'])) {
-            $feed->setImage($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src']);
+        if (isset($rawData['full_picture'])) {
+            $feed->setImage($rawData['full_picture']);
         }
-        if (isset($rawData['attachments']['data'][0]['title'])) {
-            $feed->setTitle($rawData['attachments']['data'][0]['title']);
+        if (isset($rawData['name'])) {
+            $feed->setTitle($rawData['name']);
         }
     }
 
