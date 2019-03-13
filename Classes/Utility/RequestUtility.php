@@ -4,7 +4,6 @@ namespace Pixelant\PxaSocialFeed\Utility;
 
 use Pixelant\PxaSocialFeed\Utility\Exception\ServerCommunicationException;
 use Pixelant\PxaSocialFeed\Controller\BaseController;
-use TYPO3\CMS\Core\Http\HttpRequest;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -98,11 +97,7 @@ class RequestUtility
      */
     public function send()
     {
-        if (ConfigurationUtility::getTypo3Version() >= 8) {
-            return $this->sendRequestUsingRequestFactory();
-        } else {
-            return $this->sendRequestUsingHttpRequest();
-        }
+        return $this->sendRequestUsingRequestFactory();
     }
 
     /**
@@ -133,46 +128,6 @@ class RequestUtility
         );
 
         if ($response->getStatusCode() === 200) {
-            return $response->getBody();
-        } else {
-            throw new ServerCommunicationException(
-                BaseController::translate('pxasocialfeed_module.labels.errorCommunication'),
-                1478084292
-            );
-        }
-    }
-
-    /**
-     * @return string
-     * @throws ServerCommunicationException
-     */
-    protected function sendRequestUsingHttpRequest()
-    {
-        /** @var HttpRequest $httpRequest */
-        $httpRequest = GeneralUtility::makeInstance(
-            HttpRequest::class,
-            $this->getRequestUrlWithGetParameters(),
-            $this->requestMethod
-        );
-
-        // set post parameters
-        if (!empty($this->getPostParameters())) {
-            foreach ($this->getPostParameters() as $postParameter => $postParameterValue) {
-                $httpRequest->addPostParameter($postParameter, $postParameterValue);
-            }
-        }
-
-        // set headers
-        if (!empty($this->getHeaders())) {
-            foreach ($this->getHeaders() as $header => $headerValue) {
-                $httpRequest->setHeader([$header => $headerValue]);
-            }
-        }
-
-        /** @var \HTTP_Request2_Response $response */
-        $response = $httpRequest->send();
-
-        if ($response->getStatus() === 200) {
             return $response->getBody();
         } else {
             throw new ServerCommunicationException(

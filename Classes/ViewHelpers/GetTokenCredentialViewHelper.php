@@ -27,7 +27,7 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class GetTokenCredentialViewHelper

@@ -26,7 +26,11 @@ namespace Pixelant\PxaSocialFeed\Hooks;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -49,7 +53,7 @@ class PageLayoutView
      */
     public function getExtensionInformation($params)
     {
-        $info = '<strong>' . $this->getLanguageService()->sL(self::LLPATH . 'plugin_title', true) . '</strong><br>';
+        $info = '<strong>' . $this->getLanguageService()->sL(self::LLPATH . 'plugin_title') . '</strong><br>';
         $additionalInfo = '';
 
         if ($params['row']['list_type'] == 'pxasocialfeed_showfeed') {
@@ -65,71 +69,78 @@ class PageLayoutView
 
             // get settings array
             if ($settings['settings']) {
-                $settings = \TYPO3\CMS\Extbase\Utility\ArrayUtility::arrayMergeRecursiveOverrule(
-                    $settings,
-                    $settings['settings']
-                );
+                ArrayUtility::mergeRecursiveWithOverrule($settings, $settings['settings']);
                 unset($settings['settings']);
             }
 
             // load type info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'loadType', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'loadType'),
                 $settings['switchableControllerActions']
             );
 
             // presentation info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'presentation', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'presentation'),
                 $settings['presentation']
             );
 
             // appearance of feed items info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'appearanceFeedItem', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'appearanceFeedItem'),
                 $settings['partial']
             );
 
             // limit info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit'),
                 $settings['feedsLimit'] ? $settings['feedsLimit'] : $this->getLanguageService()->sL(
-                    self::LLPATH . 'unlimited',
-                    true
+                    self::LLPATH . 'unlimited'
                 )
             );
 
             // like show info
             $additionalInfo .= sprintf(
                 '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount', true),
+                $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount'),
                 $settings['loadLikesCount'] ? $this->getLanguageService()->sL(
-                    self::LLPATH . 'yes',
-                    true
-                ) : $this->getLanguageService()->sL(self::LLPATH . 'no', true)
+                    self::LLPATH . 'yes'
+                ) : $this->getLanguageService()->sL(self::LLPATH . 'no')
             );
 
             // configurations info
             if ($settings['configuration']) {
-                $configurations = ConfigurationUtility::getDbConnection()->exec_SELECTgetRows(
-                    'uid,name',
-                    'tx_pxasocialfeed_domain_model_configuration',
-                    'uid IN (' . $settings['configuration'] . ') AND hidden=0 AND deleted=0'
-                );
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                    ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
+
+                $statement = $queryBuilder
+                    ->select('name')
+                    ->from('tx_pxasocialfeed_domain_model_configuration')
+                    ->where(
+                        $queryBuilder->expr()->in(
+                            'uid',
+                            $queryBuilder->createNamedParameter(
+                                GeneralUtility::intExplode(',', $settings['configuration']),
+                                Connection::PARAM_INT_ARRAY
+                            )
+                        )
+                    )
+                    ->execute();
 
                 $feeds = [];
-                foreach ($configurations as $configuration) {
-                    $feeds[] = $configuration['name'];
+                while ($configuration = $statement->fetchColumn(0)) {
+                    $feeds[] = $configuration;
                 }
 
-                $additionalInfo .= '<b>' . $this->getLanguageService()->sL(
-                    self::LLPATH . 'feeds',
-                    true
-                ) . ':</b> ' . implode(', ', $feeds);
+                $additionalInfo .= sprintf(
+                    '<b>%s:</b> %s',
+                    $this->getLanguageService()->sL(self::LLPATH . 'feeds'),
+                    implode(', ', $feeds)
+                );
             }
         }
 

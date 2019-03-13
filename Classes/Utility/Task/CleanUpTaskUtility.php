@@ -31,6 +31,9 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\TwitterApi;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\Connection;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -52,11 +55,6 @@ class CleanUpTaskUtility
     const TABLE_CONFIGURATION = 'tx_pxasocialfeed_domain_model_configuration';
 
     /**
-     * @var \TYPO3\CMS\Core\Database\DatabaseConnection $dbConnection
-     */
-    protected $dbConnection;
-
-    /**
      *  objectManager
      *
      * @var \TYPO3\CMS\Extbase\Object\ObjectManager
@@ -68,7 +66,6 @@ class CleanUpTaskUtility
      */
     public function __construct()
     {
-        $this->dbConnection = $GLOBALS['TYPO3_DB'];
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
     }
 
@@ -96,13 +93,24 @@ class CleanUpTaskUtility
         /** @var \DateTime $obsoleteDate */
         $obsoleteDate = GeneralUtility::makeInstance(\DateTime::class)->modify('-' . $days . ' days');
 
-        $records = $this->dbConnection->exec_SELECTgetRows(
-            'uid,configuration,crdate',
-            self::TABLE_FEED,
-            'crdate < ' . $obsoleteDate->getTimestamp() . ' AND deleted=0 AND hidden=0',
-            '',
-            'crdate ASC'
-        );
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(self::TABLE_FEED);
+
+        $records = $queryBuilder
+            ->select('uid', 'configuration', 'crdate')
+            ->from(self::TABLE_FEED)
+            ->where(
+                $queryBuilder->expr()->lt(
+                    'crdate',
+                    $queryBuilder->createNamedParameter(
+                        $obsoleteDate->getTimestamp(),
+                        \PDO::PARAM_INT
+                    )
+                )
+            )
+            ->orderBy('crdate')
+            ->execute()
+            ->fetchAll();
 
         return $this->groupByConfigurations($records);
     }
@@ -146,26 +154,28 @@ class CleanUpTaskUtility
      */
     protected function getLimitForConfiguration($confUid)
     {
-        $configuration = $this->dbConnection->exec_SELECTgetSingleRow(
-            'feeds_limit',
+        $configuration = BackendUtility::getRecord(
             self::TABLE_CONFIGURATION,
-            'uid=' . $confUid
+            $confUid,
+            'feeds_limit'
         );
 
-        return $configuration ? $configuration['feeds_limit'] : 0;
+        return is_array($configuration) ? $configuration['feeds_limit'] : 0;
     }
 
     /**
      * @param int $confUid
-     * @return mixed
+     * @return int
      */
     protected function countAllInConfiguration($confUid)
     {
-        return $this->dbConnection->exec_SELECTcountRows(
-            'configuration',
-            self::TABLE_FEED,
-            'configuration=' . $confUid
-        );
+        return GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable(self::TABLE_FEED)
+            ->count(
+                'uid',
+                self::TABLE_FEED,
+                ['configuration' => $confUid]
+            );
     }
 
     /**
@@ -174,21 +184,40 @@ class CleanUpTaskUtility
      */
     protected function deleteObsoleteEntries($obsoleteEntries)
     {
-        $uids = '';
-        foreach ($obsoleteEntries as $obsoleteEntry) {
-            $uids .= ',' . $obsoleteEntry['uid'];
-        }
-
-        $where = '';
-        if (!empty($uids)) {
-            $where .= 'uid IN (' . ltrim($uids, ',') . ') OR ';
-        }
-        $where .= 'deleted=1';
-
-        $this->dbConnection->exec_DELETEquery(
-            self::TABLE_FEED,
-            $where
+        $uids = array_map(
+            function ($obsoleteEntry) {
+                return (int)$obsoleteEntry['uid'];
+            },
+            $obsoleteEntries
         );
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable(self::TABLE_FEED);
+
+        $queryBuilder->getRestrictions()->removeAll();
+
+        $queryBuilder
+            ->delete(self::TABLE_FEED)
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'deleted',
+                    $queryBuilder->createNamedParameter(1, \PDO::PARAM_INT)
+                )
+            );
+
+        if (!empty($uids)) {
+            $queryBuilder->orWhere(
+                $queryBuilder->expr()->in(
+                    'uid',
+                    $queryBuilder->createNamedParameter(
+                        $uids,
+                        Connection::PARAM_INT_ARRAY
+                    )
+                )
+            );
+        }
+
+        $queryBuilder->execute();
     }
 
     /**
@@ -203,11 +232,13 @@ class CleanUpTaskUtility
 
         /** @var Configuration $configuration */
         foreach ($configurations as $configuration) {
-            $feeds = $this->dbConnection->exec_SELECTgetRows(
-                'uid,external_identifier',
-                self::TABLE_FEED,
-                'configuration=' . $configuration->getUid()
-            );
+            $feeds = GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE_FEED)
+                ->select(
+                    ['uid', 'external_identifier'],
+                    self::TABLE_FEED,
+                    ['configuration' => $configuration->getUid()]
+                )
+                ->fetchAll();
 
             if ($configuration->getToken()->getSocialType() !== Token::TWITTER) {
                 foreach ($feeds as $feed) {
@@ -262,7 +293,6 @@ class CleanUpTaskUtility
     }
 
     /**
-     * <<<<<<< HEAD
      * @param Configuration $configuration
      * @param array $twitterFeeds
      * @param array &$feedsToRemove

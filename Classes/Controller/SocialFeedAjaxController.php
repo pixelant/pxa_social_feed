@@ -44,10 +44,7 @@ class SocialFeedAjaxController
     const URL = 'https://api.instagram.com/v1/users/search?q=%s&access_token=%s';
 
     /**
-     * configurationRepository
-     *
      * @var \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository
-     * @inject
      */
     protected $configurationRepository;
 
@@ -57,9 +54,8 @@ class SocialFeedAjaxController
     public function __construct()
     {
         /** @var ConfigurationRepository $configurationRepository */
-        $this->configurationRepository = GeneralUtility::makeInstance(
-            ObjectManager::class
-        )->get(ConfigurationRepository::class);
+        $this->configurationRepository = GeneralUtility::makeInstance(ObjectManager::class)
+            ->get(ConfigurationRepository::class);
     }
 
     /**

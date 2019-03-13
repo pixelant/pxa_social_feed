@@ -30,16 +30,24 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
 use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TokenValidator extends AbstractValidator
 {
 
     /**
-     * @var \Pixelant\PxaSocialFeed\Utility\ConfigurationUtility
-     * @inject
+     * @var ConfigurationUtility
      */
     protected $configurationUtility;
+
+    /**
+     * @param ConfigurationUtility $configurationUtility
+     */
+    public function injectConfigurationUtility(ConfigurationUtility $configurationUtility)
+    {
+        $this->configurationUtility = $configurationUtility;
+    }
 
     /**
      * Validates tokens

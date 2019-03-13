@@ -8,7 +8,7 @@
                     <f:case value="0"><f:render section="message" arguments="{class: 'success', title: message.title, message: message.message}"/></f:case>
                     <f:case value="1"><f:render section="message" arguments="{class: 'info', title: message.title, message: message.message}"/></f:case>
                     <f:case value="2"><f:render section="message" arguments="{class: 'danger', title: message.title, message: message.message}"/></f:case>
-                    <f:case default="1"><f:render section="message" arguments="{class: 'info', title: message.title, message: message.message}"/></f:case>
+                    <f:defaultCase><f:render section="message" arguments="{class: 'info', title: message.title, message: message.message}"/></f:defaultCase>
                 </f:switch>
             </f:for>
         </f:flashMessages>

@@ -44,26 +44,26 @@ return [
         '4' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
     ],
     'palettes' => [
-        'core' => ['showitem' =>'hidden'],
+        'core' => ['showitem' => 'hidden'],
         'main' => ['showitem' => 'post_date, --linebreak--, title, --linebreak--, post_url, --linebreak--, message, --linebreak--, image, --linebreak--, likes, --linebreak--, configuration']
     ],
     // @codingStandardsIgnoreEnd
     'columns' => [
         'hidden' => [
             'exclude' => 1,
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
+            'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
             'config' => [
                 'type' => 'check',
             ],
         ],
         'starttime' => [
             'exclude' => 1,
-            'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel',
             'config' => [
                 'type' => 'input',
                 'size' => 13,
-                'max' => 20,
+                'renderType' => 'inputDateTime',
                 'eval' => 'datetime',
                 'default' => 0,
                 'range' => [
@@ -73,12 +73,12 @@ return [
         ],
         'endtime' => [
             'exclude' => 1,
-            'l10n_mode' => 'mergeIfNotBlank',
-            'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
+            'l10n_mode' => 'exclude',
+            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
             'config' => [
                 'type' => 'input',
                 'size' => 13,
-                'max' => 20,
+                'renderType' => 'inputDateTime',
                 'eval' => 'datetime',
                 'default' => 0,
                 'range' => [
@@ -98,7 +98,11 @@ return [
                     [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.3', 3, 'ext-pxasocialfeed-model-icon-twitter'],
                     [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.4', 4, 'ext-pxasocialfeed-model-icon-youtube'],
                 ],
-                'showIconTable' => true,
+                'fieldWizard' => [
+                    'selectIcons' => [
+                        'disabled' => false
+                    ]
+                ],
                 'size' => 1,
                 'maxitems' => 1,
             ]
@@ -110,8 +114,8 @@ return [
                 'type' => 'input',
                 'size' => 15,
                 'eval' => 'datetime',
-                'checkbox' => 1,
-                'default' => time()
+                'renderType' => 'inputDateTime',
+                'default' => 0
             ],
         ],
         'post_url' => [

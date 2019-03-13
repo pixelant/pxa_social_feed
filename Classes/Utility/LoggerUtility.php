@@ -62,10 +62,13 @@ class LoggerUtility
         /** @var BackendUserAuthentication $beUser */
         $beUser = $GLOBALS['BE_USER'];
 
-        $beUser->simplelog(
-            $messageHeader . ': ' . $message . ' ( ' . $feedConfig->getName() . ' )',
-            'pxa_social_feed',
-            (int)$errorType
+        $beUser->writelog(
+            4,
+            0,
+            (int)$errorType,
+            0,
+            '[pxa_social_feed] ' . $messageHeader . ': ' . $message . ' ( ' . $feedConfig->getName() . ' )',
+            []
         );
     }
 }

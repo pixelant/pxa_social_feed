@@ -7,6 +7,8 @@ use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
@@ -16,6 +18,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 
 /***************************************************************
  *
@@ -49,24 +53,17 @@ class SocialFeedAdministrationController extends BaseController
 {
 
     /**
-     * configurationRepository
-     *
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository
-     * @inject
+     * @var ConfigurationRepository
      */
     protected $configurationRepository;
 
     /**
-     * tokenRepository
-     *
      * @var \Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository
-     * @inject
      */
     protected $tokenRepository;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface
-     * @inject
+     * @var PersistenceManagerInterface
      */
     protected $persistenceManager;
 
@@ -83,6 +80,30 @@ class SocialFeedAdministrationController extends BaseController
      * @var BackendTemplateView
      */
     protected $defaultViewObjectName = BackendTemplateView::class;
+
+    /**
+     * @param ConfigurationRepository $configurationRepository
+     */
+    public function injectConfigurationRepository(ConfigurationRepository $configurationRepository)
+    {
+        $this->configurationRepository = $configurationRepository;
+    }
+
+    /**
+     * @param TokenRepository $tokenRepository
+     */
+    public function injectTokenRepository(TokenRepository $tokenRepository)
+    {
+        $this->tokenRepository = $tokenRepository;
+    }
+
+    /**
+     * @param PersistenceManagerInterface $persistenceManager
+     */
+    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
+    {
+        $this->persistenceManager = $persistenceManager;
+    }
 
     /**
      * Set up the doc header properly here
@@ -105,7 +126,6 @@ class SocialFeedAdministrationController extends BaseController
         $pageRenderer->addRequireJsConfiguration(
             [
                 'paths' => [
-                    'jquery' => 'sysext/core/Resources/Public/JavaScript/Contrib/jquery/',
                     'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
                 ],
                 'shim' => [
@@ -564,11 +584,11 @@ class SocialFeedAdministrationController extends BaseController
      */
     protected function getInlineSettings()
     {
-        $settings = [
-            'browserUrl' => BackendUtility::getModuleUrl('wizard_element_browser')
-        ];
+        $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
 
-        return json_encode($settings);
+        return json_encode([
+            'browserUrl' => (string)$uriBuilder->buildUriFromRoute('wizard_element_browser')
+        ]);
     }
 
     /**
