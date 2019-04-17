@@ -632,7 +632,7 @@ class ImportTaskUtility
 
         // Set message
         $record->setMessage(
-            $data['caption'] ? $data['caption'] : ''
+            $data['caption'] ? $this->encodeMessage($data['caption']) : ''
         );
 
         // Set url
