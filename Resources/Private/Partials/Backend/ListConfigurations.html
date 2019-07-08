@@ -1,50 +1,35 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
-     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
-     xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers">
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
 
     <f:section name="list">
-        <f:if condition="{configs}">
+        <f:if condition="{configurations}">
             <f:then>
                 <table class="table table-striped">
                     <tr class="info">
-                        <td><f:translate key="pxasocialfeed_module.labels.uid"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.form.config_name"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.form.social_id"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.form.amount_of_feeds"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.form.feed_storage"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.token_uid"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.app_id"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.edit"/></td>
-                        <td><f:translate key="pxasocialfeed_module.labels.delete"/></td>
+                        <td>UID</td>
+                        <td><f:translate key="module.name"/></td>
+                        <td><f:translate key="module.max_items"/></td>
+                        <td><f:translate key="module.storage"/></td>
+                        <td><f:translate key="module.token"/></td>
+                        <td><f:translate key="module.edit"/></td>
+                        <td><f:translate key="module.delete"/></td>
                     </tr>
 
-                    <f:for each="{configs}" as="configItem">
+                    <f:for each="{configurations}" as="configuration">
                         <tr>
-                            <td>{configItem.uid}</td>
-                            <td>{configItem.name}</td>
+                            <td>{configuration.uid}</td>
+                            <td>{configuration.name}</td>
+                            <td>{configuration.maxItems}</td>
+                            <td>{configuration.storageTitle} (#{configuration.storage})</td>
+                            <td>{configuration.token.title} (#{configuration.token.uid})</td>
                             <td>
-                                {configItem.socialId}
-                                <f:if condition="{configItem.token.socialType} == 2">
-                                    <f:comment>
-                                        If this is instagram and ID is not numeric, then it's just a user name and we need to get an ID
-                                    </f:comment>
-                                    <f:if condition="{pxa:getTokenCredential(token: configItem.token, credential: 'accessToken')}">
-                                        <f:render partial="Backend/InstagramGetId" section="main" arguments="{configiguration: configItem}"/>
-                                    </f:if>
-                                </f:if>
-                            </td>
-                            <td>{configItem.feedsLimit}</td>
-                            <td>{configItem.storageTitle} (#{configItem.feedStorage})</td>
-                            <td>{configItem.token.socialTypeDescription} (#{configItem.token.uid})</td>
-                            <td>{configItem.token.appId}</td>
-                            <td>
-                                <f:link.action action="manageConfiguration" class="btn btn-default" arguments="{configuration: configItem}">
-                                    <f:translate key="pxasocialfeed_module.labels.editConfig"/>
+                                <f:link.action action="editConfiguration" class="btn btn-default" arguments="{configuration: configuration}">
+                                    <f:translate key="module.edit"/>
                                 </f:link.action>
                             </td>
                             <td>
-                                <f:link.action action="deleteConfiguration" class="btn btn-danger  delete-action" arguments="{configuration: configItem}">
-                                    <f:translate key="pxasocialfeed_module.labels.delete"/>
+                                <f:link.action action="deleteConfiguration" class="btn btn-danger  delete-action" arguments="{configuration: configuration}">
+                                    <f:translate key="module.delete"/>
                                 </f:link.action>
                             </td>
                         </tr>

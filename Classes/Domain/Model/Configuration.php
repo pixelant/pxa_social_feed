@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Domain\Model;
 
 /***************************************************************
@@ -29,6 +29,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 
 /**
  * Configuration
@@ -43,7 +44,7 @@ class Configuration extends AbstractEntity
     protected $name = '';
 
     /**
-     * @var integer
+     * @var int
      */
     protected $maxItems = 0;
 
@@ -85,9 +86,9 @@ class Configuration extends AbstractEntity
     /**
      * @param int $maxItems
      */
-    public function setMaxItems(int $maxItems): void
+    public function setMaxItems(?int $maxItems): void
     {
-        $this->maxItems = $maxItems;
+        $this->maxItems = $maxItems ?? 0;
     }
 
     /**
@@ -101,16 +102,19 @@ class Configuration extends AbstractEntity
     /**
      * @param int $storage
      */
-    public function setStorage(int $storage): void
+    public function setStorage(?int $storage): void
     {
-        $this->storage = $storage;
+        $this->storage = $storage ?? 0;
     }
 
     /**
      * @return Token
      */
-    public function getToken(): Token
+    public function getToken(): ?Token
     {
+        if ($this->token instanceof LazyLoadingProxy) {
+            $this->token->_loadRealInstance();
+        }
         return $this->token;
     }
 

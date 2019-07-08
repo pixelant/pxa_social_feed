@@ -6,7 +6,7 @@
             <f:then>
                 <table class="table table-striped">
                     <tr class="info">
-                        <td>Uid</td>
+                        <td>UID</td>
                         <td><f:translate key="module.type"/></td>
                         <td><f:translate key="module.general_info"/></td>
                         <td><f:translate key="module.edit"/></td>
@@ -15,8 +15,8 @@
                     <f:for each="{tokens}" as="token">
                         <tr>
                             <td>{token.uid}</td>
-                            <td>{token.socialTypeDescription}</td>
-                            <td> <f:render partial="Backend/TokenInfo/Type{token.socialType}" arguments="{token: token}" /></td>
+                            <td>{token.title}</td>
+                            <td> <f:render partial="Backend/TokenInfo/Type{token.type}" arguments="{token: token}" /></td>
                             <td>
                                 <f:link.action action="editToken" class="btn btn-default" arguments="{token: token}">
                                     <f:translate key="module.edit"/>

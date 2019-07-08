@@ -30,7 +30,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
-class AbstractRepository extends Repository
+abstract class AbstractRepository extends Repository
 {
 
     /**

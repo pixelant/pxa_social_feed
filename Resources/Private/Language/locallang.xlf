@@ -69,11 +69,41 @@
             <trans-unit id="module.first_create_token">
                 <source>No tokens were found, please, first create some.</source>
             </trans-unit>
+            <trans-unit id="module.name">
+                <source>Name</source>
+            </trans-unit>
+            <trans-unit id="module.max_items">
+                <source>Maximum items</source>
+            </trans-unit>
+            <trans-unit id="module.storage">
+                <source>Storage</source>
+            </trans-unit>
+            <trans-unit id="module.token">
+                <source>Token</source>
+            </trans-unit>
+
             <trans-unit id="module.type.1">
                 <source>Facebook</source>
             </trans-unit>
+            <trans-unit id="module.type.2">
+                <source>Instagram</source>
+            </trans-unit>
+            <trans-unit id="module.type.3">
+                <source>Twitter</source>
+            </trans-unit>
+            <trans-unit id="module.type.4">
+                <source>Youtube</source>
+            </trans-unit>
 
-
+            <trans-unit id="validator.error.1456234619">
+                <source>Please, enter configuration name</source>
+            </trans-unit>
+            <trans-unit id="validator.error.1456234832">
+                <source>Maximum items can be only positive integer</source>
+            </trans-unit>
+            <trans-unit id="validator.error.1491570246">
+                <source>Storage value is invalid</source>
+            </trans-unit>
             <trans-unit id="validator.error.all_field_require">
                 <source>All fields are required</source>
             </trans-unit>

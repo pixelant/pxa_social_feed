@@ -28,7 +28,9 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  ***************************************************************/
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * The repository for Feeds
@@ -44,6 +46,8 @@ class ConfigurationRepository extends AbstractRepository
     ];
 
     /**
+     * Find by uids list
+     *
      * @param array $configurations
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
      */
@@ -52,6 +56,21 @@ class ConfigurationRepository extends AbstractRepository
         $query = $this->createQuery();
 
         $query->matching($query->in('uid', $configurations));
+
+        return $query->execute();
+    }
+
+    /**
+     * Get configurations by token
+     *
+     * @param Token $token
+     * @return QueryResultInterface
+     */
+    public function findConfigurationByToken(Token $token): QueryResultInterface
+    {
+        $query = $this->createQuery();
+
+        $query->equals('token', $token);
 
         return $query->execute();
     }

@@ -142,9 +142,9 @@ class AdministrationController extends BaseController
 
         $this->view->assignMultiple([
             'tokens' => $tokens,
-            'configs' => $this->configurationRepository->findAll(),
+            'configurations' => $this->configurationRepository->findAll(),
             'activeTokenTab' => $activeTokenTab,
-            'isTokensValid' => $this->isTokensValid($tokens)
+           // 'isTokensValid' => $this->isTokensValid($tokens)
         ]);
     }
 
@@ -158,12 +158,14 @@ class AdministrationController extends BaseController
     {
         $isNew = $token === null;
 
-        $type = $isNew ? $type : $token->getType();
+        if (!$isNew) {
+            $type = $token->getType();
+        }
         $availableTypes = [];
 
         if ($isNew) {
-            foreach (Token::getAvailableTokensTypes() as $type) {
-                $availableTypes[$type] = $this->translate('type.' . $type);
+            foreach (Token::getAvailableTokensTypes() as $availableTokensType) {
+                $availableTypes[$availableTokensType] = $this->translate('type.' . $availableTokensType);
             }
         }
 
@@ -193,8 +195,8 @@ class AdministrationController extends BaseController
      */
     public function deleteTokenAction(Token $token)
     {
-        // @TODO create relation to configuration
-        if ($token->getConfiguration() === null) {
+        $tokenConfigurations = $this->configurationRepository->findConfigurationByToken($token);
+        if ($tokenConfigurations->count() === 0) {
             $this->tokenRepository->remove($token);
 
             $this->redirectToIndexWithMessage(true, $this->translate('action_delete'));
@@ -202,7 +204,7 @@ class AdministrationController extends BaseController
 
         $this->redirectToIndexWithMessage(
             true,
-            $this->translate('error_token_configuration_exist', [$token->getConfiguration()->getName()]),
+            $this->translate('error_token_configuration_exist', [$tokenConfigurations->getFirst()->getName()]),
             FlashMessage::ERROR
         );
     }
@@ -237,6 +239,8 @@ class AdministrationController extends BaseController
                 $configuration
             );
         }
+
+        $this->configurationRepository->{$isNew ? 'add' : 'update'}($configuration);
 
         $this->redirectToIndexWithMessage(false, $this->translate('action_changes_saved'));
     }

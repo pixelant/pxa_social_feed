@@ -4,7 +4,7 @@
     <f:layout name="Backend/Default" />
 
     <f:section name="content">
-        <f:render partial="Backend/FlashMessages" section="main"/>
+        <f:flashMessages />
 
         <div id="tokens-confs">
             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
@@ -20,7 +20,7 @@
                 <div class="tab-pane{f:if(condition: activeTokenTab, else: ' active')}" id="configurations">
                     <br>
 
-                    <f:render partial="Backend/ListConfigurations" section="list" arguments="{configs: configs}"/>
+                    <f:render partial="Backend/ListConfigurations" section="list" arguments="{configurations: configurations}"/>
 
                     <f:link.action class="btn btn-default" action="editConfiguration">
                         <f:translate key="module.add_new"/>
