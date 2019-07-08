@@ -28,11 +28,12 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  ***************************************************************/
 use Facebook\Facebook;
 use Pixelant\PxaSocialFeed\Controller\BaseController;
-use Pixelant\PxaSocialFeed\Controller\SocialFeedAdministrationController;
+use Pixelant\PxaSocialFeed\Controller\AdministrationController;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Tokens
@@ -80,11 +81,11 @@ class Token extends AbstractEntity
     protected $serializedCredentials = '';
 
     /**
-     * socialType
+     * type
      *
      * @var integer
      */
-    protected $socialType = 0;
+    protected $type = 0;
 
     /**
      * oAuthTypes
@@ -92,6 +93,86 @@ class Token extends AbstractEntity
      * @var array
      */
     protected $oAuthSocialTypes = [2,5];
+
+    /**
+     * @var string
+     */
+    protected $appId = '';
+
+    /**
+     * @var string
+     */
+    protected $appSecret = '';
+
+    /**
+     * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected $configuration = null;
+
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration(): ?Configuration
+    {
+        return $this->configuration;
+    }
+
+    /**
+     * @param Configuration $configuration
+     */
+    public function setConfiguration(Configuration $configuration): void
+    {
+        $this->configuration = $configuration;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppId(): string
+    {
+        return $this->appId;
+    }
+
+    /**
+     * @param string $appId
+     */
+    public function setAppId(string $appId): void
+    {
+        $this->appId = $appId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAppSecret(): string
+    {
+        return $this->appSecret;
+    }
+
+    /**
+     * @param string $appSecret
+     */
+    public function setAppSecret(string $appSecret): void
+    {
+        $this->appSecret = $appSecret;
+    }
 
     /**
      * @return string
@@ -189,22 +270,12 @@ class Token extends AbstractEntity
     }
 
     /**
-     * get social type translation
-     *
-     * @return string
-     */
-    public function getSocialTypeDescription()
-    {
-        return BaseController::translate('pxasocialfeed_module.labels.type.' . $this->getSocialType());
-    }
-
-    /**
      * get value for select box
      * @return string
      */
-    public function getSelectBoxLabel()
+    public function getTitle(): string
     {
-        return $this->getUid() . ': ' . $this->getSocialTypeDescription();
+        return LocalizationUtility::translate('module.type.' . $this->getType(), 'PxaSocialFeed') ?? '';
     }
 
     /**
@@ -252,5 +323,22 @@ class Token extends AbstractEntity
 
                 return $helper->getLoginUrl($returnUri, $permissions);
         }
+    }
+
+    /**
+     * Check if is facebook token type
+     *
+     * @return bool
+     */
+    public function isFacebookType(): bool
+    {
+        return $this->type === static::FACEBOOK;
+    }
+
+    public static function getAvailableTokensTypes(): array
+    {
+        return [
+            static::FACEBOOK
+        ];
     }
 }

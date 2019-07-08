@@ -16,3 +16,24 @@ module.tx_pxasocialfeed {
         facebookGraphVersion = v3.0
     }
 }
+
+
+# Extbase settings
+config.tx_extbase {
+    persistence {
+        classes {
+            Pixelant\PxaSocialFeed\Domain\Model\Token {
+                subclasses {
+                    1 = Pixelant\PxaSocialFeed\Domain\Model\FacebookToken
+                }
+            }
+
+            Pixelant\PxaSocialFeed\Domain\Model\FacebookToken {
+                mapping {
+                    recordType = 1
+                    tableName = tx_pxasocialfeed_domain_model_token
+                }
+            }
+        }
+    }
+}

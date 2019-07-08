@@ -51,15 +51,4 @@ class BaseController extends ActionController
     {
         $this->feedRepository = $feedRepository;
     }
-
-    /**
-     * get label translation
-     *
-     * @param string $label
-     * @return NULL|string
-     */
-    public static function translate($label = '')
-    {
-        return LocalizationUtility::translate($label, 'PxaSocialFeed');
-    }
 }

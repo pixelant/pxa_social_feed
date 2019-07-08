@@ -12,246 +12,315 @@
             </trans-unit>
 
             <!-- BE MODULE -->
+            <trans-unit id="module.configurations">
+                <source>Configurations</source>
+            </trans-unit>
+            <trans-unit id="module.tokens">
+                <source>Tokens</source>
+            </trans-unit>
+            <trans-unit id="module.add_new">
+                <source>Add new</source>
+            </trans-unit>
+            <trans-unit id="module.nothing_were_found">
+                <source>Nothing were found</source>
+            </trans-unit>
+            <trans-unit id="module.go_back">
+                <source>Go back</source>
+            </trans-unit>
+            <trans-unit id="module.submit">
+                <source>Submit</source>
+            </trans-unit>
+            <trans-unit id="module.token_action">
+                <source>Create/Update token</source>
+            </trans-unit>
+            <trans-unit id="module.configuration_action">
+                <source>Create/Update configuration</source>
+            </trans-unit>
+            <trans-unit id="module.app_id">
+                <source>App Id</source>
+            </trans-unit>
+            <trans-unit id="module.app_secret">
+                <source>App Secret</source>
+            </trans-unit>
+            <trans-unit id="module.type">
+                <source>Type</source>
+            </trans-unit>
+            <trans-unit id="module.type.1">
+                <source>Facebook</source>
+            </trans-unit>
+            <trans-unit id="module.action_changes_saved">
+                <source>Changes saved.</source>
+            </trans-unit>
+            <trans-unit id="module.action_delete">
+                <source>Successfully removed.</source>
+            </trans-unit>
+            <trans-unit id="module.error_token_configuration_exist">
+                <source>Error removing token. Configuration "%s" is still using it.</source>
+            </trans-unit>
+            <trans-unit id="module.edit">
+                <source>Edit</source>
+            </trans-unit>
+            <trans-unit id="module.delete">
+                <source>Delete</source>
+            </trans-unit>
+            <trans-unit id="module.general_info">
+                <source>General info</source>
+            </trans-unit>
+            <trans-unit id="module.first_create_token">
+                <source>No tokens were found, please, first create some.</source>
+            </trans-unit>
+            <trans-unit id="module.type.1">
+                <source>Facebook</source>
+            </trans-unit>
+
+
+            <trans-unit id="validator.error.all_field_require">
+                <source>All fields are required</source>
+            </trans-unit>
+
             <!-- ACTIONS -->
-            <trans-unit id="pxasocialfeed_module.action.indexAction">
+            <trans-unit id="module.action.indexAction">
                 <source>List of tokens and configurations</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.action.manageConfigAction">
+            <trans-unit id="module.action.manageConfigAction">
                 <source>Create new / Edit configuration</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.action.manageTokenAction">
+            <trans-unit id="module.action.manageTokenAction">
                 <source>Create new / Edit token</source>
             </trans-unit>
 
-            <trans-unit id="pxasocialfeed_module.labels.listOfConfigs">
-                <source>List of configurations</source>
-            </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.noConfigurationsFound">
+
+            <trans-unit id="module.labels.noConfigurationsFound">
                 <source>No configurations were found</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.listOfTokens">
+            <trans-unit id="module.labels.listOfTokens">
                 <source>List of tokens</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.noTokensFound">
+            <trans-unit id="module.labels.noTokensFound">
                 <source>No tokens were found</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.notRelevant">
+            <trans-unit id="module.labels.notRelevant">
                 <source>Not relevant</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.generateAccessToken">
+            <trans-unit id="module.labels.generateAccessToken">
                 <source>Generate access token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.redirectUri">
+            <trans-unit id="module.labels.redirectUri">
                 <source>Redirect uri</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.copyToClipboard">
+            <trans-unit id="module.labels.copyToClipboard">
                 <source>Copy to clipboard</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.firstCreateToken">
+            <trans-unit id="module.labels.firstCreateToken">
                 <source>No tokens were found, please, first create some.</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.addNewToken">
+            <trans-unit id="module.labels.createToken">
                 <source>Add new token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.addNewConfig">
+            <trans-unit id="module.labels.addNewConfig">
                 <source>Add new configuration</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.createNewConfig">
+            <trans-unit id="module.labels.createNewConfig">
                 <source>Create new configuration</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.editToken">
+            <trans-unit id="module.labels.editToken">
                 <source>Edit token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.editConfig">
+            <trans-unit id="module.labels.editConfig">
                 <source>Edit configuration</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type">
+            <trans-unit id="module.labels.type">
                 <source>Source</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.1">
+            <trans-unit id="module.labels.type.1">
                 <source>Facebook</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.2">
+            <trans-unit id="module.labels.type.2">
                 <source>Instagram (OAuth2)</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.3">
+            <trans-unit id="module.labels.type.3">
                 <source>Twitter</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.4">
+            <trans-unit id="module.labels.type.4">
                 <source>Youtube</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.type.5">
+            <trans-unit id="module.labels.type.5">
                 <source>Facebook OAuth2 (Instagram)</source>
             </trans-unit>
 
+
+
             <!-- labels for module token tab -->
-            <trans-unit id="pxasocialfeed_module.labels.pages">
+            <trans-unit id="module.labels.pages">
                 <source>Pages</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.migrate_records">
+            <trans-unit id="module.labels.migrate_records">
                 <source>Migrate records to new storage</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.get_instagram_hidden_tip">
+            <trans-unit id="module.labels.get_instagram_hidden_tip">
                 <source>Please, update page to see token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.general_info">
+            <trans-unit id="module.labels.general_info">
                 <source>General info</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.actions">
+            <trans-unit id="module.labels.actions">
                 <source>Edit / Delete</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.edit">
+            <trans-unit id="module.labels.edit">
                 <source>Edit</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.create">
-                <source>Create</source>
+            <trans-unit id="module.labels.token_created">
+                <source>Token successfully created</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.successCreated">
-                <source>Successfully created</source>
+            <trans-unit id="module.labels.token_updated">
+                <source>Token successfully updated</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.delete">
+            <trans-unit id="module.labels.token_removed">
+                <source>Token successfully removed</source>
+            </trans-unit>
+
+
+            <trans-unit id="module.labels.delete">
                 <source>Delete</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.appId">
+            <trans-unit id="module.labels.app_id">
                 <source>App Id</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.appSecret">
+            <trans-unit id="module.labels.app_secret">
                 <source>App Secret</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.accessToken">
+            <trans-unit id="module.labels.accessToken">
                 <source>Access Token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.clientId">
+            <trans-unit id="module.labels.clientId">
                 <source>Client Id</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.clientSecret">
+            <trans-unit id="module.labels.clientSecret">
                 <source>Client Secret</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.consumerKey">
+            <trans-unit id="module.labels.consumerKey">
                 <source>Consumer Key</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.consumerSecret">
+            <trans-unit id="module.labels.consumerSecret">
                 <source>Consumer Secret</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.accessTokenSecret">
+            <trans-unit id="module.labels.accessTokenSecret">
                 <source>Access Token Secret</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.apiKey">
+            <trans-unit id="module.labels.apiKey">
                 <source>API Key</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.token">
+            <trans-unit id="module.labels.token">
                 <source>Token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.button_delete">
+            <trans-unit id="module.labels.button_delete">
                 <source>Delete Token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.create_new_token">
+            <trans-unit id="module.labels.create_new_token">
                 <source>Create new token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.button_clear">
+            <trans-unit id="module.labels.button_clear">
                 <source>Clear Form</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.uid">
+            <trans-unit id="module.labels.uid">
                 <source>UID</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.form.feed_storage">
+            <trans-unit id="module.labels.form.feed_storage">
                 <source>Storage</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.form.config_name">
+            <trans-unit id="module.labels.form.config_name">
                 <source>Configuration name</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.form.social_id">
+            <trans-unit id="module.labels.form.social_id">
                 <source>Social ID</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.form.social_id_tooltip">
+            <trans-unit id="module.labels.form.social_id_tooltip">
                 <source>Either Facebook / Twitter / Instagram / YouTube ID or Instagram hashtag (with starting #)</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.form.amount_of_feeds">
+            <trans-unit id="module.labels.form.amount_of_feeds">
                 <source>Limit</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.button_delete">
+            <trans-unit id="module.labels.button_delete">
                 <source>Delete configuration</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_module.config.form.button_clear">
+            <trans-unit id="tx_module.config.form.button_clear">
                 <source>Clear Form</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.button_save">
+            <trans-unit id="module.labels.button_save">
                 <source>Save</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.token_uid">
+            <trans-unit id="module.labels.token_uid">
                 <source>Token (#UID)</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.back">
+            <trans-unit id="module.labels.back">
                 <source>Back</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.configurations">
+            <trans-unit id="module.labels.configurations">
                 <source>Configurations</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.tokens">
+            <trans-unit id="module.labels.tokens">
                 <source>Tokens</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.inst_id_tooltip">
+            <trans-unit id="module.labels.inst_id_tooltip">
                 <source>Looks like it's a user name. Instagram User ID is required. Press button to fetch user ID.</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.inst_id_button">
+            <trans-unit id="module.labels.inst_id_button">
                 <source>Get Instagram user ID</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.inst_id_ajax_fail">
+            <trans-unit id="module.labels.inst_id_ajax_fail">
                 <source>Failed to get Instagram user ID</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.inst_id_ajax_success">
+            <trans-unit id="module.labels.inst_id_ajax_success">
                 <source>Instagram user ID saved.</source>
             </trans-unit>
 
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1463130121">
+            <trans-unit id="module.labels.errorcode.1463130121">
                 <source>All fields are required</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234619">
+            <trans-unit id="module.labels.errorcode.1456234619">
                 <source>Please, enter configuration name</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234671">
+            <trans-unit id="module.labels.errorcode.1456234671">
                 <source>Please, enter Social ID</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456234832">
+            <trans-unit id="module.labels.errorcode.1456234832">
                 <source>Limit of feeds is not valid</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456154742">
+            <trans-unit id="module.labels.errorcode.1456154742">
                 <source>App ID can not be empty</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1456154743">
+            <trans-unit id="module.labels.errorcode.1456154743">
                 <source>App Secret can not be empty</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1466669831">
+            <trans-unit id="module.labels.errorcode.1466669831">
                 <source>Something went wrong</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorcode.1491570246">
+            <trans-unit id="module.labels.errorcode.1491570246">
                 <source>Storage value is invalid</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.changesSaved">
+            <trans-unit id="module.labels.changesSaved">
                 <source>Changes saved successfully.</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.removedSuccess">
+            <trans-unit id="module.labels.removedSuccess">
                 <source>Successfully removed.</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.cantRemoveTokenConfigExist">
-                <source>Error removing token. Some configuration is still using it.</source>
-            </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.removed">
+
+            <trans-unit id="module.labels.removed">
                 <source>Removed</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.success">
+            <trans-unit id="module.labels.success">
                 <source>Success</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.error">
+            <trans-unit id="module.labels.error">
                 <source>Error</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorCommunication">
+            <trans-unit id="module.labels.errorCommunication">
                 <source>Error communication with server</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.errorGettingsToken">
+            <trans-unit id="module.labels.errorGettingsToken">
                 <source>Error getting access token</source>
             </trans-unit>
-            <trans-unit id="pxasocialfeed_module.labels.access_tokenUpdated">
+            <trans-unit id="module.labels.access_tokenUpdated">
                 <source>Access token updated</source>
             </trans-unit>
         </body>

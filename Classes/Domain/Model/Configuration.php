@@ -35,26 +35,6 @@ use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
  */
 class Configuration extends AbstractEntity
 {
-
-    /**
-     * @var int
-     */
-    protected $pid = 0;
-
-    /**
-     * hidden state
-     *
-     * @var boolean
-     */
-    protected $hidden = false;
-
-    /**
-     * socialId
-     *
-     * @var string
-     */
-    protected $socialId = '';
-
     /**
      * name
      *
@@ -63,140 +43,83 @@ class Configuration extends AbstractEntity
     protected $name = '';
 
     /**
-     * $feedsLimit
-     *
      * @var integer
      */
-    protected $feedsLimit = 0;
+    protected $maxItems = 0;
 
     /**
-     * Storage of feed records
-     *
      * @var int
      */
-    protected $feedStorage = 0;
+    protected $storage = 0;
 
     /**
-     * token
-     *
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $token = null;
 
     /**
-     * Returns the socialId
-     *
-     * @return string $socialId
+     * @return string
      */
-    public function getSocialId()
-    {
-        return $this->socialId;
-    }
-
-    /**
-     * Sets the socialId
-     *
-     * @param string $socialId
-     * @return void
-     */
-    public function setSocialId($socialId)
-    {
-        $this->socialId = $socialId;
-    }
-
-    /**
-     * Returns the name
-     *
-     * @return string $name
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Sets the name
-     *
      * @param string $name
-     * @return void
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
     /**
-     * Returns the $feedsLimit
-     *
-     * @return integer $feedsLimit
+     * @return int
      */
-    public function getFeedsLimit()
+    public function getMaxItems(): int
     {
-        return $this->feedsLimit;
+        return $this->maxItems;
     }
 
     /**
-     * Sets the $feedsLimit
-     *
-     * @param integer $feedsLimit
-     * @return void
+     * @param int $maxItems
      */
-    public function setFeedsLimit($feedsLimit)
+    public function setMaxItems(int $maxItems): void
     {
-        $this->feedsLimit = $feedsLimit;
-    }
-
-    /**
-     * Returns the token
-     *
-     * @return \Pixelant\PxaSocialFeed\Domain\Model\Token $token
-     */
-    public function getToken()
-    {
-        return $this->token;
-    }
-
-    /**
-     * Sets the token
-     *
-     * @param \Pixelant\PxaSocialFeed\Domain\Model\Token $token
-     * @return void
-     */
-    public function setToken(Token $token)
-    {
-        $this->token = $token;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isHidden()
-    {
-        return $this->hidden;
-    }
-
-    /**
-     * @param boolean $hidden
-     */
-    public function setHidden($hidden)
-    {
-        $this->hidden = $hidden;
+        $this->maxItems = $maxItems;
     }
 
     /**
      * @return int
      */
-    public function getFeedStorage()
+    public function getStorage(): int
     {
-        return $this->feedStorage;
+        return $this->storage;
     }
 
     /**
-     * @param int $feedStorage
+     * @param int $storage
      */
-    public function setFeedStorage($feedStorage)
+    public function setStorage(int $storage): void
     {
-        $this->feedStorage = $feedStorage;
+        $this->storage = $storage;
+    }
+
+    /**
+     * @return Token
+     */
+    public function getToken(): Token
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param Token $token
+     */
+    public function setToken(Token $token): void
+    {
+        $this->token = $token;
     }
 
     /**
@@ -208,7 +131,7 @@ class Configuration extends AbstractEntity
     {
         $raw = BackendUtility::getRecord(
             'pages',
-            $this->feedStorage,
+            $this->storage,
             'title'
         );
 

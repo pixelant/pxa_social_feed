@@ -35,20 +35,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TokenValidator extends AbstractValidator
 {
-
-    /**
-     * @var ConfigurationUtility
-     */
-    protected $configurationUtility;
-
-    /**
-     * @param ConfigurationUtility $configurationUtility
-     */
-    public function injectConfigurationUtility(ConfigurationUtility $configurationUtility)
-    {
-        $this->configurationUtility = $configurationUtility;
-    }
-
     /**
      * Validates tokens
      *
@@ -58,27 +44,22 @@ class TokenValidator extends AbstractValidator
      */
     protected function isValid($token)
     {
-        $credentialsFields = GeneralUtility::trimExplode(
-            ',',
-            $this->configurationUtility->getConfiguration($token->getSocialType())
-        );
-        $args = GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedpxasocialfeed');
+        $isValid = true;
 
-        foreach ($credentialsFields as $field) {
-            if (!isset($args['credentials'][$field]) || trim($args['credentials'][$field]) == '') {
-                $errorCode = 1463130121;
-            }
+        switch (true) {
+            case $token->isFacebookType():
+                if (empty($token->getAppId()) || empty($token->getAppSecret())) {
+                    $this->addError(
+                        $this->translateErrorMessage(
+                            'validator.error.all_field_require',
+                            'PxaSocialFeed'
+                        ),
+                        1221559976
+                    );
+                }
+                break;
         }
 
-        if (isset($errorCode)) {
-            $this->addError(
-                BaseController::translate(
-                    'pxasocialfeed_module.labels.errorcode.' . $errorCode
-                ),
-                $errorCode
-            );
-        }
-
-        return (!isset($errorCode));
+        return $isValid;
     }
 }

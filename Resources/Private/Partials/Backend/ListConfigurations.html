@@ -52,21 +52,9 @@
                 </table>
             </f:then>
             <f:else>
-                <div class="typo3-messages">
-                    <div class="alert alert-info">
-                        <div class="media">
-                            <div class="media-left">
-                        <span class="fa-stack fa-lg">
-                            <i class="fa fa-circle fa-stack-2x"></i>
-                            <i class="fa fa-check fa-stack-1x"></i>
-                        </span>
-                            </div>
-                            <div class="media-body">
-                                <div class="alert-message"><f:translate key="pxasocialfeed_module.labels.noConfigurationsFound"/></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <f:render partial="Backend/NothingFoundMessage" contentAs="message">
+                    <f:translate key="module.nothing_were_found"/>
+                </f:render>
             </f:else>
         </f:if>
     </f:section>

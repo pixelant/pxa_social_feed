@@ -5,6 +5,7 @@ namespace Pixelant\PxaSocialFeed\Controller;
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\FacebookToken;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
@@ -20,6 +21,7 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /***************************************************************
  *
@@ -49,7 +51,7 @@ use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 /**
  * SocialFeedAdministrationController
  */
-class SocialFeedAdministrationController extends BaseController
+class AdministrationController extends BaseController
 {
 
     /**
@@ -58,14 +60,9 @@ class SocialFeedAdministrationController extends BaseController
     protected $configurationRepository;
 
     /**
-     * @var \Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository
+     * @var TokenRepository
      */
     protected $tokenRepository;
-
-    /**
-     * @var PersistenceManagerInterface
-     */
-    protected $persistenceManager;
 
     /**
      * BackendTemplateContainer
@@ -98,20 +95,12 @@ class SocialFeedAdministrationController extends BaseController
     }
 
     /**
-     * @param PersistenceManagerInterface $persistenceManager
-     */
-    public function injectPersistenceManager(PersistenceManagerInterface $persistenceManager)
-    {
-        $this->persistenceManager = $persistenceManager;
-    }
-
-    /**
      * Set up the doc header properly here
      *
      * @param ViewInterface $view
      * @return void
      */
-    protected function initializeView(ViewInterface $view)
+    protected function initializeView(ViewInterface $view): void
     {
         /** @var BackendTemplateView $view */
         parent::initializeView($view);
@@ -142,12 +131,12 @@ class SocialFeedAdministrationController extends BaseController
     }
 
     /**
-     * index action to show all configurations and tokens
+     * Index action to show all configurations and tokens
      *
      * @param bool $activeTokenTab
      * @return void
      */
-    public function indexAction($activeTokenTab = false)
+    public function indexAction($activeTokenTab = false): void
     {
         $tokens = $this->tokenRepository->findAll();
 
@@ -160,154 +149,117 @@ class SocialFeedAdministrationController extends BaseController
     }
 
     /**
+     * Edit token form
+     *
      * @param Token $token
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @return void
+     * @param int|null $type
      */
-    public function manageTokenAction(Token $token = null)
+    public function editTokenAction(Token $token = null, int $type = Token::FACEBOOK): void
     {
-        $predefinedType = $this->request->hasArgument('type') ? $this->request->getArgument('type') : 1;
+        $isNew = $token === null;
 
-        $this->view->assignMultiple([
-            'type' => ($token === null ? $predefinedType : $token->getSocialType()),
-            'token' => $token,
-            'isEditForm' => $token !== null,
-            'tokens' => $this->tokenRepository->findAll()
-        ]);
+        $type = $isNew ? $type : $token->getType();
+        $availableTypes = [];
+
+        if ($isNew) {
+            foreach (Token::getAvailableTokensTypes() as $type) {
+                $availableTypes[$type] = $this->translate('type.' . $type);
+            }
+        }
+
+        $this->view->assignMultiple(compact('token', 'type', 'isNew', 'availableTypes'));
     }
 
     /**
+     * Save token changes
+     *
      * @param Token $token
      * @validate $token \Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator
-     * @return void
      */
-    public function saveTokenAction(Token $token)
+    public function updateTokenAction(Token $token): void
     {
-        $args = $this->request->getArguments();
+        $isNew = $token->getUid() === null;
 
-        if (count($args['credentials']) > 0) {
-            foreach ($args['credentials'] as $key => $credential) {
-                $token->setCredential($key, $credential);
-            }
-        }
+        $this->tokenRepository->{$isNew ? 'add' : 'update'}($token);
 
-        if ($token->getUid()) {
-            // special check for instagram INSTAGRAM_OAUTH2, if updated, need to update auth token again.
-            if ($token->getSocialType() == Token::INSTAGRAM_OAUTH2 && $token->_isDirty('serializedCredentials')) {
-                $token->setCredential('accessToken', '');
-            }
-
-            $this->tokenRepository->update($token);
-            $title = self::translate('pxasocialfeed_module.labels.edit');
-            $message = self::translate('pxasocialfeed_module.labels.changesSaved');
-        } else {
-            $this->tokenRepository->add($token);
-            $title = self::translate('pxasocialfeed_module.labels.create');
-            $message = self::translate('pxasocialfeed_module.labels.successCreated');
-        }
-
-        $this->addFlashMessage($message, $title, FlashMessage::OK);
-
-        $this->redirectToIndex();
+        $this->redirectToIndexWithMessage(true, $this->translate('action_changes_saved'));
     }
 
     /**
+     * Delete token
+     *
      * @param Token $token
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
      */
     public function deleteTokenAction(Token $token)
     {
-        $configuration = $this->configurationRepository->findByToken($token);
-
-        if ($configuration === null) {
+        // @TODO create relation to configuration
+        if ($token->getConfiguration() === null) {
             $this->tokenRepository->remove($token);
-            $this->addFlashMessage(
-                self::translate('pxasocialfeed_module.labels.removedSuccess'),
-                self::translate('pxasocialfeed_module.labels.removed'),
-                FlashMessage::OK
-            );
-        } else {
-            $this->addFlashMessage(
-                self::translate('pxasocialfeed_module.labels.cantRemoveTokenConfigExist'),
-                self::translate('pxasocialfeed_module.labels.error'),
-                FlashMessage::ERROR
-            );
+
+            $this->redirectToIndexWithMessage(true, $this->translate('action_delete'));
         }
 
-        $this->redirectToIndex();
+        $this->redirectToIndexWithMessage(
+            true,
+            $this->translate('error_token_configuration_exist', [$token->getConfiguration()->getName()]),
+            FlashMessage::ERROR
+        );
     }
 
     /**
+     * Edit configuration
+     *
      * @param Configuration $configuration
      * @return void
      */
-    public function manageConfigurationAction(Configuration $configuration = null)
+    public function editConfigurationAction(Configuration $configuration = null)
     {
-        $this->view->assignMultiple([
-            'tokens' => $this->tokenRepository->findAll(),
-            'config' => $configuration,
-            'isEditForm' => $configuration !== null
-        ]);
+        $tokens = $this->tokenRepository->findAll();
+
+        $this->view->assignMultiple(compact('configuration', 'tokens'));
     }
 
     /**
+     * Update configuration
+     *
      * @param Configuration $configuration
      * @validate $configuration \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator
      * @return void
      */
-    public function saveConfigurationAction(Configuration $configuration)
+    public function updateConfigurationAction(Configuration $configuration)
     {
-        if ($configuration->getUid()) {
-            if ($this->request->hasArgument('migrateRecords')
-                && (int)$this->request->getArgument('migrateRecords') === 1
-                && $configuration->_isDirty('feedStorage')
-            ) {
-                $this->migrateFeedsToNewStorage(
-                    $configuration,
-                    $configuration->getFeedStorage()
-                );
-            }
+        $isNew = $configuration->getUid() === null;
 
-            $this->configurationRepository->update($configuration);
-            $title = self::translate('pxasocialfeed_module.labels.edit');
-            $message = self::translate('pxasocialfeed_module.labels.changesSaved');
-        } else {
-            $this->configurationRepository->add($configuration);
-            $title = self::translate('pxasocialfeed_module.labels.create');
-            $message = self::translate('pxasocialfeed_module.labels.successCreated');
+        // If storage was updated and it's not new configuration, need to migrate existing feed records
+        if (false == $isNew && $configuration->_isDirty('storage')) {
+            $this->migrateFeedsToNewStorage(
+                $configuration
+            );
         }
-        // remove all flash message with error
-        $this->getControllerContext()->getFlashMessageQueue()->getAllMessagesAndFlush();
-        $this->addFlashMessage($message, $title, FlashMessage::OK);
 
-        $this->redirect('index');
+        $this->redirectToIndexWithMessage(false, $this->translate('action_changes_saved'));
     }
 
     /**
      * @param Configuration $configuration
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
      * @return void
+     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
+     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function deleteConfigurationAction(Configuration $configuration)
     {
         // remove all feeds
-        $feeds = $this->feedRepository->findByConfiguration($configuration->getUid());
+        // @TODO make extbase to do the job
+        /*$feeds = $this->feedRepository->findByConfiguration($configuration->getUid());
 
         foreach ($feeds as $feed) {
             $this->feedRepository->remove($feed);
-        }
+        }*/
 
         $this->configurationRepository->remove($configuration);
 
-        $this->addFlashMessage(
-            self::translate('pxasocialfeed_module.labels.removedSuccess'),
-            self::translate('pxasocialfeed_module.labels.removed'),
-            FlashMessage::OK
-        );
-        $this->redirect('index');
+        $this->redirectToIndexWithMessage(false, $this->translate('action_delete'));
     }
 
     /**
@@ -331,6 +283,20 @@ class SocialFeedAdministrationController extends BaseController
                 $this->getFacebookAccessToken($token);
                 break;
         }
+    }
+
+    /**
+     * Shortcut for translate
+     *
+     * @param string $key
+     * @param array|null $arguments
+     * @return string
+     */
+    protected function translate(string $key, array $arguments = null): ?string
+    {
+        $key = 'module.' . $key;
+
+        return LocalizationUtility::translate($key, 'PxaSocialFeed', $arguments);
     }
 
     /**
@@ -450,7 +416,7 @@ class SocialFeedAdministrationController extends BaseController
             $this->redirectToIndex();
         }
 
-        if (! isset($accessToken)) {
+        if (!isset($accessToken)) {
             if ($helper->getError()) {
                 $this->addFlashMessage(
                     'Authorization failed: ' . $helper->getError(),
@@ -479,7 +445,7 @@ class SocialFeedAdministrationController extends BaseController
         // If you know the user ID this access token belongs to, you can validate it here
         $tokenMetadata->validateExpiration();
 
-        if (! $accessToken->isLongLived()) {
+        if (!$accessToken->isLongLived()) {
             // Exchanges a short-lived access token for a long-lived one
             try {
                 $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
@@ -592,11 +558,25 @@ class SocialFeedAdministrationController extends BaseController
     }
 
     /**
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
+     * Shortcut to redirect to index with flash message
+     *
+     * @param bool $activeTokenTab
+     * @param string $message
+     * @param int $severity
      */
-    protected function redirectToIndex()
-    {
-        $this->redirect('index', null, null, ['activeTokenTab' => true]);
+    protected function redirectToIndexWithMessage(
+        bool $activeTokenTab = false,
+        string $message = null,
+        int $severity = FlashMessage::OK
+    ): void {
+        if (!empty($message)) {
+            $this->addFlashMessage(
+                $message,
+                '',
+                $severity
+            );
+        }
+
+        $this->redirect('index', null, null, ['activeTokenTab' => $activeTokenTab]);
     }
 }

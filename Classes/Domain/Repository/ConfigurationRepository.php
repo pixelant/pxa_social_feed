@@ -55,18 +55,4 @@ class ConfigurationRepository extends AbstractRepository
 
         return $query->execute();
     }
-
-    /**
-     * @param mixed $token
-     * @return Configuration|object|NULL
-     */
-    public function findByToken($token)
-    {
-        $query = $this->createQuery();
-        $query->setLimit(1);
-
-        return $query->matching(
-            $query->equals('token', $token)
-        )->execute()->getFirst();
-    }
 }

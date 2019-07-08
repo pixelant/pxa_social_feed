@@ -1,96 +1,86 @@
 <?php
 defined('TYPO3_MODE') or die();
 
-$ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:';
+return (function () {
+    $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens';
 
-return [
-    'ctrl' => [
-        'title' => $ll . 'tx_pxasocialfeed_domain_model_tokens',
-        'label' => 'app_id',
-        'tstamp' => 'tstamp',
-        'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
-        'dividers2tabs' => true,
-        'default_sortby' => 'crdate DESC',
+    return [
+        'ctrl' => [
+            'title' => $ll,
+            'label' => 'uid',
+            'tstamp' => 'tstamp',
+            'crdate' => 'crdate',
+            'cruser_id' => 'cruser_id',
+            'dividers2tabs' => true,
+            'default_sortby' => 'crdate DESC',
 
-        'delete' => 'deleted',
-        'enablecolumns' => [
-            'disabled' => 'hidden',
-            'starttime' => 'starttime',
-            'endtime' => 'endtime',
-        ],
-        'searchFields' => 'app_id,app_secret,social_type,',
-
-        'typeicon_classes' => [
-            'default' => 'ext-pxasocialfeed-model-icon'
-        ],
-
-        'rootLevel' => 1
-    ],
-    'interface' => [
-        'showRecordFieldList' => 'hidden, serialized_credentials, social_type, starttime, endtime',
-    ],
-    'types' => [
-        '1' => ['showitem' => 'hidden, --palette--;;1, social_type'],
-    ],
-    'palettes' => [
-        '1' => ['showitem' => ''],
-    ],
-    'columns' => [
-
-        'hidden' => [
-            'exclude' => 1,
-            'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
-            'config' => [
-                'type' => 'check',
+            'delete' => 'deleted',
+            'enablecolumns' => [
+                'disabled' => 'hidden'
             ],
+            'searchFields' => 'app_id, app_secret, access_token',
+
+            'typeicon_classes' => [
+                'default' => 'ext-pxasocialfeed-model-icon'
+            ],
+
+            'type' => 'type',
+            'rootLevel' => 1
         ],
-        'starttime' => [
-            'exclude' => 1,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel',
-            'config' => [
-                'type' => 'input',
-                'size' => 13,
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-                'range' => [
-                    'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
+        'interface' => [
+            'showRecordFieldList' => 'hidden, type, app_id,app_secret, starttime, endtime',
+        ],
+        'types' => [
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteGraphApi'],
+        ],
+        'palettes' => [
+            'paletteHidden' => ['showitem' => 'hidden'],
+            'paletteGraphApi' => ['showitem' => 'app_id, --linebreak--, app_secret, --linebreak--, access_token'],
+        ],
+        'columns' => [
+            'hidden' => [
+                'exclude' => true,
+                'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
+                'config' => [
+                    'type' => 'check',
+                    'default' => 0
                 ],
             ],
-        ],
-        'endtime' => [
-            'exclude' => 1,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
-            'config' => [
-                'type' => 'input',
-                'size' => 13,
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-                'range' => [
-                    'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                ],
+            'type' => [
+                'exclude' => true,
+                'label' => $ll . '.type',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [$ll . '.type.type.1', \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK]
+                    ]
+                ]
             ],
-        ],
-        'social_type' => [
-            'exclude' => 1,
-            'label' => $ll . 'tx_pxasocialfeed_domain_model_tokens.social_type',
-            'config' => [
-                'type' => 'input',
-                'size' => 4,
-                'eval' => 'int,required'
-            ]
-        ],
-        'serialized_credentials' => [
-            'exclude' => 1,
-            'label' => 'serialized_credentials',
-            'config' => [
-                'type' => 'text',
-                'eval' => 'trim'
-            ]
+            'app_id' => [
+                'exclude' => true,
+                'label' => $ll . '.app_id',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'required,trim'
+                ]
+            ],
+            'app_secret' => [
+                'exclude' => true,
+                'label' => $ll . '.app_secret',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'required,trim'
+                ]
+            ],
+            'access_token' => [
+                'exclude' => true,
+                'label' => $ll . '.access_token',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'trim'
+                ]
+            ],
         ]
-    ]
-];
+    ];
+})();
