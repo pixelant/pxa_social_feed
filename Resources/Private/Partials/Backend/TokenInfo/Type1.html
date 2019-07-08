@@ -1,6 +1,17 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers" data-namespace-typo3-fluid="true">
 <b><f:translate key="module.app_id"/></b>: {token.appId}<br />
 <b><f:translate key="module.app_secret"/></b>: {token.appSecret}<br />
 
-<a href="https://graph.facebook.com/oauth/access_token?client_id={token.appId}&client_secret={token.appSecret}&grant_type=client_credentials" target="_blank">AHAHAH</a>
+<f:if condition="{token.validAccessToken}">
+    <f:then>
+        <p>Token is valid</p>
+    </f:then>
+    <f:else>
+        <pxa:facebookLoginUrl redirectUrl="{f:uri.action(action: 'addFacebookAccessToken', absolute: '1', arguments: '{token: token}')}" token="{token}" as="url">
+            <a href="{url}" target="_blank" class="btn btn-default">
+                <f:translate key="module.generate_access_token" />
+            </a>
+        </pxa:facebookLoginUrl>
+    </f:else>
+</f:if>
 </html>

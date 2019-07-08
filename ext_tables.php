@@ -12,7 +12,7 @@ defined('TYPO3_MODE') or die();
             'pxasocialfeed',    // Submodule key
             '',                        // Position
             [
-                'Administration' => 'index, editToken, updateToken, deleteToken, editConfiguration, updateConfiguration, deleteConfiguration'
+                'Administration' => 'index, editToken, updateToken, deleteToken, editConfiguration, updateConfiguration, deleteConfiguration, addFacebookAccessToken'
             ],
             [
                 'access' => 'user,group',

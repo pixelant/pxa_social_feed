@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Utility;
 
@@ -38,51 +39,9 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  * Class ConfigurationUtility
  * @package Pixelant\PxaSocialFeed\Utility
  */
-class ConfigurationUtility implements SingletonInterface
+class ConfigurationUtility
 {
 
-    /**
-     * @var \TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface
-     */
-    protected $configurationManager = null;
-
-    /**
-     * Plugin configuration
-     *
-     * @var array
-     */
-    protected $configuration = [];
-
-    /**
-     * ConfigurationUtility constructor.
-     * initialize
-     */
-    public function __construct()
-    {
-        /** @var ConfigurationManagerInterface configurationManager */
-        $this->configurationManager = GeneralUtility::makeInstance(
-            ObjectManager::class
-        )->get(ConfigurationManagerInterface::class);
-
-        $this->configuration = $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_FRAMEWORK
-        );
-    }
-
-    /**
-     * get configuration of module
-     *
-     * @param int $tokenType
-     * @return string|array
-     */
-    public function getConfiguration($tokenType = 0)
-    {
-        if ($tokenType && array_key_exists($tokenType, $this->configuration['settings']['credentials'])) {
-            return $this->configuration['settings']['credentials'][$tokenType];
-        } else {
-            return $this->configuration;
-        }
-    }
 
     /**
      * generate html box

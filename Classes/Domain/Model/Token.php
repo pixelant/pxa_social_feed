@@ -28,6 +28,11 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Facebook\Exceptions\FacebookResponseException;
+use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Facebook;
+use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
+use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -37,6 +42,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class Token extends AbstractEntity
 {
+    use EmitSignalTrait;
 
     /**
      * facebook token
@@ -66,13 +72,6 @@ class Token extends AbstractEntity
     protected $type = 0;
 
     /**
-     * oAuthTypes
-     *
-     * @var array
-     */
-    protected $oAuthSocialTypes = [self::FACEBOOK, self::INSTAGRAM];
-
-    /**
      * @var string
      */
     protected $appId = '';
@@ -86,6 +85,11 @@ class Token extends AbstractEntity
      * @var string
      */
     protected $accessToken = '';
+
+    /**
+     * @var Facebook
+     */
+    protected $fb = null;
 
     /**
      * @return int
@@ -151,6 +155,45 @@ class Token extends AbstractEntity
         $this->accessToken = $accessToken;
     }
 
+    public function isValidAccessToken(): bool
+    {
+        if (empty($this->accessToken)) {
+            return false;
+        }
+
+        try {
+            $response = $this->getFb()->get('/me');
+        } catch (FacebookResponseException $e) {
+            // When Graph returns an error
+            echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch (FacebookSDKException $e) {
+            // When validation fails or other local issues
+            echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+
+        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($response, 'Debug', 16);
+        die;
+    }
+
+    /**
+     * Facebook login url
+     *
+     * @param string $redirectUrl
+     * @param array $permissions
+     * @return string
+     */
+    public function getFacebookLoginUrl(string $redirectUrl, array $permissions)
+    {
+        session_start();
+        $fb = $this->getFb();
+
+        $loginHelper = $fb->getRedirectLoginHelper();
+
+        return $loginHelper->getLoginUrl($redirectUrl, $permissions);
+    }
+
     /**
      * get value for select box
      * @return string
@@ -158,42 +201,6 @@ class Token extends AbstractEntity
     public function getTitle(): string
     {
         return LocalizationUtility::translate('module.type.' . $this->getType(), 'PxaSocialFeed') ?? '';
-    }
-
-    /**
-     * isOAuthToken
-     *
-     * @return bool
-     */
-    public function getIsOAuthToken()
-    {
-        return in_array($this->getSocialType(), $this->oAuthSocialTypes);
-    }
-
-    /**
-     * @param $returnUri
-     * @return string
-     * @throws \Facebook\Exceptions\FacebookSDKException
-     */
-    public function getTokenGenerationUri($returnUri)
-    {
-        switch ($this->getSocialType()) {
-            case self::INSTAGRAM_OAUTH2:
-                $uri = 'https://api.instagram.com/oauth/authorize/';
-                $uri .= '?client_id=' . $this->getCredential('clientId');
-                $uri .= '&redirect_uri=' . urlencode($returnUri);
-                $uri .= '&response_type=code&scope=public_content';
-                return $uri;
-            case self::FACEBOOK_OAUTH2:
-                $fb = FacebookSDKUtility::getFacebook($this);
-
-                $helper = $fb->getRedirectLoginHelper();
-
-                //TODO: make configurable
-                $permissions = ['manage_pages', 'instagram_basic', 'instagram_manage_insights'];
-
-                return $helper->getLoginUrl($returnUri, $permissions);
-        }
     }
 
     /**
@@ -219,5 +226,19 @@ class Token extends AbstractEntity
             static::TWITTER,
             static::YOUTUBE,
         ];
+    }
+
+    /**
+     * Get FB
+     *
+     * @return Facebook
+     */
+    public function getFb(): Facebook
+    {
+        if ($this->fb === null) {
+            $this->fb = FacebookGraphSdkFactory::factory($this);
+        }
+
+        return $this->fb;
     }
 }

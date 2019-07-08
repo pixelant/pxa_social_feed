@@ -1,26 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
 use Facebook\Exceptions\FacebookResponseException;
 use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
-use Pixelant\PxaSocialFeed\Domain\Model\FacebookToken;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
+use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
-use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /***************************************************************
@@ -51,7 +50,7 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 /**
  * SocialFeedAdministrationController
  */
-class AdministrationController extends BaseController
+class AdministrationController extends ActionController
 {
 
     /**
@@ -112,18 +111,6 @@ class AdministrationController extends BaseController
             ? $this->view->getModuleTemplate()->getPageRenderer()
             : GeneralUtility::makeInstance(PageRenderer::class);
 
-        $pageRenderer->addRequireJsConfiguration(
-            [
-                'paths' => [
-                    'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
-                ],
-                'shim' => [
-                    'deps' => ['jquery'],
-                    'clipboard' => ['exports' => 'ClipboardJS'],
-                ],
-            ]
-        );
-
         $pageRenderer->loadRequireJsModule(
             'TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule',
             "function(socialFeedModule) { socialFeedModule.getInstance({$this->getInlineSettings()}).run() }"
@@ -144,7 +131,7 @@ class AdministrationController extends BaseController
             'tokens' => $tokens,
             'configurations' => $this->configurationRepository->findAll(),
             'activeTokenTab' => $activeTokenTab,
-           // 'isTokensValid' => $this->isTokensValid($tokens)
+            // 'isTokensValid' => $this->isTokensValid($tokens)
         ]);
     }
 
@@ -184,7 +171,7 @@ class AdministrationController extends BaseController
 
         $this->tokenRepository->{$isNew ? 'add' : 'update'}($token);
 
-        $this->redirectToIndexWithMessage(true, $this->translate('action_changes_saved'));
+        $this->redirectToIndex(true, $this->translate('action_changes_saved'));
     }
 
     /**
@@ -199,10 +186,10 @@ class AdministrationController extends BaseController
         if ($tokenConfigurations->count() === 0) {
             $this->tokenRepository->remove($token);
 
-            $this->redirectToIndexWithMessage(true, $this->translate('action_delete'));
+            $this->redirectToIndex(true, $this->translate('action_delete'));
         }
 
-        $this->redirectToIndexWithMessage(
+        $this->redirectToIndex(
             true,
             $this->translate('error_token_configuration_exist', [$tokenConfigurations->getFirst()->getName()]),
             FlashMessage::ERROR
@@ -242,7 +229,7 @@ class AdministrationController extends BaseController
 
         $this->configurationRepository->{$isNew ? 'add' : 'update'}($configuration);
 
-        $this->redirectToIndexWithMessage(false, $this->translate('action_changes_saved'));
+        $this->redirectToIndex(false, $this->translate('action_changes_saved'));
     }
 
     /**
@@ -263,30 +250,7 @@ class AdministrationController extends BaseController
 
         $this->configurationRepository->remove($configuration);
 
-        $this->redirectToIndexWithMessage(false, $this->translate('action_delete'));
-    }
-
-    /**
-     * get access token
-     *
-     * @param Token $token
-     * @return void
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
-     * @throws FacebookSDKException
-     */
-    public function addAccessTokenAction(Token $token)
-    {
-        switch ($token->getSocialType()) {
-            case Token::INSTAGRAM_OAUTH2:
-                $this->getInstagramAccessToken($token);
-                break;
-            case Token::FACEBOOK_OAUTH2:
-                $this->getFacebookAccessToken($token);
-                break;
-        }
+        $this->redirectToIndex(false, $this->translate('action_delete'));
     }
 
     /**
@@ -304,99 +268,17 @@ class AdministrationController extends BaseController
     }
 
     /**
-     * get instagram access token
+     * Get facebook access token
      *
      * @param Token $token
-     * @param string $redirectAction
-     * @return void
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
      */
-    protected function getInstagramAccessToken(Token $token, $redirectAction = 'addAccessToken')
-    {
-        $code = GeneralUtility::_GP('code');
-
-        $redirectUri = $this->uriBuilder->reset()
-            ->setCreateAbsoluteUri(true)
-            ->uriFor($redirectAction, ['token' => $token->getUid()]);
-
-        if (isset($code)) {
-            /** @var RequestUtility $requestUtility */
-            $requestUtility = GeneralUtility::makeInstance(
-                RequestUtility::class,
-                'https://api.instagram.com/oauth/access_token',
-                RequestUtility::METHOD_POST
-            );
-            $requestUtility->setPostParameters(
-                [
-                    'client_id' => $token->getCredential('clientId'),
-                    'client_secret' => $token->getCredential('clientSecret'),
-                    'grant_type' => 'authorization_code',
-                    'redirect_uri' => $redirectUri,
-                    'code' => $code
-                ]
-            );
-
-            try {
-                $response = $requestUtility->send();
-            } catch (\Exception $e) {
-                $response = null;
-                $this->addFlashMessage(
-                    $e->getMessage(),
-                    self::translate('pxasocialfeed_module.labels.error'),
-                    FlashMessage::ERROR
-                );
-            }
-
-            if ($response !== null) {
-                $data = json_decode($response, true);
-
-                if (isset($data['access_token'])) {
-                    $token->setCredential('accessToken', $data['access_token']);
-                    $this->tokenRepository->update($token);
-
-                    $this->addFlashMessage(
-                        self::translate('pxasocialfeed_module.labels.access_tokenUpdated'),
-                        self::translate('pxasocialfeed_module.labels.success'),
-                        FlashMessage::OK
-                    );
-                } elseif (isset($data['error'])) {
-                    $this->addFlashMessage(
-                        $data['error_description'],
-                        self::translate('pxasocialfeed_module.labels.error'),
-                        FlashMessage::ERROR
-                    );
-                } else {
-                    $this->addFlashMessage(
-                        self::translate('pxasocialfeed_module.labels.errorGettingsToken'),
-                        self::translate('pxasocialfeed_module.labels.error'),
-                        FlashMessage::ERROR
-                    );
-                }
-            }
-        }
-
-        $this->redirectToIndex();
-    }
-
-    /**
-     * get facebook access token
-     *
-     * @param Token $token
-     * @throws FacebookSDKException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\StopActionException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\UnknownObjectException
-     */
-    protected function getFacebookAccessToken(Token $token)
+    protected function addFacebookAccessTokenAction(Token $token)
     {
         //TODO: find a better way
         session_start();
 
-        $fb = FacebookSDKUtility::getFacebook($token);
+
+        $fb = $token->getFb();
 
         $helper = $fb->getRedirectLoginHelper();
 
@@ -404,37 +286,22 @@ class AdministrationController extends BaseController
             $accessToken = $helper->getAccessToken();
         } catch (FacebookResponseException $e) {
             // When Graph returns an error
-            $this->addFlashMessage(
-                'Graph returned an error: ' . $e->getMessage(),
-                self::translate('pxasocialfeed_module.labels.error'),
-                FlashMessage::ERROR
-            );
-            $this->redirectToIndex();
+            $error = 'Graph returned an error: ' . $e->getMessage();
         } catch (FacebookSDKException $e) {
             // When validation fails or other local issues
-            $this->addFlashMessage(
-                'Facebook SDK returned an error: ' . $e->getMessage(),
-                self::translate('pxasocialfeed_module.labels.error'),
-                FlashMessage::ERROR
-            );
-            $this->redirectToIndex();
+            $error =  'Facebook SDK returned an error: ' . $e->getMessage();
+        }
+        if (isset($error)) {
+            $this->redirectToIndex(true, $error, FlashMessage::ERROR);
         }
 
         if (!isset($accessToken)) {
             if ($helper->getError()) {
-                $this->addFlashMessage(
-                    'Authorization failed: ' . $helper->getError(),
-                    self::translate('pxasocialfeed_module.labels.error'),
-                    FlashMessage::ERROR
-                );
+                $error = 'Authorization failed: ' . $helper->getError();
             } else {
-                $this->addFlashMessage(
-                    'Authorization failed: Bad request',
-                    self::translate('pxasocialfeed_module.labels.error'),
-                    FlashMessage::ERROR
-                );
+                $error = 'Bad request';
             }
-            $this->redirectToIndex();
+            $this->redirectToIndex(true, $error, FlashMessage::ERROR);
         }
 
         // The OAuth 2.0 client handler helps us manage access tokens
@@ -444,7 +311,7 @@ class AdministrationController extends BaseController
         $tokenMetadata = $oAuth2Client->debugToken($accessToken);
 
         // Validation (these will throw FacebookSDKException's when they fail)
-        $tokenMetadata->validateAppId($token->getCredential('appId'));
+        $tokenMetadata->validateAppId($token->getAppId());
 
         // If you know the user ID this access token belongs to, you can validate it here
         $tokenMetadata->validateExpiration();
@@ -454,27 +321,18 @@ class AdministrationController extends BaseController
             try {
                 $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
             } catch (FacebookSDKException $e) {
-                $this->addFlashMessage(
-                    'Error getting long-lived access token: ' . $helper->getMessage(),
-                    self::translate('pxasocialfeed_module.labels.error'),
+                $this->redirectToIndex(
+                    true,
+                    'Error getting long-lived access token: ' . $e->getMessage(),
                     FlashMessage::ERROR
                 );
-                $this->redirectToIndex();
             }
         }
 
-        if ($accessToken->getValue()) {
-            $token->setCredential('accessToken', $accessToken->getValue());
-            $this->tokenRepository->update($token);
+        $token->setAccessToken($accessToken->getValue());
+        $this->tokenRepository->update($token);
 
-            $this->addFlashMessage(
-                self::translate('pxasocialfeed_module.labels.access_tokenUpdated'),
-                self::translate('pxasocialfeed_module.labels.success'),
-                FlashMessage::OK
-            );
-        }
-
-        $this->redirectToIndex();
+        $this->redirectToIndex(true, $this->translate('access_token_updated'));
     }
 
     /**
@@ -494,16 +352,17 @@ class AdministrationController extends BaseController
             $menu->setIdentifier('pxa_social_feed');
 
             $actions = [
-                ['action' => 'index', 'label' => 'pxasocialfeed_module.action.indexAction'],
-                ['action' => 'manageConfiguration', 'label' => 'pxasocialfeed_module.action.manageConfigAction'],
-                ['action' => 'manageToken', 'label' => 'pxasocialfeed_module.action.manageTokenAction'],
+                'index',
+                'editConfiguration',
+                'editToken',
             ];
 
             foreach ($actions as $action) {
                 $item = $menu->makeMenuItem()
-                    ->setTitle(self::translate($action['label']))
-                    ->setHref($uriBuilder->reset()->uriFor($action['action'], [], 'SocialFeedAdministration'))
-                    ->setActive($this->request->getControllerActionName() === $action['action']);
+                    ->setTitle($this->translate($action . 'Action'))
+                    ->setHref($uriBuilder->reset()->uriFor($action, [], 'Administration'))
+                    ->setActive($this->request->getControllerActionName() === $action);
+
                 $menu->addMenuItem($item);
             }
 
@@ -568,7 +427,7 @@ class AdministrationController extends BaseController
      * @param string $message
      * @param int $severity
      */
-    protected function redirectToIndexWithMessage(
+    protected function redirectToIndex(
         bool $activeTokenTab = false,
         string $message = null,
         int $severity = FlashMessage::OK

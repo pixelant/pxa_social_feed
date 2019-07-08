@@ -81,6 +81,12 @@
             <trans-unit id="module.token">
                 <source>Token</source>
             </trans-unit>
+            <trans-unit id="module.generate_access_token">
+                <source>Generate access token</source>
+            </trans-unit>
+            <trans-unit id="module.access_token_updated">
+                <source>Access token updated</source>
+            </trans-unit>
 
             <trans-unit id="module.type.1">
                 <source>Facebook</source>
@@ -109,13 +115,13 @@
             </trans-unit>
 
             <!-- ACTIONS -->
-            <trans-unit id="module.action.indexAction">
+            <trans-unit id="module.indexAction">
                 <source>List of tokens and configurations</source>
             </trans-unit>
-            <trans-unit id="module.action.manageConfigAction">
+            <trans-unit id="module.editConfigurationAction">
                 <source>Create new / Edit configuration</source>
             </trans-unit>
-            <trans-unit id="module.action.manageTokenAction">
+            <trans-unit id="module.editTokenAction">
                 <source>Create new / Edit token</source>
             </trans-unit>
 
@@ -350,9 +356,7 @@
             <trans-unit id="module.labels.errorGettingsToken">
                 <source>Error getting access token</source>
             </trans-unit>
-            <trans-unit id="module.labels.access_tokenUpdated">
-                <source>Access token updated</source>
-            </trans-unit>
+
         </body>
     </file>
 </xliff>
