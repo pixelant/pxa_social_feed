@@ -30,7 +30,7 @@ return (function () {
             'showRecordFieldList' => 'hidden, name, token, max_items, storage',
         ],
         'types' => [
-            '1' => ['showitem' => 'hidden, --palette--;;1, name, token, max_items, storage'],
+            '1' => ['showitem' => 'hidden, --palette--;;1, name, max_items, storage'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],

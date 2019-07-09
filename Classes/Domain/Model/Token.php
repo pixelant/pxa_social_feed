@@ -28,12 +28,10 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Facebook\Exceptions\FacebookResponseException;
-use Facebook\Exceptions\FacebookSDKException;
+use Facebook\Authentication\AccessTokenMetadata;
 use Facebook\Facebook;
 use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
-use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -90,6 +88,11 @@ class Token extends AbstractEntity
      * @var Facebook
      */
     protected $fb = null;
+
+    /**
+     * @var AccessTokenMetadata
+     */
+    protected $fbTokenMetaData = null;
 
     /**
      * @return int
@@ -155,26 +158,54 @@ class Token extends AbstractEntity
         $this->accessToken = $accessToken;
     }
 
-    public function isValidAccessToken(): bool
+    /**
+     * Check if facebook token is valid
+     *
+     * @return bool
+     */
+    public function isValidFacebookAccessToken(): bool
     {
         if (empty($this->accessToken)) {
             return false;
         }
 
         try {
-            $response = $this->getFb()->get('/me');
-        } catch (FacebookResponseException $e) {
-            // When Graph returns an error
-            echo 'Graph returned an error: ' . $e->getMessage();
-            exit;
-        } catch (FacebookSDKException $e) {
-            // When validation fails or other local issues
-            echo 'Facebook SDK returned an error: ' . $e->getMessage();
-            exit;
+            $tokenMetadata = $this->getFacebookAccessTokenMetadata();
+            $tokenMetadata->validateExpiration();
+        } catch (\Exception $e) {
+            return false;
         }
 
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump($response, 'Debug', 16);
-        die;
+        return true;
+    }
+
+    /**
+     * Check how much it left for facebook access token
+     *
+     * @return string
+     * @throws \Exception
+     */
+    public function getFacebookAccessTokenValidPeriod(): string
+    {
+        $expireAt = $this->getFacebookAccessTokenMetadataExpirationDate();
+        if ($expireAt !== null) {
+            $today = new \DateTime();
+            $interval = $today->diff($expireAt);
+
+            return $interval->format('%R%a');
+        }
+
+        return 'Could not get expire date of token';
+    }
+
+    /**
+     * Get date when facebook token expire
+     *
+     * @return \DateTime|null
+     */
+    public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
+    {
+        return $this->getFacebookAccessTokenMetadata()->getExpiresAt();
     }
 
     /**
@@ -186,7 +217,9 @@ class Token extends AbstractEntity
      */
     public function getFacebookLoginUrl(string $redirectUrl, array $permissions)
     {
+        // required by SDK login
         session_start();
+
         $fb = $this->getFb();
 
         $loginHelper = $fb->getRedirectLoginHelper();
@@ -214,6 +247,42 @@ class Token extends AbstractEntity
     }
 
     /**
+     * Get FB
+     *
+     * @return Facebook
+     */
+    public function getFb(): Facebook
+    {
+        if ($this->fb === null) {
+            $this->fb = FacebookGraphSdkFactory::getFbByToken($this);
+        }
+
+        return $this->fb;
+    }
+
+    /**
+     * Get facebook token meta data
+     *
+     * @return AccessTokenMetadata
+     */
+    protected function getFacebookAccessTokenMetadata(): AccessTokenMetadata
+    {
+        $this->initFacebookAccessTokenMetadata();
+        return $this->fbTokenMetaData;
+    }
+
+    /**
+     * Load access token metadata
+     */
+    protected function initFacebookAccessTokenMetadata(): void
+    {
+        if ($this->fbTokenMetaData === null) {
+            $fb = $this->getFb();
+            $this->fbTokenMetaData = $fb->getOAuth2Client()->debugToken($fb->getDefaultAccessToken());
+        }
+    }
+
+    /**
      * Return all available types
      *
      * @return array
@@ -226,19 +295,5 @@ class Token extends AbstractEntity
             static::TWITTER,
             static::YOUTUBE,
         ];
-    }
-
-    /**
-     * Get FB
-     *
-     * @return Facebook
-     */
-    public function getFb(): Facebook
-    {
-        if ($this->fb === null) {
-            $this->fb = FacebookGraphSdkFactory::factory($this);
-        }
-
-        return $this->fb;
     }
 }

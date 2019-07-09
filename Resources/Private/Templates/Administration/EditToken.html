@@ -23,7 +23,7 @@
                         <td><f:translate key="module.type"/></td>
                         <td><f:form.select id="select-type" property="type" options="{availableTypes}" value="{type}" class="form-control"/></td>
                         <f:for each="{availableTypes}" as="tokenTitle" key="tokenType">
-                            <input type="hidden" id="type-url-{tokenType}" value="{f:uri.action(action: 'edit', arguments: {type: tokenType})}">
+                            <input type="hidden" id="type-url-{tokenType}" value="{f:uri.action(action: 'editToken', arguments: {token: token, type: tokenType})}">
                         </f:for>
                     </tr>
                 </f:if>

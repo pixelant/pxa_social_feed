@@ -26,22 +26,20 @@ return [
 
         'delete' => 'deleted',
         'enablecolumns' => [
-            'disabled' => 'hidden',
-            'starttime' => 'starttime',
-            'endtime' => 'endtime',
+            'disabled' => 'hidden'
         ],
         'searchFields' => 'post_url,message,image,title,config,'
     ],
     // @codingStandardsIgnoreStart
     'interface' => [
-        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, media_type, likes, title, configuration, update_date, external_identifier, starttime, endtime, type',
+        'showRecordFieldList' => 'hidden, post_date, post_url, message, image, media_type, likes, title, configuration, update_date, external_identifier, type',
     ],
     'types' => [
-        '0' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
-        '1' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
-        '2' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
-        '3' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
-        '4' => ['showitem' => '--palette--;;core, --palette--;;main, --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access,starttime, endtime'],
+        '0' => ['showitem' => '--palette--;;core, --palette--;;main'],
+        '1' => ['showitem' => '--palette--;;core, --palette--;;main'],
+        '2' => ['showitem' => '--palette--;;core, --palette--;;main'],
+        '3' => ['showitem' => '--palette--;;core, --palette--;;main'],
+        '4' => ['showitem' => '--palette--;;core, --palette--;;main'],
     ],
     'palettes' => [
         'core' => ['showitem' => 'hidden'],
@@ -54,36 +52,6 @@ return [
             'label' => 'LLL:EXT:lang/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
             'config' => [
                 'type' => 'check',
-            ],
-        ],
-        'starttime' => [
-            'exclude' => 1,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:starttime_formlabel',
-            'config' => [
-                'type' => 'input',
-                'size' => 13,
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-                'range' => [
-                    'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                ],
-            ],
-        ],
-        'endtime' => [
-            'exclude' => 1,
-            'l10n_mode' => 'exclude',
-            'label' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:endtime_formlabel',
-            'config' => [
-                'type' => 'input',
-                'size' => 13,
-                'renderType' => 'inputDateTime',
-                'eval' => 'datetime',
-                'default' => 0,
-                'range' => [
-                    'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                ],
             ],
         ],
         'type' => [
@@ -186,9 +154,11 @@ return [
             'config' => [
                 'type' => 'select',
                 'foreign_table' => 'tx_pxasocialfeed_domain_model_configuration',
+                'foreign_table_where' => 'AND tx_pxasocialfeed_domain_model_configuration.deleted=0',
+                'size' => 1,
                 'minitems' => 0,
                 'maxitems' => 1,
-                'renderType' => 'selectSingleBox'
+                'renderType' => 'selectSingleBox',
             ]
         ],
         'pid' => [

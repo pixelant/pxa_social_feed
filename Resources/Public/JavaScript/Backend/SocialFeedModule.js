@@ -42,16 +42,11 @@ define(['jquery',
              */
             var _domElementsSelectors = {
                 deleteButton: '.delete-action',
-                selectSocialType: '#select-social-type',
-                socialTypeUrlKeep: '#social-type-url-',
-                toolTip: '.tooltip-hold',
-                instagramTokenButton: '#get-instagram-toket',
-                instagramTokenTip: '#get-instagram-hidden-tip',
-                instagramGetUserIdButton: '#get-inst-user-id',
+                selectSocialType: '#select-type',
+                socialTypeUrlKeep: '#type-url-',
                 winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
                 feedsStorageInput: '[data-identifier="feeds-storage-input"]',
                 feedsStorageTitle: '[data-identifier="feed-storage-title"]',
-                migrateRecordsWrapper: '.migrate-records-wrapper',
                 copyRedirectUriButton: '#copy-redirect-uri-button'
             };
 
@@ -75,19 +70,8 @@ define(['jquery',
             function _bootstrap() {
                 _deleteConfirmation();
                 _changeSocialType();
-                _toolTip();
-                _getInstagramToketClick();
-                _loadInstagramUserIdButton();
                 _winStorageBrowser();
                 _getRedirectUriButtonClick();
-            }
-
-            /**
-             * Initialize tool tip info
-             * @private
-             */
-            function _toolTip() {
-                $(_getDomElementIdentifier('toolTip')).tooltip();
             }
 
             /**
@@ -114,6 +98,7 @@ define(['jquery',
 
             /**
              * Switch to different social type
+             *
              * @private
              */
             function _changeSocialType() {
@@ -121,51 +106,6 @@ define(['jquery',
                     var selectSocialType = $(this).find(':selected').val();
 
                     window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
-                });
-            }
-
-            /**
-             * Try to fetch instagram user id
-             * @private
-             */
-            function _loadInstagramUserIdButton() {
-                $(_getDomElementIdentifier('instagramGetUserIdButton')).on('click', function (e) {
-                    e.preventDefault();
-
-                    var $this = $(this),
-                        configuration = $this.data('uid'),
-                        ajaxUrl = TYPO3.settings.ajaxUrls['pixelant_pxasocialfeed_loadinstuserid'];
-
-                    $this.prop('disabled', true);
-
-                    $.ajax({
-                        url: ajaxUrl,
-                        type: 'post',
-                        dataType: 'json',
-                        cache: false,
-                        data: {
-                            'configuration': configuration
-                        }
-                    }).done(function (data) {
-                        Notification[data.action](data.title, data.message, 10);
-                        if (data.action === 'success') {
-                            $this.parent().html(data.userUid);
-                        }
-
-                    }).fail(function (jqXHR) {
-                        Notification.error('Fail', 'Failed ajax request', 10);
-                    });
-                });
-            }
-
-            /**
-             * Instagram token get button
-             * @private
-             */
-            function _getInstagramToketClick() {
-                $(_getDomElementIdentifier('instagramTokenButton')).on('click', function () {
-                    $(this).hide();
-                    $(_getDomElementIdentifier('instagramTokenTip')).show();
                 });
             }
 
@@ -268,10 +208,7 @@ define(['jquery',
                     .trigger('paste');
 
                 $(_getDomElementIdentifier('feedsStorageTitle'))
-                    .text(elName)
-                    .closest('.table-fit').removeClass('hidden');
-
-                $(_getDomElementIdentifier('migrateRecordsWrapper')).slideDown();
+                    .text(elName);
             };
 
             /**

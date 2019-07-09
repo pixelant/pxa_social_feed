@@ -37,6 +37,13 @@ use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 class Configuration extends AbstractEntity
 {
     /**
+     * Default PID
+     *
+     * @var int
+     */
+    protected $pid = 0;
+
+    /**
      * name
      *
      * @var string

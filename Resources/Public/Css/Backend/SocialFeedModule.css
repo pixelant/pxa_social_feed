@@ -8,3 +8,7 @@
     white-space: nowrap;
     text-overflow:ellipsis;
 }
+
+.bg-notification {
+    padding: 15px;
+}

@@ -44,7 +44,7 @@ call_user_func(
             '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pxa_social_feed/Configuration/TSconfig/ContentElementWizard.ts">'
         );
 
-        # register icons
+        // Register icons
         if (TYPO3_MODE === 'BE') {
             $icons = [
                 'ext-pxasocialfeed-wizard-icon' => 'feed.svg',
@@ -67,6 +67,11 @@ call_user_func(
                 );
             }
         }
+
+        // Register eID to obtain access token
+        $eID = \Pixelant\PxaSocialFeed\Controller\EidController::IDENTIFIER;
+        $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID] =
+            \Pixelant\PxaSocialFeed\Controller\EidController::class . '::addFbAccessTokenAction';
     },
     'pxa_social_feed'
 );

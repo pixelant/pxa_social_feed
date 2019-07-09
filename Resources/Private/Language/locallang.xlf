@@ -84,8 +84,17 @@
             <trans-unit id="module.generate_access_token">
                 <source>Generate access token</source>
             </trans-unit>
-            <trans-unit id="module.access_token_updated">
-                <source>Access token updated</source>
+            <trans-unit id="module.refresh">
+                <source>Refresh</source>
+            </trans-unit>
+            <trans-unit id="module.token_valid">
+                <source>Token is valid</source>
+            </trans-unit>
+            <trans-unit id="module.valid_days">
+                <source>Valid for %s days</source>
+            </trans-unit>
+            <trans-unit id="module.copy_url">
+                <source>Copy fallback URL for facebook settings.</source>
             </trans-unit>
 
             <trans-unit id="module.type.1">

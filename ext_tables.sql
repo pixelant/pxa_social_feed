@@ -24,8 +24,6 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feed
     cruser_id           int(11) unsigned    DEFAULT '0' NOT NULL,
     deleted             tinyint(4) unsigned DEFAULT '0' NOT NULL,
     hidden              tinyint(4) unsigned DEFAULT '0' NOT NULL,
-    starttime           int(11) unsigned    DEFAULT '0' NOT NULL,
-    endtime             int(11) unsigned    DEFAULT '0' NOT NULL,
 
     PRIMARY KEY (uid),
     KEY parent (pid)

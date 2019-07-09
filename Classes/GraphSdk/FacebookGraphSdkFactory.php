@@ -28,18 +28,44 @@ class FacebookGraphSdkFactory
      * @param string|null $version
      * @return Facebook
      */
-    public static function factory(Token $token, string $version = null): Facebook
+    public static function getFbByToken(Token $token, string $version = null): Facebook
     {
-        $fb = GeneralUtility::makeInstance(
-            Facebook::class,
-            [
-                'app_id' => $token->getAppId(),
-                'app_secret' => $token->getAppSecret(),
-                'default_access_token' => $token->getAccessToken(),
-                'default_graph_version' => $version ?? static::$version,
-            ]
+        $fb = static::getFbByAppIdAndSecret(
+            $token->getAppId(),
+            $token->getAppSecret(),
+            $token->getAccessToken(),
+            $version
         );
 
         return $fb;
+    }
+
+    /**
+     * Get fb instance
+     * @param string $appId
+     * @param string $appSecret
+     * @param string|null $accessToken
+     * @param string|null $version
+     * @return Facebook
+     */
+    public static function getFbByAppIdAndSecret(
+        string $appId,
+        string $appSecret,
+        string $accessToken = null,
+        string $version = null
+    ): Facebook {
+        $arguments = [
+            'app_id' => $appId,
+            'app_secret' => $appSecret,
+            'default_graph_version' => $version ?? static::$version,
+        ];
+        if (!empty($accessToken)) {
+            $arguments['default_access_token'] = $accessToken;
+        }
+
+        return GeneralUtility::makeInstance(
+            Facebook::class,
+            $arguments
+        );
     }
 }

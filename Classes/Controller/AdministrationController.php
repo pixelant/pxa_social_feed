@@ -9,6 +9,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
 use Pixelant\PxaSocialFeed\Utility\RequestUtility;
@@ -56,13 +57,18 @@ class AdministrationController extends ActionController
     /**
      * @var ConfigurationRepository
      */
-    protected $configurationRepository;
+    protected $configurationRepository = null;
 
     /**
      * @var TokenRepository
      */
-    protected $tokenRepository;
+    protected $tokenRepository = null;
 
+    /**
+     * @var FeedRepository
+     */
+    protected $feedRepository = null;
+    
     /**
      * BackendTemplateContainer
      *
@@ -94,6 +100,14 @@ class AdministrationController extends ActionController
     }
 
     /**
+     * @param FeedRepository $feedRepository
+     */
+    public function injectFeedRepository(FeedRepository $feedRepository)
+    {
+        $this->feedRepository = $feedRepository;
+    }
+
+    /**
      * Set up the doc header properly here
      *
      * @param ViewInterface $view
@@ -110,6 +124,18 @@ class AdministrationController extends ActionController
         $pageRenderer = $this->view->getModuleTemplate()
             ? $this->view->getModuleTemplate()->getPageRenderer()
             : GeneralUtility::makeInstance(PageRenderer::class);
+
+        $pageRenderer->addRequireJsConfiguration(
+            [
+                'paths' => [
+                    'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
+                ],
+                'shim' => [
+                    'deps' => ['jquery'],
+                    'clipboard' => ['exports' => 'ClipboardJS'],
+                ],
+            ]
+        );
 
         $pageRenderer->loadRequireJsModule(
             'TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule',
@@ -131,7 +157,7 @@ class AdministrationController extends ActionController
             'tokens' => $tokens,
             'configurations' => $this->configurationRepository->findAll(),
             'activeTokenTab' => $activeTokenTab,
-            // 'isTokensValid' => $this->isTokensValid($tokens)
+            'isTokensValid' => $this->isTokensValid($tokens)
         ]);
     }
 
@@ -139,7 +165,7 @@ class AdministrationController extends ActionController
      * Edit token form
      *
      * @param Token $token
-     * @param int|null $type
+     * @param int $type
      */
     public function editTokenAction(Token $token = null, int $type = Token::FACEBOOK): void
     {
@@ -222,9 +248,7 @@ class AdministrationController extends ActionController
 
         // If storage was updated and it's not new configuration, need to migrate existing feed records
         if (false == $isNew && $configuration->_isDirty('storage')) {
-            $this->migrateFeedsToNewStorage(
-                $configuration
-            );
+            $this->migrateFeedsToNewStorage($configuration, $configuration->getStorage());
         }
 
         $this->configurationRepository->{$isNew ? 'add' : 'update'}($configuration);
@@ -233,20 +257,19 @@ class AdministrationController extends ActionController
     }
 
     /**
+     * Delete configuration and feed items
+     *
      * @param Configuration $configuration
      * @return void
-     * @throws \TYPO3\CMS\Extbase\Persistence\Exception\IllegalObjectTypeException
-     * @throws \TYPO3\CMS\Extbase\Mvc\Exception\UnsupportedRequestTypeException
      */
     public function deleteConfigurationAction(Configuration $configuration)
     {
-        // remove all feeds
-        // @TODO make extbase to do the job
-        /*$feeds = $this->feedRepository->findByConfiguration($configuration->getUid());
+        // Remove all feeds
+        $feeds = $this->feedRepository->findByConfiguration($configuration);
 
         foreach ($feeds as $feed) {
             $this->feedRepository->remove($feed);
-        }*/
+        }
 
         $this->configurationRepository->remove($configuration);
 
@@ -265,74 +288,6 @@ class AdministrationController extends ActionController
         $key = 'module.' . $key;
 
         return LocalizationUtility::translate($key, 'PxaSocialFeed', $arguments);
-    }
-
-    /**
-     * Get facebook access token
-     *
-     * @param Token $token
-     */
-    protected function addFacebookAccessTokenAction(Token $token)
-    {
-        //TODO: find a better way
-        session_start();
-
-
-        $fb = $token->getFb();
-
-        $helper = $fb->getRedirectLoginHelper();
-
-        try {
-            $accessToken = $helper->getAccessToken();
-        } catch (FacebookResponseException $e) {
-            // When Graph returns an error
-            $error = 'Graph returned an error: ' . $e->getMessage();
-        } catch (FacebookSDKException $e) {
-            // When validation fails or other local issues
-            $error =  'Facebook SDK returned an error: ' . $e->getMessage();
-        }
-        if (isset($error)) {
-            $this->redirectToIndex(true, $error, FlashMessage::ERROR);
-        }
-
-        if (!isset($accessToken)) {
-            if ($helper->getError()) {
-                $error = 'Authorization failed: ' . $helper->getError();
-            } else {
-                $error = 'Bad request';
-            }
-            $this->redirectToIndex(true, $error, FlashMessage::ERROR);
-        }
-
-        // The OAuth 2.0 client handler helps us manage access tokens
-        $oAuth2Client = $fb->getOAuth2Client();
-
-        // Get the access token metadata from /debug_token
-        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-
-        // Validation (these will throw FacebookSDKException's when they fail)
-        $tokenMetadata->validateAppId($token->getAppId());
-
-        // If you know the user ID this access token belongs to, you can validate it here
-        $tokenMetadata->validateExpiration();
-
-        if (!$accessToken->isLongLived()) {
-            // Exchanges a short-lived access token for a long-lived one
-            try {
-                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-            } catch (FacebookSDKException $e) {
-                $this->redirectToIndex(
-                    true,
-                    'Error getting long-lived access token: ' . $e->getMessage(),
-                    FlashMessage::ERROR
-                );
-            }
-        }
-
-        $token->setAccessToken($accessToken->getValue());
-        $this->tokenRepository->update($token);
-
-        $this->redirectToIndex(true, $this->translate('access_token_updated'));
     }
 
     /**
@@ -371,10 +326,12 @@ class AdministrationController extends ActionController
     }
 
     /**
+     * Migrate feed items of configuration if storoge was changed
+     *
      * @param Configuration $configuration
      * @param int $newStorage
      */
-    protected function migrateFeedsToNewStorage(Configuration $configuration, $newStorage)
+    protected function migrateFeedsToNewStorage(Configuration $configuration, int $newStorage): void
     {
         $feedItems = $this->feedRepository->findByConfiguration($configuration);
 
@@ -386,26 +343,24 @@ class AdministrationController extends ActionController
     }
 
     /**
-     * Check if instagram tokens has access token
+     * Check if instagram and facebook tokens has access token
      * @TODO more check is needed for other tokens ?
      *
      * @param $tokens
      * @return bool
      */
-    protected function isTokensValid($tokens)
+    protected function isTokensValid($tokens): bool
     {
-        $isValid = true;
-
         /** @var Token $token */
         foreach ($tokens as $token) {
-            if ($token->getSocialType() === Token::INSTAGRAM_OAUTH2
-                && empty($token->getCredential('accessToken'))) {
-                $isValid = false;
-                break;
+            if ($token->getType() === Token::INSTAGRAM || $token->getType() === Token::FACEBOOK) {
+                if (!$token->isValidFacebookAccessToken()) {
+                    return false;
+                }
             }
         }
 
-        return $isValid;
+        return true;
     }
 
     /**

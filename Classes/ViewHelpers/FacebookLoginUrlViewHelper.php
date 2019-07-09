@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
@@ -27,9 +28,11 @@ namespace Pixelant\PxaSocialFeed\ViewHelpers;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Controller\EidController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
@@ -52,6 +55,14 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
+     * Default request permissions
+     *
+     * 'manage_pages', 'instagram_basic', 'instagram_manage_insights'
+     * @var string
+     */
+    protected $defaultPermissions = 'public_profile, user_posts';
+
+    /**
      * Initialize
      *
      * @return void
@@ -59,9 +70,9 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
     public function initializeArguments()
     {
         $this->registerArgument('token', Token::class, 'Token', true);
-        $this->registerArgument('redirectUrl', 'string', 'Redirect uri', true);
-        $this->registerArgument('permissions', 'string', 'List of request permissions', false, 'public_profile, user_posts');
-        $this->registerArgument('as', 'string', 'Render as', false, '');
+        $this->registerArgument('loginUrlAs', 'string', 'Render as', true);
+        $this->registerArgument('redirectUrlAs', 'string', 'Redirect uri', true);
+        $this->registerArgument('permissions', 'string', 'List of permissions', false, $this->defaultPermissions);
     }
 
     /**
@@ -70,32 +81,67 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return mixed
      */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ) {
         /** @var Token $token */
         $token = $arguments['token'];
-        $as = $arguments['as'];
-        $redirectUrl = $arguments['redirectUrl'];
+        $loginUrlAs = $arguments['loginUrlAs'];
+        $redirectUrlAs = $arguments['redirectUrlAs'];
         $permissions = GeneralUtility::trimExplode(',', $arguments['permissions']);
 
-
-///*'manage_pages', 'instagram_basic', 'instagram_manage_insights', */'public_profile', 'user_posts'
-
-        $url = $token->getFacebookLoginUrl($redirectUrl, $permissions);
-
-        if (!empty($as)) {
-            $variableProvider = $renderingContext->getVariableProvider();
-            if ($variableProvider->exists($as)) {
-                $variableProvider->remove($as);
-            }
-
-            $variableProvider->add($as, $url);
-            $content = $renderChildrenClosure();
-            $variableProvider->remove($as);
-
-            return $content;
+        $redirectUrl = static::buildRedirectUrl($token->getUid());
+        try {
+            $url = $token->getFacebookLoginUrl($redirectUrl, $permissions);
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
         }
 
-        return $url;
+        $variableProvider = $renderingContext->getVariableProvider();
+
+        static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
+
+        $variableProvider->add($redirectUrlAs, $redirectUrl);
+        $variableProvider->add($loginUrlAs, $url);
+        $content = $renderChildrenClosure();
+
+        static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
+
+        return $content;
+    }
+
+    /**
+     * Clean template variables
+     *
+     * @param VariableProviderInterface $variableProvider
+     * @param string ...$vars
+     */
+    protected static function removeVariables(VariableProviderInterface $variableProvider, string ...$vars): void
+    {
+        foreach ($vars as $var) {
+            if ($variableProvider->exists($var)) {
+                $variableProvider->remove($var);
+            }
+        }
+    }
+
+    /**
+     * Redirect url
+     *
+     * @param int $tokenUid
+     * @return string
+     */
+    protected static function buildRedirectUrl(int $tokenUid): string
+    {
+        return sprintf(
+            '%s://%s%s?eID=%s&token=%d',
+            GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https' : 'http', // Http is not supported by facebook anyway
+            GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
+            GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',
+            EidController::IDENTIFIER,
+            $tokenUid
+        );
     }
 }
