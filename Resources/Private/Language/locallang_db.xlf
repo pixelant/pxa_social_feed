@@ -88,6 +88,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
+                <source>Social id</source>
+            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.max_items">
                 <source>Maximum import items</source>
             </trans-unit>

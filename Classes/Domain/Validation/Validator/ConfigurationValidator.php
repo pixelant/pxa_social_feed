@@ -48,6 +48,8 @@ class ConfigurationValidator extends AbstractValidator
 
         if (empty($configuration->getName())) {
             $errorCode = 1456234619;
+        } elseif (empty($configuration->getSocialId())) {
+            $errorCode = 1562739885935;
         } elseif ($configuration->getMaxItems() <= 0) {
             $errorCode = 1456234832;
         } elseif ((int)$configuration->getStorage() <= 0) {

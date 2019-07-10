@@ -206,7 +206,7 @@ class AdministrationController extends ActionController
      * @param Token $token
      * @return void
      */
-    public function deleteTokenAction(Token $token)
+    public function deleteTokenAction(Token $token): void
     {
         $tokenConfigurations = $this->configurationRepository->findConfigurationByToken($token);
         if ($tokenConfigurations->count() === 0) {
@@ -228,7 +228,7 @@ class AdministrationController extends ActionController
      * @param Configuration $configuration
      * @return void
      */
-    public function editConfigurationAction(Configuration $configuration = null)
+    public function editConfigurationAction(Configuration $configuration = null): void
     {
         $tokens = $this->tokenRepository->findAll();
 
@@ -242,7 +242,7 @@ class AdministrationController extends ActionController
      * @validate $configuration \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator
      * @return void
      */
-    public function updateConfigurationAction(Configuration $configuration)
+    public function updateConfigurationAction(Configuration $configuration): void
     {
         $isNew = $configuration->getUid() === null;
 
@@ -262,7 +262,7 @@ class AdministrationController extends ActionController
      * @param Configuration $configuration
      * @return void
      */
-    public function deleteConfigurationAction(Configuration $configuration)
+    public function deleteConfigurationAction(Configuration $configuration): void
     {
         // Remove all feeds
         $feeds = $this->feedRepository->findByConfiguration($configuration);
@@ -295,7 +295,7 @@ class AdministrationController extends ActionController
      *
      * @return void
      */
-    protected function createMenu()
+    protected function createMenu(): void
     {
         // if view was found
         if ($this->view->getModuleTemplate() !== null) {
@@ -366,7 +366,7 @@ class AdministrationController extends ActionController
     /**
      * Generate settings for JS
      */
-    protected function getInlineSettings()
+    protected function getInlineSettings(): string
     {
         $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
 

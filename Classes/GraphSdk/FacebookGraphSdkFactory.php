@@ -5,7 +5,6 @@ namespace Pixelant\PxaSocialFeed\GraphSdk;
 
 use Facebook\Facebook;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**

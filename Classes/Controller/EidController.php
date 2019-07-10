@@ -131,9 +131,12 @@ class EidController
                 [\PDO::PARAM_STR]
             );
 
-        $content[] = '<p>Token was updated. Please, refresh view in backend.</p>';
+        $content[] = '<p>Token was updated. <b>You can close this window</b>.</p>';
 
-        $response->getBody()->write(implode('', $content));
+        $content = '<div style="padding: 10px;background: #79A547;">' . implode('', $content) . '</div>';
+        $content .= '<script>window.opener.location.reload();close();</script>';
+
+        $response->getBody()->write($content);
     }
 
     /**

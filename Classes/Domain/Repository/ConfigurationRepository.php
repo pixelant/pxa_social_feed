@@ -49,9 +49,9 @@ class ConfigurationRepository extends AbstractRepository
      * Find by uids list
      *
      * @param array $configurations
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     * @return QueryResultInterface
      */
-    public function findByUids($configurations = [])
+    public function findByUids(array $configurations): QueryResultInterface
     {
         $query = $this->createQuery();
 

@@ -4,238 +4,271 @@
 var setFormValueFromBrowseWin;
 
 define(['jquery',
-    'TYPO3/CMS/Backend/Modal',
-    'TYPO3/CMS/Backend/Severity',
-    'TYPO3/CMS/Backend/Notification',
-    'clipboard'
+	'TYPO3/CMS/Backend/Modal',
+	'TYPO3/CMS/Backend/Severity',
+	'TYPO3/CMS/Backend/Notification',
+	'clipboard'
 ], function ($, Modal, Severity, Notification, clipboard) {
 
-    return (function ($, Modal, Severity, Notification, clipboard) {
+	return (function ($, Modal, Severity, Notification, clipboard) {
 
-        /**
-         * @private
-         *
-         * Hold the instance (Singleton Pattern)
-         */
-        var _socialFeedModuleInstance = null;
+		/**
+		 * @private
+		 *
+		 * Hold the instance (Singleton Pattern)
+		 */
+		var _socialFeedModuleInstance = null;
 
-        /**
-         * Main mdoule JS
-         *
-         * @return {{init: init}}
-         * @constructor
-         */
-        function SocialFeedModule(settings) {
+		/**
+		 * Main mdoule JS
+		 *
+		 * @return {{init: init}}
+		 * @constructor
+		 */
+		function SocialFeedModule(settings) {
 
-            /**
-             * If was initialized
-             *
-             * @type {boolean}
-             * @private
-             */
-            var _isRunning = false;
+			/**
+			 * If was initialized
+			 *
+			 * @type {boolean}
+			 * @private
+			 */
+			var _isRunning = false;
 
-            /**
-             * HTML Identifiers
-             * @type {{}}
-             * @private
-             */
-            var _domElementsSelectors = {
-                deleteButton: '.delete-action',
-                selectSocialType: '#select-type',
-                socialTypeUrlKeep: '#type-url-',
-                winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
-                feedsStorageInput: '[data-identifier="feeds-storage-input"]',
-                feedsStorageTitle: '[data-identifier="feed-storage-title"]',
-                copyRedirectUriButton: '#copy-redirect-uri-button'
-            };
+			/**
+			 * HTML Identifiers
+			 * @type {{}}
+			 * @private
+			 */
+			var _domElementsSelectors = {
+				deleteButton: '.delete-action',
+				selectSocialType: '#select-type',
+				socialTypeUrlKeep: '#type-url-',
+				winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
+				feedsStorageInput: '[data-identifier="feeds-storage-input"]',
+				feedsStorageTitle: '[data-identifier="feed-storage-title"]',
+				copyRedirectUriButton: '.copy-redirect-uri-button',
+				facebookLoginButton: '#facebook-login-link'
+			};
 
-            /**
-             * run if not running yet
-             *
-             * @public
-             */
-            function run() {
-                if (_isRunning === false) {
-                    _bootstrap();
-                }
+			/**
+			 * run if not running yet
+			 *
+			 * @public
+			 */
+			function run() {
+				if (_isRunning === false) {
+					_bootstrap();
+				}
 
-                _isRunning = true;
-            }
+				_isRunning = true;
+			}
 
-            /**
-             * Init
-             * @private
-             */
-            function _bootstrap() {
-                _deleteConfirmation();
-                _changeSocialType();
-                _winStorageBrowser();
-                _getRedirectUriButtonClick();
-            }
+			/**
+			 * Init
+			 * @private
+			 */
+			function _bootstrap() {
+				_deleteConfirmation();
+				_facebookLoginWindow();
+				_changeSocialType();
+				_winStorageBrowser();
+				_getRedirectUriButtonClick();
+				_initToolTip();
+			}
 
-            /**
-             * If user try to delete something
-             *
-             * @private
-             */
-            function _deleteConfirmation() {
-                $(_getDomElementIdentifier('deleteButton')).on('click', function (e) {
-                    e.preventDefault();
-                    var url = $(this).attr('href'),
-                        modal = Modal.confirm('Delete', 'Are you sure you want to delete this record ?', Severity.warning);
+			/**
+			 * If user try to delete something
+			 *
+			 * @private
+			 */
+			function _deleteConfirmation() {
+				$(_getDomElementIdentifier('deleteButton')).on('click', function (e) {
+					e.preventDefault();
+					var url = $(this).attr('href'),
+						modal = Modal.confirm('Delete', 'Are you sure you want to delete this record ?', Severity.warning);
 
-                    modal.on('confirm.button.cancel', function () {
-                        Modal.dismiss(modal);
-                    });
+					modal.on('confirm.button.cancel', function () {
+						Modal.dismiss(modal);
+					});
 
-                    modal.on('confirm.button.ok', function () {
-                        Modal.dismiss(modal);
-                        window.location.href = url;
-                    });
-                })
-            }
+					modal.on('confirm.button.ok', function () {
+						Modal.dismiss(modal);
+						window.location.href = url;
+					});
+				})
+			}
 
-            /**
-             * Switch to different social type
-             *
-             * @private
-             */
-            function _changeSocialType() {
-                $(_getDomElementIdentifier('selectSocialType')).on('change', function () {
-                    var selectSocialType = $(this).find(':selected').val();
+			/**
+			 * Show window with facebook login
+			 *
+			 * @private
+			 */
+			function _facebookLoginWindow() {
+				$(_getDomElementIdentifier('facebookLoginButton')).on('click', function (e) {
+					e.preventDefault();
 
-                    window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
-                });
-            }
+					var $this = $(this);
+					var w = 800;
+					var h = 800;
 
-            /**
-             * Copy redirect uri to clipboard
-             * @private
-             */
-            function _getRedirectUriButtonClick() {
-                new clipboard(_getDomElementIdentifier('copyRedirectUriButton'));
-            }
+					var y = window.top.outerHeight / 2 + window.top.screenY - (h / 2);
+					var x = window.top.outerWidth / 2 + window.top.screenX - (w / 2);
 
-            /**
-             * Load browser pages window
-             *
-             * @private
-             */
-            function _winStorageBrowser() {
-                $(_getDomElementIdentifier('winStorageBrowser')).on('click', function () {
-                    var insertTarget = $(_getDomElementIdentifier('feedsStorageInput')),
-                        randomIdentifier = Math.floor((Math.random() * 100000) + 1);
+					window.open($this.attr('href'), 'Facebook login', 'height=' + h + ',width=' + w + 'top=' + y + ', left=' + x);
+				});
+			}
 
-                    var width = $(this).data('popup-width') ? $(this).data('popup-width') : 700,
-                        height = $(this).data('popup-height') ? $(this).data('popup-height') : 750;
+			/**
+			 * Switch to different social type
+			 *
+			 * @private
+			 */
+			function _changeSocialType() {
+				$(_getDomElementIdentifier('selectSocialType')).on('change', function () {
+					var selectSocialType = $(this).find(':selected').val();
 
-                    insertTarget.attr('data-insert-target', randomIdentifier);
-                    _openTypo3WinBrowser('db', randomIdentifier + '|||pages', width, height);
-                });
-            }
+					window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
+				});
+			}
 
-            /**
-             * @private
-             *
-             * opens a popup window with the element browser
-             *
-             * @param mode
-             * @param params
-             * @param width
-             * @param height
-             */
-            function _openTypo3WinBrowser(mode, params, width, height) {
-                var openedPopupWindow, url;
+			/**
+			 * Copy redirect uri to clipboard
+			 * @private
+			 */
+			function _getRedirectUriButtonClick() {
+				new clipboard(_getDomElementIdentifier('copyRedirectUriButton'));
+			}
 
-                url = _getSetting('browserUrl')
-                    + '&mode=' + mode + '&bparams=' + params;
+			/**
+			 * Load browser pages window
+			 *
+			 * @private
+			 */
+			function _winStorageBrowser() {
+				$(_getDomElementIdentifier('winStorageBrowser')).on('click', function () {
+					var insertTarget = $(_getDomElementIdentifier('feedsStorageInput')),
+						randomIdentifier = Math.floor((Math.random() * 100000) + 1);
 
-                openedPopupWindow = window.open(
-                    url,
-                    'Typo3WinBrowser',
-                    'height=' + height + ',width=' + width + ',status=0,menubar=0,resizable=1,scrollbars=1'
-                );
-                openedPopupWindow.focus();
-            }
+					var width = $(this).data('popup-width') ? $(this).data('popup-width') : 700,
+						height = $(this).data('popup-height') ? $(this).data('popup-height') : 750;
 
-            /**
-             * Get selector
-             * @param elementIdentifier
-             * @return {*|undefined}
-             * @private
-             */
-            function _getDomElementIdentifier(elementIdentifier) {
-                return _domElementsSelectors[elementIdentifier] || undefined;
-            }
+					insertTarget.attr('data-insert-target', randomIdentifier);
+					_openTypo3WinBrowser('db', randomIdentifier + '|||pages', width, height);
+				});
+			}
 
-            /**
-             * Get insert target
-             * @param reference
-             * @return {*|jQuery|HTMLElement}
-             * @private
-             */
-            function _getInsertTarget(reference) {
-                return $('[data-insert-target="'+reference+'"]');
-            }
+			/**
+			 * @private
+			 *
+			 * opens a popup window with the element browser
+			 *
+			 * @param mode
+			 * @param params
+			 * @param width
+			 * @param height
+			 */
+			function _openTypo3WinBrowser(mode, params, width, height) {
+				var openedPopupWindow, url;
 
-            /**
-             * Get settings
-             * @param key
-             * @return {*|undefined}
-             * @private
-             */
-            function _getSetting(key) {
-                return settings[key] || undefined;
-            }
+				url = _getSetting('browserUrl')
+					+ '&mode=' + mode + '&bparams=' + params;
 
-            /**
-             * @public
-             *
-             * callback from TYPO3/CMS/Recordlist/ElementBrowser
-             *
-             * @param fieldReference
-             * @param elValue
-             * @param elName
-             * @return void
-             */
-            setFormValueFromBrowseWin = function(fieldReference, elValue, elName) {
-                var result;
-                result = elValue.split('_');
+				openedPopupWindow = window.open(
+					url,
+					'Typo3WinBrowser',
+					'height=' + height + ',width=' + width + ',status=0,menubar=0,resizable=1,scrollbars=1'
+				);
+				openedPopupWindow.focus();
+			}
 
-                _getInsertTarget(fieldReference)
-                    .val(result.pop())
-                    .trigger('paste');
+			/**
+			 * Get selector
+			 * @param elementIdentifier
+			 * @return {*|undefined}
+			 * @private
+			 */
+			function _getDomElementIdentifier(elementIdentifier) {
+				return _domElementsSelectors[elementIdentifier] || undefined;
+			}
 
-                $(_getDomElementIdentifier('feedsStorageTitle'))
-                    .text(elName);
-            };
+			/**
+			 * Get insert target
+			 * @param reference
+			 * @return {*|jQuery|HTMLElement}
+			 * @private
+			 */
+			function _getInsertTarget(reference) {
+				return $('[data-insert-target="' + reference + '"]');
+			}
 
-            /**
-             * return public methods
-             */
-            return {
-                run: run
-            }
-        }
+			/**
+			 * Get settings
+			 * @param key
+			 * @return {*|undefined}
+			 * @private
+			 */
+			function _getSetting(key) {
+				return settings[key] || undefined;
+			}
 
-        return {
-            /**
-             * @public
-             * @static
-             *
-             * Implement the "Singleton Pattern".
-             *
-             * @return object
-             */
-            getInstance: function (settings) {
-                if (_socialFeedModuleInstance === null) {
-                    _socialFeedModuleInstance = new SocialFeedModule(settings);
-                }
+			/**
+			 * Tool tip
+			 * @private
+			 */
+			function _initToolTip() {
+				$(function () {
+					$('[data-toggle="tooltip"]').tooltip()
+				});
+			}
 
-                return _socialFeedModuleInstance;
-            }
-        }
+			/**
+			 * @public
+			 *
+			 * callback from TYPO3/CMS/Recordlist/ElementBrowser
+			 *
+			 * @param fieldReference
+			 * @param elValue
+			 * @param elName
+			 * @return void
+			 */
+			setFormValueFromBrowseWin = function (fieldReference, elValue, elName) {
+				var result;
+				result = elValue.split('_');
 
-    })($, Modal, Severity, Notification, clipboard);
+				_getInsertTarget(fieldReference)
+					.val(result.pop())
+					.trigger('paste');
+
+				$(_getDomElementIdentifier('feedsStorageTitle'))
+					.text(elName);
+			};
+
+			/**
+			 * return public methods
+			 */
+			return {
+				run: run
+			}
+		}
+
+		return {
+			/**
+			 * @public
+			 * @static
+			 *
+			 * Implement the "Singleton Pattern".
+			 *
+			 * @return object
+			 */
+			getInstance: function (settings) {
+				if (_socialFeedModuleInstance === null) {
+					_socialFeedModuleInstance = new SocialFeedModule(settings);
+				}
+
+				return _socialFeedModuleInstance;
+			}
+		}
+
+	})($, Modal, Severity, Notification, clipboard);
 });

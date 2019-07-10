@@ -96,6 +96,12 @@
             <trans-unit id="module.copy_url">
                 <source>Copy fallback URL for facebook settings.</source>
             </trans-unit>
+            <trans-unit id="module.social_id">
+                <source>Social ID (feed source)</source>
+            </trans-unit>
+            <trans-unit id="module.social_id_tooltip">
+                <source>Either Facebook (might be 'me' or page ID) / Twitter / Instagram (Facebook page ID) / YouTube ID</source>
+            </trans-unit>
 
             <trans-unit id="module.type.1">
                 <source>Facebook</source>
@@ -118,6 +124,9 @@
             </trans-unit>
             <trans-unit id="validator.error.1491570246">
                 <source>Storage value is invalid</source>
+            </trans-unit>
+            <trans-unit id="validator.error.1562739885935">
+                <source>Social ID is required</source>
             </trans-unit>
             <trans-unit id="validator.error.all_field_require">
                 <source>All fields are required</source>

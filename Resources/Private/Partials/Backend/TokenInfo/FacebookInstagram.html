@@ -1,0 +1,53 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers" data-namespace-typo3-fluid="true">
+<b><f:translate key="module.app_id"/></b>: {token.appId}<br />
+<b><f:translate key="module.app_secret"/></b>: {token.appSecret}<br />
+
+<f:if condition="{token.validFacebookAccessToken}">
+    <f:then>
+        <p class="bg-success bg-notification">
+            <f:translate key="module.token_valid" />
+            <br>
+            <f:translate key="module.valid_days" arguments="{0: token.facebookAccessTokenValidPeriod}" />
+        </p>
+    </f:then>
+    <f:else>
+        <pxa:facebookLoginUrl token="{token}"
+                              loginUrlAs="loginUrl"
+                              redirectUrlAs="redirectUrl"
+                              permissions="{permissions}">
+            <p class="bg-warning bg-notification">
+                <b>Access token generation is required</b>
+                <br>
+                <br>
+
+                Note: URL <b>"<span id="redirect-uri-holder-{token.uid}">{redirectUrl}</span>"</b> must be in the <b>Valid OAuth redirect URIs</b> list by going to the App Dashboard,
+                choosing your app and going to <b>Products > Facebook Login > Settings</b> under the <b>Client OAuth Settings</b> and entering it there.
+
+                <br>
+                <br>
+                <f:if condition="{token.type} == 2">
+                    <f:comment>Additional info about instagram</f:comment>
+                    <b>Please make sure that you have connected facebook page to your instagram account.</b>
+                    <br>
+                    <a href="https://developers.facebook.com/docs/instagram-api/overview#pages" target="_blank">
+                        <u>Follow the link for more details</u>
+                    </a>.
+                    <br>
+                    <br>
+                </f:if>
+                <button class="btn btn-default copy-redirect-uri-button" data-clipboard-target="#redirect-uri-holder-{token.uid}">
+                    <f:translate key="module.copy_url" />
+                </button>
+            </p>
+
+            <a id="facebook-login-link" href="{loginUrl}" target="_blank" class="btn btn-info">
+                <f:translate key="module.generate_access_token" />
+            </a>
+
+            <f:link.action action="index" arguments="{activeTokenTab: '1'}" class="btn btn-default">
+                <f:translate key="module.refresh" />
+            </f:link.action>
+        </pxa:facebookLoginUrl>
+    </f:else>
+</f:if>
+</html>

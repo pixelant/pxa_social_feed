@@ -18,7 +18,7 @@ return (function () {
             'enablecolumns' => [
                 'disabled' => 'hidden'
             ],
-            'searchFields' => 'name, token, max_items, storage',
+            'searchFields' => 'name, token, max_items, storage, social_id',
 
             'typeicon_classes' => [
                 'default' => 'ext-pxasocialfeed-model-icon'
@@ -27,10 +27,10 @@ return (function () {
             'rootLevel' => 1
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, token, max_items, storage',
+            'showRecordFieldList' => 'hidden, name, social_id, token, max_items, storage',
         ],
         'types' => [
-            '1' => ['showitem' => 'hidden, --palette--;;1, name, max_items, storage'],
+            '1' => ['showitem' => 'hidden, --palette--;;1, name, social_id, max_items, storage'],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -49,7 +49,16 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
+                    'eval' => 'trim,required'
+                ],
+            ],
+            'social_id' => [
+                'exclude' => 1,
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_config.social_id',
+                'config' => [
+                    'type' => 'input',
+                    'size' => 30,
+                    'eval' => 'trim,required'
                 ],
             ],
             'max_items' => [

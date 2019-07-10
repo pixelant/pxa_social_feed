@@ -7,14 +7,14 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feed
     uid                 int(11)                         NOT NULL auto_increment,
     pid                 int(11)             DEFAULT '0' NOT NULL,
 
-    post_date           int(11)             DEFAULT '0' NOT NULL,
+    post_date           int(11)             DEFAULT NULL,
     post_url            varchar(255)        DEFAULT ''  NOT NULL,
     message             text                            NOT NULL,
     image               text                            NOT NULL,
     title               varchar(255)        DEFAULT ''  NOT NULL,
     likes               int(11) unsigned    DEFAULT '0',
     external_identifier varchar(255)        DEFAULT ''  NOT NULL,
-    update_date         int(11) unsigned    DEFAULT '0' NOT NULL,
+    update_date         int(11)             DEFAULT NULL,
     configuration       int(11) unsigned    DEFAULT '0',
     media_type          int(11) unsigned    DEFAULT '1',
 
@@ -66,6 +66,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_configuration
     pid       int(11)             DEFAULT '0' NOT NULL,
 
     name      varchar(255)        DEFAULT ''  NOT NULL,
+    social_id varchar(255)        DEFAULT ''  NOT NULL,
     token     int(11) unsigned    DEFAULT '0',
     max_items int(11) unsigned    DEFAULT '0',
     storage   int(11)             DEFAULT '0' NOT NULL,

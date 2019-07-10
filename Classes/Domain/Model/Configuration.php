@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace Pixelant\PxaSocialFeed\Domain\Model;
 
 /***************************************************************
@@ -51,6 +52,11 @@ class Configuration extends AbstractEntity
     protected $name = '';
 
     /**
+     * @var string
+     */
+    protected $socialId = '';
+
+    /**
      * @var int
      */
     protected $maxItems = 0;
@@ -72,6 +78,22 @@ class Configuration extends AbstractEntity
     public function getName(): string
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSocialId(): string
+    {
+        return $this->socialId;
+    }
+
+    /**
+     * @param string $socialId
+     */
+    public function setSocialId(string $socialId): void
+    {
+        $this->socialId = $socialId;
     }
 
     /**

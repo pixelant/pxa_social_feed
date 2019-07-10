@@ -57,7 +57,6 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
     /**
      * Default request permissions
      *
-     * 'manage_pages', 'instagram_basic', 'instagram_manage_insights'
      * @var string
      */
     protected $defaultPermissions = 'public_profile, user_posts';

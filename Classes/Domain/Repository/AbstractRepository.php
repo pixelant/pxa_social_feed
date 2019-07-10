@@ -34,7 +34,7 @@ abstract class AbstractRepository extends Repository
 {
 
     /**
-     * initialize default settings
+     * Initialize default settings
      */
     public function initializeObject()
     {

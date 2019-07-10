@@ -2,6 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
@@ -75,6 +76,7 @@ class FeedRepository extends Repository
      */
     public function findFeedsByConfig($configurations = '', $limit = 0)
     {
+        die('TODO ME ' . __METHOD__);
         $query = $this->createQuery();
 
         if (!empty($configurations)) {
@@ -92,13 +94,13 @@ class FeedRepository extends Repository
     }
 
     /**
-     * get feed by specific storage Pid and external identifier
+     * Get feed by specific storage Pid and external identifier
      *
      * @param string $externalIdentifier
      * @param int $pid
      * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult|object
      */
-    public function findOneByExternalIdentifier($externalIdentifier, $pid)
+    public function findOneByExternalIdentifier(string $externalIdentifier, int $pid): ?Feed
     {
         $query = $this->createQuery();
 
