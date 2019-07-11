@@ -7,7 +7,7 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
  * Class FacebookSource
  * @package Pixelant\PxaSocialFeed\Feed\Source
  */
-class FacebookSource extends BaseSource
+class FacebookSource extends BaseFacebookSource
 {
     /**
      * Load feed source
@@ -17,42 +17,26 @@ class FacebookSource extends BaseSource
     public function load(): array
     {
         $fb = $this->getConfiguration()->getToken()->getFb();
-        $response = $fb->get($this->generateEndPoint());
+        $response = $fb->get(
+            $this->generateEndPoint($this->getConfiguration()->getSocialId(), 'feed')
+        );
 
-        $body = $response->getDecodedBody();
-
-        return is_array($body) ? ($body['data'] ?: []) : [];
+        return $this->getDataFromResponse($response);
     }
 
     /**
-     * Generate facebook endpoint
+     * Return fields for endpoint request
      *
-     * @return string
+     * @return array
      */
-    protected function generateEndPoint(): string
+    protected function getEndPointFields(): array
     {
-        $limit = $this->getConfiguration()->getMaxItems();
-
-        $fields = [
+        return [
             'likes.summary(true).limit(0)',
             'message',
             'attachments',
             'created_time',
             'updated_time',
         ];
-
-        list($fields) = $this->emitSignal('facebookEndPointRequestFields', [$fields]);
-
-        $url = $this->getConfiguration()->getSocialId() . '/feed';
-        $queryParams = [
-            'fields' => implode(',', $fields),
-            'limit' => $limit
-        ];
-
-        $endPoint = $url . '?' . http_build_query($queryParams);
-
-        list($endPoint) = $this->emitSignal('faceBookEndPoint', [$endPoint]);
-
-        return $endPoint;
     }
 }

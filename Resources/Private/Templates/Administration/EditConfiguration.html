@@ -25,7 +25,16 @@
                                     <f:translate key="module.social_id"/>
                                 </span>
                             </td>
-                            <td><f:form.textfield property="socialId" class="form-control"/></td>
+                            <td>
+                                <f:if condition="{configuration}">
+                                    <f:then>
+                                        <f:form.textfield property="socialId" class="form-control"/>
+                                    </f:then>
+                                    <f:else>
+                                        First save configuration with token
+                                    </f:else>
+                                </f:if>
+                            </td>
                         </tr>
                         <tr>
                             <td><f:translate key="module.max_items"/></td>

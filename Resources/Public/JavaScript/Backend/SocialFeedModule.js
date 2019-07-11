@@ -48,7 +48,7 @@ define(['jquery',
 				feedsStorageInput: '[data-identifier="feeds-storage-input"]',
 				feedsStorageTitle: '[data-identifier="feed-storage-title"]',
 				copyRedirectUriButton: '.copy-redirect-uri-button',
-				facebookLoginButton: '#facebook-login-link'
+				facebookLoginButton: '.facebook-login-link'
 			};
 
 			/**

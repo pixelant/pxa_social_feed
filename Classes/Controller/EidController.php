@@ -53,7 +53,7 @@ class EidController
 
         if ($appId && $appSecret) {
             try {
-                $fb = FacebookGraphSdkFactory::getFbByAppIdAndSecret($appId, $appSecret);
+                $fb = FacebookGraphSdkFactory::getUsingAppIdAndSecret($appId, $appSecret);
                 $accessToken = $this->obtainAccessToken($fb);
 
                 $this->getAndPersistLongLivedAccessToken($fb, $accessToken, $tokenUid, $response);

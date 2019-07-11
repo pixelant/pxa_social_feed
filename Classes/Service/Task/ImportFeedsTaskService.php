@@ -5,8 +5,10 @@ namespace Pixelant\PxaSocialFeed\Service\Task;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Exception\UnsupportedTokenType;
 use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\FeedFactoryInterface;
+use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
@@ -55,6 +57,11 @@ class ImportFeedsTaskService
                 case $configuration->getToken()->isFacebookType():
                     $factory = GeneralUtility::makeInstance(FacebookFeedFactory::class);
                     break;
+                case $configuration->getToken()->isInstagramType():
+                    $factory = GeneralUtility::makeInstance(InstagramFactory::class);
+                    break;
+                default:
+                    throw new UnsupportedTokenType("Token type '{$configuration->getToken()->getType()}' is not supported", 1562837370194);
             }
 
             if (isset($factory)) {

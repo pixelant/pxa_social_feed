@@ -3,16 +3,12 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
-use Facebook\Exceptions\FacebookResponseException;
-use Facebook\Exceptions\FacebookSDKException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
-use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
-use Pixelant\PxaSocialFeed\Utility\RequestUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -253,6 +249,11 @@ class AdministrationController extends ActionController
 
         $this->configurationRepository->{$isNew ? 'add' : 'update'}($configuration);
 
+        if ($isNew) {
+            // Redirect back to edit view, so user can now provide social ID according to selected token
+            $this->redirect('editConfiguration', $configuration);
+        }
+        
         $this->redirectToIndex(false, $this->translate('action_changes_saved'));
     }
 

@@ -27,9 +27,9 @@ class FacebookGraphSdkFactory
      * @param string|null $version
      * @return Facebook
      */
-    public static function getFbByToken(Token $token, string $version = null): Facebook
+    public static function getUsingToken(Token $token, string $version = null): Facebook
     {
-        $fb = static::getFbByAppIdAndSecret(
+        $fb = static::getUsingAppIdAndSecret(
             $token->getAppId(),
             $token->getAppSecret(),
             $token->getAccessToken(),
@@ -47,7 +47,7 @@ class FacebookGraphSdkFactory
      * @param string|null $version
      * @return Facebook
      */
-    public static function getFbByAppIdAndSecret(
+    public static function getUsingAppIdAndSecret(
         string $appId,
         string $appSecret,
         string $accessToken = null,

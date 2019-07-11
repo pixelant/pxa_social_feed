@@ -205,7 +205,20 @@ class Token extends AbstractEntity
      */
     public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
     {
-        return $this->getFacebookAccessTokenMetadata()->getExpiresAt();
+        $expireAt = $this->getFacebookAccessTokenMetadata()->getExpiresAt();
+
+        if ($expireAt === 0) {
+            $dataAccessExpiresAt = (int)$this->getFacebookAccessTokenMetadata()->getField('data_access_expires_at');
+            if ($dataAccessExpiresAt > 0) {
+                try {
+                    return (new \DateTime())->setTimestamp($dataAccessExpiresAt);
+                } catch (\Exception $exception) {
+                    return null;
+                }
+            }
+        }
+
+        return $expireAt;
     }
 
     /**
@@ -247,6 +260,16 @@ class Token extends AbstractEntity
     }
 
     /**
+     * Check if it's of type instagram
+     *
+     * @return bool
+     */
+    public function isInstagramType(): bool
+    {
+        return $this->type === static::INSTAGRAM;
+    }
+
+    /**
      * Get FB
      *
      * @return Facebook
@@ -254,7 +277,7 @@ class Token extends AbstractEntity
     public function getFb(): Facebook
     {
         if ($this->fb === null) {
-            $this->fb = FacebookGraphSdkFactory::getFbByToken($this);
+            $this->fb = FacebookGraphSdkFactory::getUsingToken($this);
         }
 
         return $this->fb;
