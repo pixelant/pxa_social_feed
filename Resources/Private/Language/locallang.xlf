@@ -99,8 +99,35 @@
             <trans-unit id="module.social_id">
                 <source>Social ID (feed source)</source>
             </trans-unit>
+            <trans-unit id="module.social_id1">
+                <source>Facebook page or your own account</source>
+            </trans-unit>
+            <trans-unit id="module.social_id2">
+                <source>Facebook page that is connected to instagram account</source>
+            </trans-unit>
+            <trans-unit id="module.social_id3">
+                <source>Twitter ID</source>
+            </trans-unit>
+            <trans-unit id="module.social_id4">
+                <source>Youtube ID</source>
+            </trans-unit>
             <trans-unit id="module.social_id_tooltip">
                 <source>Either Facebook (might be 'me' or page ID) / Twitter / Instagram (Facebook page ID) / YouTube ID</source>
+            </trans-unit>
+            <trans-unit id="module.save_configuration_first">
+                <source>Please select token and save configuration first</source>
+            </trans-unit>
+            <trans-unit id="module.source_id_me">
+                <source>My page (me)</source>
+            </trans-unit>
+            <trans-unit id="module.regenerate_access_token">
+                <source>Regenerate access token</source>
+            </trans-unit>
+            <trans-unit id="module.reset_token_question">
+                <source>Are you sure you want to generate token? This token will be lost!</source>
+            </trans-unit>
+            <trans-unit id="module.reset_token">
+                <source>Reset token</source>
             </trans-unit>
 
             <trans-unit id="module.type.1">

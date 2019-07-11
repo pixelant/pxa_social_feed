@@ -22,16 +22,27 @@
                         <tr>
                             <td>
                                 <span data-toggle="tooltip" data-placement="top" title="{f:translate(key: 'module.social_id_tooltip')}">
-                                    <f:translate key="module.social_id"/>
+                                    <f:translate key="module.social_id{configuration.token.type}"/>
                                 </span>
                             </td>
                             <td>
                                 <f:if condition="{configuration}">
                                     <f:then>
-                                        <f:form.textfield property="socialId" class="form-control"/>
+                                        <f:alias map="{token: configuration.token}">
+                                            <f:if condition="{token.facebookType} || {token.instagramType}">
+                                                <f:then>
+                                                    <f:form.select property="socialId" options="{token.facebookPagesIds}" class="form-control" />
+                                                </f:then>
+                                                <f:else>
+                                                    <f:form.textfield property="socialId" class="form-control" />
+                                                </f:else>
+                                            </f:if>
+                                        </f:alias>
                                     </f:then>
                                     <f:else>
-                                        First save configuration with token
+                                        <p class="bg-warning bg-notification">
+                                            <f:translate key="module.save_configuration_first" />
+                                        </p>
                                     </f:else>
                                 </f:if>
                             </td>

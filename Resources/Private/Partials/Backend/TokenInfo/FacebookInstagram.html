@@ -8,6 +8,13 @@
             <f:translate key="module.token_valid" />
             <br>
             <f:translate key="module.valid_days" arguments="{0: token.facebookAccessTokenValidPeriod}" />
+            <br><br>
+            <f:link.action action="resetAccessToken"
+                           arguments="{token: token}"
+                           data="{confirmation-title: '{f:translate(key: \'module.reset_token\')}', confirmation-message: '{f:translate(key: \'module.reset_token_question\')}'}"
+                           class="btn btn-default btn-sm confirmation-action">
+                <f:translate key="module.regenerate_access_token" />
+            </f:link.action>
         </p>
     </f:then>
     <f:else>

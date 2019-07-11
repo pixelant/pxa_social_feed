@@ -41,7 +41,7 @@ define(['jquery',
 			 * @private
 			 */
 			var _domElementsSelectors = {
-				deleteButton: '.delete-action',
+				confirmationButton: '.delete-action,.confirmation-action',
 				selectSocialType: '#select-type',
 				socialTypeUrlKeep: '#type-url-',
 				winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
@@ -83,10 +83,15 @@ define(['jquery',
 			 * @private
 			 */
 			function _deleteConfirmation() {
-				$(_getDomElementIdentifier('deleteButton')).on('click', function (e) {
+				$(_getDomElementIdentifier('confirmationButton')).on('click', function (e) {
 					e.preventDefault();
-					var url = $(this).attr('href'),
-						modal = Modal.confirm('Delete', 'Are you sure you want to delete this record ?', Severity.warning);
+
+					var $this = $(this);
+					var title = $this.data('confirmation-title') || 'Delete';
+					var message = $this.data('confirmation-message') || 'Are you sure you want to delete this record ?';
+
+					var url = $this.attr('href'),
+						modal = Modal.confirm(title, message, Severity.warning);
 
 					modal.on('confirm.button.cancel', function () {
 						Modal.dismiss(modal);

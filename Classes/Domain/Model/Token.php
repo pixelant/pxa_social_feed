@@ -241,6 +241,33 @@ class Token extends AbstractEntity
     }
 
     /**
+     * Fetch all available pages from facebook
+     *
+     * @return array
+     */
+    public function getFacebookPagesIds(): array
+    {
+        try {
+            $body = $this->getFb()->get('me/accounts')->getDecodedBody();
+        } catch (\Exception $exception) {
+            $body = null;
+        }
+
+        if (isset($body['data'])) {
+            $accounts = [
+                'me' => LocalizationUtility::translate('module.source_id_me', 'PxaSocialFeed')
+            ];
+            foreach ($body['data'] as $page) {
+                $accounts[$page['id']] = "{$page['name']} (ID: {$page['id']})";
+            }
+        } else {
+            $accounts = ['0' => 'Invalid data. Could not fetch accounts(pages) list from facebook'];
+        }
+
+        return $accounts;
+    }
+
+    /**
      * get value for select box
      * @return string
      */

@@ -17,6 +17,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /***************************************************************
@@ -64,7 +65,7 @@ class AdministrationController extends ActionController
      * @var FeedRepository
      */
     protected $feedRepository = null;
-    
+
     /**
      * BackendTemplateContainer
      *
@@ -197,6 +198,19 @@ class AdministrationController extends ActionController
     }
 
     /**
+     * Reset access token
+     *
+     * @param Token $token
+     */
+    public function resetAccessTokenAction(Token $token): void
+    {
+        $token->setAccessToken('');
+        $this->tokenRepository->update($token);
+        
+        $this->redirectToIndex(true);
+    }
+
+    /**
      * Delete token
      *
      * @param Token $token
@@ -250,10 +264,13 @@ class AdministrationController extends ActionController
         $this->configurationRepository->{$isNew ? 'add' : 'update'}($configuration);
 
         if ($isNew) {
+            // Save first, so we can pass it as argument
+            $this->objectManager->get(PersistenceManagerInterface::class)->persistAll();
+
             // Redirect back to edit view, so user can now provide social ID according to selected token
-            $this->redirect('editConfiguration', $configuration);
+            $this->redirect('editConfiguration', null, null, ['configuration' => $configuration]);
         }
-        
+
         $this->redirectToIndex(false, $this->translate('action_changes_saved'));
     }
 
