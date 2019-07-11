@@ -32,10 +32,32 @@ return (function () {
         ],
         'types' => [
             \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteGraphApi'],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM => ['showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteGraphApi'],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER => [
+                'showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteTwitterApi',
+                'columnsOverrides' => [
+                    'access_token' => [
+                        'label' => $ll . '.access_token',
+                        'config' => [
+                            'eval' => 'trim,required'
+                        ]
+                    ]
+                ]
+            ],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE => [
+                'showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteYoutubeApi',
+                'columnsOverrides' => [
+                    'api_key' => [
+                        'label' => $ll . '.youtube_api_key',
+                    ]
+                ]
+            ],
         ],
         'palettes' => [
             'paletteHidden' => ['showitem' => 'hidden'],
             'paletteGraphApi' => ['showitem' => 'app_id, --linebreak--, app_secret, --linebreak--, access_token'],
+            'paletteTwitterApi' => ['showitem' => 'api_key, --linebreak--, api_secret_key, --linebreak--, access_token, --linebreak--, access_token_secret'],
+            'paletteYoutubeApi' => ['showitem' => 'api_key'],
         ],
         'columns' => [
             'hidden' => [
@@ -53,7 +75,10 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        [$ll . '.type.type.1', \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK]
+                        [$ll . '.type.type.1', \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK],
+                        [$ll . '.type.type.2', \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM],
+                        [$ll . '.type.type.3', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER],
+                        [$ll . '.type.type.4', \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE],
                     ]
                 ]
             ],
@@ -79,6 +104,30 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'eval' => 'trim'
+                ]
+            ],
+            'api_key' => [
+                'exclude' => true,
+                'label' => $ll . '.api_key',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'trim,required'
+                ]
+            ],
+            'api_secret_key' => [
+                'exclude' => true,
+                'label' => $ll . '.api_secret_key',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'trim,required'
+                ]
+            ],
+            'access_token_secret' => [
+                'exclude' => true,
+                'label' => $ll . '.access_token_secret',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'trim,required'
                 ]
             ],
         ]

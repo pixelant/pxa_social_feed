@@ -32,6 +32,7 @@ use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 class TokenValidator extends AbstractValidator
 {
@@ -44,22 +45,47 @@ class TokenValidator extends AbstractValidator
      */
     protected function isValid($token)
     {
-        $isValid = true;
+        if (!in_array($token->getType(), Token::getAvailableTokensTypes())) {
+            $this->addError(
+                $this->translateErrorMessage(
+                    'validator.error.wrong_type',
+                    'PxaSocialFeed'
+                ),
+                1562851281828
+            );
+
+            return false;
+        }
 
         switch (true) {
             case $token->isFacebookType():
-                if (empty($token->getAppId()) || empty($token->getAppSecret())) {
-                    $this->addError(
-                        $this->translateErrorMessage(
-                            'validator.error.all_field_require',
-                            'PxaSocialFeed'
-                        ),
-                        1221559976
-                    );
-                }
+            case $token->isInstagramType():
+                $properties = ['appId', 'appSecret'];
+                break;
+            case $token->isTwitterType():
+                $properties = ['apiKey', 'apiSecretKey', 'accessToken', 'accessTokenSecret'];
+                break;
+            case $token->isYoutubeType():
+                $properties = ['apiKey'];
                 break;
         }
 
-        return $isValid;
+        foreach ($properties as $property) {
+            $value = ObjectAccess::getProperty($token, $property);
+
+            if (empty($value)) {
+                $this->addError(
+                    $this->translateErrorMessage(
+                        'validator.error.all_fields_require',
+                        'PxaSocialFeed'
+                    ),
+                    1221559976
+                );
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }

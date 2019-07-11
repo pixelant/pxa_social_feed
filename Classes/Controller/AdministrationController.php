@@ -206,7 +206,7 @@ class AdministrationController extends ActionController
     {
         $token->setAccessToken('');
         $this->tokenRepository->update($token);
-        
+
         $this->redirectToIndex(true);
     }
 
@@ -219,6 +219,7 @@ class AdministrationController extends ActionController
     public function deleteTokenAction(Token $token): void
     {
         $tokenConfigurations = $this->configurationRepository->findConfigurationByToken($token);
+
         if ($tokenConfigurations->count() === 0) {
             $this->tokenRepository->remove($token);
 

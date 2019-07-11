@@ -4,14 +4,12 @@
           product-name="pxa_social_feed">
         <header/>
         <body>
+            <!--Table tx_pxasocialfeed_domain_model_feed:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds">
                 <source>Social Posts</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.social_type">
-                <source>Social Type</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.date">
-                <source>Date</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.post_date">
+                <source>Post date</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.post_url">
                 <source>Post Url</source>
@@ -28,17 +26,21 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.likes">
                 <source>Likes</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.description">
-                <source>Description</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_url">
-                <source>External Url</source>
-            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.config">
-                <source>Config</source>
+                <source>Configuration</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.media_type">
+                <source>Media type</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_identifier">
+                <source>External identifier</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.update_date">
+                <source>Update date</source>
+            </trans-unit>
+            <!--Table tx_pxasocialfeed_domain_model_feed:END-->
 
-
+            <!--Table tx_pxasocialfeed_domain_model_token:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens">
                 <source>Tokens</source>
             </trans-unit>
@@ -51,29 +53,20 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.access_token">
                 <source>Access Token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.instagram_client_id">
-                <source>Instagram client id</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.youtube_api_key">
+                <source>Youtube api key</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.instagram_client_secret">
-                <source>Instagram client secret</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.api_key">
+                <source>Twitter consumer api key</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.instagram_access_token">
-                <source>Instagram access token</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.api_secret_key">
+                <source>Twitter consumer api secret key</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_consumer_key">
-                <source>Twitter consumer key</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_consumer_secret">
-                <source>Twitter consumer secret</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.access_token_secret">
+                <source>Twitter access token secret</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_access_token">
                 <source>Twitter access token</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_access_token_secret">
-                <source>Twitter access token_secret</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.access_token">
-                <source>Access Token</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type">
                 <source>Type of token</source>
@@ -81,7 +74,18 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.1">
                 <source>Facebook API</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.2">
+                <source>Instagram facebook API</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.3">
+                <source>Twitter API</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.4">
+                <source>Youtube API</source>
+            </trans-unit>
+            <!--Table tx_pxasocialfeed_domain_model_configuration:END-->
 
+            <!--Table tx_pxasocialfeed_domain_model_configuration:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_config">
                 <source>Configuration</source>
             </trans-unit>
@@ -100,6 +104,10 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.storage">
                 <source>Storage</source>
             </trans-unit>
+            <!--Table tx_pxasocialfeed_domain_model_config:END-->
+
+
+
 
 
             <trans-unit id="tx_pxasocialfeed.task.import.name">

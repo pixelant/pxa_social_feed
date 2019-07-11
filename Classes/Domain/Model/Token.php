@@ -43,6 +43,13 @@ class Token extends AbstractEntity
     use EmitSignalTrait;
 
     /**
+     * Default PID
+     *
+     * @var int
+     */
+    protected $pid = 0;
+
+    /**
      * facebook token
      */
     const FACEBOOK = 1;
@@ -83,6 +90,21 @@ class Token extends AbstractEntity
      * @var string
      */
     protected $accessToken = '';
+
+    /**
+     * @var string
+     */
+    protected $apiKey = '';
+
+    /**
+     * @var string
+     */
+    protected $apiSecretKey = '';
+
+    /**
+     * @var string
+     */
+    protected $accessTokenSecret = '';
 
     /**
      * @var Facebook
@@ -156,6 +178,54 @@ class Token extends AbstractEntity
     public function setAccessToken(string $accessToken): void
     {
         $this->accessToken = $accessToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey(): string
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param string $apiKey
+     */
+    public function setApiKey(string $apiKey): void
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiSecretKey(): string
+    {
+        return $this->apiSecretKey;
+    }
+
+    /**
+     * @param string $apiSecretKey
+     */
+    public function setApiSecretKey(string $apiSecretKey): void
+    {
+        $this->apiSecretKey = $apiSecretKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessTokenSecret(): string
+    {
+        return $this->accessTokenSecret;
+    }
+
+    /**
+     * @param string $accessTokenSecret
+     */
+    public function setAccessTokenSecret(string $accessTokenSecret): void
+    {
+        $this->accessTokenSecret = $accessTokenSecret;
     }
 
     /**
@@ -294,6 +364,26 @@ class Token extends AbstractEntity
     public function isInstagramType(): bool
     {
         return $this->type === static::INSTAGRAM;
+    }
+
+    /**
+     * Check if it's of type twitter
+     *
+     * @return bool
+     */
+    public function isTwitterType(): bool
+    {
+        return $this->type === static::TWITTER;
+    }
+
+    /**
+     * Check if it's of type youtube
+     *
+     * @return bool
+     */
+    public function isYoutubeType(): bool
+    {
+        return $this->type === static::YOUTUBE;
     }
 
     /**

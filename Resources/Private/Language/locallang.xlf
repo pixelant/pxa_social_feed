@@ -129,6 +129,18 @@
             <trans-unit id="module.reset_token">
                 <source>Reset token</source>
             </trans-unit>
+            <trans-unit id="module.api_key">
+                <source>Api key</source>
+            </trans-unit>
+            <trans-unit id="module.api_secret_key">
+                <source>Api secret key</source>
+            </trans-unit>
+            <trans-unit id="module.access_token_secret">
+                <source>Access token secret</source>
+            </trans-unit>
+            <trans-unit id="module.access_token">
+                <source>Access token</source>
+            </trans-unit>
 
             <trans-unit id="module.type.1">
                 <source>Facebook</source>
@@ -155,7 +167,10 @@
             <trans-unit id="validator.error.1562739885935">
                 <source>Social ID is required</source>
             </trans-unit>
-            <trans-unit id="validator.error.all_field_require">
+            <trans-unit id="validator.error.wrong_type">
+                <source>Bad token type</source>
+            </trans-unit>
+            <trans-unit id="validator.error.all_fields_require">
                 <source>All fields are required</source>
             </trans-unit>
 
@@ -169,239 +184,6 @@
             <trans-unit id="module.editTokenAction">
                 <source>Create new / Edit token</source>
             </trans-unit>
-
-
-            <trans-unit id="module.labels.noConfigurationsFound">
-                <source>No configurations were found</source>
-            </trans-unit>
-            <trans-unit id="module.labels.listOfTokens">
-                <source>List of tokens</source>
-            </trans-unit>
-            <trans-unit id="module.labels.noTokensFound">
-                <source>No tokens were found</source>
-            </trans-unit>
-            <trans-unit id="module.labels.notRelevant">
-                <source>Not relevant</source>
-            </trans-unit>
-            <trans-unit id="module.labels.generateAccessToken">
-                <source>Generate access token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.redirectUri">
-                <source>Redirect uri</source>
-            </trans-unit>
-            <trans-unit id="module.labels.copyToClipboard">
-                <source>Copy to clipboard</source>
-            </trans-unit>
-            <trans-unit id="module.labels.firstCreateToken">
-                <source>No tokens were found, please, first create some.</source>
-            </trans-unit>
-            <trans-unit id="module.labels.createToken">
-                <source>Add new token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.addNewConfig">
-                <source>Add new configuration</source>
-            </trans-unit>
-            <trans-unit id="module.labels.createNewConfig">
-                <source>Create new configuration</source>
-            </trans-unit>
-            <trans-unit id="module.labels.editToken">
-                <source>Edit token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.editConfig">
-                <source>Edit configuration</source>
-            </trans-unit>
-            <trans-unit id="module.labels.type">
-                <source>Source</source>
-            </trans-unit>
-            <trans-unit id="module.labels.type.1">
-                <source>Facebook</source>
-            </trans-unit>
-            <trans-unit id="module.labels.type.2">
-                <source>Instagram (OAuth2)</source>
-            </trans-unit>
-            <trans-unit id="module.labels.type.3">
-                <source>Twitter</source>
-            </trans-unit>
-            <trans-unit id="module.labels.type.4">
-                <source>Youtube</source>
-            </trans-unit>
-            <trans-unit id="module.labels.type.5">
-                <source>Facebook OAuth2 (Instagram)</source>
-            </trans-unit>
-
-
-
-            <!-- labels for module token tab -->
-            <trans-unit id="module.labels.pages">
-                <source>Pages</source>
-            </trans-unit>
-            <trans-unit id="module.labels.migrate_records">
-                <source>Migrate records to new storage</source>
-            </trans-unit>
-            <trans-unit id="module.labels.get_instagram_hidden_tip">
-                <source>Please, update page to see token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.general_info">
-                <source>General info</source>
-            </trans-unit>
-            <trans-unit id="module.labels.actions">
-                <source>Edit / Delete</source>
-            </trans-unit>
-            <trans-unit id="module.labels.edit">
-                <source>Edit</source>
-            </trans-unit>
-            <trans-unit id="module.labels.token_created">
-                <source>Token successfully created</source>
-            </trans-unit>
-            <trans-unit id="module.labels.token_updated">
-                <source>Token successfully updated</source>
-            </trans-unit>
-            <trans-unit id="module.labels.token_removed">
-                <source>Token successfully removed</source>
-            </trans-unit>
-
-
-            <trans-unit id="module.labels.delete">
-                <source>Delete</source>
-            </trans-unit>
-            <trans-unit id="module.labels.app_id">
-                <source>App Id</source>
-            </trans-unit>
-            <trans-unit id="module.labels.app_secret">
-                <source>App Secret</source>
-            </trans-unit>
-            <trans-unit id="module.labels.accessToken">
-                <source>Access Token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.clientId">
-                <source>Client Id</source>
-            </trans-unit>
-            <trans-unit id="module.labels.clientSecret">
-                <source>Client Secret</source>
-            </trans-unit>
-            <trans-unit id="module.labels.consumerKey">
-                <source>Consumer Key</source>
-            </trans-unit>
-            <trans-unit id="module.labels.consumerSecret">
-                <source>Consumer Secret</source>
-            </trans-unit>
-            <trans-unit id="module.labels.accessTokenSecret">
-                <source>Access Token Secret</source>
-            </trans-unit>
-            <trans-unit id="module.labels.apiKey">
-                <source>API Key</source>
-            </trans-unit>
-            <trans-unit id="module.labels.token">
-                <source>Token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.button_delete">
-                <source>Delete Token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.create_new_token">
-                <source>Create new token</source>
-            </trans-unit>
-            <trans-unit id="module.labels.button_clear">
-                <source>Clear Form</source>
-            </trans-unit>
-            <trans-unit id="module.labels.uid">
-                <source>UID</source>
-            </trans-unit>
-            <trans-unit id="module.labels.form.feed_storage">
-                <source>Storage</source>
-            </trans-unit>
-            <trans-unit id="module.labels.form.config_name">
-                <source>Configuration name</source>
-            </trans-unit>
-            <trans-unit id="module.labels.form.social_id">
-                <source>Social ID</source>
-            </trans-unit>
-            <trans-unit id="module.labels.form.social_id_tooltip">
-                <source>Either Facebook / Twitter / Instagram / YouTube ID or Instagram hashtag (with starting #)</source>
-            </trans-unit>
-            <trans-unit id="module.labels.form.amount_of_feeds">
-                <source>Limit</source>
-            </trans-unit>
-            <trans-unit id="module.labels.button_delete">
-                <source>Delete configuration</source>
-            </trans-unit>
-            <trans-unit id="tx_module.config.form.button_clear">
-                <source>Clear Form</source>
-            </trans-unit>
-            <trans-unit id="module.labels.button_save">
-                <source>Save</source>
-            </trans-unit>
-            <trans-unit id="module.labels.token_uid">
-                <source>Token (#UID)</source>
-            </trans-unit>
-            <trans-unit id="module.labels.back">
-                <source>Back</source>
-            </trans-unit>
-            <trans-unit id="module.labels.configurations">
-                <source>Configurations</source>
-            </trans-unit>
-            <trans-unit id="module.labels.tokens">
-                <source>Tokens</source>
-            </trans-unit>
-            <trans-unit id="module.labels.inst_id_tooltip">
-                <source>Looks like it's a user name. Instagram User ID is required. Press button to fetch user ID.</source>
-            </trans-unit>
-            <trans-unit id="module.labels.inst_id_button">
-                <source>Get Instagram user ID</source>
-            </trans-unit>
-            <trans-unit id="module.labels.inst_id_ajax_fail">
-                <source>Failed to get Instagram user ID</source>
-            </trans-unit>
-            <trans-unit id="module.labels.inst_id_ajax_success">
-                <source>Instagram user ID saved.</source>
-            </trans-unit>
-
-            <trans-unit id="module.labels.errorcode.1463130121">
-                <source>All fields are required</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1456234619">
-                <source>Please, enter configuration name</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1456234671">
-                <source>Please, enter Social ID</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1456234832">
-                <source>Limit of feeds is not valid</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1456154742">
-                <source>App ID can not be empty</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1456154743">
-                <source>App Secret can not be empty</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1466669831">
-                <source>Something went wrong</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorcode.1491570246">
-                <source>Storage value is invalid</source>
-            </trans-unit>
-            <trans-unit id="module.labels.changesSaved">
-                <source>Changes saved successfully.</source>
-            </trans-unit>
-            <trans-unit id="module.labels.removedSuccess">
-                <source>Successfully removed.</source>
-            </trans-unit>
-
-            <trans-unit id="module.labels.removed">
-                <source>Removed</source>
-            </trans-unit>
-            <trans-unit id="module.labels.success">
-                <source>Success</source>
-            </trans-unit>
-            <trans-unit id="module.labels.error">
-                <source>Error</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorCommunication">
-                <source>Error communication with server</source>
-            </trans-unit>
-            <trans-unit id="module.labels.errorGettingsToken">
-                <source>Error getting access token</source>
-            </trans-unit>
-
         </body>
     </file>
 </xliff>

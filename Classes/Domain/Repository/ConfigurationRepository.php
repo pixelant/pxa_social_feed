@@ -69,7 +69,7 @@ class ConfigurationRepository extends AbstractRepository
     {
         $query = $this->createQuery();
 
-        $query->equals('token', $token);
+        $query->matching($query->equals('token', $token));
 
         return $query->execute();
     }

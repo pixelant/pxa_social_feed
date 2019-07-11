@@ -78,7 +78,7 @@ return (function () {
             ],
             'post_date' => [
                 'exclude' => 1,
-                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.date',
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.post_date',
                 'config' => [
                     'type' => 'input',
                     'renderType' => 'inputDateTime',
@@ -135,7 +135,7 @@ return (function () {
             ],
             'external_identifier' => [
                 'exclude' => 1,
-                'label' => 'External identifier',
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.external_identifier',
                 'config' => [
                     'type' => 'input',
                     'eval' => 'trim'
@@ -143,7 +143,7 @@ return (function () {
             ],
             'update_date' => [
                 'exclude' => 1,
-                'label' => 'update date',
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.update_date',
                 'config' => [
                     'type' => 'input',
                     'renderType' => 'inputDateTime',
@@ -172,7 +172,7 @@ return (function () {
             ],
             'media_type' => [
                 'exclude' => 1,
-                'label' => 'Media type',
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.media_type',
                 'config' => [
                     'type' => 'input',
                     'eval' => 'trim'
