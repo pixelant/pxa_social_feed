@@ -49,6 +49,16 @@ class NotificationService
     }
 
     /**
+     * Check if can send an email
+     *
+     * @return bool
+     */
+    public function canSendEmail(): bool
+    {
+        return GeneralUtility::validEmail($this->senderEmail) && GeneralUtility::validEmail($this->receiverEmail);
+    }
+
+    /**
      * Prepare mailer
      *
      * @return MailMessage

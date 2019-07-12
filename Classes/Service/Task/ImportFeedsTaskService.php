@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Service\Task;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Exception\UnsupportedTokenType;
 use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
@@ -11,10 +12,11 @@ use Pixelant\PxaSocialFeed\Feed\FeedFactoryInterface;
 use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use Pixelant\PxaSocialFeed\Feed\TwitterFactory;
 use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
+use Pixelant\PxaSocialFeed\Service\Expire\FacebookAccessTokenExpireService;
+use Pixelant\PxaSocialFeed\Service\Notification\NotificationService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class ImportFeedsTaskService
@@ -34,10 +36,17 @@ class ImportFeedsTaskService
     protected $configurationRepository;
 
     /**
+     * @var NotificationService
+     */
+    protected $notificationService = null;
+
+    /**
      * TaskUtility constructor.
      */
-    public function __construct()
+    public function __construct(NotificationService $notificationService)
     {
+        $this->notificationService = $notificationService;
+
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
     }
@@ -58,9 +67,13 @@ class ImportFeedsTaskService
             $factory = null;
             switch (true) {
                 case $configuration->getToken()->isFacebookType():
+                    // Check if access is valid
+                    $this->checkFacebookAccessToken($configuration->getToken());
                     $factory = GeneralUtility::makeInstance(FacebookFeedFactory::class);
                     break;
                 case $configuration->getToken()->isInstagramType():
+                    // Check if access is valid
+                    $this->checkFacebookAccessToken($configuration->getToken());
                     $factory = GeneralUtility::makeInstance(InstagramFactory::class);
                     break;
                 case $configuration->getToken()->isTwitterType():
@@ -94,5 +107,33 @@ class ImportFeedsTaskService
 
         $updater->update($source);
         $updater->persist();
+    }
+
+    /**
+     * @param Token $token
+     */
+    protected function checkFacebookAccessToken(Token $token): void
+    {
+        $expireTokenService = GeneralUtility::makeInstance(FacebookAccessTokenExpireService::class, $token);
+
+        if (!$expireTokenService->tokenRequireCheck() || !$this->notificationService->canSendEmail()) {
+            return;
+        }
+
+        if ($expireTokenService->hasExpired()) {
+            $this->notificationService->notify(
+                LocalizationUtility::translate('email.access_token', 'PxaSocialFeed'),
+                LocalizationUtility::translate('email.access_token_expired', 'PxaSocialFeed')
+            );
+        } elseif ($expireTokenService->willExpireSoon()) {
+            $this->notificationService->notify(
+                LocalizationUtility::translate('email.access_token', 'PxaSocialFeed'),
+                LocalizationUtility::translate(
+                    'email.access_token_soon_expired',
+                    'PxaSocialFeed',
+                    [$expireTokenService->expireWhen()]
+                )
+            );
+        }
     }
 }

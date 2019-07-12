@@ -181,6 +181,16 @@
                 <source>Extension "pxa_social_feed" experience error while import:&#60;br&#62;&#60;br&#62;"%s"</source>
             </trans-unit>
 
+            <trans-unit id="email.access_token">
+                <source>Facebook Access Token check</source>
+            </trans-unit>
+            <trans-unit id="email.access_token_expired">
+                <source>Access token has expired. Please regenerate access token in order to get import feed working again.</source>
+            </trans-unit>
+            <trans-unit id="email.access_token_soon_expired">
+                <source>Access token will expire in %s days. Please generate access token before that has happened.</source>
+            </trans-unit>
+
             <!-- ACTIONS -->
             <trans-unit id="module.indexAction">
                 <source>List of tokens and configurations</source>

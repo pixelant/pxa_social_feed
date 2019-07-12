@@ -252,17 +252,18 @@ class Token extends AbstractEntity
     /**
      * Check how much it left for facebook access token
      *
+     * @param string $format
      * @return string
      * @throws \Exception
      */
-    public function getFacebookAccessTokenValidPeriod(): string
+    public function getFacebookAccessTokenValidPeriod(string $format = '%R%a'): string
     {
         $expireAt = $this->getFacebookAccessTokenMetadataExpirationDate();
         if ($expireAt !== null) {
             $today = new \DateTime();
             $interval = $today->diff($expireAt);
 
-            return $interval->format('%R%a');
+            return $interval->format($format);
         }
 
         return 'Could not get expire date of token';

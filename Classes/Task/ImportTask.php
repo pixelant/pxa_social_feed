@@ -66,7 +66,9 @@ class ImportTask extends AbstractTask
      */
     public function execute()
     {
-        $importTaskService = GeneralUtility::makeInstance(ImportFeedsTaskService::class);
+        $notificationService = $this->getNotificationService();
+        $importTaskService = GeneralUtility::makeInstance(ImportFeedsTaskService::class, $notificationService);
+
         try {
             return $importTaskService->import($this->configurations);
         } catch (\Exception $exception) {
@@ -75,8 +77,7 @@ class ImportTask extends AbstractTask
                 LoggerUtility::ERROR
             );
 
-            if (GeneralUtility::validEmail($this->receiverEmail)) {
-                $notificationService = $this->getNotificationService();
+            if ($notificationService->canSendEmail()) {
                 $notificationService->notify(
                     LocalizationUtility::translate('error.import_error', 'PxaSocialFeed'),
                     LocalizationUtility::translate('error.import_error_description', 'PxaSocialFeed', [$exception->getMessage()])
