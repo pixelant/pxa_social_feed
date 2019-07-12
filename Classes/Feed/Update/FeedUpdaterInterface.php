@@ -17,4 +17,9 @@ interface FeedUpdaterInterface
      * @param FeedSourceInterface $source
      */
     public function update(FeedSourceInterface $source): void;
+
+    /**
+     * Persist all updates
+     */
+    public function persist(): void;
 }

@@ -38,7 +38,7 @@ class YoutubeFeedUpdater extends BaseUpdater
             // Call hook
             $this->emitSignal('beforeUpdateYoutubeFeed', [$feedItem, $rawData, $source->getConfiguration()]);
 
-            $this->feedRepository->{$feedItem->_isNew() ? 'add' : 'update'}($feedItem);
+            $this->addOrUpdateFeedItem($feedItem);
         }
     }
 

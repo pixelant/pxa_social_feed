@@ -14,6 +14,7 @@ use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * Class ImportFeedsTaskService
@@ -73,12 +74,9 @@ class ImportFeedsTaskService
             }
 
             if (isset($factory)) {
-                $this->updateConfigurationFeed($factory, $configuration);
+                $this->importFeed($factory, $configuration);
             }
         }
-
-        // Persist everything
-        $this->objectManager->get(PersistenceManagerInterface::class)->persistAll();
 
         return true;
     }
@@ -89,10 +87,12 @@ class ImportFeedsTaskService
      * @param FeedFactoryInterface $feedFactory
      * @param Configuration $configuration
      */
-    protected function updateConfigurationFeed(FeedFactoryInterface $feedFactory, Configuration $configuration): void
+    protected function importFeed(FeedFactoryInterface $feedFactory, Configuration $configuration): void
     {
         $source = $feedFactory->getFeedSource($configuration);
+        $updater = $feedFactory->getFeedUpdater();
 
-        $feedFactory->getFeedUpdater()->update($source);
+        $updater->update($source);
+        $updater->persist();
     }
 }

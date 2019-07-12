@@ -59,7 +59,7 @@ class FacebookFeedUpdater extends BaseUpdater
         // Call hook
         $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $configuration]);
 
-        $this->feedRepository->{$feedItem->_isNew() ? 'add' : 'update'}($feedItem);
+        $this->addOrUpdateFeedItem($feedItem);
     }
 
     /**

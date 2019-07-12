@@ -42,7 +42,7 @@ class InstagramFeedUpdater extends BaseUpdater
             $this->emitSignal('beforeUpdateInstagramFeed', [$feedItem, $rawData, $source->getConfiguration()]);
 
             // Add/update
-            $this->feedRepository->{$feedItem->_isNew() ? 'add' : 'update'}($feedItem);
+            $this->addOrUpdateFeedItem($feedItem);
         }
     }
 

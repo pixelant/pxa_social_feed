@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 /**
  * Class BaseUpdater
@@ -27,12 +30,40 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     protected $feedRepository = null;
 
     /**
+     * Keep all processed feed items
+     *
+     * @var ObjectStorage
+     */
+    protected $feeds = [];
+
+    /**
      * BaseUpdater constructor.
      */
     public function __construct()
     {
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->feedRepository = $this->objectManager->get(FeedRepository::class);
+        $this->feeds = new ObjectStorage();
+    }
+
+    /**
+     * Persist changes
+     */
+    public function persist(): void
+    {
+        $this->objectManager->get(PersistenceManagerInterface::class)->persistAll();
+    }
+
+    /**
+     * Add or update feed object.
+     * Save all processed items
+     *
+     * @param Feed $feed
+     */
+    protected function addOrUpdateFeedItem(Feed $feed): void
+    {
+        $this->feeds->attach($feed);
+        $this->feedRepository->{$feed->_isNew() ? 'add' : 'update'}($feed);
     }
 
     /**

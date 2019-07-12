@@ -39,7 +39,7 @@ class TwitterFeedUpdater extends BaseUpdater
             // Call hook
             $this->emitSignal('beforeUpdateTwitterFeed', [$feedItem, $rawData, $source->getConfiguration()]);
 
-            $this->feedRepository->{$feedItem->_isNew() ? 'add' : 'update'}($feedItem);
+            $this->addOrUpdateFeedItem($feedItem);
         }
     }
 
