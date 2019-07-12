@@ -10,6 +10,7 @@ use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\FeedFactoryInterface;
 use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use Pixelant\PxaSocialFeed\Feed\TwitterFactory;
+use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
@@ -63,6 +64,9 @@ class ImportFeedsTaskService
                     break;
                 case $configuration->getToken()->isTwitterType():
                     $factory = GeneralUtility::makeInstance(TwitterFactory::class);
+                    break;
+                case $configuration->getToken()->isYoutubeType():
+                    $factory = GeneralUtility::makeInstance(YoutubeFactory::class);
                     break;
                 default:
                     throw new UnsupportedTokenType("Token type '{$configuration->getToken()->getType()}' is not supported", 1562837370194);

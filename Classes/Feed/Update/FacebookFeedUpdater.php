@@ -30,7 +30,7 @@ class FacebookFeedUpdater extends BaseUpdater
                 $source->getConfiguration()->getStorage()
             );
             if ($feedItem === null) {
-                $feedItem = $this->objectManager->get(Feed::class);
+                $feedItem = $this->createFeedItem($rawItem, $source->getConfiguration());
             }
 
             $this->updateFeedItem($feedItem, $rawItem, $source->getConfiguration());
@@ -46,7 +46,6 @@ class FacebookFeedUpdater extends BaseUpdater
      */
     protected function updateFeedItem(Feed $feedItem, array $rawData, Configuration $configuration): void
     {
-        $isNew = $feedItem->getUid() === null;
         $updated = strtotime($rawData['updated_time']);
         $feedUpdated = $feedItem->getUpdateDate() ? $feedItem->getUpdateDate()->getTimestamp() : 0;
 
@@ -55,23 +54,12 @@ class FacebookFeedUpdater extends BaseUpdater
             $feedItem->setUpdateDate((new \DateTime())->setTimestamp($updated));
         }
 
-        if ($isNew) {
-            list($userId, $postId) = GeneralUtility::trimExplode('_', $rawData['id'], true);
-            $feedItem->setPostUrl('https://facebook.com/' . $userId . '/posts/' . $postId);
-            $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
-            $feedItem->setConfiguration($configuration);
-            $feedItem->setUpdateDate((new \DateTime())->setTimestamp($updated));
-            $feedItem->setExternalIdentifier($rawData['id']);
-            $feedItem->setPid($configuration->getStorage());
-            $feedItem->setType(Token::FACEBOOK);
-        }
-
         $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
 
         // Call hook
         $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $configuration]);
 
-        $this->feedRepository->{$isNew ? 'add' : 'update'}($feedItem);
+        $this->feedRepository->{$feedItem->_isNew() ? 'add' : 'update'}($feedItem);
     }
 
     /**
@@ -94,5 +82,27 @@ class FacebookFeedUpdater extends BaseUpdater
         if (isset($rawData['attachments']['data'][0]['title'])) {
             $feed->setTitle($rawData['attachments']['data'][0]['title']);
         }
+    }
+
+    /**
+     * Create new feed item
+     *
+     * @param array $rawData
+     * @param Configuration $configuration
+     * @return object|Feed
+     */
+    protected function createFeedItem(array $rawData, Configuration $configuration): Feed
+    {
+        $feedItem = $this->objectManager->get(Feed::class);
+
+        list($userId, $postId) = GeneralUtility::trimExplode('_', $rawData['id'], true);
+        $feedItem->setPostUrl('https://facebook.com/' . $userId . '/posts/' . $postId);
+        $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
+        $feedItem->setConfiguration($configuration);
+        $feedItem->setExternalIdentifier($rawData['id']);
+        $feedItem->setPid($configuration->getStorage());
+        $feedItem->setType(Token::FACEBOOK);
+
+        return $feedItem;
     }
 }

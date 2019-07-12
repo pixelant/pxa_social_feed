@@ -33,7 +33,7 @@ abstract class BaseFacebookSource extends BaseSource
             'limit' => $limit
         ];
 
-        $endPoint = $url . '?' . http_build_query($queryParams);
+        $endPoint = $this->addFieldsAsGetParametersToUrl($url, $queryParams);
 
         list($endPoint) = $this->emitSignal('faceBookEndPoint', [$endPoint]);
 

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
@@ -31,13 +32,7 @@ class InstagramFeedUpdater extends BaseUpdater
 
             // Create new instagram feed
             if ($feedItem === null) {
-                /** @var Feed $feedItem */
-                $feedItem = $this->objectManager->get(Feed::class);
-
-                // Set configuration
-                $feedItem->setConfiguration($source->getConfiguration());
-                $feedItem->setPid($source->getConfiguration()->getStorage());
-                $feedItem->setType(Token::INSTAGRAM);
+                $feedItem = $this->createFeedItem($source->getConfiguration());
             }
 
             // Add/update instagram feed data gotten from facebook
@@ -90,5 +85,24 @@ class InstagramFeedUpdater extends BaseUpdater
 
         // Set likes
         $feedItem->setLikes((int)$data['like_count']);
+    }
+
+    /**
+     * Create feed item
+     *
+     * @param Configuration $configuration
+     * @return Feed
+     */
+    protected function createFeedItem(Configuration $configuration): Feed
+    {
+        /** @var Feed $feedItem */
+        $feedItem = $this->objectManager->get(Feed::class);
+
+        // Set configuration
+        $feedItem->setConfiguration($configuration);
+        $feedItem->setPid($configuration->getStorage());
+        $feedItem->setType(Token::INSTAGRAM);
+
+        return $feedItem;
     }
 }

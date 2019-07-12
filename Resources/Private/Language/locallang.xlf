@@ -88,7 +88,7 @@
                 <source>Refresh</source>
             </trans-unit>
             <trans-unit id="module.token_valid">
-                <source>Token is valid</source>
+                <source>Token is valid till</source>
             </trans-unit>
             <trans-unit id="module.valid_days">
                 <source>Valid for %s days</source>
@@ -106,10 +106,10 @@
                 <source>Facebook page that is connected to instagram account</source>
             </trans-unit>
             <trans-unit id="module.social_id3">
-                <source>Twitter ID</source>
+                <source>Twitter account ID(name)</source>
             </trans-unit>
             <trans-unit id="module.social_id4">
-                <source>Youtube ID</source>
+                <source>Youtube channel ID</source>
             </trans-unit>
             <trans-unit id="module.social_id_tooltip">
                 <source>Either Facebook (might be 'me' or page ID) / Twitter / Instagram (Facebook page ID) / YouTube ID</source>

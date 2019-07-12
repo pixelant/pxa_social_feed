@@ -6,6 +6,9 @@
     <f:then>
         <p class="bg-success bg-notification">
             <f:translate key="module.token_valid" />
+            <f:if condition="{token.facebookAccessTokenMetadataExpirationDate}">
+                <f:format.date format="d-m-Y">{token.facebookAccessTokenMetadataExpirationDate}</f:format.date>
+            </f:if>
             <br>
             <f:translate key="module.valid_days" arguments="{0: token.facebookAccessTokenValidPeriod}" />
             <br><br>

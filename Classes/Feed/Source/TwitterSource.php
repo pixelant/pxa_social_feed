@@ -6,8 +6,6 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
 use Pixelant\PxaSocialFeed\Exception\BadResponseException;
 use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
 use Psr\Http\Message\ResponseInterface;
-use TYPO3\CMS\Core\Http\RequestFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TwitterSource
@@ -41,7 +39,7 @@ class TwitterSource extends BaseSource
         $data = json_decode($body, true);
 
         if (!is_array($data)) {
-            throw new InvalidFeedSourceData("Twitter response doesn't appear to be a valid json. '$body' returned by response.", 1562910457024);
+            throw new InvalidFeedSourceData("Twitter response doesn't appear to be a valid json. Response return '$body'.", 1562910457024);
         }
 
         return $data;
@@ -63,22 +61,7 @@ class TwitterSource extends BaseSource
             ]
         ];
 
-        /** @var RequestFactory $requestFactory */
-        $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
-
-        /** @var ResponseInterface $response */
-        $response = $requestFactory->request(
-            $url,
-            'GET',
-            $additionalOptions
-        );
-
-        if ($response->getStatusCode() === 200) {
-            return $response;
-        } else {
-            $body = (string)$response->getBody();
-            throw new BadResponseException("Twitter api return status '{$response->getStatusCode()}' while trying to request '$url' with message '$body'", 1562910160643);
-        }
+        return $this->performApiGetRequest($url, $additionalOptions);
     }
 
     /**
@@ -90,20 +73,6 @@ class TwitterSource extends BaseSource
     protected function generateEndPointUrl(string $endPoint)
     {
         return $this->getApiUrl() . $endPoint;
-    }
-
-    /**
-     * Append endpoint url with get parameters based on fields
-     *
-     * @param string $url
-     * @param array $fields
-     * @return string
-     */
-    protected function addFieldsAsGetParametersToUrl(string $url, array $fields): string
-    {
-        $url .= empty($fields) ? '' : ('?' . http_build_query($fields));
-
-        return $url;
     }
 
     /**
