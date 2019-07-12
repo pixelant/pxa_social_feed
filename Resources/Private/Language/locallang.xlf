@@ -174,6 +174,13 @@
                 <source>All fields are required</source>
             </trans-unit>
 
+            <trans-unit id="error.import_error">
+                <source>Social feed import error</source>
+            </trans-unit>
+            <trans-unit id="error.import_error_description">
+                <source>Extension "pxa_social_feed" experience error while import:&#60;br&#62;&#60;br&#62;"%s"</source>
+            </trans-unit>
+
             <!-- ACTIONS -->
             <trans-unit id="module.indexAction">
                 <source>List of tokens and configurations</source>

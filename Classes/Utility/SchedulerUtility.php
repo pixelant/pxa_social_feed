@@ -30,28 +30,22 @@ namespace Pixelant\PxaSocialFeed\Utility;
 
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
- * Class ConfigurationUtility
  * @package Pixelant\PxaSocialFeed\Utility
  */
-class ConfigurationUtility
+class SchedulerUtility
 {
-
-
     /**
-     * generate html box
+     * Generate html box
      *
-     * @param array $selectedConfigs
+     * @param array $selectedConfigurations
      * @return string
      */
-    public static function getAvailabelConfigsSelectBox($selectedConfigs)
+    public static function getAvailableConfigurationsSelectBox(array $selectedConfigurations): string
     {
-        $selector = '<select class="form-control" name="tx_scheduler[configs][]" multiple>';
+        $selector = '<select class="form-control" name="tx_scheduler[pxasocialfeed_configs][]" multiple>';
 
         $statement = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getConnectionForTable('tx_pxasocialfeed_domain_model_configuration')
@@ -62,7 +56,7 @@ class ConfigurationUtility
 
         while ($config = $statement->fetch()) {
             $selectedAttribute = '';
-            if (is_array($selectedConfigs) && in_array($config['uid'], $selectedConfigs)) {
+            if (is_array($selectedConfigurations) && in_array($config['uid'], $selectedConfigurations)) {
                 $selectedAttribute = ' selected="selected"';
             }
 
@@ -80,10 +74,10 @@ class ConfigurationUtility
     }
 
     /**
-     * @param array $configs
+     * @param array $configurations
      * @return string
      */
-    public static function getSelectedConfigsInfo($configs)
+    public static function getSelectedConfigurationsInfo(array $configurations)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
@@ -95,7 +89,7 @@ class ConfigurationUtility
                 $queryBuilder->expr()->in(
                     'uid',
                     $queryBuilder->createNamedParameter(
-                        $configs,
+                        $configurations,
                         Connection::PARAM_INT_ARRAY
                     )
                 )
@@ -105,7 +99,7 @@ class ConfigurationUtility
         $info = 'Feeds: ';
 
         while ($config = $statement->fetch()) {
-            $info .= $config['name'] . ' [ID: ' . $config['uid'] . ']; ';
+            $info .= $config['name'] . ' [UID: ' . $config['uid'] . ']; ';
         }
 
         return $info;

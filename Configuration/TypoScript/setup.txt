@@ -30,28 +30,26 @@ page.includeJSFooter {
     pxa_social_feed_5 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
 }
 
-[globalVar = GP:type=7378121]
-    pxaAjaxFeedLoad = PAGE
-    pxaAjaxFeedLoad {
-        typeNum = 7378121
-        config {
-            disableAllHeaderCode = 1
-        }
-
-        5 = USER_INT
-        5 {
-            userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-            vendorName = Pixelant
-            extensionName = PxaSocialFeed
-            pluginName = Showfeed
-
-            switchableControllerActions {
-                Feeds {
-                    1 = loadFeedAjax
-                }
-            }
-
-            settings =< plugin.tx_pxasocialfeed.settings
-        }
+pxaAjaxFeedLoad = PAGE
+pxaAjaxFeedLoad {
+    typeNum = 7378121
+    config {
+        disableAllHeaderCode = 1
     }
-[end]
+
+    5 = USER_INT
+    5 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        vendorName = Pixelant
+        extensionName = PxaSocialFeed
+        pluginName = Showfeed
+
+        switchableControllerActions {
+            Feeds {
+                1 = loadFeedAjax
+            }
+        }
+
+        settings =< plugin.tx_pxasocialfeed.settings
+    }
+}

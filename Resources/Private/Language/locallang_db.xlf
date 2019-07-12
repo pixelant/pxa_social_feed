@@ -105,59 +105,6 @@
                 <source>Storage</source>
             </trans-unit>
             <!--Table tx_pxasocialfeed_domain_model_config:END-->
-
-
-
-
-
-            <trans-unit id="tx_pxasocialfeed.task.import.name">
-                <source>Social Feed Import</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed.task.import.description">
-                <source>Import feeds from social network</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed.task.cleanuptask.name">
-                <source>Clean up obsolete entries</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed.task.cleanuptask.description">
-                <source>Remove obsolete social feed entries</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.name">
-                <source>Social Feed</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.amount_feeds">
-                <source>Amount of feeds on page</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.config">
-                <source>Choose configuration for plugin</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.loadLikesCount">
-                <source>Load likes count</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.load_type">
-                <source>Load type</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.presentation">
-                <source>Presentation</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial">
-                <source>Appearance of feed items</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial.0">
-                <source>Card</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial.1">
-                <source>Dynamic</source>
-            </trans-unit>
-
-            <trans-unit id="scheduler.configs">
-                <source>Available configurations</source>
-            </trans-unit>
-            <trans-unit id="scheduler.days">
-                <source>Delete entries older than given number of days by date created on server. It will leave at least same amount of records as is set in configuration.</source>
-            </trans-unit>
         </body>
     </file>
 </xliff>

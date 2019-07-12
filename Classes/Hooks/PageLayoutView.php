@@ -27,7 +27,7 @@ namespace Pixelant\PxaSocialFeed\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Service\FlexFormService;
