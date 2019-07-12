@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
+use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
@@ -13,6 +14,8 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
  */
 abstract class BaseUpdater implements FeedUpdaterInterface
 {
+    use EmitSignalTrait;
+
     /**
      * @var ObjectManager
      */

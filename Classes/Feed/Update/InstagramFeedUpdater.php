@@ -43,6 +43,9 @@ class InstagramFeedUpdater extends BaseUpdater
             // Add/update instagram feed data gotten from facebook
             $this->populateGraphInstagramFeed($feedItem, $rawData);
 
+            // Call hook
+            $this->emitSignal('beforeUpdateInstagramFeed', [$feedItem, $rawData, $source->getConfiguration()]);
+
             // Add/update
             $this->feedRepository->{$feedItem->_isNew() ? 'add' : 'update'}($feedItem);
         }

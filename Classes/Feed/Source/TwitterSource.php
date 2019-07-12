@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
-use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
+use Pixelant\PxaSocialFeed\Exception\BadResponseException;
+use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -30,13 +32,30 @@ class TwitterSource extends BaseSource
 
         $authHeader = $this->getAuthHeader($endPointUrl, $fields);
 
-        $items = $this->requestTwitterApi(
+        $response = $this->requestTwitterApi(
             $this->addFieldsAsGetParametersToUrl($endPointUrl, $fields),
             $authHeader
         );
+
+        $body = (string)$response->getBody();
+        $data = json_decode($body, true);
+
+        if (!is_array($data)) {
+            throw new InvalidFeedSourceData("Twitter response doesn't appear to be a valid json. '$body' returned by response.", 1562910457024);
+        }
+
+        return $data;
     }
 
-    protected function requestTwitterApi(string $url, string $autHeader): array
+    /**
+     * Request twitter api
+     *
+     * @param string $url
+     * @param string $autHeader
+     * @return ResponseInterface
+     * @throws BadResponseException
+     */
+    protected function requestTwitterApi(string $url, string $autHeader): ResponseInterface
     {
         $additionalOptions = [
             'headers' => [
@@ -47,22 +66,18 @@ class TwitterSource extends BaseSource
         /** @var RequestFactory $requestFactory */
         $requestFactory = GeneralUtility::makeInstance(RequestFactory::class);
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
+        /** @var ResponseInterface $response */
         $response = $requestFactory->request(
             $url,
             'GET',
             $additionalOptions
         );
 
-        \TYPO3\CMS\Extbase\Utility\DebuggerUtility::var_dump(json_decode($response->getBody(), true),$response->getStatusCode(),16);
-        die;
         if ($response->getStatusCode() === 200) {
-            return $response->getBody();
+            return $response;
         } else {
-            throw new ServerCommunicationException(
-                BaseController::translate('pxasocialfeed_module.labels.errorCommunication'),
-                1478084292
-            );
+            $body = (string)$response->getBody();
+            throw new BadResponseException("Twitter api return status '{$response->getStatusCode()}' while trying to request '$url' with message '$body'", 1562910160643);
         }
     }
 
@@ -92,7 +107,7 @@ class TwitterSource extends BaseSource
     }
 
     /**
-     * Get API url, for easy extend
+     * Get API url
      *
      * @return string
      */
@@ -110,7 +125,7 @@ class TwitterSource extends BaseSource
     {
         $configuration = $this->getConfiguration();
 
-        // Important to pass field value as string, because it encoded with rawurlencode
+        // Important to pass field value as string, because it's encoded with rawurlencode
         $fields = [
             'screen_name' => $configuration->getSocialId(),
             'count' => (string)$configuration->getMaxItems(),

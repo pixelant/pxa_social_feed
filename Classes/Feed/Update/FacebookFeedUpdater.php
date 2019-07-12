@@ -68,6 +68,9 @@ class FacebookFeedUpdater extends BaseUpdater
 
         $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
 
+        // Call hook
+        $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $configuration]);
+
         $this->feedRepository->{$isNew ? 'add' : 'update'}($feedItem);
     }
 
