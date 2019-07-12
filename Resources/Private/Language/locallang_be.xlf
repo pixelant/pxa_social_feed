@@ -9,9 +9,7 @@
 			<trans-unit id="mlang_labels_tabdescr">
 				<source>Facebook, Instagram, YouTube and Twitter feed</source>
 			</trans-unit>
-			<trans-unit id="pi1_wiz_description">
-            	<source>Facebook, Instagram, YouTube and Twitter feed</source>
-            </trans-unit>
+
             <trans-unit id="plugin_title">
                 <source>Pxa Social Feed</source>
             </trans-unit>
@@ -32,9 +30,6 @@
             </trans-unit>
             <trans-unit id="unlimited">
                 <source>Unlimited</source>
-            </trans-unit>
-            <trans-unit id="setStoragePid">
-                <source>Specify Storage Pid, if you need it.</source>
             </trans-unit>
             <trans-unit id="presentation">
                 <source>Presentation</source>
