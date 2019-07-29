@@ -55,7 +55,7 @@ class FacebookAccessTokenExpireService
     public function expireWhen(): int
     {
         $expireAt = $this->token->getFacebookAccessTokenMetadataExpirationDate();
-        if ($expireAt !== null) {
+        if ($expireAt !== null && $expireAt->getTimestamp() >= time()) {
             $today = new \DateTime();
             $interval = $today->diff($expireAt);
 
