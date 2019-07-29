@@ -92,27 +92,28 @@ class FeedRepository extends Repository
     }
 
     /**
-     * get feeds by config
+     * Get feeds by configurations
      *
-     * @param string $configurations
+     * @param array $configurations
      * @param int $limit
      * @return QueryResult
      */
-    public function findFeedsByConfig($configurations = '', $limit = 0)
+    public function findByConfigurations(array $configurations, int $limit = 0)
     {
-        die('TODO ME ' . __METHOD__);
         $query = $this->createQuery();
 
         if (!empty($configurations)) {
             $query->matching(
                 $query->in(
-                    'configuration.uid',
-                    GeneralUtility::intExplode(',', $configurations, true)
+                    'configuration',
+                    $configurations
                 )
             );
         }
 
-        $query->setLimit($limit);
+        if ($limit > 0) {
+            $query->setLimit($limit);
+        }
 
         return $query->execute();
     }

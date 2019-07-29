@@ -3,6 +3,7 @@
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Exception\UnsupportedTokenType;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -13,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class ParseMessageViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**
@@ -49,14 +49,11 @@ class ParseMessageViewHelper extends AbstractViewHelper
         $message = $arguments['message'] ?: $renderChildrenClosure();
         $type = $arguments['type'];
 
-        if (!in_array($type, Token::getAllConstant())) {
-            throw new \RuntimeException('Unsupported Feed type', 1514908474);
-        }
         if (!$message) {
             return '';
         }
 
-        return self::parseFeedMessage($message, $type);
+        return static::parseFeedMessage($message, $type);
     }
 
     /**
@@ -102,7 +99,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                     $text
                 );
                 break;
-            case Token::INSTAGRAM_OAUTH2:
+            case Token::INSTAGRAM:
                 //Convert hashtags to instagram searches in <a> links
                 $text = preg_replace(
                     "/#([A-Za-z0-9\/\.]*)/",
@@ -130,6 +127,8 @@ class ParseMessageViewHelper extends AbstractViewHelper
                     $text
                 );
                 break;
+            default:
+                throw new UnsupportedTokenType("Token type $type is not supported by view helper", 1564384491599);
         }
 
         return $text;
