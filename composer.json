@@ -46,7 +46,7 @@
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/pxa_social_feed ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/pxa_social_feed"
     ],
-    "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ Tests/ *.php",
+    "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ *.php && .Build/bin/phpcs -n --standard=PSR2 Configuration/TCA/",
     "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/ --whitelist=Classes --coverage-html code-coverage/unit",
     "tests:all": "composer php:codesniffer && composer php:unittests"
   },
