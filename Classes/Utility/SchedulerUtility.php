@@ -104,16 +104,4 @@ class SchedulerUtility
 
         return $info;
     }
-
-    /**
-     * @param int $days
-     * @return string
-     */
-    public static function getDaysInput($days = 0)
-    {
-        return sprintf(
-            '<input type="text" class="form-control" name="tx_scheduler[days]" value="%s" />',
-            htmlspecialchars($days)
-        );
-    }
 }

@@ -34,7 +34,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      *
      * @var ObjectStorage
      */
-    protected $feeds = [];
+    protected $feeds = null;
 
     /**
      * BaseUpdater constructor.

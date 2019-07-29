@@ -17,13 +17,6 @@ class FacebookAccessTokenExpireService
     protected $token = null;
 
     /**
-     * When we assume that token expire soon
-     *
-     * @var int
-     */
-    protected $soonExpireAfterDays = 5;
-
-    /**
      * @param Token $token
      */
     public function __construct(Token $token)
@@ -32,21 +25,25 @@ class FacebookAccessTokenExpireService
     }
 
     /**
-     * Check if accees token is valid
+     * Check if access token is valid
      *
      * @return bool
      */
     public function hasExpired(): bool
     {
-        return $this->token->isValidFacebookAccessToken();
+        return $this->token->isValidFacebookAccessToken() === false;
     }
 
     /**
+     * Check if token expire soon
+     *
+     * @param int $soonExpireAfterDays When we assume that token expire soon
      * @return bool
+     * @throws \Exception
      */
-    public function willExpireSoon(): bool
+    public function willExpireSoon(int $soonExpireAfterDays): bool
     {
-        return $this->expireWhen() <= $this->soonExpireAfterDays;
+        return $this->expireWhen() <= $soonExpireAfterDays;
     }
 
     /**

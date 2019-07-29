@@ -42,6 +42,7 @@ class ImportFeedsTaskService
 
     /**
      * TaskUtility constructor.
+     * @param NotificationService $notificationService
      */
     public function __construct(NotificationService $notificationService)
     {
@@ -110,6 +111,8 @@ class ImportFeedsTaskService
     }
 
     /**
+     * Check if facebook token expire, send notification if yes
+     *
      * @param Token $token
      */
     protected function checkFacebookAccessToken(Token $token): void
@@ -125,7 +128,7 @@ class ImportFeedsTaskService
                 LocalizationUtility::translate('email.access_token', 'PxaSocialFeed'),
                 LocalizationUtility::translate('email.access_token_expired', 'PxaSocialFeed')
             );
-        } elseif ($expireTokenService->willExpireSoon()) {
+        } elseif ($expireTokenService->willExpireSoon(5)) {
             $this->notificationService->notify(
                 LocalizationUtility::translate('email.access_token', 'PxaSocialFeed'),
                 LocalizationUtility::translate(

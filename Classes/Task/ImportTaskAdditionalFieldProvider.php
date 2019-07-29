@@ -115,7 +115,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
 
     /**
      * @param array $submittedData
-     * @param ImportTask $task
+     * @param AbstractTask|ImportTask $task
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
