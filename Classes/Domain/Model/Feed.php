@@ -176,9 +176,7 @@ class Feed extends AbstractEntity
      */
     public function getMessage(): string
     {
-        return $this->type == Token::FACEBOOK
-            ? $this->getDecodedMessage()
-            : $this->message;
+        return $this->message;
     }
 
     /**

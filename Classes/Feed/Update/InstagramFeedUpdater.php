@@ -69,7 +69,7 @@ class InstagramFeedUpdater extends BaseUpdater
         );
 
         // Set message
-        $feedItem->setMessage($data['caption'] ?: '');
+        $feedItem->setMessage($this->encodeMessage($data['caption'] ?: ''));
 
         // Set url
         $feedItem->setPostUrl($data['permalink']);

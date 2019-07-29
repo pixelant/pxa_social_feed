@@ -35,7 +35,7 @@ class TwitterFeedUpdater extends BaseUpdater
             }
 
             $this->updateFeedItem($feedItem, $rawData);
-            
+
             // Call hook
             $this->emitSignal('beforeUpdateTwitterFeed', [$feedItem, $rawData, $source->getConfiguration()]);
 
@@ -79,7 +79,7 @@ class TwitterFeedUpdater extends BaseUpdater
         // Update text
         $text = $rawData['full_text'] ?: $rawData['text'] ?: '';
         if ($feedItem->getMessage() != $text) {
-            $feedItem->setMessage($text);
+            $feedItem->setMessage($this->encodeMessage($text));
         }
 
         // Media

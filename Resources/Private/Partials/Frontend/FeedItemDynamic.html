@@ -20,7 +20,7 @@
             </f:if>
         </span>
         <p class="social-feed-message">
-            <f:format.raw>{feed.message -> pxa:parseMessage(type: feed.configuration.token.type) -> f:format.nl2br()}</f:format.raw>
+            <f:format.raw>{feed.decodedMessage -> pxa:parseMessage(type: feed.configuration.token.type) -> f:format.nl2br()}</f:format.raw>
         </p>
     </li>
 </html>
