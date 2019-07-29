@@ -5,7 +5,7 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 
+ *  (c) 2015
  *
  *  All rights reserved
  *
@@ -26,6 +26,8 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Facebook\Authentication\AccessTokenMetadata;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 
 /**
@@ -35,7 +37,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class TokenTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class TokenTest extends UnitTestCase
 {
     /**
      * @var Token
@@ -55,25 +57,277 @@ class TokenTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getSocialTypeReturnsInitialValueForInteger()
+    public function initialValueForTypeForPid()
     {
-        $this->assertSame(
-            0,
-            $this->subject->getSocialType()
-        );
+        $this->assertEquals(0, $this->subject->getPid());
     }
 
     /**
      * @test
      */
-    public function setSocialTypeForIntegerSetsSocialType()
+    public function canSetPid()
     {
-        $this->subject->setSocialType(12);
+        $pid = 12;
 
-        $this->assertAttributeEquals(
-            12,
-            'socialType',
-            $this->subject
-        );
+        $this->subject->setPid($pid);
+
+        $this->assertEquals($pid, $this->subject->getPid());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForType()
+    {
+        $this->assertEquals(0, $this->subject->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetType()
+    {
+        $value = Token::INSTAGRAM;
+
+        $this->subject->setType($value);
+
+        $this->assertEquals($value, $this->subject->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForAppId()
+    {
+        $this->assertEquals('', $this->subject->getAppId());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetAppId()
+    {
+        $value = 'appId';
+
+        $this->subject->setAppId($value);
+
+        $this->assertEquals($value, $this->subject->getAppId());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForAppSecret()
+    {
+        $this->assertEquals('', $this->subject->getAppSecret());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetAppSecret()
+    {
+        $value = 'appSecret';
+
+        $this->subject->setAppSecret($value);
+
+        $this->assertEquals($value, $this->subject->getAppSecret());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForAccessToken()
+    {
+        $this->assertEquals('', $this->subject->getAccessToken());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetAccessToken()
+    {
+        $value = 'AccessToken';
+
+        $this->subject->setAccessToken($value);
+
+        $this->assertEquals($value, $this->subject->getAccessToken());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForApiKey()
+    {
+        $this->assertEquals('', $this->subject->getApiKey());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetApiKey()
+    {
+        $value = 'apiKey';
+
+        $this->subject->setApiKey($value);
+
+        $this->assertEquals($value, $this->subject->getApiKey());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForApiSecretKey()
+    {
+        $this->assertEquals('', $this->subject->getApiSecretKey());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetApiSecretKey()
+    {
+        $value = 'apiSecretKey';
+
+        $this->subject->setApiSecretKey($value);
+
+        $this->assertEquals($value, $this->subject->getApiSecretKey());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueForAccessTokenSecret()
+    {
+        $this->assertEquals('', $this->subject->getAccessTokenSecret());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetAccessTokenSecret()
+    {
+        $value = 'AccessTokenSecret';
+
+        $this->subject->setAccessTokenSecret($value);
+
+        $this->assertEquals($value, $this->subject->getAccessTokenSecret());
+    }
+
+    /**
+     * @test
+     */
+    public function isValidFacebookAccessTokenReturnFalseIfAccessTokenEmpty()
+    {
+        $this->subject->setAccessToken('');
+
+        $this->assertFalse($this->subject->isValidFacebookAccessToken());
+    }
+
+    /**
+     * @test
+     */
+    public function getFacebookAccessTokenValidPeriodReturnDifferenceInDays()
+    {
+        $expect = '+7';
+        $endDate = (new \DateTime())->modify('+7 days');
+
+        $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadataExpirationDate']);
+        $mockedToken
+            ->expects($this->once())
+            ->method('getFacebookAccessTokenMetadataExpirationDate')
+            ->willReturn($endDate);
+
+        $this->assertEquals($expect, $mockedToken->getFacebookAccessTokenValidPeriod());
+    }
+
+    /**
+     * @test
+     */
+    public function getFacebookAccessTokenMetadataExpirationDateReturnExpireAtIfAvailable()
+    {
+        $date = new \DateTime();
+
+        $mockedFacebookAccessTokenMetadata = $this->createMock(AccessTokenMetadata::class);
+        $mockedFacebookAccessTokenMetadata
+            ->expects($this->once())
+            ->method('getExpiresAt')
+            ->willReturn($date);
+
+        $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadata']);
+        $mockedToken
+            ->expects($this->once())
+            ->method('getFacebookAccessTokenMetadata')
+            ->willReturn($mockedFacebookAccessTokenMetadata);
+
+        $this->assertSame($date, $mockedToken->getFacebookAccessTokenMetadataExpirationDate());
+    }
+
+    /**
+     * @test
+     */
+    public function getFacebookAccessTokenMetadataExpirationDateTryToGetDateAccessExpireDateIfExpireDateNotAvailable()
+    {
+        $date = new \DateTime();
+
+        $mockedFacebookAccessTokenMetadata = $this->createMock(AccessTokenMetadata::class);
+        $mockedFacebookAccessTokenMetadata
+            ->expects($this->once())
+            ->method('getExpiresAt')
+            ->willReturn(0);
+
+        $mockedFacebookAccessTokenMetadata
+            ->expects($this->once())
+            ->method('getField')
+            ->with('data_access_expires_at')
+            ->willReturn(time());
+
+        $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadata']);
+        $mockedToken
+            ->expects($this->exactly(2))
+            ->method('getFacebookAccessTokenMetadata')
+            ->willReturn($mockedFacebookAccessTokenMetadata);
+
+        $this->assertTrue($mockedToken->getFacebookAccessTokenMetadataExpirationDate() instanceof \DateTime);
+    }
+
+    /**
+     * @test
+     */
+    public function isFacebookTypeReturnTrueIfOfTypeFacebook()
+    {
+        $this->subject->setType(Token::FACEBOOK);
+
+        $this->assertTrue($this->subject->isFacebookType());
+    }
+
+    /**
+     * @test
+     */
+    public function isInstagramTypeReturnTrueIfOfTypeInstagram()
+    {
+        $this->subject->setType(Token::INSTAGRAM);
+
+        $this->assertTrue($this->subject->isInstagramType());
+    }
+
+    /**
+     * @test
+     */
+    public function isTwitterTypeReturnTrueIfOfTypeTwitter()
+    {
+        $this->subject->setType(Token::TWITTER);
+
+        $this->assertTrue($this->subject->isTwitterType());
+    }
+
+    /**
+     * @test
+     */
+    public function isYoutubeTypeReturnTrueIfOfTypeYoutube()
+    {
+        $this->subject->setType(Token::YOUTUBE);
+
+        $this->assertTrue($this->subject->isYoutubeType());
     }
 }

@@ -2,10 +2,15 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 
+ *  (c) 2015
  *
  *  All rights reserved
  *
@@ -33,7 +38,7 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class ConfigurationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class ConfigurationTest extends UnitTestCase
 {
     /**
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
@@ -53,126 +58,119 @@ class ConfigurationTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getSocialIdReturnsInitialValueForString()
+    public function initialValueOfPid()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getSocialId()
-        );
+        $this->assertEquals(0, $this->subject->getPid());
     }
 
     /**
      * @test
      */
-    public function setSocialIdForStringSetsSocialId()
+    public function canSetPid()
     {
-        $this->subject->setSocialId('Conceived at T3CON10');
+        $value = 123;
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'socialId',
-            $this->subject
-        );
+        $this->subject->setPid($value);
+        $this->assertEquals($value, $this->subject->getPid());
     }
 
     /**
      * @test
      */
-    public function getNameReturnsInitialValueForString()
+    public function initialValueOfName()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getName()
-        );
+        $this->assertEquals('', $this->subject->getName());
     }
 
     /**
      * @test
      */
-    public function setNameForStringSetsConfigurationName()
+    public function canSetName()
     {
-        $this->subject->setName('Conceived at T3CON10');
+        $value = 'name';
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'name',
-            $this->subject
-        );
+        $this->subject->setName($value);
+
+        $this->assertEquals($value, $this->subject->getName());
     }
 
     /**
      * @test
      */
-    public function getPidReturnsInitialValueForInteger()
+    public function initialValueOfSocialId()
     {
-        $this->assertSame(
-            0,
-            $this->subject->getPid()
-        );
+        $this->assertEquals('', $this->subject->getSocialId());
     }
 
     /**
      * @test
      */
-    public function setPidForIntegerSetsFeedPid()
+    public function canSetSocialId()
     {
-        $this->subject->setPid(12);
+        $value = 'social id';
 
-        $this->assertAttributeEquals(
-            12,
-            'pid',
-            $this->subject
-        );
+        $this->subject->setSocialId($value);
+
+        $this->assertEquals($value, $this->subject->getSocialId());
     }
 
     /**
      * @test
      */
-    public function getFeedCountReturnsInitialValueForInteger()
+    public function initialValueOfMaxItems()
     {
-        $this->assertSame(
-            0,
-            $this->subject->getFeedsLimit()
-        );
+        $this->assertEquals(0, $this->subject->getMaxItems());
     }
 
     /**
      * @test
      */
-    public function setFeedsLimitForIntegerSetsFeedsLimit()
+    public function canSetMaxItems()
     {
-        $this->subject->setFeedsLimit(12);
+        $value = 1000;
 
-        $this->assertAttributeEquals(
-            12,
-            'feedsLimit',
-            $this->subject
-        );
+        $this->subject->setMaxItems($value);
+
+        $this->assertEquals($value, $this->subject->getMaxItems());
     }
 
     /**
      * @test
      */
-    public function getTokenReturnsInitialValueForTokens()
+    public function initialValueOfStorage()
     {
-        $this->assertEquals(
-            null,
-            $this->subject->getToken()
-        );
+        $this->assertEquals(0, $this->subject->getStorage());
     }
 
     /**
      * @test
      */
-    public function setTokenForTokensSetsToken()
+    public function canSetStorage()
     {
-        $tokenFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Token();
-        $this->subject->setToken($tokenFixture);
+        $value = 12;
 
-        $this->assertAttributeEquals(
-            $tokenFixture,
-            'token',
-            $this->subject
-        );
+        $this->subject->setStorage($value);
+
+        $this->assertEquals($value, $this->subject->getStorage());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueOfToken()
+    {
+        $this->assertNull($this->subject->getToken());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetToken()
+    {
+        $token = new Token();
+
+        $this->subject->setToken($token);
+
+        $this->assertSame($token, $this->subject->getToken());
     }
 }
