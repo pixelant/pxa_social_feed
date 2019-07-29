@@ -1,32 +1,39 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
      xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
 
-    <f:layout name="Default"/>
+<f:layout name="Default"/>
 
-    <f:section name="main">
-        <div class="load-ajax-feed-wrapper"
-             data-identifier="pxa-load-ajax-feed"
-             data-uri="{f:uri.action(pageType: '7378121', absolute: '1', action: 'loadFeedAjax', arguments: '{settings: \'{settings}\'}')}">
+<f:section name="main">
+		<div class="load-ajax-feed-wrapper"
+				 data-identifier="pxa-load-ajax-feed"
+				 data-uri="{f:render(section: 'uri') -> f:spaceless()}">
 
-            <div class="feed-loading-overlay">
-                <div class="animated-loader">
-                    <div class="wBall" id="wBall_1">
-                        <div class="wInnerBall"></div>
-                    </div>
-                    <div class="wBall" id="wBall_2">
-                        <div class="wInnerBall"></div>
-                    </div>
-                    <div class="wBall" id="wBall_3">
-                        <div class="wInnerBall"></div>
-                    </div>
-                    <div class="wBall" id="wBall_4">
-                        <div class="wInnerBall"></div>
-                    </div>
-                    <div class="wBall" id="wBall_5">
-                        <div class="wInnerBall"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </f:section>
+				<div class="feed-loading-overlay">
+						<div class="animated-loader">
+								<div class="wBall" id="wBall_1">
+										<div class="wInnerBall"></div>
+								</div>
+								<div class="wBall" id="wBall_2">
+										<div class="wInnerBall"></div>
+								</div>
+								<div class="wBall" id="wBall_3">
+										<div class="wInnerBall"></div>
+								</div>
+								<div class="wBall" id="wBall_4">
+										<div class="wInnerBall"></div>
+								</div>
+								<div class="wBall" id="wBall_5">
+										<div class="wInnerBall"></div>
+								</div>
+						</div>
+				</div>
+		</div>
+</f:section>
+
+<f:section name="uri">
+	<f:uri.action action="loadFeedAjax"
+								pageType="7378121"
+								absolute="1"
+								arguments="{configuration: settings.configuration, feedsLimit: settings.feedsLimit, partial: settings.partial, presentation: settings.presentation}" />
+</f:section>
 </div>

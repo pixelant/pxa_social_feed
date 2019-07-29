@@ -1,11 +1,8 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<f:if condition="{settings.dateFormat}">
-    <f:then></f:then>
-    <f:else>
-        <div class="alert alert-danger">
-            <h4 class="alert-title"><f:translate key="fe.error"/></h4>
-            <div class="alert-message"><f:translate key="fe.no_date"/></div>
-        </div>
-    </f:else>
+<f:if condition="{settings.dateFormat} == false">
+		<div class="alert alert-danger">
+				<h4 class="alert-title"><f:translate key="fe.error"/></h4>
+				<div class="alert-message"><f:translate key="fe.no_date"/></div>
+		</div>
 </f:if>
 </html>

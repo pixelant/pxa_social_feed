@@ -2,13 +2,11 @@
       xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers"
       data-namespace-typo3-fluid="true">
 
-    <li class="social-feed-item social-feed-{feed.configuration.token.socialType}" data-posturl="{feed.postUrl}">
-        <f:if condition="{feed.title}">
-            <h3 class="social-feed-title">{feed.title}</h3>
-        </f:if>
-        <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.image)}" style="{f:if(else: '', then: 'background-image:url({feed.image});', condition: feed.image)}">
+    <li class="social-feed-item social-feed-{feed.configuration.token.type}" data-posturl="{feed.postUrl}">
+				<h3 class="social-feed-title">{feed.title}</h3>
+        <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.image)}" style="{f:if(then: 'background-image:url({feed.image});', condition: feed.image)}">
             <div class="social-feed-information">
-                <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/type-{feed.configuration.token.socialType}-icon.svg" class="social-feed-icon" alt="social icon" />
+                <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/type-{feed.configuration.token.type}-icon.svg" class="social-feed-icon" alt="social icon" />
                 <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
             </div>
             <f:if condition="{settings.loadLikesCount}">
@@ -19,7 +17,7 @@
             </f:if>
         </div>
         <p class="social-feed-message">
-            <f:format.raw>{feed.message -> pxa:parseMessage(type: feed.configuration.token.socialType) -> f:format.nl2br()}</f:format.raw>
+            <f:format.raw>{feed.message -> pxa:parseMessage(type: feed.configuration.token.type) -> f:format.nl2br()}</f:format.raw>
         </p>
     </li>
 </html>
