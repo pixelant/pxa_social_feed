@@ -83,8 +83,12 @@ class FeedsController extends ActionController
      * @param string $presentation
      * @return void
      */
-    public function loadFeedAjaxAction(string $configuration, int $feedsLimit = 10, string $partial = '', string $presentation = '')
-    {
+    public function loadFeedAjaxAction(
+        string $configuration,
+        int $feedsLimit = 10,
+        string $partial = '',
+        string $presentation = ''
+    ) {
         $feeds = $this->feedRepository->findByConfigurations(
             GeneralUtility::intExplode(',', $configuration, true),
             $feedsLimit

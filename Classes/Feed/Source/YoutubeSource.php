@@ -36,7 +36,9 @@ class YoutubeSource extends BaseSource
         $data = json_decode($body, true);
 
         if (!is_array($data) || !isset($data['items'])) {
+            // @codingStandardsIgnoreStart
             throw new InvalidFeedSourceData("Youtube response doesn't appear to be a valid json. Items are missing. Response return '$body'.", 1562910457024);
+            // @codingStandardsIgnoreEnd
         }
 
         return $data['items'];

@@ -51,9 +51,11 @@ abstract class BaseFacebookSource extends BaseSource
         $body = $response->getDecodedBody();
 
         if (!is_array($body) || !isset($body['data'])) {
+            // @codingStandardsIgnoreStart
             throw new InvalidFeedSourceData("Invalid data received for configuration {$this->getConfiguration()->getName()}.", 1562842385128);
+            // @codingStandardsIgnoreEnd
         }
-        
+
         return $body['data'];
     }
 

@@ -42,7 +42,9 @@ class InstagramSource extends BaseFacebookSource
         $responseBody = $response->getDecodedBody();
 
         if (empty($responseBody['instagram_business_account']['id'])) {
+            // @codingStandardsIgnoreStart
             throw new \UnexpectedValueException("Could not get instagram bussines account ID for page with ID '$pageId'. Check you settings.", 1562841411121);
+            // @codingStandardsIgnoreEnd
         }
 
         return $responseBody['instagram_business_account']['id'];

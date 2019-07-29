@@ -84,7 +84,9 @@ class ImportFeedsTaskService
                     $factory = GeneralUtility::makeInstance(YoutubeFactory::class);
                     break;
                 default:
+                    // @codingStandardsIgnoreStart
                     throw new UnsupportedTokenType("Token type '{$configuration->getToken()->getType()}' is not supported", 1562837370194);
+                    // @codingStandardsIgnoreEnd
             }
 
             if (isset($factory)) {

@@ -80,7 +80,11 @@ class ImportTask extends AbstractTask
             if ($notificationService->canSendEmail()) {
                 $notificationService->notify(
                     LocalizationUtility::translate('error.import_error', 'PxaSocialFeed'),
-                    LocalizationUtility::translate('error.import_error_description', 'PxaSocialFeed', [$exception->getMessage()])
+                    LocalizationUtility::translate(
+                        'error.import_error_description',
+                        'PxaSocialFeed',
+                        [$exception->getMessage()]
+                    )
                 );
             }
 

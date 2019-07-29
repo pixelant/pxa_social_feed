@@ -79,7 +79,9 @@ abstract class BaseSource implements FeedSourceInterface
             return $response;
         } else {
             $body = (string)$response->getBody();
+            // @codingStandardsIgnoreStart
             throw new BadResponseException("Api request return status '{$response->getStatusCode()}' while trying to request '$url' with message '$body'", 1562910160643);
+            // @codingStandardsIgnoreEnd
         }
     }
 }
