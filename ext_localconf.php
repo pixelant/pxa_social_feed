@@ -19,7 +19,7 @@ defined('TYPO3_MODE') or die();
     $ll = 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_be.xlf:';
 
     // @codingStandardsIgnoreStart
-    # Import task
+    // Import task
     $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][\Pixelant\PxaSocialFeed\Task\ImportTask::class] = [
         'extension' => $_EXTKEY,
         'title' => $ll . 'task.import.name',
