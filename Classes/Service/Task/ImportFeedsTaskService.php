@@ -106,7 +106,14 @@ class ImportFeedsTaskService
         $source = $feedFactory->getFeedSource($configuration);
         $updater = $feedFactory->getFeedUpdater();
 
+        // Create/Update feed
         $updater->update($source);
+        // Save changes
+        $updater->persist();
+
+        // Remove items from feed that are not valid anymore
+        $updater->cleanUp($configuration);
+        // Save changes
         $updater->persist();
     }
 

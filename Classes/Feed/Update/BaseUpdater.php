@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
@@ -52,6 +53,16 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     public function persist(): void
     {
         $this->objectManager->get(PersistenceManagerInterface::class)->persistAll();
+    }
+
+    /**
+     * Clean all outdated records
+     *
+     * @param Configuration $configuration
+     */
+    public function cleanUp(Configuration $configuration): void
+    {
+        $this->feedRepository->removeNotInStorage($this->feeds, $configuration);
     }
 
     /**
