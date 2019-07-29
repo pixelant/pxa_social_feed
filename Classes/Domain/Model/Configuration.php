@@ -69,6 +69,7 @@ class Configuration extends AbstractEntity
     /**
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @lazy
      */
     protected $token = null;
 
