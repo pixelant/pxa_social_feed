@@ -8,3 +8,5 @@
 /.Build/*
 composer.lock
 /vendor
+
+Documentation-GENERATED-temp
