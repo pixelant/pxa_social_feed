@@ -5,9 +5,12 @@
 ### Pxa Social Feed ###  
   
 Add Facebook, Instagram, Twitter and Youtube feed on the site.  
+
+[Official documentation](https://docs.typo3.org/p/pixelant/pxa-survey/master/en-us/)
+
   
 ### How to setup ? ###  
-  
+
 #### Install extension 
 
 Use composer to get extension.
