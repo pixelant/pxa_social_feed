@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Model;
 
@@ -28,6 +29,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 
 /**
  * Feeds
@@ -55,7 +57,7 @@ class Feed extends AbstractEntity
     /**
      * updateDate
      *
-     * @var int
+     * @var \DateTime
      */
     protected $updateDate = null;
 
@@ -111,14 +113,16 @@ class Feed extends AbstractEntity
     /**
      * type
      *
-     * @var string
+     * @var int
      */
-    protected $type = '';
+    protected $type = 0;
 
     /**
      * token
      *
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @lazy
      */
     protected $configuration = null;
 
@@ -134,7 +138,7 @@ class Feed extends AbstractEntity
      *
      * @return \DateTime $date
      */
-    public function getPostDate()
+    public function getPostDate(): ?\DateTime
     {
         return $this->postDate;
     }
@@ -151,22 +155,17 @@ class Feed extends AbstractEntity
     }
 
     /**
-     * Returns the postUrl
-     *
-     * @return string $postUrl
+     * @return string
      */
-    public function getPostUrl()
+    public function getPostUrl(): string
     {
         return $this->postUrl;
     }
 
     /**
-     * Sets the postUrl
-     *
      * @param string $postUrl
-     * @return void
      */
-    public function setPostUrl($postUrl)
+    public function setPostUrl(string $postUrl): void
     {
         $this->postUrl = $postUrl;
     }
@@ -176,11 +175,9 @@ class Feed extends AbstractEntity
      *
      * @return string $message
      */
-    public function getMessage()
+    public function getMessage(): string
     {
-        return $this->type == Token::FACEBOOK
-            ? $this->getDecodedMessage()
-            : $this->message;
+        return $this->message;
     }
 
     /**
@@ -188,7 +185,7 @@ class Feed extends AbstractEntity
      *
      * @return string $message
      */
-    public function getDecodedMessage()
+    public function getDecodedMessage(): string
     {
         return json_decode(
             sprintf(
@@ -204,7 +201,7 @@ class Feed extends AbstractEntity
      * @param string $message
      * @return void
      */
-    public function setMessage($message)
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
@@ -214,7 +211,7 @@ class Feed extends AbstractEntity
      *
      * @return string $image
      */
-    public function getImage()
+    public function getImage(): string
     {
         return $this->image;
     }
@@ -225,7 +222,7 @@ class Feed extends AbstractEntity
      * @param string $image
      * @return void
      */
-    public function setImage($image)
+    public function setImage(string $image): void
     {
         $this->image = $image;
     }
@@ -235,7 +232,7 @@ class Feed extends AbstractEntity
      *
      * @return string $title
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -246,7 +243,7 @@ class Feed extends AbstractEntity
      * @param string $title
      * @return void
      */
-    public function setTitle($title)
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
@@ -254,20 +251,24 @@ class Feed extends AbstractEntity
     /**
      * Returns the config
      *
-     * @return \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration
+     * @return Configuration $configuration
      */
-    public function getConfiguration()
+    public function getConfiguration(): ?Configuration
     {
+        if ($this->configuration instanceof LazyLoadingProxy) {
+            $this->configuration->_loadRealInstance();
+        }
+
         return $this->configuration;
     }
 
     /**
      * Sets the token
      *
-     * @param \Pixelant\PxaSocialFeed\Domain\Model\Configuration $configuration
+     * @param Configuration $configuration
      * @return void
      */
-    public function setConfiguration(Configuration $configuration)
+    public function setConfiguration(?Configuration $configuration)
     {
         $this->configuration = $configuration;
     }
@@ -275,7 +276,7 @@ class Feed extends AbstractEntity
     /**
      * @return string
      */
-    public function getExternalIdentifier()
+    public function getExternalIdentifier(): string
     {
         return $this->externalIdentifier;
     }
@@ -283,15 +284,15 @@ class Feed extends AbstractEntity
     /**
      * @param string $externalIdentifier
      */
-    public function setExternalIdentifier($externalIdentifier)
+    public function setExternalIdentifier(string $externalIdentifier)
     {
         $this->externalIdentifier = $externalIdentifier;
     }
 
     /**
-     * @return int
+     * @return \DateTime|null
      */
-    public function getUpdateDate()
+    public function getUpdateDate(): ?\DateTime
     {
         return $this->updateDate;
     }
@@ -299,7 +300,7 @@ class Feed extends AbstractEntity
     /**
      * @param int $updateDate
      */
-    public function setUpdateDate($updateDate)
+    public function setUpdateDate(\DateTime $updateDate)
     {
         $this->updateDate = $updateDate;
     }
@@ -307,7 +308,7 @@ class Feed extends AbstractEntity
     /**
      * @return int
      */
-    public function getLikes()
+    public function getLikes(): int
     {
         return $this->likes;
     }
@@ -315,7 +316,7 @@ class Feed extends AbstractEntity
     /**
      * @param int $likes
      */
-    public function setLikes($likes)
+    public function setLikes(int $likes)
     {
         $this->likes = $likes;
     }
@@ -323,7 +324,7 @@ class Feed extends AbstractEntity
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -331,7 +332,7 @@ class Feed extends AbstractEntity
     /**
      * @param string $type
      */
-    public function setType($type)
+    public function setType(int $type)
     {
         $this->type = $type;
     }
@@ -341,7 +342,7 @@ class Feed extends AbstractEntity
      *
      * @return int $mediaType
      */
-    public function getMediaType()
+    public function getMediaType(): int
     {
         return $this->mediaType;
     }
@@ -352,7 +353,7 @@ class Feed extends AbstractEntity
      * @param int $mediaType
      * @return void
      */
-    public function setMediaType($mediaType)
+    public function setMediaType(int $mediaType)
     {
         $this->mediaType = $mediaType;
     }

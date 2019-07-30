@@ -1,0 +1,45 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:layout name="Backend/Default"/>
+
+    <f:section name="content">
+        <f:comment>Empty flash messages</f:comment>
+        <f:flashMessages as="messages" />
+
+        <f:render partial="Backend/ValidationErrors" arguments="{for: 'token'}" />
+
+        <h4>
+            <f:translate key="module.token_action" />
+        </h4>
+
+        <f:form action="updateToken" name="token" object="{token}" enctype="multipart/form-data">
+            <table class="table table-bordered">
+
+                <f:render partial="Backend/TokenEdit/Type{type}" arguments="{_all}" />
+
+                <f:if condition="{availableTypes}">
+                    <tr>
+                        <td><f:translate key="module.type"/></td>
+                        <td><f:form.select id="select-type" property="type" options="{availableTypes}" value="{type}" class="form-control"/></td>
+                        <f:for each="{availableTypes}" as="tokenTitle" key="tokenType">
+                            <input type="hidden" id="type-url-{tokenType}" value="{f:uri.action(action: 'editToken', arguments: {token: token, type: tokenType})}">
+                        </f:for>
+                    </tr>
+                </f:if>
+                <tr>
+                    <td></td>
+                    <td>
+                        <f:form.submit class="btn btn-success"
+                                       name="save"
+                                       value="{f:translate(key: 'module.submit')}" />
+                    </td>
+                </tr>
+            </table>
+        </f:form>
+
+        <f:link.action class="btn btn-default" action="index" arguments="{activeTokenTab: 1}">
+            <f:translate key="module.go_back" />
+        </f:link.action>
+    </f:section>
+</div>

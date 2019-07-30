@@ -2,6 +2,10 @@
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
+use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
+
 /***************************************************************
  *
  *  Copyright notice
@@ -30,8 +34,20 @@ namespace Pixelant\PxaSocialFeed\Controller;
 /**
  * FeedsController
  */
-class FeedsController extends BaseController
+class FeedsController extends ActionController
 {
+    /**
+     * @var FeedRepository
+     */
+    protected $feedRepository = null;
+
+    /**
+     * @param FeedRepository $feedRepository
+     */
+    public function injectFeedRepository(FeedRepository $feedRepository)
+    {
+        $this->feedRepository = $feedRepository;
+    }
 
     /**
      * List action
@@ -41,8 +57,9 @@ class FeedsController extends BaseController
     public function listAction()
     {
         $limit = $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10;
+        $configurations = GeneralUtility::intExplode(',', $this->settings['configuration'], true);
 
-        $feeds = $this->feedRepository->findFeedsByConfig($this->settings['configuration'], $limit);
+        $feeds = $this->feedRepository->findByConfigurations($configurations, $limit);
 
         $this->view->assign('feeds', $feeds);
     }
@@ -60,22 +77,28 @@ class FeedsController extends BaseController
     /**
      * Load feed with ajax
      *
-     * @param array $settings
+     * @param string $configuration
+     * @param int $feedsLimit
+     * @param string $partial
+     * @param string $presentation
      * @return void
      */
-    public function loadFeedAjaxAction($settings)
-    {
-        $limit = $settings['feedsLimit'] ? $settings['feedsLimit'] : 10;
-
-        $feeds = $this->feedRepository->findFeedsByConfig(
-            $settings['configuration'],
-            (int)$limit
+    public function loadFeedAjaxAction(
+        string $configuration,
+        int $feedsLimit = 10,
+        string $partial = '',
+        string $presentation = ''
+    ) {
+        $feeds = $this->feedRepository->findByConfigurations(
+            GeneralUtility::intExplode(',', $configuration, true),
+            $feedsLimit
+        );
+        $settings = array_merge(
+            $this->settings,
+            compact('configuration', 'feedsLimit', 'partial', 'presentation')
         );
 
-        $this->view->assignMultiple([
-            'feeds' => $feeds,
-            'settings' => $settings
-        ]);
+        $this->view->assignMultiple(compact('feeds', 'settings'));
 
         header('Content-Type: application/json');
 

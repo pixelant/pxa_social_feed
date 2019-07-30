@@ -4,14 +4,12 @@
           product-name="pxa_social_feed">
         <header/>
         <body>
+            <!--Table tx_pxasocialfeed_domain_model_feed:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds">
                 <source>Social Posts</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.social_type">
-                <source>Social Type</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.date">
-                <source>Date</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.post_date">
+                <source>Post date</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.post_url">
                 <source>Post Url</source>
@@ -28,136 +26,85 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.likes">
                 <source>Likes</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.description">
-                <source>Description</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_url">
-                <source>External Url</source>
-            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.config">
-                <source>Config</source>
+                <source>Configuration</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.media_type">
+                <source>Media type</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.external_identifier">
+                <source>External identifier</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.update_date">
+                <source>Update date</source>
+            </trans-unit>
+            <!--Table tx_pxasocialfeed_domain_model_feed:END-->
+
+            <!--Table tx_pxasocialfeed_domain_model_token:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens">
                 <source>Tokens</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.facebook_app_id">
-                <source>Facebook App Id</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_id">
+                <source>App Id</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.facebook_app_secret">
-                <source>Facebook App Secret</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.instagram_client_id">
-                <source>Instagram client id</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.instagram_client_secret">
-                <source>Instagram client secret</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.instagram_access_token">
-                <source>Instagram access token</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_consumer_key">
-                <source>Twitter consumer key</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_consumer_secret">
-                <source>Twitter consumer secret</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_access_token">
-                <source>Twitter access token</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_access_token_secret">
-                <source>Twitter access token_secret</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_secret">
+                <source>App Secret</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.access_token">
                 <source>Access Token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.social_type">
-                <source>Social Type</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.youtube_api_key">
+                <source>Youtube api key</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.api_key">
+                <source>Twitter consumer api key</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.api_secret_key">
+                <source>Twitter consumer api secret key</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.access_token_secret">
+                <source>Twitter access token secret</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_access_token">
+                <source>Twitter access token</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type">
+                <source>Type of token</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.1">
+                <source>Facebook API</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.2">
+                <source>Instagram facebook API</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.3">
+                <source>Twitter API</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.4">
+                <source>Youtube API</source>
+            </trans-unit>
+            <!--Table tx_pxasocialfeed_domain_model_configuration:END-->
+
+            <!--Table tx_pxasocialfeed_domain_model_configuration:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_config">
                 <source>Configuration</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
-                <source>Social Id</source>
-            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.name">
-                <source>Configuration Name</source>
+                <source>Name</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_pid">
-                <source>Feed Pid</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
+                <source>Social id</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.executed">
-                <source>Executed</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.feeds_limit">
-                <source>Feed limit</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.max_items">
+                <source>Maximum import items</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.token">
                 <source>Token</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_config.feed_storage">
-                <source>Feed storage</source>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.storage">
+                <source>Storage</source>
             </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.1">
-                <source>Facebook</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.2">
-                <source>Instagram</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.3">
-                <source>Twitter</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.4">
-                <source>Youtube</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed.task.import.name">
-                <source>Social Feed Import</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed.task.import.description">
-                <source>Import feeds from social network</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed.task.cleanuptask.name">
-                <source>Clean up obsolete entries</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed.task.cleanuptask.description">
-                <source>Remove obsolete social feed entries</source>
-            </trans-unit>
-
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.name">
-                <source>Social Feed</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.amount_feeds">
-                <source>Amount of feeds on page</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.config">
-                <source>Choose configuration for plugin</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.loadLikesCount">
-                <source>Load likes count</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.load_type">
-                <source>Load type</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.presentation">
-                <source>Presentation</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial">
-                <source>Appearance of feed items</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial.0">
-                <source>Card</source>
-            </trans-unit>
-            <trans-unit id="tx_pxasocialfeed_plugin.flexform.partial.1">
-                <source>Dynamic</source>
-            </trans-unit>
-
-            <trans-unit id="scheduler.configs">
-                <source>Available configurations</source>
-            </trans-unit>
-            <trans-unit id="scheduler.days">
-                <source>Delete entries older than given number of days by date created on server. It will leave at least same amount of records as is set in configuration.</source>
-            </trans-unit>
+            <!--Table tx_pxasocialfeed_domain_model_config:END-->
         </body>
     </file>
 </xliff>

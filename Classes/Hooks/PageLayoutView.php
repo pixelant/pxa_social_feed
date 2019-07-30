@@ -27,11 +27,13 @@ namespace Pixelant\PxaSocialFeed\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PageLayoutView
@@ -39,85 +41,38 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class PageLayoutView
 {
-
     /**
-     * Path to the locallang file
+     * Path to layout preview
+     * @TODO make it configurable
      *
      * @var string
      */
-    const LLPATH = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:';
+    protected $templatePath = 'EXT:pxa_social_feed/Resources/Private/Templates/PageLayoutView/PluginPreview.html';
 
     /**
+     * Generate plugin BE preview info
+     *
      * @param array $params
      * @return string
      */
-    public function getExtensionInformation($params)
+    public function getExtensionInformation($params): string
     {
-        $info = '<strong>' . $this->getLanguageService()->sL(self::LLPATH . 'plugin_title') . '</strong><br>';
-        $additionalInfo = '';
-
         if ($params['row']['list_type'] == 'pxasocialfeed_showfeed') {
-            $flexformData = GeneralUtility::xml2array($params['row']['pi_flexform']);
+            $view = $this->getView();
+            $settings = $this->getFlexFormService()->convertFlexFormContentToArray($params['row']['pi_flexform'] ?? '');
 
-            $settings = [];
-            if (is_array($flexformData['data']['sDEF']['lDEF'])) {
-                $rawSettings = $flexformData['data']['sDEF']['lDEF'];
-                foreach ($rawSettings as $field => $rawSetting) {
-                    $this->flexFormToArray($field, $rawSetting['vDEF'], $settings);
-                }
-            }
-
-            // get settings array
-            if ($settings['settings']) {
-                ArrayUtility::mergeRecursiveWithOverrule($settings, $settings['settings']);
+            if (isset($settings['settings'])) {
+                $settings += $settings['settings'];
                 unset($settings['settings']);
             }
 
-            // load type info
-            $additionalInfo .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'loadType'),
-                $settings['switchableControllerActions']
-            );
-
-            // presentation info
-            $additionalInfo .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'presentation'),
-                $settings['presentation']
-            );
-
-            // appearance of feed items info
-            $additionalInfo .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'appearanceFeedItem'),
-                $settings['partial']
-            );
-
-            // limit info
-            $additionalInfo .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'feedsLimit'),
-                $settings['feedsLimit'] ? $settings['feedsLimit'] : $this->getLanguageService()->sL(
-                    self::LLPATH . 'unlimited'
-                )
-            );
-
-            // like show info
-            $additionalInfo .= sprintf(
-                '<b>%s</b>: %s<br>',
-                $this->getLanguageService()->sL(self::LLPATH . 'loadLikesCount'),
-                $settings['loadLikesCount'] ? $this->getLanguageService()->sL(
-                    self::LLPATH . 'yes'
-                ) : $this->getLanguageService()->sL(self::LLPATH . 'no')
-            );
-
             // configurations info
+            $configurations = '';
             if ($settings['configuration']) {
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                     ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
 
-                $statement = $queryBuilder
+                $configurations = $queryBuilder
                     ->select('name')
                     ->from('tx_pxasocialfeed_domain_model_configuration')
                     ->where(
@@ -129,56 +84,42 @@ class PageLayoutView
                             )
                         )
                     )
-                    ->execute();
+                    ->execute()
+                    ->fetchAll(\PDO::FETCH_COLUMN);
 
-                $feeds = [];
-                while ($configuration = $statement->fetchColumn(0)) {
-                    $feeds[] = $configuration;
+                if (is_array($configurations)) {
+                    $configurations = implode(', ', $configurations);
                 }
-
-                $additionalInfo .= sprintf(
-                    '<b>%s:</b> %s',
-                    $this->getLanguageService()->sL(self::LLPATH . 'feeds'),
-                    implode(', ', $feeds)
-                );
             }
+
+            $view->assignMultiple(compact('settings', 'configurations'));
+
+            return $view->render();
         }
 
-        return $info . ($additionalInfo ? '<hr><pre>' . $additionalInfo . '</pre>' : '');
+        return '';
     }
 
     /**
+     * Get view
      *
-     * @return \TYPO3\CMS\Lang\LanguageService
+     * @return StandaloneView
      */
-    protected function getLanguageService()
+    protected function getView(): StandaloneView
     {
-        return $GLOBALS['LANG'];
+        $template = GeneralUtility::getFileAbsFileName($this->templatePath);
+
+        $view = GeneralUtility::makeInstance(StandaloneView::class);
+        $view->setTemplatePathAndFilename($template);
+
+        return $view;
     }
 
     /**
-     * go through all settings and generate array
-     *
-     * @param $field
-     * @param $value
-     * @param $settings
-     * @return void
+     * @return FlexFormService
      */
-    protected function flexFormToArray($field, $value, &$settings)
+    protected function getFlexFormService(): FlexFormService
     {
-
-        $fieldNameParts = GeneralUtility::trimExplode('.', $field);
-        if (count($fieldNameParts) > 1) {
-            $name = $fieldNameParts[0];
-            unset($fieldNameParts[0]);
-
-            if (!isset($settings[$name])) {
-                $settings[$name] = [];
-            }
-
-            $this->flexFormToArray(implode('.', $fieldNameParts), $value, $settings[$name]);
-        } else {
-            $settings[$fieldNameParts[0]] = $value;
-        }
+        return GeneralUtility::makeInstance(FlexFormService::class);
     }
 }

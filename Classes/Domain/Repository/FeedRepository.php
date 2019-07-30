@@ -2,8 +2,12 @@
 
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -50,7 +54,6 @@ class FeedRepository extends Repository
      */
     public function initializeObject()
     {
-
         /** @var $defaultQuerySettings Typo3QuerySettings */
         $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
 
@@ -58,7 +61,7 @@ class FeedRepository extends Repository
         $defaultQuerySettings->setRespectStoragePage(false);
 
         if (TYPO3_MODE === 'BE' || TYPO3_MODE === 'CLI') {
-            // don't add fields from enablecolumns constraint
+            // don't add fields from enable columns constraint
             $defaultQuerySettings->setIgnoreEnableFields(true);
             $defaultQuerySettings->setEnableFieldsToBeIgnored(['disabled']);
         }
@@ -67,38 +70,62 @@ class FeedRepository extends Repository
     }
 
     /**
-     * get feeds by config
+     * Remove feed items for configuration that were not listed in object storage
      *
-     * @param string $configurations
-     * @param int $limit
-     * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult|object
+     * @param ObjectStorage $storage
+     * @param Configuration $configuration
      */
-    public function findFeedsByConfig($configurations = '', $limit = 0)
+    public function removeNotInStorage(ObjectStorage $storage, Configuration $configuration): void
+    {
+        $query = $this->createQuery();
+
+        $query->matching(
+            $query->logicalAnd(
+                $query->logicalNot($query->in('uid', $storage)),
+                $query->equals('configuration', $configuration)
+            )
+        );
+
+        foreach ($query->execute() as $itemToRemove) {
+            $this->remove($itemToRemove);
+        }
+    }
+
+    /**
+     * Get feeds by configurations
+     *
+     * @param array $configurations
+     * @param int $limit
+     * @return QueryResult
+     */
+    public function findByConfigurations(array $configurations, int $limit = 0)
     {
         $query = $this->createQuery();
 
         if (!empty($configurations)) {
             $query->matching(
                 $query->in(
-                    'configuration.uid',
-                    GeneralUtility::intExplode(',', $configurations, true)
+                    'configuration',
+                    $configurations
                 )
             );
         }
 
-        $query->setLimit($limit);
+        if ($limit > 0) {
+            $query->setLimit($limit);
+        }
 
         return $query->execute();
     }
 
     /**
-     * get feed by specific storage Pid and external identifier
+     * Get feed by specific storage Pid and external identifier
      *
      * @param string $externalIdentifier
      * @param int $pid
-     * @return \TYPO3\CMS\Extbase\Persistence\Generic\QueryResult|object
+     * @return Feed|object
      */
-    public function findOneByExternalIdentifier($externalIdentifier, $pid)
+    public function findOneByExternalIdentifier(string $externalIdentifier, int $pid): ?Feed
     {
         $query = $this->createQuery();
 

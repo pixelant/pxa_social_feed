@@ -1,0 +1,42 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:layout name="Backend/Default" />
+
+    <f:section name="content">
+        <f:flashMessages />
+
+        <div id="tokens-confs">
+            <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                <li class="tab-switch{f:if(condition: activeTokenTab, else: ' active')}">
+                    <a href="#configurations" data-toggle="tab"><f:translate key="module.configurations"/></a>
+                </li>
+                <li class="{f:if(condition: isTokensValid, then:'', else: 'has-validation-error ')}tab-switch{f:if(condition: activeTokenTab, then: ' active')}">
+                    <a href="#tokens" data-toggle="tab"><f:translate key="module.tokens"/></a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane{f:if(condition: activeTokenTab, else: ' active')}" id="configurations">
+                    <br>
+
+                    <f:render partial="Backend/ListConfigurations" section="list" arguments="{configurations: configurations}"/>
+
+                    <f:link.action class="btn btn-default" action="editConfiguration">
+                        <f:translate key="module.add_new"/>
+                    </f:link.action>
+                </div>
+
+                <div class="tab-pane{f:if(condition: activeTokenTab, then: ' active')}" id="tokens">
+                    <br>
+
+                    <f:render partial="Backend/ListTokens" section="list" arguments="{tokens: tokens}"/>
+
+                    <f:link.action class="btn btn-default" action="editToken">
+                        <f:translate key="module.add_new"/>
+                    </f:link.action>
+                </div>
+            </div>
+        </div>
+    </f:section>
+</div>

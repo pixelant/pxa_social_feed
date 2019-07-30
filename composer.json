@@ -2,7 +2,7 @@
   "name": "pixelant/pxa-social-feed",
   "description": "Add Facebook, Instagram, and Twitter feeds to your site.",
   "type": "typo3-cms-extension",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
       "Pixelant\\PxaSocialFeed\\": "Classes/"
@@ -16,24 +16,18 @@
       "role": "Developer"
     }
   ],
-  "replace": {
-    "pxa_social_feed": "self.version",
-    "typo3-ter/pxa-social-feed": "self.version"
-  },
   "require": {
+    "php": ">=7.1",
     "typo3/cms-core": "^8.7 || ^9.5",
-    "facebook/graph-sdk": "^5.6.3"
+    "facebook/graph-sdk": "~5.7.0"
   },
   "require-dev": {
-    "nimut/testing-framework": "^2.0",
-    "squizlabs/php_codesniffer": "2.*",
-    "symfony/finder": "^3.0"
+    "nimut/testing-framework": "^4.1",
+    "squizlabs/php_codesniffer": "^3.4"
   },
   "autoload-dev": {
     "psr-4": {
-      "Pixelant\\PxaSocialFeed\\Tests\\": "Tests/",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+      "Pixelant\\PxaSocialFeed\\Tests\\": "Tests/"
     }
   },
   "config": {
@@ -48,8 +42,8 @@
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/pxa_social_feed ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/pxa_social_feed"
     ],
-    "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ Tests/ *.php",
-    "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/ --whitelist=Classes --coverage-html code-coverage/unit",
+    "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ *.php && .Build/bin/phpcs -n --standard=PSR2 Configuration/TCA/",
+    "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
     "tests:all": "composer php:codesniffer && composer php:unittests"
   },
   "extra": {
@@ -57,6 +51,7 @@
       "dev-master": "0.0.x-dev"
     },
     "typo3/cms": {
+      "extension-key": "pxa_social_feed",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
     }

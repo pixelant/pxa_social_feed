@@ -34,7 +34,6 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
  */
 class TokenRepository extends AbstractRepository
 {
-
     /**
      * @var array $defaultOrderings
      */

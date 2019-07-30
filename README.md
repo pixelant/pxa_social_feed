@@ -1,90 +1,27 @@
-# Pixelant #
-[![Build Status](https://travis-ci.org/pixelant/pxa_social_feed.svg?branch=master)](https://travis-ci.org/pixelant/pxa_social_feed)
 
-### Pxa Social Feed ###
+# Pixelant #  
+[![Build Status](https://travis-ci.org/pixelant/pxa_social_feed.svg?branch=master)](https://travis-ci.org/pixelant/pxa_social_feed)  
+  
+### Pxa Social Feed ###  
+  
+Add Facebook, Instagram, Twitter and Youtube feed on the site.  
 
-Allow to add facebook, instagram, twitter and youtube feeds on site.
+[Official documentation](https://docs.typo3.org/p/pixelant/pxa-survey/master/en-us/)
 
-### How to setup ? ###
+  
+### How to setup ? ###  
 
-There are 4 main steps how to make it work:
+#### Install extension 
 
-* Configure access tokens and feeds configuration for facebook, instagram, twitter and youtube in BE module.
-* Add FE plugin on page.
-* Include extension TypoScript in TS template of site
-* Configure scheduler task
+Use composer to get extension.
+  
 
-#### Create tokens using BE module. ####
-In "Admin tools" find "Social Feed" module. First create new access tokens to be able to fetch feeds.
-Access tokens types:
+    composer require pixelant/pxa-social-feed
 
-* Facebook. Create new app to get credentials. [developers page](https://developers.facebook.com/apps)
-
-    1. App Id 
-    2. App Secret
-
-* Instagram OAuth. Register a new client to get credentials [developers page](https://www.instagram.com/developer/). 
-
-    1. Client Id
-    2. Client Secret
-
-    After Client Id and Client Secret are set, **press Generate Access Token" button.** 
-
-    **IMPORTANT !!!** To get Access Token - Valid redirect URI should be "http://yoursiteurl.com/typo3/index.php"
-
-* Twitter. [Obtaining access tokens](https://dev.twitter.com/oauth/overview)
-
-    1. Consumer Key
-    2. Consumer Secret
-    3. Access Token
-    4. Access Token Secret
-    
-* Youtube. Read about how to get API key. [developers page](https://developers.google.com/youtube/v3/getting-started)
-
-    1. Api Key 
-
-* Facebook OAuth (Instagram). Create new app to get credentials. [developers page](https://developers.facebook.com/apps) 
-
-    1. Client Id
-    2. Client Secret
-
-    After Client Id and Client Secret are set, **press "Generate Access Token" button.** 
-
-    If facebook app requires redirect uri - it is displayed and could be copied in the backend module above the **Generate Access Token** button.
-
-#### Create configurations using BE module. ####
-In configuration there are next fields:
-
-* Configuration name - *just a custom name*
-* Social ID - ID of account where to fetch feed from. For example:
-  * Facebook page id, like **30674257397** (a https://www.facebook.com/typo3/ page id)
-  * Instagram account id, like **561765545** (Resultify page id)     
-  * Instagram hashtag, like **#typo3**
-  * In case of using 'Facebook OAuth (Instagram)' token - facebook page id which instagram account is connected to   
-* Limit - *minimum number of records to keep and fetch from feed at once*
-* Storage - *specify folder where to save feed items*
-* Token - *choose access token*
-
-#### Add plugin on a page. ####
-Create new content element and on "**Plugins**" tab find "**Social Feed**".
-
-#### Plugin Options ####
-
-* Amount of feeds on page - *limit of feeds to show at once*
-* Load likes count - *show like count for posts or no*
-* Choose configuration for plugin - *configurations to show on page*
-
-#### Include TS template ####
-Include static (from extensions): "Pxa Social Feed (pxa_social_feed)"
-
-### Scheduler tasks ###
-There are two scheduler tasks:
-
-* Social Feed Import - *Import feeds from social network*
-* Clean up obsolete entries - *Remove obsolete social feed entries*
-
-#### Social Feed Import ####
-Need only to set Frequency and choose configurations.
-
-#### Clean up obsolete entries ####
-Remove obsolete records for given number of days. It won't remove records if amount is less than limit in configuration.
+#### Configure extension in TYPO3 backend
+There are 4 main steps in order to get it work:  
+  
+* Configure access tokens and feeds configuration for facebook, instagram, twitter and youtube in BE module.  Read more about this on TYPO3 repository extension documentation.
+* Include extension TypoScript.
+* Add frontend plugin on page.
+* Configure scheduler task.

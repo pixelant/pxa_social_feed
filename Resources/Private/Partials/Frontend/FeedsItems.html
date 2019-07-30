@@ -11,9 +11,9 @@
 	<f:variable name="partial">{settings.partial}</f:variable>
 </f:if>
 
-<ul class="social-feed-container social-feed-{partial->f:format.case(mode: 'lower')} {presentation}">
+<ul class="social-feed-container social-feed-{partial -> f:format.case(mode: 'lower')} {presentation}">
     <f:for each="{feeds}" as="feed">
-        <f:render partial="Frontend/{partial}" arguments="{feed: feed, settings: settings}"/>
+        <f:render partial="Frontend/{partial}" arguments="{feed: feed}"/>
     </f:for>
 </ul>
 

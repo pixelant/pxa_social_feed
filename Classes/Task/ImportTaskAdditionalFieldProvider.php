@@ -1,9 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Task;
 
-use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
@@ -51,16 +53,34 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         $additionalFields = [];
 
         if ($this->getAction($parentObject) == 'add') {
-            $taskInfo['configs'] = null;
+            $taskInfo['pxasocialfeed_configs'] = null;
+            $taskInfo['pxasocialfeed_receiver_email'] = '';
+            $taskInfo['pxasocialfeed_sender_email'] = '';
         }
 
         if ($this->getAction($parentObject) == 'edit') {
-            $taskInfo['configs'] = $task->getConfigs();
+            $taskInfo['pxasocialfeed_configs'] = $task->getConfigurations();
+            $taskInfo['pxasocialfeed_receiver_email'] = $task->getReceiverEmail();
+            $taskInfo['pxasocialfeed_sender_email'] = $task->getSenderEmail();
         }
 
-        $additionalFields['configs'] = [
-            'code' => ConfigurationUtility::getAvailabelConfigsSelectBox($taskInfo['configs']),
-            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:scheduler.configs',
+        $additionalFields['pxasocialfeed_configs'] = [
+            'code' => SchedulerUtility::getAvailableConfigurationsSelectBox($taskInfo['pxasocialfeed_configs'] ?? []),
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.configs',
+            'cshKey' => '',
+            'cshLabel' => ''
+        ];
+
+        $additionalFields['pxasocialfeed_receiver_email'] = [
+            'code' => $this->getInputField('pxasocialfeed_receiver_email', $taskInfo['pxasocialfeed_receiver_email']),
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.receiver_email',
+            'cshKey' => '',
+            'cshLabel' => ''
+        ];
+
+        $additionalFields['pxasocialfeed_sender_email'] = [
+            'code' => $this->getInputField('pxasocialfeed_sender_email', $taskInfo['pxasocialfeed_sender_email']),
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.sender_email',
             'cshKey' => '',
             'cshLabel' => ''
         ];
@@ -80,8 +100,12 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         // nothing to validate, just list of uids
         $valid = false;
 
-        if (!isset($submittedData['configs'])) {
+        if (!isset($submittedData['pxasocialfeed_configs'])) {
             $this->addMessage('Wrong configurations select', FlashMessage::ERROR);
+        } elseif (!$this->isValidEmail($submittedData['pxasocialfeed_sender_email'])
+            || !$this->isValidEmail($submittedData['pxasocialfeed_receiver_email'])
+        ) {
+            $this->addMessage('Please provide a valid email address.', FlashMessage::ERROR);
         } else {
             $valid = true;
         }
@@ -91,10 +115,40 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
 
     /**
      * @param array $submittedData
-     * @param ImportTask $task
+     * @param AbstractTask|ImportTask $task
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
-        $task->setConfigs($submittedData['configs']);
+        $task->setConfigurations($submittedData['pxasocialfeed_configs']);
+        $task->setReceiverEmail($submittedData['pxasocialfeed_receiver_email']);
+        $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
+    }
+
+    /**
+     * Input field code
+     *
+     * @param string $fieldName
+     * @param string $value
+     * @return string
+     */
+    protected function getInputField(string $fieldName, string $value): string
+    {
+        return sprintf(
+            '<input type="text" class="form-control" name="tx_scheduler[%s]" id="%s" value="%s" size="30">',
+            $fieldName,
+            $fieldName,
+            htmlspecialchars($value)
+        );
+    }
+
+    /**
+     * Validate email
+     *
+     * @param string $email
+     * @return bool
+     */
+    protected function isValidEmail(string $email): bool
+    {
+        return empty($email) || GeneralUtility::validEmail($email);
     }
 }

@@ -30,25 +30,12 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
 
 use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
+use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 class TokenValidator extends AbstractValidator
 {
-
-    /**
-     * @var ConfigurationUtility
-     */
-    protected $configurationUtility;
-
-    /**
-     * @param ConfigurationUtility $configurationUtility
-     */
-    public function injectConfigurationUtility(ConfigurationUtility $configurationUtility)
-    {
-        $this->configurationUtility = $configurationUtility;
-    }
-
     /**
      * Validates tokens
      *
@@ -58,27 +45,47 @@ class TokenValidator extends AbstractValidator
      */
     protected function isValid($token)
     {
-        $credentialsFields = GeneralUtility::trimExplode(
-            ',',
-            $this->configurationUtility->getConfiguration($token->getSocialType())
-        );
-        $args = GeneralUtility::_GP('tx_pxasocialfeed_tools_pxasocialfeedpxasocialfeed');
+        if (!in_array($token->getType(), Token::getAvailableTokensTypes())) {
+            $this->addError(
+                $this->translateErrorMessage(
+                    'validator.error.wrong_type',
+                    'PxaSocialFeed'
+                ),
+                1562851281828
+            );
 
-        foreach ($credentialsFields as $field) {
-            if (!isset($args['credentials'][$field]) || trim($args['credentials'][$field]) == '') {
-                $errorCode = 1463130121;
+            return false;
+        }
+
+        switch (true) {
+            case $token->isFacebookType():
+            case $token->isInstagramType():
+                $properties = ['appId', 'appSecret'];
+                break;
+            case $token->isTwitterType():
+                $properties = ['apiKey', 'apiSecretKey', 'accessToken', 'accessTokenSecret'];
+                break;
+            case $token->isYoutubeType():
+                $properties = ['apiKey'];
+                break;
+        }
+
+        foreach ($properties as $property) {
+            $value = ObjectAccess::getProperty($token, $property);
+
+            if (empty($value)) {
+                $this->addError(
+                    $this->translateErrorMessage(
+                        'validator.error.all_fields_require',
+                        'PxaSocialFeed'
+                    ),
+                    1221559976
+                );
+
+                return false;
             }
         }
 
-        if (isset($errorCode)) {
-            $this->addError(
-                BaseController::translate(
-                    'pxasocialfeed_module.labels.errorcode.' . $errorCode
-                ),
-                $errorCode
-            );
-        }
-
-        return (!isset($errorCode));
+        return true;
     }
 }

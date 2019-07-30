@@ -1,0 +1,48 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:section name="list">
+        <f:if condition="{configurations}">
+            <f:then>
+                <table class="table table-striped">
+                    <tr class="info">
+                        <td>UID</td>
+                        <td><f:translate key="module.name"/></td>
+                        <td><f:translate key="module.social_id"/></td>
+                        <td><f:translate key="module.max_items"/></td>
+                        <td><f:translate key="module.storage"/></td>
+                        <td><f:translate key="module.token"/></td>
+                        <td><f:translate key="module.edit"/></td>
+                        <td><f:translate key="module.delete"/></td>
+                    </tr>
+
+                    <f:for each="{configurations}" as="configuration">
+                        <tr>
+                            <td>{configuration.uid}</td>
+                            <td>{configuration.name}</td>
+                            <td>{configuration.socialId}</td>
+                            <td>{configuration.maxItems}</td>
+                            <td>{configuration.storageTitle} (#{configuration.storage})</td>
+                            <td>{configuration.token.title} (#{configuration.token.uid})</td>
+                            <td>
+                                <f:link.action action="editConfiguration" class="btn btn-default" arguments="{configuration: configuration}">
+                                    <f:translate key="module.edit"/>
+                                </f:link.action>
+                            </td>
+                            <td>
+                                <f:link.action action="deleteConfiguration" class="btn btn-danger  delete-action" arguments="{configuration: configuration}">
+                                    <f:translate key="module.delete"/>
+                                </f:link.action>
+                            </td>
+                        </tr>
+                    </f:for>
+                </table>
+            </f:then>
+            <f:else>
+                <f:render partial="Backend/NothingFoundMessage" contentAs="message">
+                    <f:translate key="module.nothing_were_found"/>
+                </f:render>
+            </f:else>
+        </f:if>
+    </f:section>
+</div>

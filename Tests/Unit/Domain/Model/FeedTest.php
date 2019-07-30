@@ -2,10 +2,14 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 
+use Nimut\TestingFramework\TestCase\UnitTestCase;
+use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
+use Pixelant\PxaSocialFeed\Domain\Model\Feed;
+
 /***************************************************************
  *  Copyright notice
  *
- *  (c) 2015 
+ *  (c) 2015
  *
  *  All rights reserved
  *
@@ -33,7 +37,7 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  *
  */
-class FeedTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
+class FeedTest extends UnitTestCase
 {
     /**
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Feed
@@ -53,202 +57,251 @@ class FeedTest extends \TYPO3\CMS\Core\Tests\UnitTestCase
     /**
      * @test
      */
-    public function getSocialTypeReturnsInitialValueForString()
+    public function initialValueOfPid()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getType()
-        );
+        $this->assertEquals(0, $this->subject->getPid());
     }
 
     /**
      * @test
      */
-    public function setSocialTypeForStringSetsSocialType()
+    public function canSetPid()
     {
-        $this->subject->setType('Conceived at T3CON10');
+        $value = 123;
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'type',
-            $this->subject
-        );
+        $this->subject->setPid($value);
+        $this->assertEquals($value, $this->subject->getPid());
     }
 
     /**
      * @test
      */
-    public function getDateReturnsInitialValueForDateTime()
+    public function initialValueOfUpdateDate()
     {
-        $this->assertEquals(
-            null,
-            $this->subject->getPostDate()
-        );
+        $this->assertNull($this->subject->getUpdateDate());
     }
 
     /**
      * @test
      */
-    public function setDateForDateTimeSetsDate()
+    public function canSetUpdateDate()
     {
-        $dateTimeFixture = new \DateTime();
-        $this->subject->setPostDate($dateTimeFixture);
+        $date = new \DateTime();
 
-        $this->assertAttributeEquals(
-            $dateTimeFixture,
-            'postDate',
-            $this->subject
-        );
+        $this->subject->setUpdateDate($date);
+
+        $this->assertSame($date, $this->subject->getUpdateDate());
     }
 
     /**
      * @test
      */
-    public function getPostUrlReturnsInitialValueForString()
+    public function initialValueOfExternalIdentifier()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getPostUrl()
-        );
+        $this->assertEmpty($this->subject->getExternalIdentifier());
     }
 
     /**
      * @test
      */
-    public function setPostUrlForStringSetsPostUrl()
+    public function canSetExternalIdentifier()
     {
-        $this->subject->setPostUrl('Conceived at T3CON10');
+        $value = 'test';
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'postUrl',
-            $this->subject
-        );
+        $this->subject->setExternalIdentifier($value);
+
+        $this->assertEquals($value, $this->subject->getExternalIdentifier());
     }
 
     /**
      * @test
      */
-    public function getMessageReturnsInitialValueForString()
+    public function initialValueOfPostDate()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getMessage()
-        );
+        $this->assertNull($this->subject->getPostDate());
     }
 
     /**
      * @test
      */
-    public function setMessageForStringSetsMessage()
+    public function canSetPostDate()
     {
-        $this->subject->setMessage('Conceived at T3CON10');
+        $date = new \DateTime();
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'message',
-            $this->subject
-        );
+        $this->subject->setPostDate($date);
+
+        $this->assertSame($date, $this->subject->getPostDate());
     }
 
     /**
      * @test
      */
-    public function getImageReturnsInitialValueForString()
+    public function initialValueOfPostUrl()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getImage()
-        );
+        $this->assertEmpty($this->subject->getPostUrl());
     }
 
     /**
      * @test
      */
-    public function setImageForStringSetsImage()
+    public function canSetPostUrl()
     {
-        $this->subject->setImage('Conceived at T3CON10');
+        $value = 'post url';
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'image',
-            $this->subject
-        );
+        $this->subject->setPostUrl($value);
+
+        $this->assertEquals($value, $this->subject->getPostUrl());
     }
 
     /**
      * @test
      */
-    public function getTitleReturnsInitialValueForString()
+    public function initialValueOfMessage()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getTitle()
-        );
+        $this->assertEmpty($this->subject->getMessage());
     }
 
     /**
      * @test
      */
-    public function setTitleForStringSetsTitle()
+    public function canSetMessage()
     {
-        $this->subject->setTitle('Conceived at T3CON10');
+        $value = 'message';
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'title',
-            $this->subject
-        );
+        $this->subject->setMessage($value);
+
+        $this->assertEquals($value, $this->subject->getMessage());
     }
 
     /**
      * @test
      */
-    public function getExternalIdentifierReturnsInitialValueForString()
+    public function initialValueOfImage()
     {
-        $this->assertSame(
-            '',
-            $this->subject->getExternalIdentifier()
-        );
+        $this->assertEmpty($this->subject->getImage());
     }
 
     /**
      * @test
      */
-    public function setExternalIdentifierForStringSetsExternalIdentifier()
+    public function canSetImage()
     {
-        $this->subject->setExternalIdentifier('Conceived at T3CON10');
+        $value = 'image';
 
-        $this->assertAttributeEquals(
-            'Conceived at T3CON10',
-            'externalIdentifier',
-            $this->subject
-        );
+        $this->subject->setImage($value);
+
+        $this->assertEquals($value, $this->subject->getImage());
     }
 
     /**
      * @test
      */
-    public function getConfigurationReturnsInitialValueForConfiguration()
+    public function initialValueOfLikes()
     {
-        $this->assertEquals(
-            null,
-            $this->subject->getConfiguration()
-        );
+        $this->assertEquals(0, $this->subject->getLikes());
     }
 
     /**
      * @test
      */
-    public function setConfigurationForConfigSetsConfig()
+    public function canSetLikes()
     {
-        $configurationFixture = new \Pixelant\PxaSocialFeed\Domain\Model\Configuration();
-        $this->subject->setConfiguration($configurationFixture);
+        $value = 120;
 
-        $this->assertAttributeEquals(
-            $configurationFixture,
-            'configuration',
-            $this->subject
-        );
+        $this->subject->setLikes($value);
+
+        $this->assertEquals($value, $this->subject->getLikes());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueOfTitle()
+    {
+        $this->assertEmpty($this->subject->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetTitle()
+    {
+        $value = 'title';
+
+        $this->subject->setTitle($value);
+
+        $this->assertEquals($value, $this->subject->getTitle());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueOfType()
+    {
+        $this->assertEquals(0, $this->subject->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetType()
+    {
+        $value = 3;
+
+        $this->subject->setType($value);
+
+        $this->assertEquals($value, $this->subject->getType());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueOfConfiguration()
+    {
+        $this->assertNull($this->subject->getConfiguration());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetConfiguration()
+    {
+        $fixture = new Configuration();
+
+        $this->subject->setConfiguration($fixture);
+
+        $this->assertSame($fixture, $this->subject->getConfiguration());
+    }
+
+    /**
+     * @test
+     */
+    public function initialValueOfMediaType()
+    {
+        $this->assertEquals(Feed::IMAGE, $this->subject->getMediaType());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetMediaType()
+    {
+        $value = Feed::VIDEO;
+
+        $this->subject->setMediaType($value);
+
+        $this->assertEquals($value, $this->subject->getMediaType());
+    }
+
+    /**
+     * @test
+     */
+    public function getDecodedMessageReturnMessage()
+    {
+        $value = 'message2';
+
+        $this->subject->setMessage($value);
+
+        $this->assertEquals($value, $this->subject->getDecodedMessage());
     }
 }

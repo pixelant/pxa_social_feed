@@ -22,36 +22,37 @@ page.includeCSS {
     pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/Css/socialFeed.css
 }
 
-page.includeJSFooter {
+page.includeJSFooterlibs {
     pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/JavaScript/jquery.dotdotdot.min.js
     pxa_social_feed_2 = EXT:pxa_social_feed/Resources/Public/JavaScript/owl.carousel.min.js
     pxa_social_feed_3 = EXT:pxa_social_feed/Resources/Public/JavaScript/masonry.pkgd.min.js
     pxa_social_feed_4 = EXT:pxa_social_feed/Resources/Public/JavaScript/imagesloaded.pkgd.min.js
+}
+
+page.includeJSFooter {
     pxa_social_feed_5 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
 }
 
-[globalVar = GP:type=7378121]
-    pxaAjaxFeedLoad = PAGE
-    pxaAjaxFeedLoad {
-        typeNum = 7378121
-        config {
-            disableAllHeaderCode = 1
-        }
-
-        5 = USER_INT
-        5 {
-            userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
-            vendorName = Pixelant
-            extensionName = PxaSocialFeed
-            pluginName = Showfeed
-
-            switchableControllerActions {
-                Feeds {
-                    1 = loadFeedAjax
-                }
-            }
-
-            settings =< plugin.tx_pxasocialfeed.settings
-        }
+pxaAjaxFeedLoad = PAGE
+pxaAjaxFeedLoad {
+    typeNum = 7378121
+    config {
+        disableAllHeaderCode = 1
     }
-[end]
+
+    5 = USER_INT
+    5 {
+        userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
+        vendorName = Pixelant
+        extensionName = PxaSocialFeed
+        pluginName = Showfeed
+
+        switchableControllerActions {
+            Feeds {
+                1 = loadFeedAjax
+            }
+        }
+
+        settings =< plugin.tx_pxasocialfeed.settings
+    }
+}

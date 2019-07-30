@@ -4,301 +4,276 @@
 var setFormValueFromBrowseWin;
 
 define(['jquery',
-    'TYPO3/CMS/Backend/Modal',
-    'TYPO3/CMS/Backend/Severity',
-    'TYPO3/CMS/Backend/Notification',
-    'clipboard'
+	'TYPO3/CMS/Backend/Modal',
+	'TYPO3/CMS/Backend/Severity',
+	'TYPO3/CMS/Backend/Notification',
+	'clipboard'
 ], function ($, Modal, Severity, Notification, clipboard) {
 
-    return (function ($, Modal, Severity, Notification, clipboard) {
+	return (function ($, Modal, Severity, Notification, clipboard) {
 
-        /**
-         * @private
-         *
-         * Hold the instance (Singleton Pattern)
-         */
-        var _socialFeedModuleInstance = null;
+		/**
+		 * @private
+		 *
+		 * Hold the instance (Singleton Pattern)
+		 */
+		var _socialFeedModuleInstance = null;
 
-        /**
-         * Main mdoule JS
-         *
-         * @return {{init: init}}
-         * @constructor
-         */
-        function SocialFeedModule(settings) {
+		/**
+		 * Main mdoule JS
+		 *
+		 * @return {{init: init}}
+		 * @constructor
+		 */
+		function SocialFeedModule(settings) {
 
-            /**
-             * If was initialized
-             *
-             * @type {boolean}
-             * @private
-             */
-            var _isRunning = false;
+			/**
+			 * If was initialized
+			 *
+			 * @type {boolean}
+			 * @private
+			 */
+			var _isRunning = false;
 
-            /**
-             * HTML Identifiers
-             * @type {{}}
-             * @private
-             */
-            var _domElementsSelectors = {
-                deleteButton: '.delete-action',
-                selectSocialType: '#select-social-type',
-                socialTypeUrlKeep: '#social-type-url-',
-                toolTip: '.tooltip-hold',
-                instagramTokenButton: '#get-instagram-toket',
-                instagramTokenTip: '#get-instagram-hidden-tip',
-                instagramGetUserIdButton: '#get-inst-user-id',
-                winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
-                feedsStorageInput: '[data-identifier="feeds-storage-input"]',
-                feedsStorageTitle: '[data-identifier="feed-storage-title"]',
-                migrateRecordsWrapper: '.migrate-records-wrapper',
-                copyRedirectUriButton: '#copy-redirect-uri-button'
-            };
+			/**
+			 * HTML Identifiers
+			 * @type {{}}
+			 * @private
+			 */
+			var _domElementsSelectors = {
+				confirmationButton: '.delete-action,.confirmation-action',
+				selectSocialType: '#select-type',
+				socialTypeUrlKeep: '#type-url-',
+				winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
+				feedsStorageInput: '[data-identifier="feeds-storage-input"]',
+				feedsStorageTitle: '[data-identifier="feed-storage-title"]',
+				copyRedirectUriButton: '.copy-redirect-uri-button',
+				facebookLoginButton: '.facebook-login-link'
+			};
 
-            /**
-             * run if not running yet
-             *
-             * @public
-             */
-            function run() {
-                if (_isRunning === false) {
-                    _bootstrap();
-                }
+			/**
+			 * run if not running yet
+			 *
+			 * @public
+			 */
+			function run() {
+				if (_isRunning === false) {
+					_bootstrap();
+				}
 
-                _isRunning = true;
-            }
+				_isRunning = true;
+			}
 
-            /**
-             * Init
-             * @private
-             */
-            function _bootstrap() {
-                _deleteConfirmation();
-                _changeSocialType();
-                _toolTip();
-                _getInstagramToketClick();
-                _loadInstagramUserIdButton();
-                _winStorageBrowser();
-                _getRedirectUriButtonClick();
-            }
+			/**
+			 * Init
+			 * @private
+			 */
+			function _bootstrap() {
+				_deleteConfirmation();
+				_facebookLoginWindow();
+				_changeSocialType();
+				_winStorageBrowser();
+				_getRedirectUriButtonClick();
+				_initToolTip();
+			}
 
-            /**
-             * Initialize tool tip info
-             * @private
-             */
-            function _toolTip() {
-                $(_getDomElementIdentifier('toolTip')).tooltip();
-            }
+			/**
+			 * If user try to delete something
+			 *
+			 * @private
+			 */
+			function _deleteConfirmation() {
+				$(_getDomElementIdentifier('confirmationButton')).on('click', function (e) {
+					e.preventDefault();
 
-            /**
-             * If user try to delete something
-             *
-             * @private
-             */
-            function _deleteConfirmation() {
-                $(_getDomElementIdentifier('deleteButton')).on('click', function (e) {
-                    e.preventDefault();
-                    var url = $(this).attr('href'),
-                        modal = Modal.confirm('Delete', 'Are you sure you want to delete this record ?', Severity.warning);
+					var $this = $(this);
+					var title = $this.data('confirmation-title') || 'Delete';
+					var message = $this.data('confirmation-message') || 'Are you sure you want to delete this record ?';
 
-                    modal.on('confirm.button.cancel', function () {
-                        Modal.dismiss(modal);
-                    });
+					var url = $this.attr('href'),
+						modal = Modal.confirm(title, message, Severity.warning);
 
-                    modal.on('confirm.button.ok', function () {
-                        Modal.dismiss(modal);
-                        window.location.href = url;
-                    });
-                })
-            }
+					modal.on('confirm.button.cancel', function () {
+						Modal.dismiss(modal);
+					});
 
-            /**
-             * Switch to different social type
-             * @private
-             */
-            function _changeSocialType() {
-                $(_getDomElementIdentifier('selectSocialType')).on('change', function () {
-                    var selectSocialType = $(this).find(':selected').val();
+					modal.on('confirm.button.ok', function () {
+						Modal.dismiss(modal);
+						window.location.href = url;
+					});
+				})
+			}
 
-                    window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
-                });
-            }
+			/**
+			 * Show window with facebook login
+			 *
+			 * @private
+			 */
+			function _facebookLoginWindow() {
+				$(_getDomElementIdentifier('facebookLoginButton')).on('click', function (e) {
+					e.preventDefault();
 
-            /**
-             * Try to fetch instagram user id
-             * @private
-             */
-            function _loadInstagramUserIdButton() {
-                $(_getDomElementIdentifier('instagramGetUserIdButton')).on('click', function (e) {
-                    e.preventDefault();
+					var $this = $(this);
+					var w = 800;
+					var h = 800;
 
-                    var $this = $(this),
-                        configuration = $this.data('uid'),
-                        ajaxUrl = TYPO3.settings.ajaxUrls['pixelant_pxasocialfeed_loadinstuserid'];
+					var y = window.top.outerHeight / 2 + window.top.screenY - (h / 2);
+					var x = window.top.outerWidth / 2 + window.top.screenX - (w / 2);
 
-                    $this.prop('disabled', true);
+					window.open($this.attr('href'), 'Facebook login', 'height=' + h + ',width=' + w + 'top=' + y + ', left=' + x);
+				});
+			}
 
-                    $.ajax({
-                        url: ajaxUrl,
-                        type: 'post',
-                        dataType: 'json',
-                        cache: false,
-                        data: {
-                            'configuration': configuration
-                        }
-                    }).done(function (data) {
-                        Notification[data.action](data.title, data.message, 10);
-                        if (data.action === 'success') {
-                            $this.parent().html(data.userUid);
-                        }
+			/**
+			 * Switch to different social type
+			 *
+			 * @private
+			 */
+			function _changeSocialType() {
+				$(_getDomElementIdentifier('selectSocialType')).on('change', function () {
+					var selectSocialType = $(this).find(':selected').val();
 
-                    }).fail(function (jqXHR) {
-                        Notification.error('Fail', 'Failed ajax request', 10);
-                    });
-                });
-            }
+					window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
+				});
+			}
 
-            /**
-             * Instagram token get button
-             * @private
-             */
-            function _getInstagramToketClick() {
-                $(_getDomElementIdentifier('instagramTokenButton')).on('click', function () {
-                    $(this).hide();
-                    $(_getDomElementIdentifier('instagramTokenTip')).show();
-                });
-            }
+			/**
+			 * Copy redirect uri to clipboard
+			 * @private
+			 */
+			function _getRedirectUriButtonClick() {
+				new clipboard(_getDomElementIdentifier('copyRedirectUriButton'));
+			}
 
-            /**
-             * Copy redirect uri to clipboard
-             * @private
-             */
-            function _getRedirectUriButtonClick() {
-                new clipboard(_getDomElementIdentifier('copyRedirectUriButton'));
-            }
+			/**
+			 * Load browser pages window
+			 *
+			 * @private
+			 */
+			function _winStorageBrowser() {
+				$(_getDomElementIdentifier('winStorageBrowser')).on('click', function () {
+					var insertTarget = $(_getDomElementIdentifier('feedsStorageInput')),
+						randomIdentifier = Math.floor((Math.random() * 100000) + 1);
 
-            /**
-             * Load browser pages window
-             *
-             * @private
-             */
-            function _winStorageBrowser() {
-                $(_getDomElementIdentifier('winStorageBrowser')).on('click', function () {
-                    var insertTarget = $(_getDomElementIdentifier('feedsStorageInput')),
-                        randomIdentifier = Math.floor((Math.random() * 100000) + 1);
+					var width = $(this).data('popup-width') ? $(this).data('popup-width') : 700,
+						height = $(this).data('popup-height') ? $(this).data('popup-height') : 750;
 
-                    var width = $(this).data('popup-width') ? $(this).data('popup-width') : 700,
-                        height = $(this).data('popup-height') ? $(this).data('popup-height') : 750;
+					insertTarget.attr('data-insert-target', randomIdentifier);
+					_openTypo3WinBrowser('db', randomIdentifier + '|||pages', width, height);
+				});
+			}
 
-                    insertTarget.attr('data-insert-target', randomIdentifier);
-                    _openTypo3WinBrowser('db', randomIdentifier + '|||pages', width, height);
-                });
-            }
+			/**
+			 * @private
+			 *
+			 * opens a popup window with the element browser
+			 *
+			 * @param mode
+			 * @param params
+			 * @param width
+			 * @param height
+			 */
+			function _openTypo3WinBrowser(mode, params, width, height) {
+				var openedPopupWindow, url;
 
-            /**
-             * @private
-             *
-             * opens a popup window with the element browser
-             *
-             * @param mode
-             * @param params
-             * @param width
-             * @param height
-             */
-            function _openTypo3WinBrowser(mode, params, width, height) {
-                var openedPopupWindow, url;
+				url = _getSetting('browserUrl')
+					+ '&mode=' + mode + '&bparams=' + params;
 
-                url = _getSetting('browserUrl')
-                    + '&mode=' + mode + '&bparams=' + params;
+				openedPopupWindow = window.open(
+					url,
+					'Typo3WinBrowser',
+					'height=' + height + ',width=' + width + ',status=0,menubar=0,resizable=1,scrollbars=1'
+				);
+				openedPopupWindow.focus();
+			}
 
-                openedPopupWindow = window.open(
-                    url,
-                    'Typo3WinBrowser',
-                    'height=' + height + ',width=' + width + ',status=0,menubar=0,resizable=1,scrollbars=1'
-                );
-                openedPopupWindow.focus();
-            }
+			/**
+			 * Get selector
+			 * @param elementIdentifier
+			 * @return {*|undefined}
+			 * @private
+			 */
+			function _getDomElementIdentifier(elementIdentifier) {
+				return _domElementsSelectors[elementIdentifier] || undefined;
+			}
 
-            /**
-             * Get selector
-             * @param elementIdentifier
-             * @return {*|undefined}
-             * @private
-             */
-            function _getDomElementIdentifier(elementIdentifier) {
-                return _domElementsSelectors[elementIdentifier] || undefined;
-            }
+			/**
+			 * Get insert target
+			 * @param reference
+			 * @return {*|jQuery|HTMLElement}
+			 * @private
+			 */
+			function _getInsertTarget(reference) {
+				return $('[data-insert-target="' + reference + '"]');
+			}
 
-            /**
-             * Get insert target
-             * @param reference
-             * @return {*|jQuery|HTMLElement}
-             * @private
-             */
-            function _getInsertTarget(reference) {
-                return $('[data-insert-target="'+reference+'"]');
-            }
+			/**
+			 * Get settings
+			 * @param key
+			 * @return {*|undefined}
+			 * @private
+			 */
+			function _getSetting(key) {
+				return settings[key] || undefined;
+			}
 
-            /**
-             * Get settings
-             * @param key
-             * @return {*|undefined}
-             * @private
-             */
-            function _getSetting(key) {
-                return settings[key] || undefined;
-            }
+			/**
+			 * Tool tip
+			 * @private
+			 */
+			function _initToolTip() {
+				$(function () {
+					$('[data-toggle="tooltip"]').tooltip()
+				});
+			}
 
-            /**
-             * @public
-             *
-             * callback from TYPO3/CMS/Recordlist/ElementBrowser
-             *
-             * @param fieldReference
-             * @param elValue
-             * @param elName
-             * @return void
-             */
-            setFormValueFromBrowseWin = function(fieldReference, elValue, elName) {
-                var result;
-                result = elValue.split('_');
+			/**
+			 * @public
+			 *
+			 * callback from TYPO3/CMS/Recordlist/ElementBrowser
+			 *
+			 * @param fieldReference
+			 * @param elValue
+			 * @param elName
+			 * @return void
+			 */
+			setFormValueFromBrowseWin = function (fieldReference, elValue, elName) {
+				var result;
+				result = elValue.split('_');
 
-                _getInsertTarget(fieldReference)
-                    .val(result.pop())
-                    .trigger('paste');
+				_getInsertTarget(fieldReference)
+					.val(result.pop())
+					.trigger('paste');
 
-                $(_getDomElementIdentifier('feedsStorageTitle'))
-                    .text(elName)
-                    .closest('.table-fit').removeClass('hidden');
+				$(_getDomElementIdentifier('feedsStorageTitle'))
+					.text(elName);
+			};
 
-                $(_getDomElementIdentifier('migrateRecordsWrapper')).slideDown();
-            };
+			/**
+			 * return public methods
+			 */
+			return {
+				run: run
+			}
+		}
 
-            /**
-             * return public methods
-             */
-            return {
-                run: run
-            }
-        }
+		return {
+			/**
+			 * @public
+			 * @static
+			 *
+			 * Implement the "Singleton Pattern".
+			 *
+			 * @return object
+			 */
+			getInstance: function (settings) {
+				if (_socialFeedModuleInstance === null) {
+					_socialFeedModuleInstance = new SocialFeedModule(settings);
+				}
 
-        return {
-            /**
-             * @public
-             * @static
-             *
-             * Implement the "Singleton Pattern".
-             *
-             * @return object
-             */
-            getInstance: function (settings) {
-                if (_socialFeedModuleInstance === null) {
-                    _socialFeedModuleInstance = new SocialFeedModule(settings);
-                }
+				return _socialFeedModuleInstance;
+			}
+		}
 
-                return _socialFeedModuleInstance;
-            }
-        }
-
-    })($, Modal, Severity, Notification, clipboard);
+	})($, Modal, Severity, Notification, clipboard);
 });

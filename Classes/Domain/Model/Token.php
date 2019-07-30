@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Model;
 
@@ -26,19 +27,27 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+
+use Facebook\Authentication\AccessTokenMetadata;
 use Facebook\Facebook;
-use Pixelant\PxaSocialFeed\Controller\BaseController;
-use Pixelant\PxaSocialFeed\Controller\SocialFeedAdministrationController;
-use Pixelant\PxaSocialFeed\Utility\Api\FacebookSDKUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
+use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Tokens
  */
 class Token extends AbstractEntity
 {
+    use EmitSignalTrait;
+
+    /**
+     * Default PID
+     *
+     * @var int
+     */
+    protected $pid = 0;
 
     /**
      * facebook token
@@ -48,7 +57,7 @@ class Token extends AbstractEntity
     /**
      * instagram_oauth2
      */
-    const INSTAGRAM_OAUTH2 = 2;
+    const INSTAGRAM = 2;
 
     /**
      * twitter token
@@ -61,196 +70,371 @@ class Token extends AbstractEntity
     const YOUTUBE = 4;
 
     /**
-     * youtube token
-     */
-    const FACEBOOK_OAUTH2 = 5;
-
-    /**
-     * pid
-     *
-     * @var int
-     */
-    protected $pid = 0;
-
-    /**
-     * All credentials
-     *
-     * @var string
-     */
-    protected $serializedCredentials = '';
-
-    /**
-     * socialType
+     * type
      *
      * @var integer
      */
-    protected $socialType = 0;
+    protected $type = 0;
 
     /**
-     * oAuthTypes
-     *
-     * @var array
+     * @var string
      */
-    protected $oAuthSocialTypes = [2,5];
+    protected $appId = '';
+
+    /**
+     * @var string
+     */
+    protected $appSecret = '';
+
+    /**
+     * @var string
+     */
+    protected $accessToken = '';
+
+    /**
+     * @var string
+     */
+    protected $apiKey = '';
+
+    /**
+     * @var string
+     */
+    protected $apiSecretKey = '';
+
+    /**
+     * @var string
+     */
+    protected $accessTokenSecret = '';
+
+    /**
+     * @var Facebook
+     */
+    protected $fb = null;
+
+    /**
+     * @var AccessTokenMetadata
+     */
+    protected $fbTokenMetaData = null;
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type): void
+    {
+        $this->type = $type;
+    }
 
     /**
      * @return string
      */
-    public function getSerializedCredentials()
+    public function getAppId(): string
     {
-        return $this->serializedCredentials;
+        return $this->appId;
     }
 
     /**
-     * @param string $serializedCredentials
+     * @param string $appId
      */
-    public function setSerializedCredentials($serializedCredentials)
+    public function setAppId(string $appId): void
     {
-        $this->serializedCredentials = $serializedCredentials;
+        $this->appId = $appId;
     }
 
     /**
-     * Credentials array
-     *
-     * @return array
-     */
-    public function getCredentials()
-    {
-        return unserialize($this->getSerializedCredentials());
-    }
-
-    /**
-     * Get credential
-     *
-     * @param string $key
      * @return string
-     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    public function getCredential($key = '')
+    public function getAppSecret(): string
     {
-        $credentials = $this->getCredentials();
+        return $this->appSecret;
+    }
 
-        if (empty($key) || empty($credentials[$key])) {
-            return '';
+    /**
+     * @param string $appSecret
+     */
+    public function setAppSecret(string $appSecret): void
+    {
+        $this->appSecret = $appSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessToken(): string
+    {
+        return $this->accessToken;
+    }
+
+    /**
+     * @param string $accessToken
+     */
+    public function setAccessToken(string $accessToken): void
+    {
+        $this->accessToken = $accessToken;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey(): string
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param string $apiKey
+     */
+    public function setApiKey(string $apiKey): void
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiSecretKey(): string
+    {
+        return $this->apiSecretKey;
+    }
+
+    /**
+     * @param string $apiSecretKey
+     */
+    public function setApiSecretKey(string $apiSecretKey): void
+    {
+        $this->apiSecretKey = $apiSecretKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessTokenSecret(): string
+    {
+        return $this->accessTokenSecret;
+    }
+
+    /**
+     * @param string $accessTokenSecret
+     */
+    public function setAccessTokenSecret(string $accessTokenSecret): void
+    {
+        $this->accessTokenSecret = $accessTokenSecret;
+    }
+
+    /**
+     * Check if facebook token is valid
+     *
+     * @return bool
+     */
+    public function isValidFacebookAccessToken(): bool
+    {
+        if (empty($this->accessToken)) {
+            return false;
         }
 
-        $value = $credentials[$key];
+        try {
+            $tokenMetadata = $this->getFacebookAccessTokenMetadata();
+            $tokenMetadata->validateExpiration();
+        } catch (\Exception $e) {
+            return false;
+        }
 
-        // Check if token is not expired
-        if ($key === 'accessToken' && $this->getSocialType() === self::FACEBOOK_OAUTH2) {
-            /** @var Facebook $facebookSDKUtility */
-            $facebookSDKUtility = FacebookSDKUtility::getFacebook($this);
-            try {
-                $facebookSDKUtility->get('me', $value);
-            } catch (\Exception $e) {
-                return '';
+        return true;
+    }
+
+    /**
+     * Check how much it left for facebook access token
+     *
+     * @param string $format
+     * @return string
+     * @throws \Exception
+     */
+    public function getFacebookAccessTokenValidPeriod(string $format = '%R%a'): string
+    {
+        $expireAt = $this->getFacebookAccessTokenMetadataExpirationDate();
+        if ($expireAt !== null) {
+            $today = new \DateTime();
+            $interval = $today->diff($expireAt);
+
+            return $interval->format($format);
+        }
+
+        return 'Could not get expire date of token';
+    }
+
+    /**
+     * Get date when facebook token expire
+     *
+     * @return \DateTime|null
+     */
+    public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
+    {
+        $expireAt = $this->getFacebookAccessTokenMetadata()->getExpiresAt();
+
+        if ($expireAt === 0) {
+            $dataAccessExpiresAt = (int)$this->getFacebookAccessTokenMetadata()->getField('data_access_expires_at');
+            if ($dataAccessExpiresAt > 0) {
+                try {
+                    return (new \DateTime())->setTimestamp($dataAccessExpiresAt);
+                } catch (\Exception $exception) {
+                    return null;
+                }
             }
         }
 
-        return $value;
+        return $expireAt;
     }
 
     /**
-     * Set credential
+     * Facebook login url
      *
-     * @param string $key
-     * @param string $value
-     * @return void
-     */
-    public function setCredential($key = '', $value = '')
-    {
-        if (!empty($key)) {
-            $credentials = $this->getCredentials();
-            $credentials[$key] = trim($value);
-
-            $this->setSerializedCredentials(serialize($credentials));
-        }
-    }
-
-    /**
-     * Returns the socialType
-     *
-     * @return integer $socialType
-     */
-    public function getSocialType()
-    {
-        return $this->socialType;
-    }
-
-    /**
-     * Sets the socialType
-     *
-     * @param integer $socialType
-     * @return void
-     */
-    public function setSocialType($socialType)
-    {
-        $this->socialType = $socialType;
-    }
-
-    /**
-     * get social type translation
-     *
+     * @param string $redirectUrl
+     * @param array $permissions
      * @return string
      */
-    public function getSocialTypeDescription()
+    public function getFacebookLoginUrl(string $redirectUrl, array $permissions)
     {
-        return BaseController::translate('pxasocialfeed_module.labels.type.' . $this->getSocialType());
+        // required by SDK login
+        session_start();
+
+        $fb = $this->getFb();
+
+        $loginHelper = $fb->getRedirectLoginHelper();
+
+        return $loginHelper->getLoginUrl($redirectUrl, $permissions);
+    }
+
+    /**
+     * Fetch all available pages from facebook
+     *
+     * @return array
+     */
+    public function getFacebookPagesIds(): array
+    {
+        try {
+            $body = $this->getFb()->get('me/accounts')->getDecodedBody();
+        } catch (\Exception $exception) {
+            $body = null;
+        }
+
+        if (isset($body['data'])) {
+            $accounts = [
+                'me' => LocalizationUtility::translate('module.source_id_me', 'PxaSocialFeed')
+            ];
+            foreach ($body['data'] as $page) {
+                $accounts[$page['id']] = "{$page['name']} (ID: {$page['id']})";
+            }
+        } else {
+            $accounts = ['0' => 'Invalid data. Could not fetch accounts(pages) list from facebook'];
+        }
+
+        return $accounts;
     }
 
     /**
      * get value for select box
      * @return string
      */
-    public function getSelectBoxLabel()
+    public function getTitle(): string
     {
-        return $this->getUid() . ': ' . $this->getSocialTypeDescription();
+        return LocalizationUtility::translate('module.type.' . $this->getType(), 'PxaSocialFeed') ?? '';
     }
 
     /**
-     * return class constants (types of social feeds)
-     *
-     * @return array
-     */
-    public static function getAllConstant()
-    {
-        $oClass = new \ReflectionClass(__CLASS__);
-        return $oClass->getConstants();
-    }
-
-    /**
-     * isOAuthToken
+     * Check if is facebook token type
      *
      * @return bool
      */
-    public function getIsOAuthToken()
+    public function isFacebookType(): bool
     {
-        return in_array($this->getSocialType(), $this->oAuthSocialTypes);
+        return $this->type === static::FACEBOOK;
     }
 
     /**
-     * @param $returnUri
-     * @return string
-     * @throws \Facebook\Exceptions\FacebookSDKException
+     * Check if it's of type instagram
+     *
+     * @return bool
      */
-    public function getTokenGenerationUri($returnUri)
+    public function isInstagramType(): bool
     {
-        switch ($this->getSocialType()) {
-            case self::INSTAGRAM_OAUTH2:
-                $uri = 'https://api.instagram.com/oauth/authorize/';
-                $uri .= '?client_id=' . $this->getCredential('clientId');
-                $uri .= '&redirect_uri=' . urlencode($returnUri);
-                $uri .= '&response_type=code&scope=public_content';
-                return $uri;
-            case self::FACEBOOK_OAUTH2:
-                $fb = FacebookSDKUtility::getFacebook($this);
+        return $this->type === static::INSTAGRAM;
+    }
 
-                $helper = $fb->getRedirectLoginHelper();
+    /**
+     * Check if it's of type twitter
+     *
+     * @return bool
+     */
+    public function isTwitterType(): bool
+    {
+        return $this->type === static::TWITTER;
+    }
 
-                //TODO: make configurable
-                $permissions = ['manage_pages','instagram_basic','instagram_manage_insights'];
+    /**
+     * Check if it's of type youtube
+     *
+     * @return bool
+     */
+    public function isYoutubeType(): bool
+    {
+        return $this->type === static::YOUTUBE;
+    }
 
-                return $helper->getLoginUrl($returnUri, $permissions);
+    /**
+     * Get FB
+     *
+     * @return Facebook
+     */
+    public function getFb(): Facebook
+    {
+        if ($this->fb === null) {
+            $this->fb = FacebookGraphSdkFactory::getUsingToken($this);
         }
+
+        return $this->fb;
+    }
+
+    /**
+     * Get facebook token meta data
+     *
+     * @return AccessTokenMetadata
+     */
+    protected function getFacebookAccessTokenMetadata(): AccessTokenMetadata
+    {
+        $this->initFacebookAccessTokenMetadata();
+        return $this->fbTokenMetaData;
+    }
+
+    /**
+     * Load access token metadata
+     */
+    protected function initFacebookAccessTokenMetadata(): void
+    {
+        if ($this->fbTokenMetaData === null) {
+            $fb = $this->getFb();
+            $this->fbTokenMetaData = $fb->getOAuth2Client()->debugToken($fb->getDefaultAccessToken());
+        }
+    }
+
+    /**
+     * Return all available types
+     *
+     * @return array
+     */
+    public static function getAvailableTokensTypes(): array
+    {
+        return [
+            static::FACEBOOK,
+            static::INSTAGRAM,
+            static::TWITTER,
+            static::YOUTUBE,
+        ];
     }
 }

@@ -46,29 +46,25 @@ class ConfigurationValidator extends AbstractValidator
         // do trim
         $this->trimObjectProperties($configuration);
 
-        if (is_object($configuration)) {
-            if (empty($configuration->getName())) {
-                $errorCode = 1456234619;
-            } elseif (empty($configuration->getSocialId())) {
-                $errorCode = 1456234671;
-            } elseif (!$configuration->getFeedsLimit() || !is_int($configuration->getFeedsLimit())) {
-                $errorCode = 1456234832;
-            } elseif ((int)$configuration->getFeedStorage() === 0) {
-                $errorCode = 1491570246;
-            }
-        } else {
-            $errorCode = 1466669831;
+        if (empty($configuration->getName())) {
+            $errorCode = 1456234619;
+        } elseif (empty($configuration->getSocialId()) && !$configuration->_isNew()) {
+            $errorCode = 1562739885935;
+        } elseif ($configuration->getMaxItems() <= 0) {
+            $errorCode = 1456234832;
+        } elseif ((int)$configuration->getStorage() <= 0) {
+            $errorCode = 1491570246;
         }
 
         if (isset($errorCode)) {
             $this->addError(
-                BaseController::translate(
-                    'pxasocialfeed_module.labels.errorcode.' . $errorCode
-                ),
+                $this->translateErrorMessage('validator.error.' . $errorCode, 'PxaSocialFeed'),
                 $errorCode
             );
+
+            return false;
         }
 
-        return (!isset($errorCode));
+        return true;
     }
 }

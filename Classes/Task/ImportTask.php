@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace Pixelant\PxaSocialFeed\Task;
 
 /***************************************************************
@@ -26,30 +28,68 @@ namespace Pixelant\PxaSocialFeed\Task;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
-use Pixelant\PxaSocialFeed\Utility\Task\ImportTaskUtility;
+use Pixelant\PxaSocialFeed\Service\Notification\NotificationService;
+use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
+use Pixelant\PxaSocialFeed\Utility\LoggerUtility;
+use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
+/**
+ * Class ImportTask
+ * @package Pixelant\PxaSocialFeed\Task
+ */
 class ImportTask extends AbstractTask
 {
-
     /**
-     * list of config uids
+     * Configurations uids
      *
      * @var array
      */
-    protected $configs = '';
+    protected $configurations = [];
 
     /**
-     * execute scheduler task
+     * @var string
+     */
+    protected $receiverEmail = '';
+
+    /**
+     * @var string
+     */
+    protected $senderEmail = '';
+
+    /**
+     * Execute scheduler task
+     *
      * @return bool
      */
     public function execute()
     {
-        /** @var ImportTaskUtility $taskUtility */
-        $taskUtility = GeneralUtility::makeInstance(ImportTaskUtility::class);
-        return $taskUtility->run($this->getConfigs());
+        $notificationService = $this->getNotificationService();
+        $importTaskService = GeneralUtility::makeInstance(ImportFeedsTaskService::class, $notificationService);
+
+        try {
+            return $importTaskService->import($this->configurations);
+        } catch (\Exception $exception) {
+            LoggerUtility::log(
+                $exception->getMessage(),
+                LoggerUtility::ERROR
+            );
+
+            if ($notificationService->canSendEmail()) {
+                $notificationService->notify(
+                    LocalizationUtility::translate('error.import_error', 'PxaSocialFeed'),
+                    LocalizationUtility::translate(
+                        'error.import_error_description',
+                        'PxaSocialFeed',
+                        [$exception->getMessage()]
+                    )
+                );
+            }
+
+            throw $exception;
+        }
     }
 
     /**
@@ -58,24 +98,65 @@ class ImportTask extends AbstractTask
      *
      * @return    string    Information to display
      */
-    public function getAdditionalInformation()
+    public function getAdditionalInformation(): string
     {
-        return ConfigurationUtility::getSelectedConfigsInfo($this->getConfigs());
+        return SchedulerUtility::getSelectedConfigurationsInfo($this->getConfigurations());
     }
 
     /**
      * @return array
      */
-    public function getConfigs()
+    public function getConfigurations(): array
     {
-        return $this->configs;
+        return $this->configurations;
     }
 
     /**
-     * @param array $configs
+     * @param array $configurations
      */
-    public function setConfigs($configs)
+    public function setConfigurations(array $configurations)
     {
-        $this->configs = $configs;
+        $this->configurations = $configurations;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReceiverEmail(): string
+    {
+        return $this->receiverEmail;
+    }
+
+    /**
+     * @param string $receiverEmail
+     */
+    public function setReceiverEmail(string $receiverEmail): void
+    {
+        $this->receiverEmail = $receiverEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSenderEmail(): string
+    {
+        return $this->senderEmail;
+    }
+
+    /**
+     * @param string $senderEmail
+     */
+    public function setSenderEmail(string $senderEmail): void
+    {
+        $this->senderEmail = $senderEmail;
+    }
+
+    /**
+     * @return NotificationService
+     */
+    protected function getNotificationService(): NotificationService
+    {
+        $sender = $this->senderEmail ?: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress'];
+        return GeneralUtility::makeInstance(NotificationService::class, $this->receiverEmail, $sender);
     }
 }

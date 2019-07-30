@@ -6,13 +6,13 @@
         <sDEF>
             <ROOT>
                 <TCEforms>
-                    <sheetTitle>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.name</sheetTitle>
+                    <sheetTitle>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.name</sheetTitle>
                 </TCEforms>
                 <type>array</type>
                 <el>
                     <switchableControllerActions>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.load_type</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.load_type</label>
                             <config>
                                 <type>select</type>
                                 <items>
@@ -31,7 +31,7 @@
 
                     <settings.presentation>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.presentation</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.presentation</label>
                             <config>
                                 <type>select</type>
                                 <items>
@@ -50,16 +50,16 @@
 
                     <settings.partial>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial</label>
                             <config>
                                 <type>select</type>
                                 <items>
                                     <numIndex index="0">
-                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial.0</numIndex>
+                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.0</numIndex>
                                         <numIndex index="1">FeedItemCard</numIndex>
                                     </numIndex>
                                     <numIndex index="1">
-                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.partial.1</numIndex>
+                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.1</numIndex>
                                         <numIndex index="1">FeedItemDynamic</numIndex>
                                     </numIndex>
                                 </items>
@@ -69,7 +69,7 @@
 
                     <settings.feedsLimit>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.amount_feeds</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.amount_feeds</label>
                             <config>
                                 <type>input</type>
                                 <size>30</size>
@@ -79,7 +79,7 @@
 
                     <settings.loadLikesCount>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.loadLikesCount</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.loadLikesCount</label>
                             <config>
                                 <type>check</type>
                                 <default>1</default>
@@ -89,7 +89,7 @@
 
                     <settings.configuration>
                         <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_plugin.flexform.config</label>
+                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.config</label>
                             <config>
                                 <type>select</type>
                                 <size>10</size>
@@ -100,7 +100,6 @@
                             </config>
                         </TCEforms>
                     </settings.configuration>
-
                 </el>
             </ROOT>
         </sDEF>

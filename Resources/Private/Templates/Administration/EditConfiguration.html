@@ -1,0 +1,88 @@
+<div xmlns="http://www.w3.org/1999/xhtml" lang="en"
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+
+    <f:layout name="Backend/Default" />
+
+    <f:section name="content">
+        <f:comment><!--clean all messages--></f:comment>
+        <f:flashMessages as="messages" />
+
+        <f:if condition="{tokens -> f:count()} > 0">
+            <f:then>
+                <h4><f:translate key="pxasocialfeed_module.labels.configuration_action"/></h4>
+
+                <f:render partial="Backend/ValidationErrors" arguments="{for: 'configuration'}"/>
+
+                <f:form action="updateConfiguration" name="configuration" object="{configuration}">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td><f:translate key="module.name"/></td>
+                            <td><f:form.textfield property="name" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span data-toggle="tooltip" data-placement="top" title="{f:translate(key: 'module.social_id_tooltip')}">
+                                    <f:translate key="module.social_id{configuration.token.type}"/>
+                                </span>
+                            </td>
+                            <td>
+                                <f:if condition="{configuration}">
+                                    <f:then>
+                                        <f:alias map="{token: configuration.token}">
+                                            <f:if condition="{token.facebookType} || {token.instagramType}">
+                                                <f:then>
+                                                    <f:form.select property="socialId" options="{token.facebookPagesIds}" class="form-control" />
+                                                </f:then>
+                                                <f:else>
+                                                    <f:form.textfield property="socialId" class="form-control" />
+                                                </f:else>
+                                            </f:if>
+                                        </f:alias>
+                                    </f:then>
+                                    <f:else>
+                                        <p class="bg-warning bg-notification">
+                                            <f:translate key="module.save_configuration_first" />
+                                        </p>
+                                    </f:else>
+                                </f:if>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><f:translate key="module.max_items"/></td>
+                            <td><f:form.textfield property="maxItems" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td><f:translate key="module.storage"/></td>
+                            <td>
+                                <f:render partial="Backend/Typo3WinBrowserEditor" arguments="{configuration: configuration}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><f:translate key="module.token"/></td>
+                            <td><f:form.select property="token" options="{tokens}" optionLabelField="title" class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <f:form.submit class="btn btn-success" name="save" value="{f:translate(key: 'module.submit')}"/>
+                            </td>
+                        </tr>
+                    </table>
+                </f:form>
+
+                <f:link.action class="btn btn-default" action="index">
+                    <f:translate key="module.go_back"/>
+                </f:link.action>
+            </f:then>
+            <f:else>
+                <f:render partial="Backend/NothingFoundMessage" contentAs="message">
+                    <f:translate key="module.first_create_token"/>
+                </f:render>
+
+                <f:link.action class="btn btn-success" action="editToken">
+                    <f:translate key="module.add_new"/>
+                </f:link.action>
+            </f:else>
+        </f:if>
+    </f:section>
+</div>
