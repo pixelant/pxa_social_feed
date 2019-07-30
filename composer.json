@@ -2,7 +2,7 @@
   "name": "pixelant/pxa-social-feed",
   "description": "Add Facebook, Instagram, and Twitter feeds to your site.",
   "type": "typo3-cms-extension",
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "autoload": {
     "psr-4": {
       "Pixelant\\PxaSocialFeed\\": "Classes/"
@@ -16,10 +16,6 @@
       "role": "Developer"
     }
   ],
-  "replace": {
-    "pxa_social_feed": "self.version",
-    "typo3-ter/pxa-social-feed": "self.version"
-  },
   "require": {
     "php": ">=7.1",
     "typo3/cms-core": "^8.7 || ^9.5",
@@ -55,6 +51,7 @@
       "dev-master": "0.0.x-dev"
     },
     "typo3/cms": {
+      "extension-key": "pxa_social_feed",
       "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
     }
