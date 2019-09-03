@@ -27,12 +27,10 @@ namespace Pixelant\PxaSocialFeed\Hooks;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Service\FlexFormService;
-use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
@@ -116,10 +114,12 @@ class PageLayoutView
     }
 
     /**
-     * @return FlexFormService
+     * @return \TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
      */
-    protected function getFlexFormService(): FlexFormService
+    protected function getFlexFormService()
     {
-        return GeneralUtility::makeInstance(FlexFormService::class);
+        return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 9004000
+            ? GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\FlexFormService::class)
+            : GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\FlexFormService::class);
     }
 }
