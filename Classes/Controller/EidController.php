@@ -11,6 +11,7 @@ use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Http\Response;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -25,11 +26,13 @@ class EidController
      * Add access token
      *
      * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function addFbAccessTokenAction(ServerRequestInterface $request, ResponseInterface $response)
+    public function addFbAccessTokenAction(ServerRequestInterface $request): ResponseInterface
     {
+        /** @var Response $response */
+        $response = GeneralUtility::makeInstance(Response::class);
+
         if ($request->getQueryParams()['token']) {
             return $this->processRequest($request, $response);
         } else {
