@@ -7,7 +7,7 @@
 Introduction
 ============
 
-This Extension helps you show Facebook, Instagram, Twitter or Youtube feeds on your website.
+This Extension helps you show Facebook, Instagram, Twitter or YouTube feeds on your website.
 
 .. _what-it-does:
 

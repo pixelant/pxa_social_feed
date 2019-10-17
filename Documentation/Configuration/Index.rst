@@ -21,7 +21,7 @@ In the newly opened form, choose the **Type** of token you want to create:
 - Facebook
 - Instagram
 - Twitter
-- Youtube
+- YouTube
 
 Facebook token
 """"""""""""""
@@ -120,10 +120,10 @@ https://developer.twitter.com/en/apps
    Twitter keys and tokens
 
 
-Youtube token
+YouTube token
 """""""""""""
 
-Youtube token requires only an Api Key.
+YouTube token requires only an Api Key.
 
 `Developers documentation <https://developers.google.com/youtube/v3/getting-started>`_
 
@@ -146,7 +146,7 @@ Configuration has the following fields:
    For Facebook and Instagram tokens you will be able to choose from what page to fetch posts. For Instagram account you will need to select
    the connected page to that account.
 
-   For Twitter or Youtube you need to enter their accounts IDs.
+   For Twitter or YouTube you need to enter their accounts IDs.
 
 Scheduler task
 ^^^^^^^^^^^^^^
