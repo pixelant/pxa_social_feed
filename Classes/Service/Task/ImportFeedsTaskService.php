@@ -61,8 +61,13 @@ class ImportFeedsTaskService
      */
     public function import(array $configurationUids, bool $runAllConfigurations = false): bool
     {
-        /** @var Configuration[] $configurations */
-        $configurations = $runAllConfigurations ? $this->configurationRepository->findAll() : $this->configurationRepository->findByUids($configurationUids);
+        if ($runAllConfigurations) {
+            /** @var Configuration[] $configurations */
+            $configurations = $this->configurationRepository->findAll();
+        } else {
+            /** @var Configuration[] $configurations */
+            $configurations = $this->configurationRepository->findByUids($configurationUids);
+        }
 
         foreach ($configurations as $configuration) {
             // Reset

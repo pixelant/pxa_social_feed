@@ -65,7 +65,8 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         }
 
         $additionalFields['pxasocialfeed_run_all_configs'] = [
-            'code' => '<input type="checkbox" name="tx_scheduler[pxasocialfeed_run_all_configs]" ' . ($task->isRunAllConfigurations() ? 'checked="checked"' : '') . ' />',
+            'code' => '<input type="checkbox" name="tx_scheduler[pxasocialfeed_run_all_configs]" '
+                . ($task->isRunAllConfigurations() ? 'checked="checked"' : '') . ' />',
             'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.run_all_configs',
             'cshKey' => '',
             'cshLabel' => '',
@@ -107,7 +108,9 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         // nothing to validate, just list of uids
         $valid = false;
 
-        if (!isset($submittedData['pxasocialfeed_run_all_configs']) && !isset($submittedData['pxasocialfeed_configs'])) {
+        if (!isset($submittedData['pxasocialfeed_run_all_configs'])
+            && !isset($submittedData['pxasocialfeed_configs'])
+        ) {
             $this->addMessage('Wrong configurations select', FlashMessage::ERROR);
         } elseif (!$this->isValidEmail($submittedData['pxasocialfeed_sender_email'])
             || !$this->isValidEmail($submittedData['pxasocialfeed_receiver_email'])
