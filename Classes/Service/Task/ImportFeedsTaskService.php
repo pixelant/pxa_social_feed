@@ -56,12 +56,13 @@ class ImportFeedsTaskService
      * Import logic
      *
      * @param array $configurationUids
+     * @param bool $runAllConfigurations
      * @return bool
      */
-    public function import(array $configurationUids): bool
+    public function import(array $configurationUids, bool $runAllConfigurations = false): bool
     {
         /** @var Configuration[] $configurations */
-        $configurations = $this->configurationRepository->findByUids($configurationUids);
+        $configurations = $runAllConfigurations ? $this->configurationRepository->findAll() : $this->configurationRepository->findByUids($configurationUids);
 
         foreach ($configurations as $configuration) {
             // Reset

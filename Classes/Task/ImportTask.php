@@ -60,6 +60,11 @@ class ImportTask extends AbstractTask
     protected $senderEmail = '';
 
     /**
+     * @var bool
+     */
+    protected $runAllConfigurations = false;
+
+    /**
      * Execute scheduler task
      *
      * @return bool
@@ -70,7 +75,7 @@ class ImportTask extends AbstractTask
         $importTaskService = GeneralUtility::makeInstance(ImportFeedsTaskService::class, $notificationService);
 
         try {
-            return $importTaskService->import($this->configurations);
+            return $importTaskService->import($this->configurations, $this->runAllConfigurations);
         } catch (\Exception $exception) {
             LoggerUtility::log(
                 $exception->getMessage(),
@@ -100,7 +105,10 @@ class ImportTask extends AbstractTask
      */
     public function getAdditionalInformation(): string
     {
-        return SchedulerUtility::getSelectedConfigurationsInfo($this->getConfigurations());
+        return SchedulerUtility::getSelectedConfigurationsInfo(
+            $this->getConfigurations(),
+            $this->isRunAllConfigurations()
+        );
     }
 
     /**
@@ -158,5 +166,21 @@ class ImportTask extends AbstractTask
     {
         $sender = $this->senderEmail ?: $GLOBALS['TYPO3_CONF_VARS']['MAIL']['defaultMailFromAddress'];
         return GeneralUtility::makeInstance(NotificationService::class, $this->receiverEmail, $sender);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRunAllConfigurations(): bool
+    {
+        return $this->runAllConfigurations;
+    }
+
+    /**
+     * @param bool $runAllConfigurations
+     */
+    public function setRunAllConfigurations(bool $runAllConfigurations): void
+    {
+        $this->runAllConfigurations = $runAllConfigurations;
     }
 }

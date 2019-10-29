@@ -64,6 +64,13 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
             $taskInfo['pxasocialfeed_sender_email'] = $task->getSenderEmail();
         }
 
+        $additionalFields['pxasocialfeed_run_all_configs'] = [
+            'code' => '<input type="checkbox" name="tx_scheduler[pxasocialfeed_run_all_configs]" ' . ($task->isRunAllConfigurations() ? 'checked="checked"' : '') . ' />',
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.run_all_configs',
+            'cshKey' => '',
+            'cshLabel' => '',
+        ];
+
         $additionalFields['pxasocialfeed_configs'] = [
             'code' => SchedulerUtility::getAvailableConfigurationsSelectBox($taskInfo['pxasocialfeed_configs'] ?? []),
             'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.configs',
@@ -100,7 +107,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         // nothing to validate, just list of uids
         $valid = false;
 
-        if (!isset($submittedData['pxasocialfeed_configs'])) {
+        if (!isset($submittedData['pxasocialfeed_run_all_configs']) && !isset($submittedData['pxasocialfeed_configs'])) {
             $this->addMessage('Wrong configurations select', FlashMessage::ERROR);
         } elseif (!$this->isValidEmail($submittedData['pxasocialfeed_sender_email'])
             || !$this->isValidEmail($submittedData['pxasocialfeed_receiver_email'])
@@ -119,9 +126,10 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
-        $task->setConfigurations($submittedData['pxasocialfeed_configs']);
+        $task->setConfigurations($submittedData['pxasocialfeed_configs'] ?? []);
         $task->setReceiverEmail($submittedData['pxasocialfeed_receiver_email']);
         $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
+        $task->setRunAllConfigurations((bool) $submittedData['pxasocialfeed_run_all_configs']);
     }
 
     /**

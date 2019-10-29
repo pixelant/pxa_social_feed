@@ -75,10 +75,15 @@ class SchedulerUtility
 
     /**
      * @param array $configurations
+     * @param bool $runAllConfigurations
      * @return string
      */
-    public static function getSelectedConfigurationsInfo(array $configurations)
+    public static function getSelectedConfigurationsInfo(array $configurations, bool $runAllConfigurations)
     {
+        if ($runAllConfigurations) {
+            return 'Feeds: All configurations';
+        }
+
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
 
