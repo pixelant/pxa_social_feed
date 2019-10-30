@@ -56,17 +56,19 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
             $taskInfo['pxasocialfeed_configs'] = null;
             $taskInfo['pxasocialfeed_receiver_email'] = '';
             $taskInfo['pxasocialfeed_sender_email'] = '';
+            $taskInfo['pxasocialfeed_run_all_configs'] = false;
         }
 
         if ($this->getAction($parentObject) == 'edit') {
             $taskInfo['pxasocialfeed_configs'] = $task->getConfigurations();
             $taskInfo['pxasocialfeed_receiver_email'] = $task->getReceiverEmail();
             $taskInfo['pxasocialfeed_sender_email'] = $task->getSenderEmail();
+            $taskInfo['pxasocialfeed_run_all_configs'] = $task->isRunAllConfigurations();
         }
 
         $additionalFields['pxasocialfeed_run_all_configs'] = [
             'code' => '<input type="checkbox" name="tx_scheduler[pxasocialfeed_run_all_configs]" '
-                . ($task->isRunAllConfigurations() ? 'checked="checked"' : '') . ' />',
+                . ($taskInfo['pxasocialfeed_run_all_configs'] ? 'checked="checked"' : '') . ' />',
             'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.run_all_configs',
             'cshKey' => '',
             'cshLabel' => '',
