@@ -15,7 +15,7 @@ How to get feed visible on page.
 Add plugin to page
 """"""""""""""""""
 
-Create new content element and choose **Social feed**
+Create a new content element and choose **Social feed**
 
 
 .. figure:: ../Images/UserManual/NewElementWizard.png
@@ -30,7 +30,7 @@ Configure plugin
 There are plugin options you need to setup first:
 
 - Load type: *Standard* - just render as regular plugin. *Ajax* - load feed with ajax.
-- Presentation: Two options with what JS libarary to use to render feed.
+- Presentation: Two options with what JS library to use to render feed.
 - Appearance of feed items: *Card* or *Dynamic* partial.
 - Amount of feeds on page: *limit how many items to show at once*
 - Load likes count: *show/hide likes count*

@@ -27,7 +27,7 @@ Pxa Social Feed
 
 **About extension**
 
-Add Facebook, Instagram, Twitter and Youtube feed on the site.
+Add Facebook, Instagram, Twitter and YouTube feed on the site.
 
 **For Contributors**
 
