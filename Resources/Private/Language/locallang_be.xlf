@@ -44,6 +44,9 @@
 			<!--Backend plguin preview:END-->
 
 			<!--Scheduler:START-->
+			<trans-unit id="scheduler.run_all_configs">
+				<source>Run all configurations (Overrides any selected configs below)</source>
+			</trans-unit>
 			<trans-unit id="scheduler.configs">
 				<source>Available configurations</source>
 			</trans-unit>

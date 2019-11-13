@@ -56,13 +56,23 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
             $taskInfo['pxasocialfeed_configs'] = null;
             $taskInfo['pxasocialfeed_receiver_email'] = '';
             $taskInfo['pxasocialfeed_sender_email'] = '';
+            $taskInfo['pxasocialfeed_run_all_configs'] = false;
         }
 
         if ($this->getAction($parentObject) == 'edit') {
             $taskInfo['pxasocialfeed_configs'] = $task->getConfigurations();
             $taskInfo['pxasocialfeed_receiver_email'] = $task->getReceiverEmail();
             $taskInfo['pxasocialfeed_sender_email'] = $task->getSenderEmail();
+            $taskInfo['pxasocialfeed_run_all_configs'] = $task->isRunAllConfigurations();
         }
+
+        $additionalFields['pxasocialfeed_run_all_configs'] = [
+            'code' => '<input type="checkbox" name="tx_scheduler[pxasocialfeed_run_all_configs]" '
+                . ($taskInfo['pxasocialfeed_run_all_configs'] ? 'checked="checked"' : '') . ' />',
+            'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.run_all_configs',
+            'cshKey' => '',
+            'cshLabel' => '',
+        ];
 
         $additionalFields['pxasocialfeed_configs'] = [
             'code' => SchedulerUtility::getAvailableConfigurationsSelectBox($taskInfo['pxasocialfeed_configs'] ?? []),
@@ -100,7 +110,9 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         // nothing to validate, just list of uids
         $valid = false;
 
-        if (!isset($submittedData['pxasocialfeed_configs'])) {
+        if (!isset($submittedData['pxasocialfeed_run_all_configs'])
+            && !isset($submittedData['pxasocialfeed_configs'])
+        ) {
             $this->addMessage('Wrong configurations select', FlashMessage::ERROR);
         } elseif (!$this->isValidEmail($submittedData['pxasocialfeed_sender_email'])
             || !$this->isValidEmail($submittedData['pxasocialfeed_receiver_email'])
@@ -119,9 +131,10 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
-        $task->setConfigurations($submittedData['pxasocialfeed_configs']);
+        $task->setConfigurations($submittedData['pxasocialfeed_configs'] ?? []);
         $task->setReceiverEmail($submittedData['pxasocialfeed_receiver_email']);
         $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
+        $task->setRunAllConfigurations((bool) $submittedData['pxasocialfeed_run_all_configs']);
     }
 
     /**
