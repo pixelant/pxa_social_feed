@@ -43,13 +43,6 @@ class Token extends AbstractEntity
     use EmitSignalTrait;
 
     /**
-     * Default PID
-     *
-     * @var int
-     */
-    protected $pid = 0;
-
-    /**
      * facebook token
      */
     const FACEBOOK = 1;
@@ -68,6 +61,18 @@ class Token extends AbstractEntity
      * youtube token
      */
     const YOUTUBE = 4;
+
+    /**
+     * Default PID
+     *
+     * @var int
+     */
+    protected $pid = 0;
+
+    /**
+     * @var string
+     */
+    protected $name = '';
 
     /**
      * type
@@ -115,6 +120,22 @@ class Token extends AbstractEntity
      * @var AccessTokenMetadata
      */
     protected $fbTokenMetaData = null;
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
 
     /**
      * @return int
