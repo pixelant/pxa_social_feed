@@ -39,6 +39,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_token
     uid                 int(11)                         NOT NULL auto_increment,
     pid                 int(11)             DEFAULT '0' NOT NULL,
 
+    name                varchar(55)         DEFAULT ''  NOT NULL,
     type                int(11)             DEFAULT '1' NOT NULL,
 
     # Facebok & Instagram
