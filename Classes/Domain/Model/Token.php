@@ -360,12 +360,18 @@ class Token extends AbstractEntity
     }
 
     /**
-     * get value for select box
+     * Get value for select box
+     *
      * @return string
      */
     public function getTitle(): string
     {
-        return LocalizationUtility::translate('module.type.' . $this->getType(), 'PxaSocialFeed') ?? '';
+        $type = LocalizationUtility::translate('module.type.' . $this->getType(), 'PxaSocialFeed') ?? '';
+        if ($this->getName()) {
+            return sprintf('%s (%s)', $type, $this->getName());
+        }
+
+        return $type;
     }
 
     /**
