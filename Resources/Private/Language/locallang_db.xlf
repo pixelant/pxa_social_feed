@@ -44,6 +44,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens">
                 <source>Tokens</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.name">
+                <source>Name</source>
+            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_id">
                 <source>App Id</source>
             </trans-unit>

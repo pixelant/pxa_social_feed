@@ -7,7 +7,8 @@ return (function () {
     return [
         'ctrl' => [
             'title' => $ll,
-            'label' => 'uid',
+            'label' => 'name',
+            'label_alt' => 'uid',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
             'cruser_id' => 'cruser_id',
@@ -28,13 +29,13 @@ return (function () {
             'rootLevel' => 1
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, type, app_id,app_secret, starttime, endtime',
+            'showRecordFieldList' => 'hidden, name, type, app_id, app_secret, starttime, endtime',
         ],
         'types' => [
-            \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteGraphApi'],
-            \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM => ['showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteGraphApi'],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteGraphApi'],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM => ['showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteGraphApi'],
             \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER => [
-                'showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteTwitterApi',
+                'showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteTwitterApi',
                 'columnsOverrides' => [
                     'access_token' => [
                         'label' => $ll . '.access_token',
@@ -45,7 +46,7 @@ return (function () {
                 ]
             ],
             \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE => [
-                'showitem' => '--palette--;;paletteHidden, type, --palette--;;paletteYoutubeApi',
+                'showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteYoutubeApi',
                 'columnsOverrides' => [
                     'api_key' => [
                         'label' => $ll . '.youtube_api_key',
@@ -80,6 +81,14 @@ return (function () {
                         [$ll . '.type.type.3', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER],
                         [$ll . '.type.type.4', \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE],
                     ]
+                ]
+            ],
+            'name' => [
+                'exclude' => true,
+                'label' => $ll . '.name',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'trim'
                 ]
             ],
             'app_id' => [
