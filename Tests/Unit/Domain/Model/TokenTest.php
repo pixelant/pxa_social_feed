@@ -330,4 +330,24 @@ class TokenTest extends UnitTestCase
 
         $this->assertTrue($this->subject->isYoutubeType());
     }
+
+    /**
+     * @test
+     */
+    public function initialValueForName()
+    {
+        $this->assertEquals('', $this->subject->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetName()
+    {
+        $name = 'test';
+
+        $this->subject->setName($name);
+
+        $this->assertEquals($name, $this->subject->getName());
+    }
 }
