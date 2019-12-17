@@ -72,6 +72,9 @@
             <trans-unit id="module.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="module.name_optional">
+                <source>Optional name...</source>
+            </trans-unit>
             <trans-unit id="module.max_items">
                 <source>Maximum items</source>
             </trans-unit>
