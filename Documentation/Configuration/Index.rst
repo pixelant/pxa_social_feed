@@ -52,6 +52,8 @@ Copy the ID and Secret from the app settings.
 
 After you've added the ID and Secret, you can generate an access token.
 
+For mor Information how u can generate an access token watch out this video https://www.youtube.com/watch?v=_hF099c0A9M
+
 **But first you need to add the redirect url** to the "Valid OAuth Redirect URIs" field found in the "Facebook login" settings in your app.
 
 There is a button called "Copy fallback URL for facebook settings." which will copy the URL to your clipboard that you should then paste into the "Facebook login" app settings.
