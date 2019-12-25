@@ -27,6 +27,9 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Database\Query\Restriction\BackendGroupRestriction;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Persistence\Generic\Storage\Typo3DbQueryParser;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
@@ -34,7 +37,7 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  * Class AbstractRepository
  * @package Pixelant\PxaSocialFeed\Domain\Repository
  */
-abstract class AbstractRepository extends Repository
+abstract class AbstractBackendRepository extends Repository
 {
 
     /**
@@ -51,5 +54,22 @@ abstract class AbstractRepository extends Repository
         $defaultQuerySettings->setRespectSysLanguage(false);
 
         $this->setDefaultQuerySettings($defaultQuerySettings);
+    }
+
+    public function findAll()
+    {
+        if (TYPO3_MODE === 'BE') {
+            $query = $this->createQuery();
+            $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
+
+            $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
+            $queryBuilder
+                ->getRestrictions()
+                ->add(GeneralUtility::makeInstance(BackendGroupRestriction::class));
+
+            return $query->statement($queryBuilder->getSQL(), $queryBuilder->getParameters())->execute();
+        }
+
+        return parent::findAll();
     }
 }
