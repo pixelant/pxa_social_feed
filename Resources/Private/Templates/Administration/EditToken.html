@@ -36,6 +36,19 @@
                 </tr>
 
                 <tr>
+                    <td><f:translate key="module.name" default="BE GROUP!!" /></td>
+                    <td>
+                        <f:form.select property="beGroup"
+                                       options="{beGroups}"
+                                       optionValueField="uid"
+                                       optionLabelField="title"
+                                       prependOptionValue="0"
+                                       prependOptionLabel="Here we go again"
+                                       class="form-control" />
+                    </td>
+                </tr>
+
+                <tr>
                     <td></td>
                     <td>
                         <f:form.submit class="btn btn-success"
