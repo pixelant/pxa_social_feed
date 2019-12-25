@@ -2,11 +2,12 @@
 defined('TYPO3_MODE') or die();
 
 return (function () {
-    $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:';
+    $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_config';
+    $accessTab = ', --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden, be_group';
 
     return [
         'ctrl' => [
-            'title' => $ll . 'tx_pxasocialfeed_domain_model_config',
+            'title' => $ll,
             'label' => 'name',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
@@ -27,10 +28,10 @@ return (function () {
             'rootLevel' => 1
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, social_id, token, max_items, storage',
+            'showRecordFieldList' => 'hidden, name, social_id, token, max_items, storage, be_group',
         ],
         'types' => [
-            '1' => ['showitem' => 'hidden, --palette--;;1, name, social_id, max_items, storage'],
+            '1' => ['showitem' => '--palette--;;1, name, social_id, max_items, storage' . $accessTab],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -45,7 +46,7 @@ return (function () {
             ],
             'name' => [
                 'exclude' => 1,
-                'label' => $ll . 'tx_pxasocialfeed_domain_model_config.name',
+                'label' => $ll . '.name',
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
@@ -54,7 +55,7 @@ return (function () {
             ],
             'social_id' => [
                 'exclude' => 1,
-                'label' => $ll . 'tx_pxasocialfeed_domain_model_config.social_id',
+                'label' => $ll . '.social_id',
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
@@ -63,7 +64,7 @@ return (function () {
             ],
             'max_items' => [
                 'exclude' => 1,
-                'label' => $ll . 'tx_pxasocialfeed_domain_model_config.max_items',
+                'label' => $ll . '.max_items',
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
@@ -72,7 +73,7 @@ return (function () {
             ],
             'storage' => [
                 'exclude' => 1,
-                'label' => $ll . 'tx_pxasocialfeed_domain_model_config.storage',
+                'label' => $ll . '.storage',
                 'config' => [
                     'type' => 'input',
                     'eval' => 'int,required'
@@ -80,7 +81,7 @@ return (function () {
             ],
             'token' => [
                 'exclude' => 1,
-                'label' => $ll . 'tx_pxasocialfeed_domain_model_config.token',
+                'label' => $ll . '.token',
                 'config' => [
                     'type' => 'select',
                     'foreign_table' => 'tx_pxasocialfeed_domain_model_token',
@@ -88,7 +89,21 @@ return (function () {
                     'maxitems' => 1,
                     'renderType' => 'selectSingleBox'
                 ]
-            ]
+            ],
+            'be_group' => [
+                'exclude' => true,
+                'l10n_mode' => 'exclude',
+                'label' => $ll . '.be_group',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'size' => 7,
+                    'maxitems' => 20,
+                    'foreign_table' => 'be_groups',
+                    'foreign_table_where' => 'ORDER BY be_groups.title',
+                    'enableMultiSelectFilterTextfield' => true
+                ]
+            ],
         ]
     ];
 })();

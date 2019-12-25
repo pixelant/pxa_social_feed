@@ -47,6 +47,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.name">
                 <source>Name</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.be_group">
+                <source>BE group restriction</source>
+            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.app_id">
                 <source>App Id</source>
             </trans-unit>
@@ -91,6 +94,9 @@
             <!--Table tx_pxasocialfeed_domain_model_configuration:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_config">
                 <source>Configuration</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.be_group">
+                <source>BE group restriction</source>
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.name">
                 <source>Name</source>
