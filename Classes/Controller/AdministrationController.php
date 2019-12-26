@@ -6,10 +6,12 @@ namespace Pixelant\PxaSocialFeed\Controller;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\AbstractBackendRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\BackendUserGroupRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
+use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
@@ -20,6 +22,8 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
+use TYPO3\CMS\Extbase\Persistence\RepositoryInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /***************************************************************
@@ -164,11 +168,11 @@ class AdministrationController extends ActionController
      */
     public function indexAction($activeTokenTab = false): void
     {
-        $tokens = $this->tokenRepository->findAll();
+        $tokens = $this->findAllByRepository($this->tokenRepository);
 
         $this->view->assignMultiple([
             'tokens' => $tokens,
-            'configurations' => $this->configurationRepository->findAll(),
+            'configurations' => $this->findAllByRepository($this->configurationRepository),
             'activeTokenTab' => $activeTokenTab,
             'isTokensValid' => $this->isTokensValid($tokens)
         ]);
@@ -257,7 +261,7 @@ class AdministrationController extends ActionController
      */
     public function editConfigurationAction(Configuration $configuration = null): void
     {
-        $tokens = $this->tokenRepository->findAll();
+        $tokens = $this->findAllByRepository($this->tokenRepository);
 
         $this->view->assignMultiple(compact('configuration', 'tokens'));
         $this->assignBEGroups();
@@ -310,6 +314,20 @@ class AdministrationController extends ActionController
         $this->configurationRepository->remove($configuration);
 
         $this->redirectToIndex($this->translate('action_delete'));
+    }
+
+    /**
+     * Check if editor restriction feature is enabled
+     * If so find all with backend group access restriction
+     *
+     * @param AbstractBackendRepository $repository
+     * @return QueryResultInterface
+     */
+    protected function findAllByRepository(AbstractBackendRepository $repository): QueryResultInterface
+    {
+        return ConfigurationUtility::isFeatureEnabled('editorRestriction')
+            ? $repository->findAll()
+            : $repository->findAllBackendGroupRestriction();
     }
 
     /**

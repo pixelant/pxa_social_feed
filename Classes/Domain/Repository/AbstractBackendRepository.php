@@ -56,20 +56,21 @@ abstract class AbstractBackendRepository extends Repository
         $this->setDefaultQuerySettings($defaultQuerySettings);
     }
 
-    public function findAll()
+    /**
+     * Find all records with backend user group restriction
+     *
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface
+     */
+    public function findAllBackendGroupRestriction()
     {
-        if (TYPO3_MODE === 'BE') {
-            $query = $this->createQuery();
-            $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
+        $query = $this->createQuery();
+        $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
 
-            $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
-            $queryBuilder
-                ->getRestrictions()
-                ->add(GeneralUtility::makeInstance(BackendGroupRestriction::class));
+        $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
+        $queryBuilder
+            ->getRestrictions()
+            ->add(GeneralUtility::makeInstance(BackendGroupRestriction::class));
 
-            return $query->statement($queryBuilder->getSQL(), $queryBuilder->getParameters())->execute();
-        }
-
-        return parent::findAll();
+        return $query->statement($queryBuilder->getSQL(), $queryBuilder->getParameters())->execute();
     }
 }
