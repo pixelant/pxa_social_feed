@@ -12,6 +12,9 @@
             </trans-unit>
 
             <!-- BE MODULE -->
+            <trans-unit id="module.be_group">
+                <source>Editor access rights</source>
+            </trans-unit>
             <trans-unit id="module.configurations">
                 <source>Configurations</source>
             </trans-unit>

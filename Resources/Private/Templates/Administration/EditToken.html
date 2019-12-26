@@ -35,18 +35,7 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td><f:translate key="module.name" default="BE GROUP!!" /></td>
-                    <td>
-                        <f:form.select property="beGroup"
-                                       options="{beGroups}"
-                                       optionValueField="uid"
-                                       optionLabelField="title"
-                                       prependOptionValue="0"
-                                       prependOptionLabel="Here we go again"
-                                       class="form-control" />
-                    </td>
-                </tr>
+                <f:render partial="Backend/Form/BeGroupsSelect" arguments="{beGroups: beGroups}" />
 
                 <tr>
                     <td></td>

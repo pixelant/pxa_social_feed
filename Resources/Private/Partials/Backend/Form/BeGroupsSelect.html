@@ -1,0 +1,14 @@
+<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
+<tr>
+    <td><f:translate key="module.be_group" /></td>
+    <td>
+        <f:form.select property="beGroup"
+                       options="{beGroups}"
+                       optionValueField="uid"
+                       optionLabelField="title"
+                       multiple="1"
+                       size="{f:if(condition: '{beGroups -> f:count()} < 10', then: '{beGroups -> f:count()}', else: '10')}"
+                       class="form-control" />
+    </td>
+</tr>
+</html>
