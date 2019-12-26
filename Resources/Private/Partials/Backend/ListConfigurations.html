@@ -1,5 +1,6 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
-     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+     xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers">
 
     <f:section name="list">
         <f:if condition="{configurations}">
@@ -12,8 +13,7 @@
                         <td><f:translate key="module.max_items"/></td>
                         <td><f:translate key="module.storage"/></td>
                         <td><f:translate key="module.token"/></td>
-                        <td><f:translate key="module.edit"/></td>
-                        <td><f:translate key="module.delete"/></td>
+                        <td></td>
                     </tr>
 
                     <f:for each="{configurations}" as="configuration">
@@ -25,14 +25,20 @@
                             <td>{configuration.storageTitle} (#{configuration.storage})</td>
                             <td>{configuration.token.title} (#{configuration.token.uid})</td>
                             <td>
-                                <f:link.action action="editConfiguration" class="btn btn-default" arguments="{configuration: configuration}">
-                                    <f:translate key="module.edit"/>
-                                </f:link.action>
-                            </td>
-                            <td>
-                                <f:link.action action="deleteConfiguration" class="btn btn-danger  delete-action" arguments="{configuration: configuration}">
-                                    <f:translate key="module.delete"/>
-                                </f:link.action>
+                                <div class="btn-group">
+                                    <f:if condition="{isAdmin}">
+                                        <f:link.action action="runConfiguration" class="btn btn-default" arguments="{configuration: configuration}" title="{f:translate(key: 'module.execute_single_import')}">
+                                            <core:icon identifier="extensions-scheduler-run-task" />
+                                        </f:link.action>
+                                    </f:if>
+
+                                    <f:link.action action="editConfiguration" class="btn btn-default" arguments="{configuration: configuration}" title="{f:translate(key: 'module.edit')}">
+                                        <core:icon identifier="actions-document-open" />
+                                    </f:link.action>
+                                    <f:link.action action="deleteConfiguration" class="btn btn-default delete-action" arguments="{configuration: configuration}" title="{f:translate(key: 'module.delete')}">
+                                        <core:icon identifier="actions-edit-delete" />
+                                    </f:link.action>
+                                </div>
                             </td>
                         </tr>
                     </f:for>

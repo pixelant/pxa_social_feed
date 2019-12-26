@@ -12,6 +12,12 @@
             </trans-unit>
 
             <!-- BE MODULE -->
+            <trans-unit id="module.single_import_end">
+                <source>Configuration import executed</source>
+            </trans-unit>
+            <trans-unit id="module.execute_single_import">
+                <source>Execute single import</source>
+            </trans-unit>
             <trans-unit id="module.be_group">
                 <source>Editor access rights</source>
             </trans-unit>

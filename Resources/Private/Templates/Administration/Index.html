@@ -20,7 +20,7 @@
                 <div class="tab-pane{f:if(condition: activeTokenTab, else: ' active')}" id="configurations">
                     <br>
 
-                    <f:render partial="Backend/ListConfigurations" section="list" arguments="{configurations: configurations}"/>
+                    <f:render partial="Backend/ListConfigurations" section="list" arguments="{configurations: configurations, isAdmin: isAdmin}"/>
 
                     <f:link.action class="btn btn-default" action="editConfiguration">
                         <f:translate key="module.add_new"/>

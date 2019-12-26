@@ -13,7 +13,7 @@ defined('TYPO3_MODE') or die();
             '',                        // Position
             [
                 // @codingStandardsIgnoreStart
-                'Administration' => 'index, editToken, updateToken, deleteToken, editConfiguration, updateConfiguration, deleteConfiguration, resetAccessToken'
+                'Administration' => 'index, editToken, updateToken, deleteToken, editConfiguration, updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration'
                 // @codingStandardsIgnoreEnd
             ],
             [

@@ -1,5 +1,6 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
-     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
+     xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers">
 
     <f:section name="list">
         <f:if condition="{tokens}">
@@ -9,23 +10,22 @@
                         <td>UID</td>
                         <td><f:translate key="module.type"/></td>
                         <td><f:translate key="module.general_info"/></td>
-                        <td><f:translate key="module.edit"/></td>
-                        <td><f:translate key="module.delete"/></td>
+                        <td></td>
                     </tr>
                     <f:for each="{tokens}" as="token">
                         <tr>
                             <td>{token.uid}</td>
                             <td>{token.title}</td>
-                            <td> <f:render partial="Backend/TokenInfo/Type{token.type}" arguments="{token: token}" /></td>
+                            <td><f:render partial="Backend/TokenInfo/Type{token.type}" arguments="{token: token}" /></td>
                             <td>
-                                <f:link.action action="editToken" class="btn btn-default" arguments="{token: token}">
-                                    <f:translate key="module.edit"/>
-                                </f:link.action>
-                            </td>
-                            <td>
-                                <f:link.action action="deleteToken" class="btn btn-danger delete-action" arguments="{token: token}">
-                                    <f:translate key="module.delete"/>
-                                </f:link.action>
+                                <div class="btn-group">
+                                    <f:link.action action="editToken" class="btn btn-default" arguments="{token: token}" title="{f:translate(key: 'module.edit')}">
+                                        <core:icon identifier="actions-document-open" />
+                                    </f:link.action>
+                                    <f:link.action action="deleteToken" class="btn btn-default delete-action" arguments="{token: token}" title="{f:translate(key: 'module.delete')}">
+                                        <core:icon identifier="actions-edit-delete" />
+                                    </f:link.action>
+                                </div>
                             </td>
                         </tr>
                     </f:for>

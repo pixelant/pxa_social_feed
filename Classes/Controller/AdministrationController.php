@@ -11,6 +11,7 @@ use Pixelant\PxaSocialFeed\Domain\Repository\BackendUserGroupRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
+use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
@@ -174,7 +175,8 @@ class AdministrationController extends ActionController
             'tokens' => $tokens,
             'configurations' => $this->findAllByRepository($this->configurationRepository),
             'activeTokenTab' => $activeTokenTab,
-            'isTokensValid' => $this->isTokensValid($tokens)
+            'isTokensValid' => $this->isTokensValid($tokens),
+            'isAdmin' => $GLOBALS['BE_USER']->isAdmin(),
         ]);
     }
 
@@ -314,6 +316,19 @@ class AdministrationController extends ActionController
         $this->configurationRepository->remove($configuration);
 
         $this->redirectToIndex($this->translate('action_delete'));
+    }
+
+    /**
+     * Test run of import configuration
+     *
+     * @param Configuration $configuration
+     */
+    public function runConfigurationAction(Configuration $configuration)
+    {
+        $importService = GeneralUtility::makeInstance(ImportFeedsTaskService::class);
+        $importService->import([$configuration->getUid()]);
+
+        $this->redirectToIndex($this->translate('single_import_end'));
     }
 
     /**
