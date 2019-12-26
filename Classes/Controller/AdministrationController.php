@@ -326,8 +326,8 @@ class AdministrationController extends ActionController
     protected function findAllByRepository(AbstractBackendRepository $repository): QueryResultInterface
     {
         return ConfigurationUtility::isFeatureEnabled('editorRestriction')
-            ? $repository->findAll()
-            : $repository->findAllBackendGroupRestriction();
+            ? $repository->findAllBackendGroupRestriction()
+            : $repository->findAll();
     }
 
     /**
