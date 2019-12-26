@@ -351,6 +351,10 @@ class AdministrationController extends ActionController
      */
     protected function assignBEGroups()
     {
+        if (!ConfigurationUtility::isFeatureEnabled('editorRestriction')) {
+            return;
+        }
+
         /** @var BackendUserAuthentication $beUser */
         $beUser = $GLOBALS['BE_USER'];
         $groups = $beUser->isAdmin()
