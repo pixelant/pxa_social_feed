@@ -1,0 +1,2 @@
+# cat=basic/enable/050; type=boolean; label=Enable restriction feature
+editorRestriction = 0
