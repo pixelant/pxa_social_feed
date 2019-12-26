@@ -88,7 +88,7 @@
                 <source>Token</source>
             </trans-unit>
             <trans-unit id="module.generate_access_token">
-                <source>Generate access token</source>
+                <source>Login to Facebook and get access token</source>
             </trans-unit>
             <trans-unit id="module.refresh">
                 <source>Refresh</source>

@@ -12,3 +12,22 @@
 .bg-notification {
     padding: 15px;
 }
+
+.facebook-login-link {
+    background-color: #4267b2;
+    border-radius: 4px;
+}
+
+.facebook-login-link,
+.facebook-login-link:hover {
+    color: #fff;
+}
+
+.facebook-login-link img {
+    position: relative;
+    bottom: 2px;
+}
+
+.facebook-login-link b {
+    margin-left: 3px;
+}
