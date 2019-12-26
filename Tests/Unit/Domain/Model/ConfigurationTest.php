@@ -4,8 +4,7 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /***************************************************************
  *  Copyright notice
@@ -172,5 +171,25 @@ class ConfigurationTest extends UnitTestCase
         $this->subject->setToken($token);
 
         $this->assertSame($token, $this->subject->getToken());
+    }
+
+    /**
+     * @test
+     */
+    public function initValueOfBeGroup()
+    {
+        $this->assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetBeGroup()
+    {
+        $beGroup = new ObjectStorage();
+
+        $this->subject->setBeGroup($beGroup);
+
+        $this->assertSame($beGroup, $this->subject->getBeGroup());
     }
 }
