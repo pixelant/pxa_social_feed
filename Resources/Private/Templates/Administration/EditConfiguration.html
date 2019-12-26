@@ -61,6 +61,8 @@
                             <td><f:translate key="module.token"/></td>
                             <td><f:form.select property="token" options="{tokens}" optionLabelField="title" class="form-control"/></td>
                         </tr>
+
+                        <f:render partial="Backend/Form/BeGroupsSelect" arguments="{beGroups: beGroups}" />
                         <tr>
                             <td></td>
                             <td>
