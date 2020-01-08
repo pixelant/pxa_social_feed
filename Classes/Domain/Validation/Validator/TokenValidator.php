@@ -28,10 +28,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  ***************************************************************/
 
 
-use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 class TokenValidator extends AbstractValidator

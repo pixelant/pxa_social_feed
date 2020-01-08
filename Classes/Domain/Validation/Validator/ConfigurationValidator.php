@@ -27,8 +27,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
-use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 
 class ConfigurationValidator extends AbstractValidator
