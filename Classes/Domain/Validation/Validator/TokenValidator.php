@@ -67,10 +67,14 @@ class TokenValidator extends AbstractValidator
                 break;
         }
 
+        if ($this->isBeGroupRequired()) {
+            $properties[] = 'beGroup';
+        }
+
         foreach ($properties as $property) {
             $value = ObjectAccess::getProperty($token, $property);
 
-            if (empty($value)) {
+            if ($this->isEmptyValue($value)) {
                 $this->addError(
                     $this->translateErrorMessage(
                         'validator.error.all_fields_require',

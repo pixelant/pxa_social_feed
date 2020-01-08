@@ -27,7 +27,9 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 abstract class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator
@@ -47,5 +49,28 @@ abstract class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator
                 }
             }
         }
+    }
+
+    /**
+     * @param $value
+     * @return bool
+     */
+    protected function isEmptyValue($value)
+    {
+        if ($value instanceof ObjectStorage) {
+            return $value->count() === 0;
+        }
+
+        return empty($value);
+    }
+
+    /**
+     * Check if BE groups field is required
+     * @return bool
+     */
+    protected function isBeGroupRequired()
+    {
+        return ConfigurationUtility::isFeatureEnabled('editorRestriction')
+            && ConfigurationUtility::isFeatureEnabled('editorRestrictionIsRequired');
     }
 }

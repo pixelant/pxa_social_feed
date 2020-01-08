@@ -167,6 +167,9 @@
                 <source>Youtube</source>
             </trans-unit>
 
+            <trans-unit id="validator.error.1578488026895">
+                <source>Please choose group for "Editor access rights"</source>
+            </trans-unit>
             <trans-unit id="validator.error.1456234619">
                 <source>Please, enter configuration name</source>
             </trans-unit>

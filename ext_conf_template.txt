@@ -1,2 +1,8 @@
 # cat=basic/enable/050; type=boolean; label=Enable restriction feature
 editorRestriction = 0
+
+# cat=basic/enable/100; type=boolean; label=User group restriction is required
+editorRestrictionIsRequired = 0
+
+# cat=basic/enable/150; type=string; label=Exclude backend user groups from selection
+excludeBackendUserGroups =
