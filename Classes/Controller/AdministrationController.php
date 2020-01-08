@@ -15,7 +15,6 @@ use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -24,7 +23,6 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
-use TYPO3\CMS\Extbase\Persistence\RepositoryInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /***************************************************************
@@ -355,11 +353,15 @@ class AdministrationController extends ActionController
             return;
         }
 
-        /** @var BackendUserAuthentication $beUser */
-        $beUser = $GLOBALS['BE_USER'];
-        $groups = $beUser->isAdmin()
-            ? $this->backendUserGroupRepository->findAll()
-            : $beUser->userGroups;
+        $excludeGroups = $this->getExcludeGroups();
+
+        if ($GLOBALS['BE_USER']->isAdmin()) {
+            $groups = $this->backendUserGroupRepository->findAll($excludeGroups);
+        } else {
+            $groups = array_filter($GLOBALS['BE_USER']->userGroups, function ($group) use ($excludeGroups) {
+                return !in_array($group['uid'], $excludeGroups);
+            });
+        }
 
         $this->view->assign('beGroups', $groups);
     }
@@ -499,5 +501,20 @@ class AdministrationController extends ActionController
         }
 
         $this->redirect('index');
+    }
+
+    /**
+     * Return exclude user group uids from ext configuration
+     *
+     * @return array
+     */
+    protected function getExcludeGroups()
+    {
+        $configuration = ConfigurationUtility::getExtensionConfiguration();
+        if (isset($configuration['excludeBackendUserGroups'])) {
+            return GeneralUtility::intExplode(',', $configuration['excludeBackendUserGroups'], true);
+        }
+
+        return [];
     }
 }
