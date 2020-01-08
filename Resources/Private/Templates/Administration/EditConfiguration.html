@@ -49,7 +49,7 @@
                         </tr>
                         <tr>
                             <td><f:translate key="module.max_items"/></td>
-                            <td><f:form.textfield property="maxItems" class="form-control"/></td>
+                            <td><f:form.textfield property="maxItems" class="form-control" value="{f:if(condition: configuration, else: '10')}"/></td>
                         </tr>
                         <tr>
                             <td><f:translate key="module.storage"/></td>
