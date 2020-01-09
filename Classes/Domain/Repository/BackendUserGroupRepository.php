@@ -30,7 +30,7 @@ class BackendUserGroupRepository
 
         if (!empty($exclude)) {
             $queryBuilder->where(
-                $queryBuilder->expr()->in(
+                $queryBuilder->expr()->notIn(
                     'uid',
                     $queryBuilder->createNamedParameter($exclude, Connection::PARAM_INT_ARRAY)
                 )
