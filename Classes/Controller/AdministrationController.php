@@ -6,9 +6,13 @@ namespace Pixelant\PxaSocialFeed\Controller;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\AbstractBackendRepository;
+use Pixelant\PxaSocialFeed\Domain\Repository\BackendUserGroupRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
+use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
+use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
@@ -18,6 +22,7 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /***************************************************************
@@ -67,6 +72,11 @@ class AdministrationController extends ActionController
     protected $feedRepository = null;
 
     /**
+     * @var BackendUserGroupRepository
+     */
+    protected $backendUserGroupRepository = null;
+
+    /**
      * BackendTemplateContainer
      *
      * @var BackendTemplateView
@@ -79,6 +89,15 @@ class AdministrationController extends ActionController
      * @var BackendTemplateView
      */
     protected $defaultViewObjectName = BackendTemplateView::class;
+
+    /**
+     * @param BackendUserGroupRepository $backendUserGroupRepository
+     */
+    public function __construct(BackendUserGroupRepository $backendUserGroupRepository)
+    {
+        parent::__construct();
+        $this->backendUserGroupRepository = $backendUserGroupRepository;
+    }
 
     /**
      * @param ConfigurationRepository $configurationRepository
@@ -148,13 +167,14 @@ class AdministrationController extends ActionController
      */
     public function indexAction($activeTokenTab = false): void
     {
-        $tokens = $this->tokenRepository->findAll();
+        $tokens = $this->findAllByRepository($this->tokenRepository);
 
         $this->view->assignMultiple([
             'tokens' => $tokens,
-            'configurations' => $this->configurationRepository->findAll(),
+            'configurations' => $this->findAllByRepository($this->configurationRepository),
             'activeTokenTab' => $activeTokenTab,
-            'isTokensValid' => $this->isTokensValid($tokens)
+            'isTokensValid' => $this->isTokensValid($tokens),
+            'isAdmin' => $GLOBALS['BE_USER']->isAdmin(),
         ]);
     }
 
@@ -180,6 +200,7 @@ class AdministrationController extends ActionController
         }
 
         $this->view->assignMultiple(compact('token', 'type', 'isNew', 'availableTypes'));
+        $this->assignBEGroups();
     }
 
     /**
@@ -194,7 +215,7 @@ class AdministrationController extends ActionController
 
         $this->tokenRepository->{$isNew ? 'add' : 'update'}($token);
 
-        $this->redirectToIndex(true, $this->translate('action_changes_saved'));
+        $this->redirectToIndexTokenTab($this->translate('action_changes_saved'));
     }
 
     /**
@@ -207,7 +228,7 @@ class AdministrationController extends ActionController
         $token->setAccessToken('');
         $this->tokenRepository->update($token);
 
-        $this->redirectToIndex(true);
+        $this->redirectToIndexTokenTab();
     }
 
     /**
@@ -223,11 +244,10 @@ class AdministrationController extends ActionController
         if ($tokenConfigurations->count() === 0) {
             $this->tokenRepository->remove($token);
 
-            $this->redirectToIndex(true, $this->translate('action_delete'));
+            $this->redirectToIndexTokenTab($this->translate('action_delete'));
         }
 
-        $this->redirectToIndex(
-            true,
+        $this->redirectToIndexTokenTab(
             $this->translate('error_token_configuration_exist', [$tokenConfigurations->getFirst()->getName()]),
             FlashMessage::ERROR
         );
@@ -241,9 +261,10 @@ class AdministrationController extends ActionController
      */
     public function editConfigurationAction(Configuration $configuration = null): void
     {
-        $tokens = $this->tokenRepository->findAll();
+        $tokens = $this->findAllByRepository($this->tokenRepository);
 
         $this->view->assignMultiple(compact('configuration', 'tokens'));
+        $this->assignBEGroups();
     }
 
     /**
@@ -272,7 +293,7 @@ class AdministrationController extends ActionController
             $this->redirect('editConfiguration', null, null, ['configuration' => $configuration]);
         }
 
-        $this->redirectToIndex(false, $this->translate('action_changes_saved'));
+        $this->redirectToIndex($this->translate('action_changes_saved'));
     }
 
     /**
@@ -292,7 +313,57 @@ class AdministrationController extends ActionController
 
         $this->configurationRepository->remove($configuration);
 
-        $this->redirectToIndex(false, $this->translate('action_delete'));
+        $this->redirectToIndex($this->translate('action_delete'));
+    }
+
+    /**
+     * Test run of import configuration
+     *
+     * @param Configuration $configuration
+     */
+    public function runConfigurationAction(Configuration $configuration)
+    {
+        $importService = GeneralUtility::makeInstance(ImportFeedsTaskService::class);
+        $importService->import([$configuration->getUid()]);
+
+        $this->redirectToIndex($this->translate('single_import_end'));
+    }
+
+    /**
+     * Check if editor restriction feature is enabled
+     * If so find all with backend group access restriction
+     *
+     * @param AbstractBackendRepository $repository
+     * @return QueryResultInterface
+     */
+    protected function findAllByRepository(AbstractBackendRepository $repository): QueryResultInterface
+    {
+        return ConfigurationUtility::isFeatureEnabled('editorRestriction')
+            ? $repository->findAllBackendGroupRestriction()
+            : $repository->findAll();
+    }
+
+    /**
+     * Assign BE groups to template
+     * If admin all are available
+     */
+    protected function assignBEGroups()
+    {
+        if (!ConfigurationUtility::isFeatureEnabled('editorRestriction')) {
+            return;
+        }
+
+        $excludeGroups = $this->getExcludeGroups();
+
+        if ($GLOBALS['BE_USER']->isAdmin()) {
+            $groups = $this->backendUserGroupRepository->findAll($excludeGroups);
+        } else {
+            $groups = array_filter($GLOBALS['BE_USER']->userGroups, function ($group) use ($excludeGroups) {
+                return !in_array($group['uid'], $excludeGroups);
+            });
+        }
+
+        $this->view->assign('beGroups', $groups);
     }
 
     /**
@@ -395,17 +466,13 @@ class AdministrationController extends ActionController
     }
 
     /**
-     * Shortcut to redirect to index with flash message
+     * Shortcut to redirect to index on tokens tab with flash message
      *
-     * @param bool $activeTokenTab
-     * @param string $message
+     * @param string|null $message
      * @param int $severity
      */
-    protected function redirectToIndex(
-        bool $activeTokenTab = false,
-        string $message = null,
-        int $severity = FlashMessage::OK
-    ): void {
+    protected function redirectToIndexTokenTab(string $message = null, int $severity = FlashMessage::OK)
+    {
         if (!empty($message)) {
             $this->addFlashMessage(
                 $message,
@@ -414,6 +481,40 @@ class AdministrationController extends ActionController
             );
         }
 
-        $this->redirect('index', null, null, ['activeTokenTab' => $activeTokenTab]);
+        $this->redirect('index', null, null, ['activeTokenTab' => true]);
+    }
+
+    /**
+     * Shortcut to redirect to index with flash message
+     *
+     * @param string|null $message
+     * @param int $severity
+     */
+    protected function redirectToIndex(string $message = null, int $severity = FlashMessage::OK)
+    {
+        if (!empty($message)) {
+            $this->addFlashMessage(
+                $message,
+                '',
+                $severity
+            );
+        }
+
+        $this->redirect('index');
+    }
+
+    /**
+     * Return exclude user group uids from ext configuration
+     *
+     * @return array
+     */
+    protected function getExcludeGroups()
+    {
+        $configuration = ConfigurationUtility::getExtensionConfiguration();
+        if (isset($configuration['excludeBackendUserGroups'])) {
+            return GeneralUtility::intExplode(',', $configuration['excludeBackendUserGroups'], true);
+        }
+
+        return [];
     }
 }

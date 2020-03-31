@@ -33,6 +33,7 @@ use Facebook\Facebook;
 use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
@@ -68,6 +69,12 @@ class Token extends AbstractEntity
      * @var int
      */
     protected $pid = 0;
+
+    /**
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
+     * @lazy
+     */
+    protected $beGroup= null;
 
     /**
      * @var string
@@ -120,6 +127,14 @@ class Token extends AbstractEntity
      * @var AccessTokenMetadata
      */
     protected $fbTokenMetaData = null;
+
+    /**
+     * Initialize
+     */
+    public function __construct()
+    {
+        $this->beGroup = new ObjectStorage();
+    }
 
     /**
      * @return string
@@ -247,6 +262,22 @@ class Token extends AbstractEntity
     public function setAccessTokenSecret(string $accessTokenSecret): void
     {
         $this->accessTokenSecret = $accessTokenSecret;
+    }
+
+    /**
+     * @return ObjectStorage
+     */
+    public function getBeGroup(): ObjectStorage
+    {
+        return $this->beGroup;
+    }
+
+    /**
+     * @param ObjectStorage $beGroup
+     */
+    public function setBeGroup(ObjectStorage $beGroup): void
+    {
+        $this->beGroup = $beGroup;
     }
 
     /**

@@ -32,7 +32,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 /**
  * The repository for Feeds
  */
-class TokenRepository extends AbstractRepository
+class TokenRepository extends AbstractBackendRepository
 {
     /**
      * @var array $defaultOrderings

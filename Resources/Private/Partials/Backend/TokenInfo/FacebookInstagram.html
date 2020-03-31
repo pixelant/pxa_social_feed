@@ -50,8 +50,11 @@
                 </button>
             </p>
 
-            <a href="{loginUrl}" target="_blank" class="btn btn-info facebook-login-link">
-                <f:translate key="module.generate_access_token" />
+            <a href="{loginUrl}" target="_blank" class="btn facebook-login-link">
+                <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/BE/fb_login_button.png" />
+                <b>
+                    <f:translate key="module.generate_access_token" />
+                </b>
             </a>
 
             <f:link.action action="index" arguments="{activeTokenTab: '1'}" class="btn btn-default">

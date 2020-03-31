@@ -29,6 +29,7 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 use Facebook\Authentication\AccessTokenMetadata;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Token.
@@ -349,5 +350,25 @@ class TokenTest extends UnitTestCase
         $this->subject->setName($name);
 
         $this->assertEquals($name, $this->subject->getName());
+    }
+
+    /**
+     * @test
+     */
+    public function initValueOfBeGroup()
+    {
+        $this->assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetBeGroup()
+    {
+        $beGroup = new ObjectStorage();
+
+        $this->subject->setBeGroup($beGroup);
+
+        $this->assertSame($beGroup, $this->subject->getBeGroup());
     }
 }

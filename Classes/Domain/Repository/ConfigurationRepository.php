@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 /**
  * The repository for Feeds
  */
-class ConfigurationRepository extends AbstractRepository
+class ConfigurationRepository extends AbstractBackendRepository
 {
 
     /**

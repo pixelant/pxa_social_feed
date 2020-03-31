@@ -12,6 +12,15 @@
             </trans-unit>
 
             <!-- BE MODULE -->
+            <trans-unit id="module.single_import_end">
+                <source>Configuration import executed</source>
+            </trans-unit>
+            <trans-unit id="module.execute_single_import">
+                <source>Execute single import</source>
+            </trans-unit>
+            <trans-unit id="module.be_group">
+                <source>Editor access rights</source>
+            </trans-unit>
             <trans-unit id="module.configurations">
                 <source>Configurations</source>
             </trans-unit>
@@ -85,7 +94,7 @@
                 <source>Token</source>
             </trans-unit>
             <trans-unit id="module.generate_access_token">
-                <source>Generate access token</source>
+                <source>Login to Facebook and get access token</source>
             </trans-unit>
             <trans-unit id="module.refresh">
                 <source>Refresh</source>
@@ -158,6 +167,9 @@
                 <source>Youtube</source>
             </trans-unit>
 
+            <trans-unit id="validator.error.1578488026895">
+                <source>Please choose group for "Editor access rights"</source>
+            </trans-unit>
             <trans-unit id="validator.error.1456234619">
                 <source>Please, enter configuration name</source>
             </trans-unit>

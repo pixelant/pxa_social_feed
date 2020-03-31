@@ -123,7 +123,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                 //Convert @tags to youtube profiles in <a> links
                 $text = preg_replace(
                     "/@([A-Za-z0-9\/\._]*)/",
-                    "<a href=\"https://www.instagram.com/$1/\">@$1</a>",
+                    "<a href=\"https://www.youtube.com/user/$1/\">@$1</a>",
                     $text
                 );
                 break;

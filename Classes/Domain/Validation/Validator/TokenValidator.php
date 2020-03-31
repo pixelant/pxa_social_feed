@@ -28,10 +28,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  ***************************************************************/
 
 
-use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 class TokenValidator extends AbstractValidator
@@ -70,10 +67,14 @@ class TokenValidator extends AbstractValidator
                 break;
         }
 
+        if ($this->isBeGroupRequired()) {
+            $properties[] = 'beGroup';
+        }
+
         foreach ($properties as $property) {
             $value = ObjectAccess::getProperty($token, $property);
 
-            if (empty($value)) {
+            if ($this->isEmptyValue($value)) {
                 $this->addError(
                     $this->translateErrorMessage(
                         'validator.error.all_fields_require',

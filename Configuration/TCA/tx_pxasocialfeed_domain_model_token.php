@@ -3,6 +3,7 @@ defined('TYPO3_MODE') or die();
 
 return (function () {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens';
+    $accessTab = ', --div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.access, hidden, be_group';
 
     return [
         'ctrl' => [
@@ -29,13 +30,13 @@ return (function () {
             'rootLevel' => 1
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, type, app_id, app_secret, starttime, endtime',
+            'showRecordFieldList' => 'hidden, name, type, app_id, app_secret, be_group',
         ],
         'types' => [
-            \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteGraphApi'],
-            \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM => ['showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteGraphApi'],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => 'name, type, --palette--;;paletteGraphApi' . $accessTab],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM => ['showitem' => 'name, type, --palette--;;paletteGraphApi' . $accessTab],
             \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER => [
-                'showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteTwitterApi',
+                'showitem' => 'name, type, --palette--;;paletteTwitterApi' . $accessTab,
                 'columnsOverrides' => [
                     'access_token' => [
                         'label' => $ll . '.access_token',
@@ -46,7 +47,7 @@ return (function () {
                 ]
             ],
             \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE => [
-                'showitem' => '--palette--;;paletteHidden, name, type, --palette--;;paletteYoutubeApi',
+                'showitem' => 'name, type, --palette--;;paletteYoutubeApi' . $accessTab,
                 'columnsOverrides' => [
                     'api_key' => [
                         'label' => $ll . '.youtube_api_key',
@@ -55,7 +56,6 @@ return (function () {
             ],
         ],
         'palettes' => [
-            'paletteHidden' => ['showitem' => 'hidden'],
             'paletteGraphApi' => ['showitem' => 'app_id, --linebreak--, app_secret, --linebreak--, access_token'],
             'paletteTwitterApi' => ['showitem' => 'api_key, --linebreak--, api_secret_key, --linebreak--, access_token, --linebreak--, access_token_secret'],
             'paletteYoutubeApi' => ['showitem' => 'api_key'],
@@ -137,6 +137,20 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'eval' => 'trim,required'
+                ]
+            ],
+            'be_group' => [
+                'exclude' => true,
+                'l10n_mode' => 'exclude',
+                'label' => $ll . '.be_group',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectMultipleSideBySide',
+                    'size' => 7,
+                    'maxitems' => 20,
+                    'foreign_table' => 'be_groups',
+                    'foreign_table_where' => 'ORDER BY be_groups.title',
+                    'enableMultiSelectFilterTextfield' => true
                 ]
             ],
         ]

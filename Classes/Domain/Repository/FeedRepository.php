@@ -57,7 +57,7 @@ class FeedRepository extends Repository
         /** @var $defaultQuerySettings Typo3QuerySettings */
         $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
 
-        // respect Storage
+        // Don't respect storage
         $defaultQuerySettings->setRespectStoragePage(false);
 
         if (TYPO3_MODE === 'BE' || TYPO3_MODE === 'CLI') {

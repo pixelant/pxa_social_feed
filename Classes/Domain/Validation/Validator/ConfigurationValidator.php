@@ -27,8 +27,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
-use Pixelant\PxaSocialFeed\Controller\BaseController;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 
 class ConfigurationValidator extends AbstractValidator
@@ -54,6 +52,8 @@ class ConfigurationValidator extends AbstractValidator
             $errorCode = 1456234832;
         } elseif ((int)$configuration->getStorage() <= 0) {
             $errorCode = 1491570246;
+        } elseif ($this->isBeGroupRequired() && $this->isEmptyValue($configuration->getBeGroup())) {
+            $errorCode = 1578488026895;
         }
 
         if (isset($errorCode)) {
