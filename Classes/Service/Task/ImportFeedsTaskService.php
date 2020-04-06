@@ -6,6 +6,7 @@ namespace Pixelant\PxaSocialFeed\Service\Task;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
+use Pixelant\PxaSocialFeed\Exception\FailedExecutingImportException;
 use Pixelant\PxaSocialFeed\Exception\UnsupportedTokenType;
 use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\FeedFactoryInterface;
@@ -87,13 +88,26 @@ class ImportFeedsTaskService
                     $factory = GeneralUtility::makeInstance(YoutubeFactory::class);
                     break;
                 default:
-                    // @codingStandardsIgnoreStart
-                    throw new UnsupportedTokenType("Token type '{$configuration->getToken()->getType()}' is not supported", 1562837370194);
-                    // @codingStandardsIgnoreEnd
+                    throw new UnsupportedTokenType(
+                        "Token type '{$configuration->getToken()->getType()}' is not supported",
+                        1562837370194
+                    );
             }
 
             if (isset($factory)) {
-                $this->importFeed($factory, $configuration);
+                try {
+                    $this->importFeed($factory, $configuration);
+                } catch (\Exception $exception) {
+                    throw new FailedExecutingImportException(
+                        sprintf(
+                            'Failed importing using configuration "%s (UID-%d)" with message "%s"',
+                            $configuration->getName(),
+                            $configuration->getUid(),
+                            $exception->getMessage()
+                        ),
+                        1586153059241
+                    );
+                }
             }
         }
 
