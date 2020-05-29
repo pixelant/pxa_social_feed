@@ -5,6 +5,7 @@ namespace Pixelant\PxaSocialFeed\Utility;
 
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * Read plugin configuration
@@ -22,7 +23,17 @@ class ConfigurationUtility
      */
     public static function getExtensionConfiguration(): array
     {
-        return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_social_feed');
+        $configuration = [];
+        if (VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
+            $configVariables = (array)$GLOBALS['TYPO3_CONF_VARS'];
+            $possibleConfig = unserialize((string)$configVariables['EXT']['extConf']['pxa_social_feed']);
+            if (!empty($possibleConfig) && is_array($possibleConfig)) {
+                $configuration = $possibleConfig;
+            }
+        } else {
+            $configuration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_social_feed');
+        }
+        return $configuration;
     }
 
     /**
