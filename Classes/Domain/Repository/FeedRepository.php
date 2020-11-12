@@ -4,7 +4,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -70,25 +69,24 @@ class FeedRepository extends Repository
     }
 
     /**
-     * Remove feed items for configuration that were not listed in object storage
+     * Finds all feed items for configuration that were not listed in object storage
      *
      * @param ObjectStorage $storage
      * @param Configuration $configuration
+     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface<QueryResult>
      */
-    public function removeNotInStorage(ObjectStorage $storage, Configuration $configuration): void
+    public function findNotInStorage(ObjectStorage $storage, Configuration $configuration)
     {
         $query = $this->createQuery();
 
         $query->matching(
-            $query->logicalAnd(
+            $query->logicalAnd([
                 $query->logicalNot($query->in('uid', $storage)),
                 $query->equals('configuration', $configuration)
-            )
+            ])
         );
 
-        foreach ($query->execute() as $itemToRemove) {
-            $this->remove($itemToRemove);
-        }
+        return $query->execute();
     }
 
     /**

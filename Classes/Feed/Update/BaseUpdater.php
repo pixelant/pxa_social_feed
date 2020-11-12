@@ -62,7 +62,11 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     public function cleanUp(Configuration $configuration): void
     {
-        $this->feedRepository->removeNotInStorage($this->feeds, $configuration);
+        /** @var Feed $feedToRemove */
+        foreach ($this->feedRepository->findNotInStorage($this->feeds, $configuration) as $feedToRemove) {
+            $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'changedFeedItem', [$feedToRemove]);
+            $this->feedRepository->remove($feedToRemove);
+        }
     }
 
     /**
@@ -73,6 +77,11 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     protected function addOrUpdateFeedItem(Feed $feed): void
     {
+        // Check if $feed is new or modified and emit change event
+        if ($feed->_isDirty() || $feed->_isNew()) {
+            $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'changedFeedItem', [$feed]);
+        }
+
         $this->feeds->attach($feed);
         $this->feedRepository->{$feed->_isNew() ? 'add' : 'update'}($feed);
     }
