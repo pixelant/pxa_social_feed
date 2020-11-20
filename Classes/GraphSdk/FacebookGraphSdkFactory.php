@@ -18,7 +18,7 @@ class FacebookGraphSdkFactory
      *
      * @var string
      */
-    protected static $version = 'v8.0';
+    protected static $version = 'v9.0';
 
     /**
      * Facebook factory
