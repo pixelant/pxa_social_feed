@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Class FacebookSource
  * @package Pixelant\PxaSocialFeed\Feed\Source
@@ -16,7 +20,15 @@ class FacebookSource extends BaseFacebookSource
      */
     public function load(): array
     {
-        $fb = $this->getConfiguration()->getToken()->getFb();
+        // Get facebook page access token
+        $tokenRepository = GeneralUtility::makeInstance(TokenRepository::class);
+        /** @var Token $pageAccessToken */
+        $pageAccessToken = $tokenRepository->findFacebookPageToken(
+            $this->getConfiguration()->getToken(),
+            $this->configuration->getSocialId()
+        )->getFirst();
+
+        $fb = $pageAccessToken->getFb();
         $response = $fb->get(
             $this->generateEndPoint($this->getConfiguration()->getSocialId(), 'feed')
         );
