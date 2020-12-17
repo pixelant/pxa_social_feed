@@ -70,13 +70,12 @@ class Configuration extends AbstractEntity
     /**
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @lazy
      */
     protected $token = null;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $beGroup= null;
 

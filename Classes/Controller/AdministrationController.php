@@ -15,6 +15,7 @@ use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Extbase\Annotation;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -95,7 +96,6 @@ class AdministrationController extends ActionController
      */
     public function __construct(BackendUserGroupRepository $backendUserGroupRepository)
     {
-        parent::__construct();
         $this->backendUserGroupRepository = $backendUserGroupRepository;
     }
 
@@ -207,7 +207,7 @@ class AdministrationController extends ActionController
      * Save token changes
      *
      * @param Token $token
-     * @validate $token \Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator
+     * @TYPO3\CMS\Extbase\Annotation\Validate("\Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator", param="token")
      */
     public function updateTokenAction(Token $token): void
     {
@@ -271,7 +271,7 @@ class AdministrationController extends ActionController
      * Update configuration
      *
      * @param Configuration $configuration
-     * @validate $configuration \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator
+     * @TYPO3\CMS\Extbase\Annotation\Validate("\Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator", param="configuration")
      * @return void
      */
     public function updateConfigurationAction(Configuration $configuration): void
