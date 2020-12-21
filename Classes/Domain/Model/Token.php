@@ -119,7 +119,7 @@ class Token extends AbstractEntity
     protected $accessTokenSecret = '';
 
     /**
-     * @var Facebook
+     * @var null
      */
     protected $fb = null;
 
