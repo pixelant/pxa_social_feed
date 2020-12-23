@@ -119,6 +119,12 @@ class Token extends AbstractEntity
     protected $accessTokenSecret = '';
 
     /**
+     * This property contains Facebook object and annotation should be @var
+     * Facebook, but extbase can not handle lastResponse property in Facebook
+     * class in a proper way because its @var has several types and is
+     * interpreted as it has no type, for details follow next links:
+     * https://github.com/TYPO3/TYPO3.CMS/blob/9.5/typo3/sysext/extbase/Classes/Validation/ValidatorResolver.php#L298
+     * https://github.com/TYPO3/TYPO3.CMS/blob/10.4/typo3/sysext/extbase/Classes/Validation/ValidatorResolver.php#L157
      * @var null
      */
     protected $fb = null;

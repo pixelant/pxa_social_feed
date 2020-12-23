@@ -28,7 +28,7 @@
     "facebook/graph-sdk": "~5.7.0"
   },
   "require-dev": {
-    "nimut/testing-framework": "^4.1",
+    "nimut/testing-framework": "^5.1",
     "squizlabs/php_codesniffer": "^3.4"
   },
   "autoload-dev": {
