@@ -263,7 +263,19 @@ class AdministrationController extends ActionController
     {
         $tokens = $this->findAllByRepository($this->tokenRepository);
 
-        $this->view->assignMultiple(compact('configuration', 'tokens'));
+        if (!version_compare('10.4.0', TYPO3_version)) {
+            $icons = [
+                'pagetree' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/apps/apps-pagetree-page-default.svg',
+                'filetree' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/apps/apps-filetree-folder-default.svg'
+            ];
+        } else {
+            $icons = [
+                'pagetree' => 'EXT:core/Resources/Public/Icons/T3Icons/apps/apps-pagetree-page-default.svg',
+                'filetree' => 'EXT:core/Resources/Public/Icons/T3Icons/apps/apps-filetree-folder-default.svg'
+            ];
+        }
+
+        $this->view->assignMultiple(compact('configuration', 'tokens', 'icons'));
         $this->assignBEGroups();
     }
 
