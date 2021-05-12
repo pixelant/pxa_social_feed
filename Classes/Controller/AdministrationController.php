@@ -263,7 +263,7 @@ class AdministrationController extends ActionController
     {
         $tokens = $this->findAllByRepository($this->tokenRepository);
 
-        if (!version_compare('10.4.0', TYPO3_version)) {
+        if (version_compare('10.4', TYPO3_version, '<=')) {
             $icons = [
                 'pagetree' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/apps/apps-pagetree-page-default.svg',
                 'filetree' => 'EXT:core/Resources/Public/Icons/T3Icons/svgs/apps/apps-filetree-folder-default.svg'
