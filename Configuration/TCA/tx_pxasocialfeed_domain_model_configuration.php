@@ -53,6 +53,15 @@ return (function () {
                     'eval' => 'trim,required'
                 ],
             ],
+            'image_size' => [
+                'exclude' => 1,
+                'label' => $ll . '.image_size',
+                'config' => [
+                    'type' => 'input',
+                    'size' => 30,
+                    'eval' => 'trim,required'
+                ],
+            ],
             'social_id' => [
                 'exclude' => 1,
                 'label' => $ll . '.social_id',

@@ -61,6 +61,10 @@
                             <td><f:translate key="module.token"/></td>
                             <td><f:form.select property="token" options="{tokens}" optionLabelField="title" class="form-control"/></td>
                         </tr>
+                      <tr>
+                        <td><f:translate key="module.image_size"/></td>
+                        <td><f:form.select property="imageSize" options="{normal_images: 'Normal Images', small_images: 'Small Images'}" class="form-control"/></td>
+                      </tr>
 
                         <f:render partial="Backend/Form/BeGroupsSelect" arguments="{beGroups: beGroups}" />
                         <tr>

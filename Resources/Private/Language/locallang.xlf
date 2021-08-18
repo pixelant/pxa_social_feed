@@ -93,6 +93,9 @@
             <trans-unit id="module.token">
                 <source>Token</source>
             </trans-unit>
+			<trans-unit id="module.image_size">
+				<source>Image Size</source>
+			</trans-unit>
             <trans-unit id="module.generate_access_token">
                 <source>Login to Facebook and get access token</source>
             </trans-unit>
