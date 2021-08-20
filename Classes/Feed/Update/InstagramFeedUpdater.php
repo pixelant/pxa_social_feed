@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
+use GuzzleHttp\Client;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
@@ -61,7 +62,12 @@ class InstagramFeedUpdater extends BaseUpdater
             ? ($data['thumbnail_url'] ?: $data['media_url'] ?: '') // Thumbnail or Media url for video
             : ($data['media_url'] ?: ''); // Media or empty string
 
-        $feedItem->setImage($media);
+        //store 2 images by URL here (!) and add 2 paths
+
+        $imagePath = $this->storeImg($media);
+
+        $feedItem->setImage($imagePath['normal_image']);
+        $feedItem->setSmallImage($imagePath['small_image']);
 
         // Set media type
         $feedItem->setMediaType(
@@ -85,6 +91,33 @@ class InstagramFeedUpdater extends BaseUpdater
 
         // Set likes
         $feedItem->setLikes((int)$data['like_count']);
+    }
+
+    protected function storeImg($url){
+        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class);
+        $storage= $resourceFactory->getDefaultStorage();
+        $downloadFolderNormal =  $storage->getFolder('socialmedia/instacontent/normal');
+        $downloadFolderSmall =  $storage->getFolder('socialmedia/instacontent/small');
+
+
+        $filename = explode('?', basename($url), 2);
+        $normal_f_name = str_replace('_', '-', $filename[0]);
+        $small_f_name = 'small-' . str_replace('_', '-', $filename[0]);
+
+        $file_normal = $downloadFolderNormal->createFile($filename[0]);
+
+        $file_small = $downloadFolderSmall->createFile('small_' . $filename[0]);
+
+            $httpClient = $this->objectManager->get(Client::class);
+            $response = $httpClient->get($url);
+            $file_normal->setContents($response->getBody()->getContents());
+
+            // need to minify the image here, dunno how
+            $file_small->setContents($response->getBody()->getContents());
+
+        return  ['normal_image' => 'socialmedia/instacontent/normal/' . $normal_f_name,
+                'small_image' => 'socialmedia/instacontent/small/' . $small_f_name ];
+
     }
 
     /**

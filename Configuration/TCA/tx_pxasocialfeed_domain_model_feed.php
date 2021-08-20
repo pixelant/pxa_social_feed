@@ -115,6 +115,15 @@ return (function () {
                     'eval' => 'trim'
                 ],
             ],
+            'small_image' => [
+                'exclude' => 1,
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.small_image',
+                'config' => [
+                    'type' => 'input',
+                    'size' => 30,
+                    'eval' => 'trim'
+                ],
+            ],
             'likes' => [
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.likes',
