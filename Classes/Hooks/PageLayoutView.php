@@ -66,7 +66,7 @@ class PageLayoutView
 
             // configurations info
             $configurations = '';
-            if ($settings['configuration']) {
+            if (isset($settings['configuration']) && $settings['configuration']) {
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                     ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
 

@@ -15,14 +15,15 @@
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.load_type</label>
                             <config>
                                 <type>select</type>
+                                <renderType>selectSingle</renderType>
                                 <items>
                                     <numIndex index="0">
                                         <numIndex index="0">Standard</numIndex>
-                                        <numIndex index="1">Feeds->list</numIndex>
+                                        <numIndex index="1">\Pixelant\PxaSocialFeed\Controller\FeedsController->list</numIndex>
                                     </numIndex>
                                     <numIndex index="1">
                                         <numIndex index="0">Ajax</numIndex>
-                                        <numIndex index="1">Feeds->listAjax;Feeds->loadFeedAjax</numIndex>
+                                        <numIndex index="1">\Pixelant\PxaSocialFeed\Controller\FeedsController->listAjax;\Pixelant\PxaSocialFeed\Controller\FeedsController->loadFeedAjax</numIndex>
                                     </numIndex>
                                 </items>
                             </config>
@@ -34,6 +35,7 @@
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.presentation</label>
                             <config>
                                 <type>select</type>
+                                <renderType>selectSingle</renderType>
                                 <items>
                                     <numIndex index="0">
                                         <numIndex index="0">Owl Carousel</numIndex>
@@ -53,6 +55,7 @@
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial</label>
                             <config>
                                 <type>select</type>
+                                <renderType>selectSingle</renderType>
                                 <items>
                                     <numIndex index="0">
                                         <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.0</numIndex>
@@ -92,6 +95,7 @@
                             <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.config</label>
                             <config>
                                 <type>select</type>
+                                <renderType>selectMultipleSideBySide</renderType>
                                 <size>10</size>
                                 <minitems>1</minitems>
                                 <maxitems>999</maxitems>
