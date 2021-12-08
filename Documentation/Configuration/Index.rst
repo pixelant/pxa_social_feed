@@ -96,7 +96,7 @@ After you managed to get a Facebook page connected to your Instagram Business ac
 Twitter token
 """""""""""""
 
-`Authentication documentation <https://developer.twitter.com/en/docs/basics/authentication/overview>`_
+`Authentication documentation <https://developer.twitter.com/en/docs/authentication/overview>`_
 
 Twitter token requires the following values:
 
@@ -121,6 +121,11 @@ https://developer.twitter.com/en/apps
 
    Twitter keys and tokens
 
+If you are using Twitter API 2.0 you need to request **Elevated Access** to be able to use API v1.1.
+
+.. figure:: ../Images/AdministratorManual/TwitterAccess20.png
+   :class: with-shadow
+   :alt: Backend view
 
 YouTube token
 """""""""""""

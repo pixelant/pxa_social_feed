@@ -62,7 +62,9 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     public function cleanUp(Configuration $configuration): void
     {
-        $this->feedRepository->removeNotInStorage($this->feeds, $configuration);
+        if (count($this->feeds) > 0) {
+            $this->feedRepository->removeNotInStorage($this->feeds, $configuration);
+        }
     }
 
     /**

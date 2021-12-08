@@ -35,13 +35,14 @@ class TwitterSource extends BaseSource
             $authHeader
         );
 
-        $body = (string)$response->getBody();
+        $body = $response->getBody()->getContents();
         $data = json_decode($body, true);
 
         if (!is_array($data)) {
-            // @codingStandardsIgnoreStart
-            throw new InvalidFeedSourceData("Twitter response doesn't appear to be a valid json. Response return '$body'.", 1562910457024);
-            // @codingStandardsIgnoreEnd
+            throw new InvalidFeedSourceData(
+                "Twitter response doesn't appear to be a valid json. Response return '$body'.",
+                1562910457024
+            );
         }
 
         return $data;
