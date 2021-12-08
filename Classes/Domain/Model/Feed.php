@@ -122,7 +122,6 @@ class Feed extends AbstractEntity
      *
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     * @lazy
      */
     protected $configuration = null;
 
