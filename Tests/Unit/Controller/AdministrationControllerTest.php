@@ -18,7 +18,7 @@ class AdministrationControllerTest extends UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = $this->getAccessibleMock(
             AdministrationController::class,
@@ -29,7 +29,7 @@ class AdministrationControllerTest extends UnitTestCase
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
         unset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxa_social_feed']);

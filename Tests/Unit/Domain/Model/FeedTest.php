@@ -44,12 +44,12 @@ class FeedTest extends UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Feed();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
     }

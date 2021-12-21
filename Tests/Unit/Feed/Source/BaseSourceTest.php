@@ -16,12 +16,12 @@ class BaseSourceTest extends UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = $this->getAccessibleMock(BaseSource::class, ['load'], [], '', false);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
     }

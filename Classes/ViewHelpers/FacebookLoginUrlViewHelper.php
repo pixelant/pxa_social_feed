@@ -92,8 +92,9 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
         $permissions = GeneralUtility::trimExplode(',', $arguments['permissions']);
 
         $redirectUrl = static::buildRedirectUrl($token->getUid());
+
         try {
-            $url = $token->getFacebookLoginUrl($redirectUrl, $permissions);
+            $url = $token->getFacebookLoginUrl($token->getAppId(), $token->getAppSecret(), $redirectUrl, $permissions);
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
@@ -135,7 +136,7 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
     protected static function buildRedirectUrl(int $tokenUid): string
     {
         return sprintf(
-            '%s://%s%s?eID=%s&token=%d',
+            '%s://%s%s/?eID=%s&token=%d',
             GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https' : 'http', // Http is not supported by facebook anyway
             GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
             GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',

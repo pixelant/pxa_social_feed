@@ -3,6 +3,7 @@
 
 # Exclude OSX index files
 .DS_Store
+var/
 
 # Composer
 /.Build/*

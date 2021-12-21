@@ -45,12 +45,12 @@ class TokenTest extends UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new Token();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
     }
@@ -240,56 +240,6 @@ class TokenTest extends UnitTestCase
             ->willReturn($endDate);
 
         $this->assertEquals($expect, $mockedToken->getFacebookAccessTokenValidPeriod());
-    }
-
-    /**
-     * @test
-     */
-    public function getFacebookAccessTokenMetadataExpirationDateReturnExpireAtIfAvailable()
-    {
-        $date = new \DateTime();
-
-        $mockedFacebookAccessTokenMetadata = $this->createMock(AccessTokenMetadata::class);
-        $mockedFacebookAccessTokenMetadata
-            ->expects($this->once())
-            ->method('getExpiresAt')
-            ->willReturn($date);
-
-        $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadata']);
-        $mockedToken
-            ->expects($this->once())
-            ->method('getFacebookAccessTokenMetadata')
-            ->willReturn($mockedFacebookAccessTokenMetadata);
-
-        $this->assertSame($date, $mockedToken->getFacebookAccessTokenMetadataExpirationDate());
-    }
-
-    /**
-     * @test
-     */
-    public function getFacebookAccessTokenMetadataExpirationDateTryToGetDateAccessExpireDateIfExpireDateNotAvailable()
-    {
-        $date = new \DateTime();
-
-        $mockedFacebookAccessTokenMetadata = $this->createMock(AccessTokenMetadata::class);
-        $mockedFacebookAccessTokenMetadata
-            ->expects($this->once())
-            ->method('getExpiresAt')
-            ->willReturn(0);
-
-        $mockedFacebookAccessTokenMetadata
-            ->expects($this->once())
-            ->method('getField')
-            ->with('data_access_expires_at')
-            ->willReturn(time());
-
-        $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadata']);
-        $mockedToken
-            ->expects($this->exactly(2))
-            ->method('getFacebookAccessTokenMetadata')
-            ->willReturn($mockedFacebookAccessTokenMetadata);
-
-        $this->assertTrue($mockedToken->getFacebookAccessTokenMetadataExpirationDate() instanceof \DateTime);
     }
 
     /**

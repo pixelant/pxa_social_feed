@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
-use Facebook\FacebookResponse;
 use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
 
 /**
@@ -12,6 +11,8 @@ use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
  */
 abstract class BaseFacebookSource extends BaseSource
 {
+    const GRAPH_VERSION = 'v12.0';
+
     /**
      * Generate facebook endpoint
      *
@@ -28,9 +29,16 @@ abstract class BaseFacebookSource extends BaseSource
         list($fields) = $this->emitSignal('facebookEndPointRequestFields', [$fields]);
 
         $url = $id . '/' . $endPointEntry;
+
         $queryParams = [
             'fields' => implode(',', $fields),
-            'limit' => $limit
+            'limit' => $limit,
+            'access_token' => $this->getConfiguration()->getToken()->getAccessToken(),
+            'appsecret_proof' => hash_hmac(
+                'sha256',
+                $this->getConfiguration()->getToken()->getAccessToken(),
+                $this->getConfiguration()->getToken()->getAppSecret()
+            ),
         ];
 
         $endPoint = $this->addFieldsAsGetParametersToUrl($url, $queryParams);
@@ -43,20 +51,19 @@ abstract class BaseFacebookSource extends BaseSource
     /**
      * Get data from facebook
      *
-     * @param FacebookResponse $response
+     * @param array $response
      * @return array
      */
-    protected function getDataFromResponse(FacebookResponse $response): array
+    protected function getDataFromResponse(array $response): array
     {
-        $body = $response->getDecodedBody();
-
-        if (!is_array($body) || !isset($body['data'])) {
-            // @codingStandardsIgnoreStart
-            throw new InvalidFeedSourceData("Invalid data received for configuration {$this->getConfiguration()->getName()}.", 1562842385128);
-            // @codingStandardsIgnoreEnd
+        if (!is_array($response) || !isset($response['data'])) {
+            throw new InvalidFeedSourceData(
+                'Invalid data received for configuration ' . $this->getConfiguration()->getName() . '.',
+                1562842385128
+            );
         }
 
-        return $body['data'];
+        return $response['data'];
     }
 
     /**

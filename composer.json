@@ -17,12 +17,11 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
-    "typo3/cms-core": "^8.7 || ^9.5",
-    "facebook/graph-sdk": "~5.7.0"
+    "typo3/cms-core": "^10.3 || ^11.5",
+    "league/oauth2-facebook": "^2.0"
   },
   "require-dev": {
-    "nimut/testing-framework": "^4.1",
+    "nimut/testing-framework": "^6.0",
     "squizlabs/php_codesniffer": "^3.4"
   },
   "autoload-dev": {
@@ -38,9 +37,15 @@
     }
   },
   "scripts": {
-    "post-autoload-dump": [
+    "pre-autoload-dump": [
       "mkdir -p .Build/Web/typo3conf/ext/",
       "[ -L .Build/Web/typo3conf/ext/pxa_social_feed ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/pxa_social_feed"
+    ],
+    "post-autoload-dump": [
+      "@prepare-extension-test-structure"
+    ],
+    "prepare-extension-test-structure": [
+      "Nimut\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
     ],
     "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ *.php && .Build/bin/phpcs -n --standard=PSR2 Configuration/TCA/",
     "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
