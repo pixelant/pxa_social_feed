@@ -13,7 +13,8 @@ defined('TYPO3_MODE') or die();
             '',                        // Position
             [
                 \Pixelant\PxaSocialFeed\Controller\AdministrationController::class =>
-                    'index, editToken, updateToken, deleteToken, editConfiguration, updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration'
+                    'index, editToken, updateToken, deleteToken, editConfiguration, ' .
+                    'updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration'
             ],
             [
                 'access' => 'user,group',

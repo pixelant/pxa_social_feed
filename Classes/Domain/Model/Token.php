@@ -287,7 +287,10 @@ class Token extends AbstractEntity
             $token = new AccessToken([
                 'access_token' => $this->getAccessToken()
             ]);
-            $hasExpired = $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token)->hasExpired();
+            $hasExpired = $this->getFb(
+                $this->getAppId(),
+                $this->getAppSecret()
+            )->getLongLivedAccessToken($token)->hasExpired();
 
             if ($hasExpired === true) {
                 $isValid = false;

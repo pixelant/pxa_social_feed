@@ -40,7 +40,8 @@ class InstagramSource extends BaseFacebookSource
             $pageId = $this->getConfiguration()->getSocialId();
 
             $response = file_get_contents(
-                self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION . '/' . $pageId . '?fields=instagram_business_account'
+                self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION .
+                '/' . $pageId . '?fields=instagram_business_account'
             );
             $responseBody = json_decode($response, true);
         } catch (\Exception $exception) {
