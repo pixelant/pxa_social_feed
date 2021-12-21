@@ -24,16 +24,18 @@ class FacebookFeedUpdater extends BaseUpdater
     {
         $items = $source->load();
 
-        foreach ($items as $rawItem) {
-            $feedItem = $this->feedRepository->findOneByExternalIdentifier(
-                $rawItem['id'],
-                $source->getConfiguration()->getStorage()
-            );
-            if ($feedItem === null) {
-                $feedItem = $this->createFeedItem($rawItem, $source->getConfiguration());
-            }
+        if (count($items) > 0) {
+            foreach ($items as $rawItem) {
+                $feedItem = $this->feedRepository->findOneByExternalIdentifier(
+                    $rawItem['id'],
+                    $source->getConfiguration()->getStorage()
+                );
+                if ($feedItem === null) {
+                    $feedItem = $this->createFeedItem($rawItem, $source->getConfiguration());
+                }
 
-            $this->updateFeedItem($feedItem, $rawItem, $source->getConfiguration());
+                $this->updateFeedItem($feedItem, $rawItem, $source->getConfiguration());
+            }
         }
     }
 
@@ -54,7 +56,7 @@ class FacebookFeedUpdater extends BaseUpdater
             $feedItem->setUpdateDate((new \DateTime())->setTimestamp($updated));
         }
 
-        $feedItem->setLikes(intval($rawData['likes']['summary']['total_count']));
+        $feedItem->setLikes(intval($rawData['reactions']['summary']['total_count']));
 
         // Call hook
         $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $configuration]);
