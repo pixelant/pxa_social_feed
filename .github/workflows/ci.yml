@@ -25,6 +25,7 @@ jobs:
           key: php${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
             php${{ matrix.php-version }}-composer-
+
       - name: Install Composer dependencies
         run: composer install --no-progress
 
