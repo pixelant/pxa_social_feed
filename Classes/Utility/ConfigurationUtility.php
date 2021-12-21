@@ -22,18 +22,8 @@ class ConfigurationUtility
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
     public static function getExtensionConfiguration(): array
-    {
-        $configuration = [];
-        if (VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) < 9000000) {
-            $configVariables = (array)$GLOBALS['TYPO3_CONF_VARS'];
-            $possibleConfig = unserialize((string)$configVariables['EXT']['extConf']['pxa_social_feed']);
-            if (!empty($possibleConfig) && is_array($possibleConfig)) {
-                $configuration = $possibleConfig;
-            }
-        } else {
-            $configuration = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_social_feed');
-        }
-        return $configuration;
+    {;
+        return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_social_feed');
     }
 
     /**
