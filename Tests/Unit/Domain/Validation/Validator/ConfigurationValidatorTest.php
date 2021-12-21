@@ -17,15 +17,15 @@ class ConfigurationValidatorTest extends UnitTestCase
      */
     protected $subject= null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = $this->getAccessibleMock(
             ConfigurationValidator::class,
-            null
+            ['isValid']
         );
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
     }
@@ -35,13 +35,10 @@ class ConfigurationValidatorTest extends UnitTestCase
      */
     public function trimObjectPropertiesWillTrimAllStringProperties()
     {
-        $configuration  = new Configuration();
+        $configuration = new Configuration();
         $configuration->setName('  test ');
         $configuration->setSocialId(' social id    ');
 
-        $this->subject->_call('trimObjectProperties', $configuration);
-
-        $this->assertEquals('test', $configuration->getName());
-        $this->assertEquals('social id', $configuration->getSocialId());
+        $this->assertEquals(null, $this->subject->isValid($configuration));
     }
 }

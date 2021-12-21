@@ -39,7 +39,7 @@ class ConfigurationValidator extends AbstractValidator
      *
      * @return bool
      */
-    protected function isValid($configuration)
+    public function isValid($configuration)
     {
         // do trim
         $this->trimObjectProperties($configuration);
