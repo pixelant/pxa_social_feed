@@ -3,14 +3,14 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
-use Facebook\Facebook;
-
 /**
  * Class InstagramSource
  * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 class InstagramSource extends BaseFacebookSource
 {
+    const BASE_INSTAGRAM_GRAPH_URL = 'https://graph.instagram.com/';
+
     /**
      * Load feed source
      *
@@ -18,11 +18,13 @@ class InstagramSource extends BaseFacebookSource
      */
     public function load(): array
     {
-        $fb = $this->getConfiguration()->getToken()->getFb();
-
-        $instagramId = $this->getInstagramId($fb);
-
-        $response = $fb->get($this->generateEndPoint($instagramId, 'media'));
+        $instagramId = $this->getInstagramId();
+        $endPointUrl = $this->generateEndPoint($instagramId, 'media');
+        $response = file_get_contents(
+            self::BASE_INSTAGRAM_GRAPH_URL .
+            self::GRAPH_VERSION . $endPointUrl
+        );
+        $response = json_decode($response, true);
 
         return $this->getDataFromResponse($response);
     }
@@ -30,21 +32,29 @@ class InstagramSource extends BaseFacebookSource
     /**
      * Fetch instagram ID
      *
-     * @param Facebook $fb
      * @return string
-     * @throws \Facebook\Exceptions\FacebookSDKException
      */
-    protected function getInstagramId(Facebook $fb): string
+    protected function getInstagramId(): string
     {
-        $pageId = $this->getConfiguration()->getSocialId();
+        try {
+            $pageId = $this->getConfiguration()->getSocialId();
 
-        $response = $fb->get($pageId . '?fields=instagram_business_account');
-        $responseBody = $response->getDecodedBody();
+            $response = file_get_contents(
+                self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION . '/' . $pageId . '?fields=instagram_business_account'
+            );
+            $responseBody = json_decode($response, true);
+        } catch (\Exception $exception) {
+            throw new \UnexpectedValueException(
+                'Could not get instagram business account ID for page with ID ' . $pageId . '. Check you settings.',
+                1562841411121
+            );
+        }
 
         if (empty($responseBody['instagram_business_account']['id'])) {
-            // @codingStandardsIgnoreStart
-            throw new \UnexpectedValueException("Could not get instagram bussines account ID for page with ID '$pageId'. Check you settings.", 1562841411121);
-            // @codingStandardsIgnoreEnd
+            throw new \UnexpectedValueException(
+                'Could not get instagram business account ID for page with ID ' . $pageId . '. Check you settings.',
+                1562841411121
+            );
         }
 
         return $responseBody['instagram_business_account']['id'];

@@ -9,8 +9,6 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
  */
 class FacebookSource extends BaseFacebookSource
 {
-    const GRAPH_VERSION = 'v12.0';
-
     /**
      * Load feed source
      *

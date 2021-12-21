@@ -439,7 +439,6 @@ class AdministrationController extends ActionController
 
     /**
      * Check if instagram and facebook tokens has access token
-     * @TODO more check is needed for other tokens ?
      *
      * @param $tokens
      * @return bool

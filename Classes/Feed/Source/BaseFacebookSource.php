@@ -11,6 +11,8 @@ use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
  */
 abstract class BaseFacebookSource extends BaseSource
 {
+    const GRAPH_VERSION = 'v12.0';
+
     /**
      * Generate facebook endpoint
      *
