@@ -22,7 +22,7 @@ class ConfigurationUtility
      * @throws \TYPO3\CMS\Core\Configuration\Exception\ExtensionConfigurationPathDoesNotExistException
      */
     public static function getExtensionConfiguration(): array
-    {;
+    {
         return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('pxa_social_feed');
     }
 
