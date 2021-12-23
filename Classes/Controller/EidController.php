@@ -223,9 +223,12 @@ class EidController
      */
     protected function buildRedirectUrl(int $tokenUid): string
     {
+        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
+            || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https' ? 'https' : 'http';
+
         return sprintf(
             '%s://%s%s/?eID=%s&token=%d',
-            GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https' : 'http', // Http is not supported by facebook anyway
+            $protocol,
             GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
             GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',
             self::IDENTIFIER,
