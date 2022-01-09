@@ -327,12 +327,13 @@ class Token extends AbstractEntity
      */
     public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
     {
+        $expireAt = new \DateTime();
         $token = new AccessToken([
-            'access_token' => $this->getAccessToken()
+            'access_token' => $this->getAccessToken(),
+            'expires' => $expireAt->getTimestamp()
         ]);
 
         $accessToken = $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
-        $expireAt = new \DateTime();
         $expireAt->setTimestamp($accessToken->getExpires());
 
         if ($expireAt === 0) {
