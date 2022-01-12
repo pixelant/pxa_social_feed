@@ -104,6 +104,17 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
         static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
 
         $variableProvider->add($redirectUrlAs, $redirectUrl);
+
+        if (strpos($url, 'redirect_uri=&') !== false) {
+            $urlStructure = explode('redirect_uri=&', $url);
+            $url = sprintf(
+                '%sredirect_uri=%s&%s',
+                $urlStructure[0],
+                urlencode($redirectUrl),
+                $urlStructure[1]
+            );
+        }
+
         $variableProvider->add($loginUrlAs, $url);
         $content = $renderChildrenClosure();
 
