@@ -28,6 +28,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use League\OAuth2\Client\Provider\Exception\FacebookProviderException;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Token\AccessToken;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
@@ -284,15 +285,15 @@ class Token extends AbstractEntity
         if (empty($this->accessToken)) {
             $isValid = false;
         } else {
-            $token = new AccessToken([
-                'access_token' => $this->getAccessToken()
-            ]);
-            $hasExpired = $this->getFb(
-                $this->getAppId(),
-                $this->getAppSecret()
-            )->getLongLivedAccessToken($token)->hasExpired();
-
-            if ($hasExpired === true) {
+            try {
+                $token = new AccessToken([
+                    'access_token' => $this->getAccessToken(),
+                ]);
+                $this->getFb(
+                    $this->getAppId(),
+                    $this->getAppSecret()
+                )->getLongLivedAccessToken($token);
+            } catch (FacebookProviderException $exception) {
                 $isValid = false;
             }
         }
@@ -327,24 +328,14 @@ class Token extends AbstractEntity
      */
     public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
     {
-        $expireAt = new \DateTime();
-        $token = new AccessToken([
-            'access_token' => $this->getAccessToken(),
-            'expires' => $expireAt->getTimestamp()
-        ]);
-
-        $accessToken = $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
-        $expireAt->setTimestamp($accessToken->getExpires());
-
-        if ($expireAt === 0) {
-            $dataAccessExpiresAt = 1734694626000;
-            if ($dataAccessExpiresAt > 0) {
-                try {
-                    return (new \DateTime())->setTimestamp($dataAccessExpiresAt);
-                } catch (\Exception $exception) {
-                    return null;
-                }
-            }
+        try {
+            $expireAt = new \DateTime('+60 days');
+            $token = new AccessToken([
+                'access_token' => $this->getAccessToken()
+            ]);
+            $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
+        } catch (FacebookProviderException $exception) {
+            return null;
         }
 
         return $expireAt;
