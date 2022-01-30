@@ -97,6 +97,13 @@ class Feed extends AbstractEntity
     protected $image = '';
 
     /**
+     * small image
+     *
+     * @var string
+     */
+    protected $smallImage = '';
+
+    /**
      * likes
      *
      * @var int
@@ -224,6 +231,27 @@ class Feed extends AbstractEntity
     public function setImage(string $image): void
     {
         $this->image = $image;
+    }
+
+    /**
+     * Returns small image
+     *
+     * @return string $smallImage
+     */
+    public function getSmallImage(): string
+    {
+        return $this->smallImage;
+    }
+
+    /**
+     * Sets the image
+     *
+     * @param string $smallImage
+     * @return void
+     */
+    public function setSmallImage(string $smallImage): void
+    {
+        $this->smallImage = $smallImage;
     }
 
     /**

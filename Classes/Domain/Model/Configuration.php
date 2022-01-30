@@ -53,6 +53,15 @@ class Configuration extends AbstractEntity
     protected $name = '';
 
     /**
+     * image size
+     *
+     * @var string
+     *
+     */
+    protected $imageSize = 'normal_images';
+
+
+    /**
      * @var string
      */
     protected $socialId = '';
@@ -111,6 +120,11 @@ class Configuration extends AbstractEntity
         return $this->name;
     }
 
+    public function getImageSize(): string
+    {
+        return $this->imageSize;
+    }
+
     /**
      * @return string
      */
@@ -133,6 +147,11 @@ class Configuration extends AbstractEntity
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function setImageSize(string $imageSize): void
+    {
+        $this->imageSize = $imageSize;
     }
 
     /**

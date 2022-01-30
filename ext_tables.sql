@@ -11,6 +11,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feed
     post_url            varchar(255)        DEFAULT ''  NOT NULL,
     message             text                            NOT NULL,
     image               text                            NOT NULL,
+    small_image               text                      NOT NULL,
     title               varchar(255)        DEFAULT ''  NOT NULL,
     likes               int(11) unsigned    DEFAULT '0',
     external_identifier varchar(255)        DEFAULT ''  NOT NULL,
@@ -76,6 +77,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_configuration
     pid       int(11)             DEFAULT '0' NOT NULL,
 
     name      varchar(255)        DEFAULT ''  NOT NULL,
+    image_size varchar(255)       DEFAULT 'normal_images'  NOT NULL,
     social_id varchar(255)        DEFAULT ''  NOT NULL,
     token     int(11) unsigned    DEFAULT '0',
     max_items int(11) unsigned    DEFAULT '0',
