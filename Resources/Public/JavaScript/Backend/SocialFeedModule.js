@@ -3,14 +3,16 @@
  */
 var setFormValueFromBrowseWin;
 
-define(['jquery',
+define([
+	'jquery',
+	'bootstrap',
 	'TYPO3/CMS/Backend/Modal',
 	'TYPO3/CMS/Backend/Severity',
 	'TYPO3/CMS/Backend/Notification',
 	'clipboard'
-], function ($, Modal, Severity, Notification, clipboard) {
+], function ($, bootstrap, Modal, Severity, Notification, clipboard) {
 
-	return (function ($, Modal, Severity, Notification, clipboard) {
+	return (function ($, bootstrap, Modal, Severity, Notification, clipboard) {
 
 		/**
 		 * @private
@@ -20,7 +22,7 @@ define(['jquery',
 		var _socialFeedModuleInstance = null;
 
 		/**
-		 * Main mdoule JS
+		 * Main module JavaScript
 		 *
 		 * @return {{init: init}}
 		 * @constructor
@@ -75,6 +77,24 @@ define(['jquery',
 				_winStorageBrowser();
 				_getRedirectUriButtonClick();
 				_initToolTip();
+				_activateTabs();
+			}
+
+			/**
+			 * Activate the tabs for the backend module
+			 *
+			 * @private
+			 */
+			function _activateTabs() {
+				var triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'))
+				triggerTabList.forEach(function (triggerEl) {
+					var tabTrigger = new bootstrap.Tab(triggerEl)
+
+					triggerEl.addEventListener('click', function (event) {
+						event.preventDefault()
+						tabTrigger.show()
+					})
+				});
 			}
 
 			/**
@@ -275,5 +295,5 @@ define(['jquery',
 			}
 		}
 
-	})($, Modal, Severity, Notification, clipboard);
+	})($, bootstrap, Modal, Severity, Notification, clipboard);
 });

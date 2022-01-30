@@ -5,14 +5,14 @@ defined('TYPO3_MODE') or die();
     $_EXTKEY = 'pxa_social_feed';
 
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
-        'Pixelant.' . $_EXTKEY,
+        'PxaSocialFeed',
         'Showfeed',
         [
-            'Feeds' => 'list, loadFeedAjax, listAjax'
+            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax, listAjax'
         ],
         // non-cacheable actions
         [
-            'Feeds' => 'list, loadFeedAjax'
+            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax'
         ]
     );
 

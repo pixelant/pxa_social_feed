@@ -30,9 +30,12 @@ class FacebookSource extends BaseFacebookSource
         )->getFirst();
 
         $fb = $pageAccessToken->getFb();
-        $response = $fb->get(
-            $this->generateEndPoint($this->getConfiguration()->getSocialId(), 'feed')
+        $endPointUrl = $this->generateEndPoint($this->getConfiguration()->getSocialId(), 'feed');
+        $response = file_get_contents(
+            $fb::BASE_GRAPH_URL .
+            self::GRAPH_VERSION . '/' . $endPointUrl
         );
+        $response = json_decode($response, true);
 
         return $this->getDataFromResponse($response);
     }
@@ -45,7 +48,7 @@ class FacebookSource extends BaseFacebookSource
     protected function getEndPointFields(): array
     {
         return [
-            'likes.summary(true).limit(0)',
+            'reactions.summary(true).limit(0)',
             'message',
             'attachments',
             'created_time',

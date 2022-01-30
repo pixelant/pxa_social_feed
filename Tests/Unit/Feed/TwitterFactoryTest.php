@@ -21,7 +21,7 @@ class TwitterFactoryTest extends UnitTestCase
      */
     protected $subject = null;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new TwitterFactory();
 
@@ -32,7 +32,7 @@ class TwitterFactoryTest extends UnitTestCase
         $reflection->setValue(null, $singletonInstances);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->subject);
     }

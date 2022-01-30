@@ -12,9 +12,9 @@ defined('TYPO3_MODE') or die();
             'pxasocialfeed',    // Submodule key
             '',                        // Position
             [
-                // @codingStandardsIgnoreStart
-                'Administration' => 'index, editToken, updateToken, deleteToken, editConfiguration, updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration'
-                // @codingStandardsIgnoreEnd
+                \Pixelant\PxaSocialFeed\Controller\AdministrationController::class =>
+                    'index, editToken, updateToken, deleteToken, editConfiguration, ' .
+                    'updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration'
             ],
             [
                 'access' => 'user,group',

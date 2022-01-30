@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
-use Facebook\Authentication\AccessToken;
-use Facebook\Exceptions\FacebookSDKException;
-use Facebook\Facebook;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\Facebook;
 use Pixelant\PxaSocialFeed\Exception\FacebookObtainAccessTokenException;
-use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
+use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -57,7 +57,15 @@ class EidController
 
         if ($appId && $appSecret) {
             try {
-                $fb = FacebookGraphSdkFactory::getUsingAppIdAndSecret($appId, $appSecret);
+                $fb = new Facebook(
+                    [
+                        'clientId' => $appId,
+                        'clientSecret' => $appSecret,
+                        'redirectUri' => $this->buildRedirectUrl($tokenUid),
+                        'graphApiVersion' => FacebookSource::GRAPH_VERSION,
+                    ]
+                );
+
                 $accessToken = $this->obtainAccessToken($fb);
 
                 $this->getAndPersistLongLivedAccessToken($fb, $accessToken, $tokenUid, $response);
@@ -94,36 +102,18 @@ class EidController
         $content = [];
         // Logged in
         $content[] = '<h3>Access Token</h3>';
-        $content[] = "<p>Value: {$accessToken->getValue()}</p>";
+        $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
-        // The OAuth 2.0 client handler helps us manage access tokens
-        $oAuth2Client = $fb->getOAuth2Client();
-
-        // Get the access token metadata from /debug_token
-        $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-        // var_dump($tokenMetadata);
-
-        // Validation (these will throw FacebookSDKException's when they fail)
-        $tokenMetadata->validateAppId($fb->getApp()->getId());
-        // If you know the user ID this access token belongs to, you can validate it here
-        //$tokenMetadata->validateUserId('123');
-        $tokenMetadata->validateExpiration();
-
-        if (!$accessToken->isLongLived()) {
-            // Exchanges a short-lived access token for a long-lived one
-            try {
-                $accessToken = $oAuth2Client->getLongLivedAccessToken($accessToken);
-            } catch (FacebookSDKException $e) {
-                $accessTokenException = new FacebookObtainAccessTokenException(
-                    'Error getting long-lived access token: ' . $e->getMessage(),
-                    1562674067812
-                );
-                $accessTokenException->setStatusCode(503);
-                throw $accessTokenException;
-            }
-
-            $content[] = '<h3>Long-lived</h3>';
-            $content[] = "<p>Value: {$accessToken->getValue()}</p>";
+        // Exchanges a short-lived access token for a long-lived one
+        try {
+            $accessToken = $fb->getLongLivedAccessToken($accessToken->getToken());
+        } catch (\Exception $e) {
+            $accessTokenException = new FacebookObtainAccessTokenException(
+                'Error getting long-lived access token: ' . $e->getMessage(),
+                1562674067812
+            );
+            $accessTokenException->setStatusCode(503);
+            throw $accessTokenException;
         }
 
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
@@ -159,6 +149,10 @@ class EidController
 
             $queryBuilder->insert('tx_pxasocialfeed_domain_model_token', $pageAccessToken);
         }
+
+        $content[] = '<h3>Long-lived</h3>';
+        $content[] = "<p>Value: {$accessToken->getToken()}</p>";
+
 
         $content[] = '<p>Token was updated. <b>You can close this window</b>.</p>';
 
@@ -203,11 +197,22 @@ class EidController
      */
     protected function obtainAccessToken(Facebook $fb): AccessToken
     {
-        $helper = $fb->getRedirectLoginHelper();
+        // If we don't have an authorization code then get one
+        if (!isset($_GET['code'])) {
+            $authUrl = $fb->getAuthorizationUrl([
+                'scope' => ['email'],
+            ]);
+            $_SESSION['oauth2state'] = $fb->getState();
+
+            echo '<a href="' . $authUrl . '">Log in with Facebook!</a>';
+            exit;
+        }
 
         try {
-            $accessToken = $helper->getAccessToken();
-        } catch (\Facebook\Exceptions\FacebookResponseException $e) {
+            $accessToken = $fb->getAccessToken('authorization_code', [
+                'code' => $_GET['code']
+            ]);
+        } catch (IdentityProviderException $e) {
             // When Graph returns an error
             $accessTokenException = new FacebookObtainAccessTokenException(
                 'Graph returned an error: ' . $e->getMessage(),
@@ -215,7 +220,7 @@ class EidController
             );
             $accessTokenException->setStatusCode(503);
             throw $accessTokenException;
-        } catch (FacebookSDKException $e) {
+        } catch (\Exception $e) {
             // When validation fails or other local issues
             $accessTokenException = new FacebookObtainAccessTokenException(
                 'Facebook SDK returned an error: ' . $e->getMessage(),
@@ -226,29 +231,36 @@ class EidController
         }
 
         if (!isset($accessToken)) {
-            if ($helper->getError()) {
-                $message = [
-                    'Error: ' . $helper->getError(),
-                    'Error Code: ' . $helper->getErrorCode(),
-                    'Error Reason: ' . $helper->getErrorReason(),
-                    'Error Description: ' . $helper->getErrorDescription()
-                ];
-
-                $accessTokenException = new FacebookObtainAccessTokenException(
-                    implode("\n", $message),
-                    1562673378189
-                );
-                $accessTokenException->setStatusCode(401);
-            } else {
-                $accessTokenException = new FacebookObtainAccessTokenException(
-                    'Bad request',
-                    1562673399351
-                );
-                $accessTokenException->setStatusCode(400);
-            }
+            $accessTokenException = new FacebookObtainAccessTokenException(
+                'Bad request',
+                1562673399351
+            );
+            $accessTokenException->setStatusCode(400);
             throw $accessTokenException;
         }
 
         return $accessToken;
+    }
+
+    /**
+     * Redirect url
+     *
+     * @param int $tokenUid
+     * @return string
+     */
+    protected function buildRedirectUrl(int $tokenUid): string
+    {
+        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
+            || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO']
+            === 'https' ? 'https' : 'http';
+
+        return sprintf(
+            '%s://%s%s/?eID=%s&token=%d',
+            $protocol,
+            GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
+            GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',
+            self::IDENTIFIER,
+            $tokenUid
+        );
     }
 }

@@ -28,9 +28,10 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Facebook\Authentication\AccessTokenMetadata;
-use Facebook\Facebook;
-use Pixelant\PxaSocialFeed\GraphSdk\FacebookGraphSdkFactory;
+use League\OAuth2\Client\Provider\Exception\FacebookProviderException;
+use League\OAuth2\Client\Provider\Facebook;
+use League\OAuth2\Client\Token\AccessToken;
+use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -77,9 +78,9 @@ class Token extends AbstractEntity
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
-     * @lazy
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $beGroup= null;
+    protected $beGroup = null;
 
     /**
      * @var string
@@ -87,8 +88,6 @@ class Token extends AbstractEntity
     protected $name = '';
 
     /**
-     * type
-     *
      * @var integer
      */
     protected $type = 0;
@@ -127,11 +126,6 @@ class Token extends AbstractEntity
      * @var Facebook
      */
     protected $fb = null;
-
-    /**
-     * @var AccessTokenMetadata
-     */
-    protected $fbTokenMetaData = null;
 
     /**
      * Initialize
@@ -292,18 +286,24 @@ class Token extends AbstractEntity
      */
     public function isValidFacebookAccessToken(): bool
     {
+        $isValid = true;
         if (empty($this->accessToken)) {
-            return false;
+            $isValid = false;
+        } else {
+            try {
+                $token = new AccessToken([
+                    'access_token' => $this->getAccessToken(),
+                ]);
+                $this->getFb(
+                    $this->getAppId(),
+                    $this->getAppSecret()
+                )->getLongLivedAccessToken($token);
+            } catch (FacebookProviderException $exception) {
+                $isValid = false;
+            }
         }
 
-        try {
-            $tokenMetadata = $this->getFacebookAccessTokenMetadata();
-            $tokenMetadata->validateExpiration();
-        } catch (\Exception $e) {
-            return false;
-        }
-
-        return true;
+        return $isValid;
     }
 
     /**
@@ -333,17 +333,14 @@ class Token extends AbstractEntity
      */
     public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
     {
-        $expireAt = $this->getFacebookAccessTokenMetadata()->getExpiresAt();
-
-        if ($expireAt === 0) {
-            $dataAccessExpiresAt = (int)$this->getFacebookAccessTokenMetadata()->getField('data_access_expires_at');
-            if ($dataAccessExpiresAt > 0) {
-                try {
-                    return (new \DateTime())->setTimestamp($dataAccessExpiresAt);
-                } catch (\Exception $exception) {
-                    return null;
-                }
-            }
+        try {
+            $expireAt = new \DateTime('+60 days');
+            $token = new AccessToken([
+                'access_token' => $this->getAccessToken()
+            ]);
+            $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
+        } catch (FacebookProviderException $exception) {
+            return null;
         }
 
         return $expireAt;
@@ -356,16 +353,15 @@ class Token extends AbstractEntity
      * @param array $permissions
      * @return string
      */
-    public function getFacebookLoginUrl(string $redirectUrl, array $permissions)
+    public function getFacebookLoginUrl(string $clientId, string $clientSecret, string $redirectUrl, array $permissions)
     {
         // required by SDK login
         session_start();
 
-        $fb = $this->getFb();
-
-        $loginHelper = $fb->getRedirectLoginHelper();
-
-        return $loginHelper->getLoginUrl($redirectUrl, $permissions);
+        $fb = $this->getFb($clientId, $clientSecret, $redirectUrl);
+        return $fb->getAuthorizationUrl([
+            'scope' => ['email'],
+        ]) . '&bypass=1';
     }
 
     /**
@@ -375,19 +371,25 @@ class Token extends AbstractEntity
      */
     public function getFacebookPagesIds(): array
     {
+        $token = new AccessToken([
+            'access_token' => $this->getAccessToken()
+        ]);
+
         try {
-            $body = $this->getFb()->get('me/accounts')->getDecodedBody();
+            $body = $this->getFb($this->getAppId(), $this->getAppSecret())->getResourceOwner($token);
         } catch (\Exception $exception) {
             $body = null;
         }
 
-        if (isset($body['data'])) {
+        if (isset($body)) {
             $accounts = [
                 'me' => LocalizationUtility::translate('module.source_id_me', 'PxaSocialFeed')
             ];
-            foreach ($body['data'] as $page) {
-                $accounts[$page['id']] = "{$page['name']} (ID: {$page['id']})";
-            }
+            $accounts[$body->getId()] = sprintf(
+                '%s (ID: %s)',
+                $body->getName(),
+                $body->getId()
+            );
         } else {
             $accounts = ['0' => 'Invalid data. Could not fetch accounts(pages) list from facebook'];
         }
@@ -465,35 +467,20 @@ class Token extends AbstractEntity
      *
      * @return Facebook
      */
-    public function getFb(): Facebook
+    public function getFb(string $clientId = '', string $clientSecret = '', string $redirectUri = ''): Facebook
     {
         if ($this->fb === null) {
-            $this->fb = FacebookGraphSdkFactory::getUsingToken($this);
+            $this->fb = new Facebook(
+                [
+                    'clientId'          => $clientId,
+                    'clientSecret'      => $clientSecret,
+                    'redirectUri'       => $redirectUri,
+                    'graphApiVersion'   => FacebookSource::GRAPH_VERSION,
+                ]
+            );
         }
 
         return $this->fb;
-    }
-
-    /**
-     * Get facebook token meta data
-     *
-     * @return AccessTokenMetadata
-     */
-    protected function getFacebookAccessTokenMetadata(): AccessTokenMetadata
-    {
-        $this->initFacebookAccessTokenMetadata();
-        return $this->fbTokenMetaData;
-    }
-
-    /**
-     * Load access token metadata
-     */
-    protected function initFacebookAccessTokenMetadata(): void
-    {
-        if ($this->fbTokenMetaData === null) {
-            $fb = $this->getFb();
-            $this->fbTokenMetaData = $fb->getOAuth2Client()->debugToken($fb->getDefaultAccessToken());
-        }
     }
 
     /**

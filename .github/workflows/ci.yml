@@ -1,0 +1,40 @@
+name: Continuous Integration
+
+on: [ push, pull_request ]
+
+jobs:
+  ci:
+    name: Suite to run
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version:
+          - 7.4
+          - 8.0
+
+    steps:
+      - name: Configure PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: "Cache dependencies installed with composer"
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: php${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: |
+            php${{ matrix.php-version }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress
+
+      - name: Run PHP Code Sniffer
+        run: composer run php:codesniffer
+
+      - name: Run PHP Unit tests
+        run: composer run php:unittests

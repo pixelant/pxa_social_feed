@@ -19,12 +19,14 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
+use TYPO3\CMS\Extbase\Annotation as Extbase;
 
 /***************************************************************
  *
@@ -96,7 +98,6 @@ class AdministrationController extends ActionController
      */
     public function __construct(BackendUserGroupRepository $backendUserGroupRepository)
     {
-        parent::__construct();
         $this->backendUserGroupRepository = $backendUserGroupRepository;
     }
 
@@ -145,7 +146,11 @@ class AdministrationController extends ActionController
         $pageRenderer->addRequireJsConfiguration(
             [
                 'paths' => [
-                    'clipboard' => '../typo3conf/ext/pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
+                    'clipboard' => PathUtility::getAbsoluteWebPath(
+                        GeneralUtility::getFileAbsFileName(
+                            'EXT:pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
+                        )
+                    )
                 ],
                 'shim' => [
                     'deps' => ['jquery'],
@@ -208,7 +213,7 @@ class AdministrationController extends ActionController
      * Save token changes
      *
      * @param Token $token
-     * @validate $token \Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator
+     * @Extbase\Validate("\Pixelant\PxaSocialFeed\Domain\Validation\Validator\TokenValidator", param="token")
      */
     public function updateTokenAction(Token $token): void
     {
@@ -279,7 +284,7 @@ class AdministrationController extends ActionController
      * Update configuration
      *
      * @param Configuration $configuration
-     * @validate $configuration \Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator
+     * @Extbase\Validate("\Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator", param="configuration")
      * @return void
      */
     public function updateConfigurationAction(Configuration $configuration): void
@@ -442,7 +447,6 @@ class AdministrationController extends ActionController
 
     /**
      * Check if instagram and facebook tokens has access token
-     * @TODO more check is needed for other tokens ?
      *
      * @param $tokens
      * @return bool

@@ -92,8 +92,9 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
         $permissions = GeneralUtility::trimExplode(',', $arguments['permissions']);
 
         $redirectUrl = static::buildRedirectUrl($token->getUid());
+
         try {
-            $url = $token->getFacebookLoginUrl($redirectUrl, $permissions);
+            $url = $token->getFacebookLoginUrl($token->getAppId(), $token->getAppSecret(), $redirectUrl, $permissions);
         } catch (\Exception $exception) {
             return $exception->getMessage();
         }
@@ -103,6 +104,17 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
         static::removeVariables($variableProvider, $loginUrlAs, $redirectUrlAs);
 
         $variableProvider->add($redirectUrlAs, $redirectUrl);
+
+        if (strpos($url, 'redirect_uri=&') !== false) {
+            $urlStructure = explode('redirect_uri=&', $url);
+            $url = sprintf(
+                '%sredirect_uri=%s&%s',
+                $urlStructure[0],
+                urlencode($redirectUrl),
+                $urlStructure[1]
+            );
+        }
+
         $variableProvider->add($loginUrlAs, $url);
         $content = $renderChildrenClosure();
 
@@ -134,9 +146,13 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
      */
     protected static function buildRedirectUrl(int $tokenUid): string
     {
+        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
+            || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO']
+            === 'https' ? 'https' : 'http';
+
         return sprintf(
-            '%s://%s%s?eID=%s&token=%d',
-            GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https' : 'http', // Http is not supported by facebook anyway
+            '%s://%s%s/?eID=%s&token=%d',
+            $protocol,
             GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
             GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',
             EidController::IDENTIFIER,

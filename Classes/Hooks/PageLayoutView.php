@@ -30,7 +30,6 @@ namespace Pixelant\PxaSocialFeed\Hooks;
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
@@ -66,7 +65,7 @@ class PageLayoutView
 
             // configurations info
             $configurations = '';
-            if ($settings['configuration']) {
+            if (isset($settings['configuration']) && $settings['configuration']) {
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                     ->getQueryBuilderForTable('tx_pxasocialfeed_domain_model_configuration');
 
@@ -114,12 +113,10 @@ class PageLayoutView
     }
 
     /**
-     * @return \TYPO3\CMS\Core\Service\FlexFormService|\TYPO3\CMS\Extbase\Service\FlexFormService
+     * @return \TYPO3\CMS\Core\Service\FlexFormService
      */
     protected function getFlexFormService()
     {
-        return VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 9004000
-            ? GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\FlexFormService::class)
-            : GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Service\FlexFormService::class);
+        return GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\FlexFormService::class);
     }
 }
