@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
-use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Facebook;
@@ -116,43 +115,17 @@ class EidController
             throw $accessTokenException;
         }
 
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tx_pxasocialfeed_domain_model_token');
-
-        $queryBuilder->update(
-            'tx_pxasocialfeed_domain_model_token',
-            ['access_token' => (string)$accessToken],
-            ['uid' => $tokenUid],
-            [\PDO::PARAM_STR]
-        );
-
-        // Remove all existing page access tokens
-        $queryBuilder->delete('tx_pxasocialfeed_domain_model_token', ['parent_token' => $tokenUid]);
-
-        // Add page access tokens
-        $fb->setDefaultAccessToken($accessToken);
-        $pages = $fb->get('/me/accounts/?fields=id,name,access_token')->getDecodedBody()['data'];
-
-        foreach ($pages as $page) {
-            $pageAccessToken = [
-                'tstamp' => time(),
-                'crdate' => time(),
-                'name' => $page['name'],
-                'type' => Token::FACEBOOK_PAGE,
-                'app_id' => $fb->getApp()->getId(),
-                'app_secret' => $fb->getApp()->getSecret(),
-                'access_token' => $page['access_token'],
-                'fb_social_id' => $page['id'],
-                'parent_token' => $tokenUid,
-                'hidden' => 1 // Token should not be displayed in backend
-            ];
-
-            $queryBuilder->insert('tx_pxasocialfeed_domain_model_token', $pageAccessToken);
-        }
-
         $content[] = '<h3>Long-lived</h3>';
         $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+            ->update(
+                'tx_pxasocialfeed_domain_model_token',
+                ['access_token' => (string)$accessToken],
+                ['uid' => $tokenUid],
+                [\PDO::PARAM_STR]
+            );
 
         $content[] = '<p>Token was updated. <b>You can close this window</b>.</p>';
 
