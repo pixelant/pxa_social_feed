@@ -93,8 +93,11 @@ class InstagramFeedUpdater extends BaseUpdater
         $feedItem->setLikes((int)$data['like_count']);
     }
 
-    protected function storeImg($url){
-        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Resource\ResourceFactory::class);
+    protected function storeImg($url) 
+    {
+        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Resource\ResourceFactory::class
+        );
         $storage= $resourceFactory->getDefaultStorage();
         $downloadFolderNormal =  $storage->getFolder('socialmedia/instacontent/normal');
         $downloadFolderSmall =  $storage->getFolder('socialmedia/instacontent/small');
@@ -115,9 +118,10 @@ class InstagramFeedUpdater extends BaseUpdater
             // need to minify the image here, dunno how
             $file_small->setContents($response->getBody()->getContents());
 
-        return  ['normal_image' => 'socialmedia/instacontent/normal/' . $normal_f_name,
-                'small_image' => 'socialmedia/instacontent/small/' . $small_f_name ];
-
+        return [
+            'normal_image' => 'socialmedia/instacontent/normal/' . $normal_f_name,
+            'small_image' => 'socialmedia/instacontent/small/' . $small_f_name 
+        ];
     }
 
     /**
