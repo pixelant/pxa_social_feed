@@ -93,7 +93,7 @@ class InstagramFeedUpdater extends BaseUpdater
         $feedItem->setLikes((int)$data['like_count']);
     }
 
-    protected function storeImg($url) 
+    protected function storeImg($url)
     {
         $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
             \TYPO3\CMS\Core\Resource\ResourceFactory::class
@@ -120,7 +120,7 @@ class InstagramFeedUpdater extends BaseUpdater
 
         return [
             'normal_image' => 'socialmedia/instacontent/normal/' . $normal_f_name,
-            'small_image' => 'socialmedia/instacontent/small/' . $small_f_name 
+            'small_image' => 'socialmedia/instacontent/small/' . $small_f_name
         ];
     }
 
