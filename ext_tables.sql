@@ -47,7 +47,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_token
     # Facebok & Instagram
     app_id              varchar(55)         DEFAULT ''  NOT NULL,
     app_secret          varchar(255)        DEFAULT ''  NOT NULL,
-    access_token        varchar(255)        DEFAULT ''  NOT NULL,
+    access_token        text                DEFAULT ''  NOT NULL,
 
     # Twitter, access_token already exist
     api_key             varchar(255)        DEFAULT ''  NOT NULL,
