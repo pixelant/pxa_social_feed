@@ -9,7 +9,7 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
  */
 class InstagramSource extends BaseFacebookSource
 {
-    const BASE_INSTAGRAM_GRAPH_URL = 'https://graph.instagram.com/';
+    const BASE_INSTAGRAM_GRAPH_URL = 'https://graph.facebook.com/';
 
     /**
      * Load feed source
@@ -22,7 +22,7 @@ class InstagramSource extends BaseFacebookSource
         $endPointUrl = $this->generateEndPoint($instagramId, 'media');
         $response = file_get_contents(
             self::BASE_INSTAGRAM_GRAPH_URL .
-            self::GRAPH_VERSION . $endPointUrl
+            self::GRAPH_VERSION . '/' . $endPointUrl
         );
         $response = json_decode($response, true);
 
@@ -38,10 +38,11 @@ class InstagramSource extends BaseFacebookSource
     {
         try {
             $pageId = $this->getConfiguration()->getSocialId();
-
+            $access_token = $this->getConfiguration()->getToken()->getAccessToken();
             $response = file_get_contents(
                 self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION .
-                '/' . $pageId . '?fields=instagram_business_account'
+                '/' . $pageId . '?fields=instagram_business_account' .
+                '&access_token=' . $access_token
             );
             $responseBody = json_decode($response, true);
         } catch (\Exception $exception) {
