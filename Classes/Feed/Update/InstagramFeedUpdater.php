@@ -104,23 +104,25 @@ class InstagramFeedUpdater extends BaseUpdater
 
 
         $filename = explode('?', basename($url), 2);
-        $normal_f_name = str_replace('_', '-', $filename[0]);
-        $small_f_name = 'small-' . str_replace('_', '-', $filename[0]);
+        $normal_f_name = $filename[0];
+        $small_f_name = 'small_' .$filename[0];
 
         $file_normal = $downloadFolderNormal->createFile($filename[0]);
 
         $file_small = $downloadFolderSmall->createFile('small_' . $filename[0]);
 
-            $httpClient = $this->objectManager->get(Client::class);
-            $response = $httpClient->get($url);
-            $file_normal->setContents($response->getBody()->getContents());
+        $httpClient = $this->objectManager->get(Client::class);
+        $response = $httpClient->get($url);
+        $file_normal->setContents($response->getBody()->getContents());
 
-            // need to minify the image here, dunno how
-            $file_small->setContents($response->getBody()->getContents());
+        // need to minify the image here, dunno how
+        $file_small->setContents($response->getBody()->getContents());
+
+        $conf = $storage->getConfiguration();
 
         return [
-            'normal_image' => 'socialmedia/instacontent/normal/' . $normal_f_name,
-            'small_image' => 'socialmedia/instacontent/small/' . $small_f_name
+            'normal_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/normal/' . $normal_f_name,
+            'small_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/small/' . $small_f_name
         ];
     }
 
