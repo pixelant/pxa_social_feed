@@ -1,4 +1,4 @@
-.. include:: ../Includes.txt
+.. include:: /Includes.rst.txt
 
 
 .. _configuration:
@@ -34,7 +34,7 @@ You should be logged in to a Facebook account.
 
 **Before adding the access token** we need to add **App Id** and **App Secret**.
 
-.. figure:: ../Images/AdministratorManual/FacebookToken.png
+.. figure:: /Images/AdministratorManual/FacebookToken.png
    :class: with-shadow
    :alt: Backend view
 
@@ -43,7 +43,7 @@ You should be logged in to a Facebook account.
 To get those go to the Facebook Apps page https://developers.facebook.com/apps/ and open your App. If you don't have an app yet, create one.
 Copy the ID and Secret from the app settings.
 
-.. figure:: ../Images/AdministratorManual/AppIdSecret.png
+.. figure:: /Images/AdministratorManual/AppIdSecret.png
    :class: with-shadow
    :alt: Backend view
 
@@ -58,13 +58,13 @@ For mor Information how you can generate an access token watch out this video ht
 
 There is a button called "Copy fallback URL for facebook settings." which will copy the URL to your clipboard that you should then paste into the "Facebook login" app settings.
 
-.. figure:: ../Images/AdministratorManual/CopyAccessToken.png
+.. figure:: /Images/AdministratorManual/CopyAccessToken.png
    :class: with-shadow
    :alt: Backend view
 
    Redirect url
 
-.. figure:: ../Images/AdministratorManual/FacebookLogin.png
+.. figure:: /Images/AdministratorManual/FacebookLogin.png
    :class: with-shadow
    :alt: Backend view
 
@@ -74,7 +74,7 @@ After you've added the redirect URL to the Valid OAuth redirect URIs field on Fa
 
 **If everything went well you should get an "Access token" that will be saved automatically.**
 
-.. figure:: ../Images/AdministratorManual/GotToken.png
+.. figure:: /Images/AdministratorManual/GotToken.png
    :class: with-shadow
    :alt: Backend view
 
@@ -105,7 +105,7 @@ Twitter token requires the following values:
 - Access Token
 - Access Token Secret
 
-.. figure:: ../Images/AdministratorManual/TwitterToken.png
+.. figure:: /Images/AdministratorManual/TwitterToken.png
    :class: with-shadow
    :alt: Backend view
 
@@ -115,7 +115,7 @@ Twitter token requires the following values:
 You can find it in your Twitter App settings.
 https://developer.twitter.com/en/apps
 
-.. figure:: ../Images/AdministratorManual/TwitterAccess.png
+.. figure:: /Images/AdministratorManual/TwitterAccess.png
    :class: with-shadow
    :alt: Backend view
 
@@ -123,7 +123,7 @@ https://developer.twitter.com/en/apps
 
 If you are using Twitter API 2.0 you need to request **Elevated Access** to be able to use API v1.1.
 
-.. figure:: ../Images/AdministratorManual/TwitterAccess20.png
+.. figure:: /Images/AdministratorManual/TwitterAccess20.png
    :class: with-shadow
    :alt: Backend view
 
@@ -166,7 +166,7 @@ Optionally you can add **Receiver email** and **Sender email** if you want to ge
     Both receiver and sender should be valid email addresses.
 
 
-.. figure:: ../Images/AdministratorManual/Scheduler.png
+.. figure:: /Images/AdministratorManual/Scheduler.png
    :class: with-shadow
    :alt: Backend view
 
