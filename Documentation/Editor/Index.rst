@@ -1,4 +1,4 @@
-.. include:: ../Includes.txt
+.. include:: /Includes.rst.txt
 
 
 .. _for-editors:
@@ -18,7 +18,7 @@ Add plugin to page
 Create a new content element and choose **Social feed**
 
 
-.. figure:: ../Images/UserManual/NewElementWizard.png
+.. figure:: /Images/UserManual/NewElementWizard.png
    :class: with-shadow
    :alt: Backend view
 
@@ -47,7 +47,7 @@ Use ``Ajax`` instead, which will use cache able plugin action and load feed with
 
    You should choose at least one feed source
 
-.. figure:: ../Images/UserManual/PluginOptions.png
+.. figure:: /Images/UserManual/PluginOptions.png
    :class: with-shadow
    :alt: Backend view
 

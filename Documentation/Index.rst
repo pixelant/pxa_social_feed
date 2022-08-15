@@ -1,20 +1,16 @@
-.. every .rst file should include Includes.txt
-.. use correct path!
-
-.. include:: Includes.txt
-
-
-.. Every manual should have a start label for cross-referencing to
-.. start page. Do not remove this!
+.. include:: /Includes.rst.txt
 
 .. _start:
 
-=============================================================
+===============
 Pxa Social Feed
-=============================================================
+===============
 
 :Extension key:
     pxa_social_feed
+
+:Package name:
+    pixelant/pxa-social-feed
 
 :Version:
    |release|
@@ -25,20 +21,21 @@ Pxa Social Feed
 :Email:
    info@pixelant.net
 
-**About extension**
+:Rendered:
+   |today|
+
+----
 
 Add Facebook, Instagram, Twitter and YouTube feed on the site.
 
-**For Contributors**
+----
 
-   You are welcome to help improve this guide. Just click on "Edit me on GitHub"
-   on the top right to submit your change request.
+**Table of Contents:**
 
 
 .. toctree::
-   :maxdepth: 3
-   :hidden:
-
+   :maxdepth: 2
+   :titlesonly:
 
    Introduction/Index
    Editor/Index
