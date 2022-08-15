@@ -34,6 +34,9 @@
     "bin-dir": ".Build/bin",
     "preferred-install": {
       "typo3/cms": "source"
+    },
+    "allow-plugins": {
+      "typo3/cms-composeinstallers": true
     }
   },
   "scripts": {
