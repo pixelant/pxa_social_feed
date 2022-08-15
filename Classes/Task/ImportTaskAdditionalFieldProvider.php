@@ -134,7 +134,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         $task->setConfigurations($submittedData['pxasocialfeed_configs'] ?? []);
         $task->setReceiverEmail($submittedData['pxasocialfeed_receiver_email']);
         $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
-        $task->setRunAllConfigurations((bool) $submittedData['pxasocialfeed_run_all_configs']);
+        $task->setRunAllConfigurations((bool) ($submittedData['pxasocialfeed_run_all_configs'] ?? false));
     }
 
     /**
