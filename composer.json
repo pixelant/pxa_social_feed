@@ -36,7 +36,8 @@
       "typo3/cms": "source"
     },
     "allow-plugins": {
-      "typo3/cms-composeinstallers": true
+      "typo3/cms-composeinstallers": true,
+      "typo3/cms-composer-installers": true
     }
   },
   "scripts": {
