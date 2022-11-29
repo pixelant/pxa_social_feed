@@ -63,7 +63,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
      */
     public static function parseFeedMessage($text, $type)
     {
-        //Convert urls to links
+        // Convert urls to links
         $text = preg_replace(
             '$(\s|^)(https?://[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
             ' <a href="$2" target="_blank" rel="noreferrer">$2</a> ',
@@ -77,12 +77,13 @@ class ParseMessageViewHelper extends AbstractViewHelper
 
         switch ($type) {
             case Token::FACEBOOK:
-                //Convert hashtags to facebook searches in <a> links
+                // Convert hashtags to facebook searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
                     function ($matches) {
                         return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.facebook.com/hashtag/%s?source=feed_text">#%s</a>',
+                            '<a target="_blank" rel="noreferrer" '
+                                . 'href="https://www.facebook.com/hashtag/%s?source=feed_text">#%s</a>',
                             rawurlencode($matches[1]),
                             htmlspecialchars($matches[1])
                         );
@@ -91,7 +92,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                 );
                 break;
             case Token::TWITTER:
-                //Convert hashtags to twitter searches in <a> links
+                // Convert hashtags to twitter searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
                     function ($matches) {
@@ -104,7 +105,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                     $text
                 );
 
-                //Convert @tags to twitter profiles in <a> links
+                // Convert @tags to twitter profiles in <a> links
                 $text = preg_replace_callback(
                     "/@([[:alnum:]\/._]+)/u",
                     function ($matches) {
@@ -118,19 +119,20 @@ class ParseMessageViewHelper extends AbstractViewHelper
                 );
                 break;
             case Token::INSTAGRAM:
-                //Convert hashtags to instagram searches in <a> links
+                // Convert hashtags to instagram searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",
                     function ($matches) {
                         return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.instagram.com/explore/tags/%s/">#%s</a>',
+                            '<a target="_blank" rel="noreferrer" '
+                                . 'href="https://www.instagram.com/explore/tags/%s/">#%s</a>',
                             rawurlencode($matches[1]),
                             htmlspecialchars($matches[1])
                         );
                     },
                     $text
                 );
-                //Convert @tags to instagram profiles in <a> links
+                // Convert @tags to instagram profiles in <a> links
                 $text = preg_replace_callback(
                     "/@([[:alnum:]\/._]+)/u",
                     function ($matches) {
@@ -149,14 +151,15 @@ class ParseMessageViewHelper extends AbstractViewHelper
                     "/#([[:alnum:]\/.]+)/u",
                     function ($matches) {
                         return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.youtube.com/results?search_query=%s">#%s</a>',
+                            '<a target="_blank" rel="noreferrer" '
+                                . 'href="https://www.youtube.com/results?search_query=%s">#%s</a>',
                             rawurlencode('#' . $matches[1]),
                             htmlspecialchars($matches[1])
                         );
                     },
                     $text
                 );
-                //Convert @tags to youtube profiles in <a> links
+                // Convert @tags to youtube profiles in <a> links
                 $text = preg_replace_callback(
                     "/@([[:alnum:]\/._]+)/u",
                     function ($matches) {
