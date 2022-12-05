@@ -45,9 +45,7 @@ trait EmitSignalTrait
     {
         if ($this->signalSlotDispatcher === null) {
             $this->signalSlotDispatcher = GeneralUtility::makeInstance(
-                Dispatcher::class,
-                GeneralUtility::makeInstance(ObjectManager::class),
-                GeneralUtility::makeInstance(Logger::class, 'PxaSocialFeed')
+                Dispatcher::class
             );
         }
 
