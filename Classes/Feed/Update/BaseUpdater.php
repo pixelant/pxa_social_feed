@@ -65,7 +65,11 @@ abstract class BaseUpdater implements FeedUpdaterInterface
         if (count($this->feeds) > 0) {
             /** @var Feed $feedToRemove */
             foreach ($this->feedRepository->findNotInStorage($this->feeds, $configuration) as $feedToRemove) {
+                // todo: remove in next major version
+                /** @deprecated The call to changedFeedItem is deprecated and will be removed in version 4 */
                 $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'changedFeedItem', [$feedToRemove]);
+
+                $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'removedFeedItem', [$feedToRemove]);
                 $this->feedRepository->remove($feedToRemove);
             }
         }
