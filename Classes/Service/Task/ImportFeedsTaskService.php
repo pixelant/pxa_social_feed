@@ -68,31 +68,11 @@ class ImportFeedsTaskService
             : $this->configurationRepository->findByUids($configurationUids);
 
         foreach ($configurations as $configuration) {
-            // Reset
-            $factory = null;
-            switch (true) {
-                case $configuration->getToken()->isFacebookType():
-                    // Check if access is valid
-                    $this->checkFacebookAccessToken($configuration->getToken());
-                    $factory = GeneralUtility::makeInstance(FacebookFeedFactory::class);
-                    break;
-                case $configuration->getToken()->isInstagramType():
-                    // Check if access is valid
-                    $this->checkFacebookAccessToken($configuration->getToken());
-                    $factory = GeneralUtility::makeInstance(InstagramFactory::class);
-                    break;
-                case $configuration->getToken()->isTwitterType():
-                    $factory = GeneralUtility::makeInstance(TwitterFactory::class);
-                    break;
-                case $configuration->getToken()->isYoutubeType():
-                    $factory = GeneralUtility::makeInstance(YoutubeFactory::class);
-                    break;
-                default:
-                    throw new UnsupportedTokenType(
-                        "Token type '{$configuration->getToken()->getType()}' is not supported",
-                        1562837370194
-                    );
+            if (null == $token = $configuration->getToken()) {
+                continue;
             }
+
+            $factory = $this->getFactory($token);
 
             if (isset($factory)) {
                 try {
@@ -134,6 +114,37 @@ class ImportFeedsTaskService
         $updater->cleanUp($configuration);
         // Save changes
         $updater->persist();
+    }
+
+     /**
+     * @param Token $token
+     */
+    protected function getFactory(Token $token): FeedFactoryInterface {
+        switch (true) {
+            case $token->isFacebookType():
+                // Check if access is valid
+                $this->checkFacebookAccessToken($token);
+
+                return GeneralUtility::makeInstance(FacebookFeedFactory::class);
+
+            case $token->isInstagramType():
+                // Check if access is valid
+                $this->checkFacebookAccessToken($token);
+
+                return GeneralUtility::makeInstance(InstagramFactory::class);
+
+            case $token->isTwitterType():
+                return GeneralUtility::makeInstance(TwitterFactory::class);
+
+            case $token->isYoutubeType():
+                return GeneralUtility::makeInstance(YoutubeFactory::class);
+
+            default:
+                throw new UnsupportedTokenType(
+                    "Token type '{$token->getType()}' is not supported",
+                    1562837370194
+                );
+        }
     }
 
     /**
