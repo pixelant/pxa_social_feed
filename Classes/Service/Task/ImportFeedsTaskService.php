@@ -74,20 +74,18 @@ class ImportFeedsTaskService
 
             $factory = $this->getFactory($token);
 
-            if (isset($factory)) {
-                try {
-                    $this->importFeed($factory, $configuration);
-                } catch (\Exception $exception) {
-                    throw new FailedExecutingImportException(
-                        sprintf(
-                            'Failed importing using configuration "%s (UID-%d)" with message "%s"',
-                            $configuration->getName(),
-                            $configuration->getUid(),
-                            $exception->getMessage()
-                        ),
-                        1586153059241
-                    );
-                }
+            try {
+                $this->importFeed($factory, $configuration);
+            } catch (\Exception $exception) {
+                throw new FailedExecutingImportException(
+                    sprintf(
+                        'Failed importing using configuration "%s (UID-%d)" with message "%s"',
+                        $configuration->getName(),
+                        $configuration->getUid(),
+                        $exception->getMessage()
+                    ),
+                    1586153059241
+                );
             }
         }
 
