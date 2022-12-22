@@ -37,6 +37,7 @@ class FacebookSource extends BaseFacebookSource
             'reactions.summary(true).limit(0)',
             'message',
             'attachments',
+            'permalink_url',
             'created_time',
             'updated_time',
         ];
