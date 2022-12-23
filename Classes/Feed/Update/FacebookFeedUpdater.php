@@ -97,8 +97,7 @@ class FacebookFeedUpdater extends BaseUpdater
     {
         $feedItem = $this->objectManager->get(Feed::class);
 
-        list($userId, $postId) = GeneralUtility::trimExplode('_', $rawData['id'], true);
-        $feedItem->setPostUrl('https://facebook.com/' . $userId . '/posts/' . $postId);
+        $feedItem->setPostUrl($rawData['permalink_url']);
         $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
         $feedItem->setConfiguration($configuration);
         $feedItem->setExternalIdentifier($rawData['id']);
