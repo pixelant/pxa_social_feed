@@ -173,7 +173,7 @@ class EidController
         // If we don't have an authorization code then get one
         if (!isset($_GET['code'])) {
             $authUrl = $fb->getAuthorizationUrl([
-                'scope' => ['email'],
+                'scope' => ['email', 'pages_read_engagement', 'pages_read_user_content'],
             ]);
             $_SESSION['oauth2state'] = $fb->getState();
 
