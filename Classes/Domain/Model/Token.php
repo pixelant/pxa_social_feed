@@ -355,7 +355,7 @@ class Token extends AbstractEntity
 
         $fb = $this->getFb($clientId, $clientSecret, $redirectUrl);
         return $fb->getAuthorizationUrl([
-            'scope' => ['email'],
+            'scope' => $permissions,
         ]) . '&bypass=1';
     }
 
