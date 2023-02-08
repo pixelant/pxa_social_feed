@@ -46,6 +46,13 @@ class Configuration extends AbstractEntity
     protected $pid = 0;
 
     /**
+     * hidden
+     *
+     * @var bool
+     */
+    protected $hidden = false;
+
+    /**
      * name
      *
      * @var string
@@ -94,6 +101,22 @@ class Configuration extends AbstractEntity
     public function __construct()
     {
         $this->beGroup = new ObjectStorage();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param bool $hidden
+     */
+    public function setHidden(bool $hidden): void
+    {
+        $this->hidden = $hidden;
     }
 
     /**

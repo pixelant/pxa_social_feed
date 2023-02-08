@@ -68,6 +68,9 @@ class ImportFeedsTaskService
             : $this->configurationRepository->findByUids($configurationUids);
 
         foreach ($configurations as $configuration) {
+            if ($configuration->isHidden()) {
+                continue;
+            }
             if (null == $token = $configuration->getToken()) {
                 continue;
             }
