@@ -6,3 +6,6 @@ editorRestrictionIsRequired = 0
 
 # cat=basic/enable/150; type=string; label=Exclude backend user groups from selection
 excludeBackendUserGroups =
+
+# cat=basic/enable/200; type=boolean; label=Disable configuration if the feed import task failed
+disableConfigurationOnFailure = 0

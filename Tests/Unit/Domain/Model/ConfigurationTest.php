@@ -76,6 +76,25 @@ class ConfigurationTest extends UnitTestCase
     /**
      * @test
      */
+    public function initialValueOfHidden()
+    {
+        $this->assertEquals(false, $this->subject->isHidden());
+    }
+
+    /**
+     * @test
+     */
+    public function canSetHidden()
+    {
+        $value = true;
+
+        $this->subject->setHidden($value);
+        $this->assertEquals($value, $this->subject->isHidden());
+    }
+
+    /**
+     * @test
+     */
     public function initialValueOfName()
     {
         $this->assertEquals('', $this->subject->getName());

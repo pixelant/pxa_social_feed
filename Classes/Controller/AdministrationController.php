@@ -329,7 +329,11 @@ class AdministrationController extends ActionController
     public function runConfigurationAction(Configuration $configuration)
     {
         $importService = GeneralUtility::makeInstance(ImportFeedsTaskService::class);
-        $importService->import([$configuration->getUid()]);
+        try {
+            $importService->import([ $configuration->getUid() ]);
+        } catch (\Exception $e) {
+            $this->redirectToIndex($e->getMessage(), FlashMessage::ERROR);
+        }
 
         $this->redirectToIndex($this->translate('single_import_end'));
     }
