@@ -5,6 +5,7 @@ namespace Pixelant\PxaSocialFeed\Service\Notification;
 
 use TYPO3\CMS\Core\Mail\MailMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MailUtility;
 
 /**
  * Class ErrorImportingNotificationService
@@ -43,8 +44,8 @@ class NotificationService
         $mailer = $this->getMailer();
 
         $mailer
-            ->setSubject($subject)
-            ->setBody($message, 'text/html')
+            ->subject($subject)
+            ->html($message)
             ->send();
     }
 
@@ -68,8 +69,8 @@ class NotificationService
         $mail = GeneralUtility::makeInstance(MailMessage::class);
 
         $mail
-            ->setFrom($this->senderEmail)
-            ->setTo($this->receiverEmail);
+            ->from(MailUtility::getSystemFromAddress())
+            ->to($this->receiverEmail);
 
         return $mail;
     }
