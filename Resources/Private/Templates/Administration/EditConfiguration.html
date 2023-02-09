@@ -65,6 +65,10 @@
                         <td><f:translate key="module.image_size"/></td>
                         <td><f:form.select property="imageSize" options="{normal_images: 'Normal Images', small_images: 'Small Images'}" class="form-control"/></td>
                       </tr>
+                      <tr>
+                        <td><f:translate key="module.hidden"/></td>
+                        <td><f:form.checkbox property="hidden" value="1" class="form-check-input"/></td>
+                      </tr>
 
                         <f:render partial="Backend/Form/BeGroupsSelect" arguments="{beGroups: beGroups}" />
                         <tr>

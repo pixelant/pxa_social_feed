@@ -18,7 +18,11 @@
 
                     <f:for each="{configurations}" as="configuration">
                         <tr>
-                            <td>{configuration.uid}</td>
+                            <td>
+                                <span title="id={configuration.uid}">
+                                    <core:icon identifier="ext-pxasocialfeed-model-icon" overlay="{f:if(condition: configuration.hidden, then: 'overlay-hidden')}" state="{f:if(condition: configuration.hidden, then: 'disabled', else: 'default')}" />
+                                </span>
+                            </td>
                             <td>{configuration.name}</td>
                             <td>{configuration.socialId}</td>
                             <td>{configuration.maxItems}</td>
@@ -27,9 +31,18 @@
                             <td>
                                 <div class="btn-group">
                                     <f:if condition="{isAdmin}">
-                                        <f:link.action action="runConfiguration" class="btn btn-default" arguments="{configuration: configuration}" title="{f:translate(key: 'module.execute_single_import')}">
-                                            <core:icon identifier="actions-play" />
-                                        </f:link.action>
+                                        <f:if condition="!{configuration.hidden}">
+                                            <f:then>
+                                                <f:link.action action="runConfiguration" class="btn btn-default" arguments="{configuration: configuration}" title="{f:translate(key: 'module.execute_single_import')}">
+                                                    <core:icon identifier="actions-play" />
+                                                </f:link.action>
+                                            </f:then>
+                                            <f:else>
+                                                <span class="btn btn-default disabled" aria-hidden="true">
+                                                    <core:icon identifier="empty-empty" />
+                                                </span>
+                                            </f:else>
+                                        </f:if>
                                     </f:if>
 
                                     <f:link.action action="editConfiguration" class="btn btn-default" arguments="{configuration: configuration}" title="{f:translate(key: 'module.edit')}">
