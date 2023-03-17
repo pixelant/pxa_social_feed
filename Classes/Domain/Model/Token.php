@@ -45,7 +45,7 @@ class Token extends AbstractEntity
     use EmitSignalTrait;
 
     /**
-     * facebook token
+     * facebook user token
      */
     const FACEBOOK = 1;
 
@@ -63,6 +63,11 @@ class Token extends AbstractEntity
      * youtube token
      */
     const YOUTUBE = 4;
+
+    /**
+     * facebook page token
+     */
+    const FACEBOOK_PAGE = 5;
 
     /**
      * Default PID
@@ -415,6 +420,16 @@ class Token extends AbstractEntity
     public function isFacebookType(): bool
     {
         return $this->type === static::FACEBOOK;
+    }
+
+    /**
+     * Check if is facebook page token type
+     *
+     * @return bool
+     */
+    public function isFacebookPageType(): bool
+    {
+        return $this->type === static::FACEBOOK_PAGE;
     }
 
     /**
