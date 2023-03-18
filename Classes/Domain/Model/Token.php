@@ -34,6 +34,7 @@ use League\OAuth2\Client\Token\AccessToken;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -128,7 +129,17 @@ class Token extends AbstractEntity
     protected $fb = null;
 
     /**
-     * Initialize
+     * @var string
+     */
+    protected string $fbSocialId = '';
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected Token|LazyLoadingProxy|null $parentToken = null;
+
+    /**
+     * Initialize.
      */
     public function __construct()
     {
@@ -253,6 +264,14 @@ class Token extends AbstractEntity
     public function getAccessTokenSecret(): string
     {
         return $this->accessTokenSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFbSocialId(): string
+    {
+        return $this->fbSocialId;
     }
 
     /**
@@ -398,7 +417,22 @@ class Token extends AbstractEntity
     }
 
     /**
-     * Get value for select box
+     * @return null|Token
+     */
+    public function getParentToken(): ?Token
+    {
+        if ($this->parentToken instanceof LazyLoadingProxy) {
+            $this->parentToken->_loadRealInstance();
+        }
+        if ($this->parentToken instanceof Token) {
+            return $this->parentToken;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get value for select box.
      *
      * @return string
      */
