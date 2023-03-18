@@ -82,6 +82,29 @@ return (function () {
                     ]
                 ]
             ],
+            'fb_social_id' => [
+                'exclude' => 1,
+                'config' => [
+                    'type' => 'input',
+                    'size' => 30,
+                    'eval' => 'trim',
+                    'default' => '',
+                    'readOnly' => true,
+                ],
+            ],
+            'parent_token' => [
+                'exclude' => 1,
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'default' => 0,
+                    'items' => [
+                        ['', 0],
+                    ],
+                    'foreign_table' => 'tx_pxasocialfeed_domain_model_token',
+                    'foreign_table_where' => 'AND {#tx_pxasocialfeed_domain_model_token}.{#pid}=###CURRENT_PID### AND {#tx_pxasocialfeed_domain_model_token}.{#sys_language_uid} IN (-1,0)',
+                ],
+            ],
             'name' => [
                 'exclude' => true,
                 'label' => $ll . '.name',
