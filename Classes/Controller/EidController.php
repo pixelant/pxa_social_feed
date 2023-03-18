@@ -26,7 +26,8 @@ class EidController
 
     private TokenRepository $tokenRepository;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tokenRepository = GeneralUtility::makeInstance(TokenRepository::class);
     }
 
@@ -130,17 +131,17 @@ class EidController
         $this->tokenRepository->removeAllPageTokensByParentToken($tokenUid);
 
         foreach ($fb->getLongLivePageTokens('me', $accessToken) as $page) {
-          $pageAccessToken = [
-            'app_id' => $fb->getClientId(),
-            'app_secret' => $fb->getClientSecret(),
-            'access_token' => $page->getAccessToken(),
-            'parent_token' => $tokenUid,
-            'fb_social_id' => $page->getId(),
-            'name' => $page->getName(),
-            'hidden' => 0,
-          ];
-    
-          $this->tokenRepository->addPageToken($pageAccessToken);
+            $pageAccessToken = [
+                'app_id' => $fb->getClientId(),
+                'app_secret' => $fb->getClientSecret(),
+                'access_token' => $page->getAccessToken(),
+                'parent_token' => $tokenUid,
+                'fb_social_id' => $page->getId(),
+                'name' => $page->getName(),
+                'hidden' => 0,
+            ];
+
+            $this->tokenRepository->addPageToken($pageAccessToken);
         }
     
         $content[] = '<p>Token was updated. <b>You can close this window</b>.</p>';

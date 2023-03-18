@@ -21,10 +21,17 @@ class FacebookUser extends \League\OAuth2\Client\Provider\FacebookUser
     {
         parent::__construct($response);
 
-        if (!isset($response['accounts']) || !is_array($response['accounts']) || !isset($response['accounts']['data']) || !is_array($response['accounts']['data'])) {
+        if (!isset($response['accounts'])
+            || !is_array($response['accounts'])
+            || !isset($response['accounts']['data'])
+            || !is_array($response['accounts']['data'])
+        ) {
             $this->pages = [];
         } else {
-            $this->pages = array_map(fn ($page) => GeneralUtility::makeInstance(FacebookPage::class, $page), $response['accounts']['data']);
+            $this->pages = array_map(
+                fn ($page) => GeneralUtility::makeInstance(FacebookPage::class, $page),
+                $response['accounts']['data']
+            );
         }
     }
 

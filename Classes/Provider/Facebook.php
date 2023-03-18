@@ -122,6 +122,7 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
     {
         $appSecretProof = AppSecretProof::create($this->clientSecret, $token->getToken());
 
-        return $this->getBaseGraphUrl().$this->graphApiVersion."/{$userId}/accounts?access_token=".$token.'&appsecret_proof='.$appSecretProof;
+        return $this->getBaseGraphUrl().$this->graphApiVersion.
+               "/{$userId}/accounts?access_token=".$token.'&appsecret_proof='.$appSecretProof;
     }
 }

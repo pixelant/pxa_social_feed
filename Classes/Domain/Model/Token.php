@@ -135,8 +135,10 @@ class Token extends AbstractEntity
 
     /**
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     *
+     * @var null|LazyLoadingProxy|Token
      */
-    protected Token|LazyLoadingProxy|null $parentToken = null;
+    protected $parentToken;
 
     /**
      * Initialize.
