@@ -6,7 +6,6 @@ namespace Pixelant\PxaSocialFeed\Controller;
 
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Exception\FacebookObtainAccessTokenException;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
