@@ -15,6 +15,7 @@ use Pixelant\PxaSocialFeed\Service\Task\ImportFeedsTaskService;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Backend\Routing\UriBuilder as BackendUriBuilder;
 use TYPO3\CMS\Backend\View\BackendTemplateView;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -248,6 +249,13 @@ class AdministrationController extends ActionController
 
         if ($tokenConfigurations->count() === 0) {
             $this->tokenRepository->remove($token);
+
+            if ($token->getType() === Token::FACEBOOK) {
+                // Remove all page access tokens created by this token
+                $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+                    ->getConnectionForTable('tx_pxasocialfeed_domain_model_token');
+                $queryBuilder->delete('tx_pxasocialfeed_domain_model_token', ['parent_token' => $token->getUid()]);
+            }
 
             $this->redirectToIndexTokenTab($this->translate('action_delete'));
         }

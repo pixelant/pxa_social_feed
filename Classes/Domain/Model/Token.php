@@ -29,11 +29,12 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  ***************************************************************/
 
 use League\OAuth2\Client\Provider\Exception\FacebookProviderException;
-use League\OAuth2\Client\Provider\Facebook;
+use Pixelant\PxaSocialFeed\Provider\Facebook;
 use League\OAuth2\Client\Token\AccessToken;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
+use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -45,7 +46,7 @@ class Token extends AbstractEntity
     use EmitSignalTrait;
 
     /**
-     * facebook token
+     * facebook user token
      */
     const FACEBOOK = 1;
 
@@ -63,6 +64,11 @@ class Token extends AbstractEntity
      * youtube token
      */
     const YOUTUBE = 4;
+
+    /**
+     * facebook page token
+     */
+    const FACEBOOK_PAGE = 5;
 
     /**
      * Default PID
@@ -123,7 +129,19 @@ class Token extends AbstractEntity
     protected $fb = null;
 
     /**
-     * Initialize
+     * @var string
+     */
+    protected string $fbSocialId = '';
+
+    /**
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     *
+     * @var null|LazyLoadingProxy|Token
+     */
+    protected $parentToken;
+
+    /**
+     * Initialize.
      */
     public function __construct()
     {
@@ -248,6 +266,14 @@ class Token extends AbstractEntity
     public function getAccessTokenSecret(): string
     {
         return $this->accessTokenSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFbSocialId(): string
+    {
+        return $this->fbSocialId;
     }
 
     /**
@@ -393,7 +419,22 @@ class Token extends AbstractEntity
     }
 
     /**
-     * Get value for select box
+     * @return null|Token
+     */
+    public function getParentToken(): ?Token
+    {
+        if ($this->parentToken instanceof LazyLoadingProxy) {
+            $this->parentToken->_loadRealInstance();
+        }
+        if ($this->parentToken instanceof Token) {
+            return $this->parentToken;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get value for select box.
      *
      * @return string
      */
@@ -415,6 +456,16 @@ class Token extends AbstractEntity
     public function isFacebookType(): bool
     {
         return $this->type === static::FACEBOOK;
+    }
+
+    /**
+     * Check if is facebook page token type
+     *
+     * @return bool
+     */
+    public function isFacebookPageType(): bool
+    {
+        return $this->type === static::FACEBOOK_PAGE;
     }
 
     /**

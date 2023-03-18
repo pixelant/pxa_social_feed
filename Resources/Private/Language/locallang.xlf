@@ -126,6 +126,9 @@
             <trans-unit id="module.social_id4">
                 <source>Youtube channel ID</source>
             </trans-unit>
+            <trans-unit id="module.social_id5">
+              <source>Facebook Page id</source>
+            </trans-unit>
             <trans-unit id="module.social_id_tooltip">
                 <source>Either Facebook (might be 'me' or page ID) / Twitter / Instagram (Facebook page ID) / YouTube ID</source>
             </trans-unit>
@@ -158,7 +161,7 @@
             </trans-unit>
 
             <trans-unit id="module.type.1">
-                <source>Facebook</source>
+                <source>Facebook User</source>
             </trans-unit>
             <trans-unit id="module.type.2">
                 <source>Instagram</source>
@@ -168,6 +171,9 @@
             </trans-unit>
             <trans-unit id="module.type.4">
                 <source>Youtube</source>
+            </trans-unit>
+            <trans-unit id="module.type.5">
+                <source>Facebook Page</source>
             </trans-unit>
 
             <trans-unit id="validator.error.1578488026895">

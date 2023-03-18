@@ -48,6 +48,8 @@ CREATE TABLE tx_pxasocialfeed_domain_model_token
     app_id              varchar(55)         DEFAULT ''  NOT NULL,
     app_secret          varchar(255)        DEFAULT ''  NOT NULL,
     access_token        text,
+    fb_social_id        varchar(255)        DEFAULT ''  NOT NULL,
+    parent_token        int(11),
 
     # Twitter, access_token already exist
     api_key             varchar(255)        DEFAULT ''  NOT NULL,

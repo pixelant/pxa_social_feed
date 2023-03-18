@@ -139,6 +139,7 @@ class ImportFeedsTaskService
     protected function getFactory(Token $token): FeedFactoryInterface
     {
         switch (true) {
+            case $token->isFacebookPageType():
             case $token->isFacebookType():
                 // Check if access is valid
                 $this->checkFacebookAccessToken($token);
