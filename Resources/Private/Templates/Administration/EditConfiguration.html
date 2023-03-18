@@ -33,6 +33,9 @@
                                                 <f:then>
                                                     <f:form.select property="socialId" options="{token.facebookPagesIds}" class="form-control" />
                                                 </f:then>
+                                                <f:else if="{token.facebookPageType}">
+                                                    <f:form.textfield property="socialId" class="form-control" value="{token.fbSocialId}" readonly="true" />
+                                                </f:else>
                                                 <f:else>
                                                     <f:form.textfield property="socialId" class="form-control" />
                                                 </f:else>
