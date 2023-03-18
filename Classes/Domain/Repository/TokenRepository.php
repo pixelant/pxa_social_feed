@@ -48,8 +48,9 @@ class TokenRepository extends AbstractBackendRepository
     /**
      * Finds a facebook page token based on the parent token (user token) and the social id.
      *
-     * @param Token $token
+     * @param Token  $token
      * @param string $fbSocialId
+     *
      * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface<QueryResult>
      */
     public function findFacebookPageToken(Token $token, string $fbSocialId)
@@ -69,41 +70,50 @@ class TokenRepository extends AbstractBackendRepository
         return $query->execute();
     }
 
-  /**
-  * @param array<string, int|string> $pageToken
-  */
-  public function addPageToken(array $pageToken): void {
-    $pageAccessToken = [
-      'tstamp' => time(),
-      'crdate' => time(),
-      'type' => Token::FACEBOOK_PAGE,
-    ] + $pageToken;
+    /**
+     * @param array<string, int|string> $pageToken
+     */
+    public function addPageToken(array $pageToken): void
+    {
+        $pageAccessToken = [
+            'tstamp' => time(),
+            'crdate' => time(),
+            'type' => Token::FACEBOOK_PAGE,
+        ] + $pageToken;
 
-    GeneralUtility::makeInstance(ConnectionPool::class)
-      ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
-      ->insert('tx_pxasocialfeed_domain_model_token', $pageAccessToken)
-    ;
-  }
-
-
-    public function removeAllPageTokensByParentToken(int $tokenUid): void {
-      GeneralUtility::makeInstance(ConnectionPool::class)
-        ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
-        ->delete('tx_pxasocialfeed_domain_model_token', [
-          'parent_token' => $tokenUid,
-        ])
-      ;
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+            ->insert('tx_pxasocialfeed_domain_model_token', $pageAccessToken)
+        ;
     }
-  
-    public function updateAccessToken(int $uid, string $accessToken): void {
-      GeneralUtility::makeInstance(ConnectionPool::class)
-        ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
-        ->update(
-          'tx_pxasocialfeed_domain_model_token',
-          ['access_token' => (string) $accessToken],
-          ['uid' => $uid],
-          [\PDO::PARAM_STR]
-        )
-      ;
+
+    /**
+     * @param int $tokenUid
+     */
+    public function removeAllPageTokensByParentToken(int $tokenUid): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+            ->delete('tx_pxasocialfeed_domain_model_token', [
+                'parent_token' => $tokenUid,
+            ])
+        ;
+    }
+
+    /**
+     * @param int    $uid
+     * @param string $accessToken
+     */
+    public function updateAccessToken(int $uid, string $accessToken): void
+    {
+        GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+            ->update(
+                'tx_pxasocialfeed_domain_model_token',
+                ['access_token' => (string) $accessToken],
+                ['uid' => $uid],
+                [\PDO::PARAM_STR]
+            )
+        ;
     }
 }
