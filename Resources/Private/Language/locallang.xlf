@@ -54,9 +54,6 @@
             <trans-unit id="module.type">
                 <source>Type</source>
             </trans-unit>
-            <trans-unit id="module.type.1">
-                <source>Facebook</source>
-            </trans-unit>
             <trans-unit id="module.action_changes_saved">
                 <source>Changes saved.</source>
             </trans-unit>
