@@ -1,14 +1,16 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Controller;
 
-use Pixelant\PxaSocialFeed\Domain\Model\Token;
-use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Provider\Facebook;
+use League\OAuth2\Client\Token\AccessToken;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use Pixelant\PxaSocialFeed\Exception\FacebookObtainAccessTokenException;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
+use Pixelant\PxaSocialFeed\Provider\Facebook;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -22,6 +24,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class EidController
 {
     const IDENTIFIER = 'pxa_social_feed_fb_access_token';
+
+    private TokenRepository $tokenRepository;
+
+    public function __construct() {
+        $this->tokenRepository = GeneralUtility::makeInstance(TokenRepository::class);
+    }
 
     /**
      * Add access token
@@ -86,7 +94,7 @@ class EidController
     }
 
     /**
-     * Convert access token to long term token
+     * Convert access token to long live token
      *
      * @param Facebook $fb
      * @param AccessToken $accessToken
@@ -100,7 +108,6 @@ class EidController
         ResponseInterface $response
     ): void {
         $content = [];
-        // Logged in
         $content[] = '<h3>Access Token</h3>';
         $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
@@ -113,47 +120,30 @@ class EidController
                 1562674067812
             );
             $accessTokenException->setStatusCode(503);
+
             throw $accessTokenException;
-        }
-
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getConnectionForTable('tx_pxasocialfeed_domain_model_token');
-
-        $queryBuilder->update(
-            'tx_pxasocialfeed_domain_model_token',
-            ['access_token' => (string)$accessToken],
-            ['uid' => $tokenUid],
-            [\PDO::PARAM_STR]
-        );
-
-        // Remove all existing page access tokens
-        $queryBuilder->delete('tx_pxasocialfeed_domain_model_token', ['parent_token' => $tokenUid]);
-
-        // Add page access tokens
-        $fb->setDefaultAccessToken($accessToken);
-        $pages = $fb->get('/me/accounts/?fields=id,name,access_token')->getDecodedBody()['data'];
-
-        foreach ($pages as $page) {
-            $pageAccessToken = [
-                'tstamp' => time(),
-                'crdate' => time(),
-                'name' => $page['name'],
-                'type' => Token::FACEBOOK_PAGE,
-                'app_id' => $fb->getApp()->getId(),
-                'app_secret' => $fb->getApp()->getSecret(),
-                'access_token' => $page['access_token'],
-                'fb_social_id' => $page['id'],
-                'parent_token' => $tokenUid,
-                'hidden' => 1 // Token should not be displayed in backend
-            ];
-
-            $queryBuilder->insert('tx_pxasocialfeed_domain_model_token', $pageAccessToken);
         }
 
         $content[] = '<h3>Long-lived</h3>';
         $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
+        $this->tokenRepository->updateAccessToken($tokenUid, (string) $accessToken);
+        $this->tokenRepository->removeAllPageTokensByParentToken($tokenUid);
 
+        foreach ($fb->getLongLivePageTokens('me', $accessToken) as $page) {
+          $pageAccessToken = [
+            'app_id' => $fb->getClientId(),
+            'app_secret' => $fb->getClientSecret(),
+            'access_token' => $page->getAccessToken(),
+            'parent_token' => $tokenUid,
+            'fb_social_id' => $page->getId(),
+            'name' => $page->getName(),
+            'hidden' => 0,
+          ];
+    
+          $this->tokenRepository->addPageToken($pageAccessToken);
+        }
+    
         $content[] = '<p>Token was updated. <b>You can close this window</b>.</p>';
 
         $content = '<div style="padding: 10px;background: #79A547;">' . implode('', $content) . '</div>';

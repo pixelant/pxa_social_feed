@@ -28,6 +28,8 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  ***************************************************************/
 
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 
@@ -65,5 +67,43 @@ class TokenRepository extends AbstractBackendRepository
         $query->setLimit(1);
 
         return $query->execute();
+    }
+
+  /**
+  * @param array<string, int|string> $pageToken
+  */
+  public function addPageToken(array $pageToken): void {
+    $pageAccessToken = [
+      'tstamp' => time(),
+      'crdate' => time(),
+      'type' => Token::FACEBOOK_PAGE,
+    ] + $pageToken;
+
+    GeneralUtility::makeInstance(ConnectionPool::class)
+      ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+      ->insert('tx_pxasocialfeed_domain_model_token', $pageAccessToken)
+    ;
+  }
+
+
+    public function removeAllPageTokensByParentToken(int $tokenUid): void {
+      GeneralUtility::makeInstance(ConnectionPool::class)
+        ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+        ->delete('tx_pxasocialfeed_domain_model_token', [
+          'parent_token' => $tokenUid,
+        ])
+      ;
+    }
+  
+    public function updateAccessToken(int $uid, string $accessToken): void {
+      GeneralUtility::makeInstance(ConnectionPool::class)
+        ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
+        ->update(
+          'tx_pxasocialfeed_domain_model_token',
+          ['access_token' => (string) $accessToken],
+          ['uid' => $uid],
+          [\PDO::PARAM_STR]
+        )
+      ;
     }
 }
