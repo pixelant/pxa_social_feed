@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 (function () {
@@ -33,7 +34,7 @@ defined('TYPO3_MODE') or die();
     // @codingStandardsIgnoreEnd
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
-        '<INCLUDE_TYPOSCRIPT: source="FILE:EXT:pxa_social_feed/Configuration/TSconfig/ContentElementWizard.ts">'
+        "@import 'EXT:pxa_social_feed/Configuration/TSconfig/ContentElementWizard.tsconfig'"
     );
 
     // Register icons

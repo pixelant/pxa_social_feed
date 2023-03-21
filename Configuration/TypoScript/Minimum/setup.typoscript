@@ -18,22 +18,6 @@ plugin.tx_pxasocialfeed {
     }
 }
 
-page.includeCSS {
-    pxa_social_feed_1 = EXT:pxa_social_feed/Resources/Public/Css/socialFeed.css
-}
-
-page.includeJSFooterlibs {
-    pxa_social_feed_1 = https://code.jquery.com/jquery-2.2.4.min.js
-    pxa_social_feed_2 = EXT:pxa_social_feed/Resources/Public/JavaScript/jquery.dotdotdot.min.js
-    pxa_social_feed_3 = EXT:pxa_social_feed/Resources/Public/JavaScript/owl.carousel.min.js
-    pxa_social_feed_4 = EXT:pxa_social_feed/Resources/Public/JavaScript/masonry.pkgd.min.js
-    pxa_social_feed_5 = EXT:pxa_social_feed/Resources/Public/JavaScript/imagesloaded.pkgd.min.js
-}
-
-page.includeJSFooter {
-    pxa_social_feed_6 = EXT:pxa_social_feed/Resources/Public/JavaScript/socialFeed.js
-}
-
 pxaAjaxFeedLoad = PAGE
 pxaAjaxFeedLoad {
     typeNum = 7378121
