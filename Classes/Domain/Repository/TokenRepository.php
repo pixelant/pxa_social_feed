@@ -60,7 +60,7 @@ class TokenRepository extends AbstractBackendRepository
 
         $query->matching(
             $query->logicalAnd([
-                $query->equals('parentToken', $token),
+                $query->equals('parentToken', $token->getParentToken()),
                 $query->equals('fbSocialId', $fbSocialId)
             ])
         );
