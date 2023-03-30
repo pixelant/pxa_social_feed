@@ -134,11 +134,9 @@ class Token extends AbstractEntity
     protected string $fbSocialId = '';
 
     /**
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
-     *
-     * @var null|LazyLoadingProxy|Token
+     * @var null|Token
      */
-    protected $parentToken;
+    protected $parentToken = null;
 
     /**
      * Initialize.
@@ -423,9 +421,6 @@ class Token extends AbstractEntity
      */
     public function getParentToken(): ?Token
     {
-        if ($this->parentToken instanceof LazyLoadingProxy) {
-            $this->parentToken->_loadRealInstance();
-        }
         if ($this->parentToken instanceof Token) {
             return $this->parentToken;
         }
