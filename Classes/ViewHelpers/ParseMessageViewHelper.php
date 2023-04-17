@@ -76,6 +76,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
         );
 
         switch ($type) {
+            case Token::FACEBOOK_PAGE:
             case Token::FACEBOOK:
                 // Convert hashtags to facebook searches in <a> links
                 $text = preg_replace_callback(
