@@ -349,7 +349,7 @@ class Feed extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return int
      */
     public function getType(): int
     {
@@ -357,7 +357,7 @@ class Feed extends AbstractEntity
     }
 
     /**
-     * @param string $type
+     * @param int $type
      */
     public function setType(int $type)
     {
