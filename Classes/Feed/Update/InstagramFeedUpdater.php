@@ -99,8 +99,20 @@ class InstagramFeedUpdater extends BaseUpdater
             \TYPO3\CMS\Core\Resource\ResourceFactory::class
         );
         $storage= $resourceFactory->getDefaultStorage();
-        $downloadFolderNormal =  $storage->getFolder('socialmedia/instacontent/normal');
-        $downloadFolderSmall =  $storage->getFolder('socialmedia/instacontent/small');
+
+        $downloadFolderNormalIdentifier = 'socialmedia/instacontent/normal';
+        if (!$storage->hasFolder($downloadFolderNormalIdentifier)) {
+            $downloadFolderNormal = $storage->createFolder($downloadFolderNormalIdentifier);
+        } else {
+            $downloadFolderNormal = $storage->getFolder($downloadFolderNormalIdentifier);
+        }
+
+        $downloadFolderSmallIdentifier = 'socialmedia/instacontent/small';
+        if (!$storage->hasFolder($downloadFolderSmallIdentifier)) {
+            $downloadFolderSmall = $storage->createFolder($downloadFolderSmallIdentifier);
+        } else {
+            $downloadFolderSmall = $storage->getFolder($downloadFolderSmallIdentifier);
+        }
 
 
         $filename = explode('?', basename($url), 2);
