@@ -7,7 +7,6 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\Source\YoutubeSource;
 use Pixelant\PxaSocialFeed\Feed\Update\YoutubeFeedUpdater;
 use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FacebookFeedFactoryTest
