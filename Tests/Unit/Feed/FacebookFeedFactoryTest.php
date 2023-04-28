@@ -8,7 +8,6 @@ use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Pixelant\PxaSocialFeed\Feed\Update\FacebookFeedUpdater;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class FacebookFeedFactoryTest
@@ -28,7 +27,6 @@ class FacebookFeedFactoryTest extends UnitTestCase
         $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
         $reflection->setAccessible(true);
         $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
         $reflection->setValue(null, $singletonInstances);
     }
 
