@@ -54,7 +54,6 @@ class FeedRepository extends Repository
      */
     public function initializeObject()
     {
-        /** @var $defaultQuerySettings Typo3QuerySettings */
         $defaultQuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
 
         // Don't respect storage
