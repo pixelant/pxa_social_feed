@@ -22,12 +22,7 @@ class YoutubeFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new YoutubeFactory();
-
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $reflection->setValue(null, $singletonInstances);
+        $this->subject = $this->createMock(YoutubeFactory::class);
     }
 
     protected function tearDown(): void
@@ -40,9 +35,7 @@ class YoutubeFactoryTest extends UnitTestCase
      */
     public function getFeedSourceReturnTwitterSource()
     {
-        $configuration = new Configuration();
-
-        $this->assertTrue($this->subject->getFeedSource($configuration) instanceof YoutubeSource);
+        self::assertInstanceOf(YoutubeSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
     /**
@@ -50,6 +43,6 @@ class YoutubeFactoryTest extends UnitTestCase
      */
     public function getFeedUpdaterReturnTwitterUpdater()
     {
-        $this->assertTrue($this->subject->getFeedUpdater() instanceof YoutubeFeedUpdater);
+        self::assertInstanceOf(YoutubeFeedUpdater::class, $this->subject->getFeedUpdater());
     }
 }

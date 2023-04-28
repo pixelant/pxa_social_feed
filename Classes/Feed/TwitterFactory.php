@@ -21,9 +21,9 @@ class TwitterFactory implements FeedFactoryInterface
      * Feed source allow to fetch feed items
      *
      * @param Configuration $configuration
-     * @return FeedSourceInterface
+     * @return TwitterSource
      */
-    public function getFeedSource(Configuration $configuration): FeedSourceInterface
+    public function getFeedSource(Configuration $configuration): TwitterSource
     {
         return GeneralUtility::makeInstance(TwitterSource::class, $configuration);
     }
@@ -31,9 +31,9 @@ class TwitterFactory implements FeedFactoryInterface
     /**
      * Feed updater. Will create/update feed items
      *
-     * @return FeedUpdaterInterface
+     * @return TwitterFeedUpdater
      */
-    public function getFeedUpdater(): FeedUpdaterInterface
+    public function getFeedUpdater(): TwitterFeedUpdater
     {
         return GeneralUtility::makeInstance(TwitterFeedUpdater::class);
     }

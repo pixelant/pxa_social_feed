@@ -22,9 +22,9 @@ class InstagramFactory implements FeedFactoryInterface
      * Feed source allow to fetch feed items
      *
      * @param Configuration $configuration
-     * @return FeedSourceInterface
+     * @return InstagramSource
      */
-    public function getFeedSource(Configuration $configuration): FeedSourceInterface
+    public function getFeedSource(Configuration $configuration): InstagramSource
     {
         return GeneralUtility::makeInstance(InstagramSource::class, $configuration);
     }
@@ -32,9 +32,9 @@ class InstagramFactory implements FeedFactoryInterface
     /**
      * Feed updater. Will create/update feed items
      *
-     * @return FeedUpdaterInterface
+     * @return InstagramFeedUpdater
      */
-    public function getFeedUpdater(): FeedUpdaterInterface
+    public function getFeedUpdater(): InstagramFeedUpdater
     {
         return GeneralUtility::makeInstance(InstagramFeedUpdater::class);
     }

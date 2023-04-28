@@ -22,12 +22,7 @@ class TwitterFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new TwitterFactory();
-
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $reflection->setValue(null, $singletonInstances);
+        $this->subject = $this->createMock(TwitterFactory::class);
     }
 
     protected function tearDown(): void
@@ -40,9 +35,7 @@ class TwitterFactoryTest extends UnitTestCase
      */
     public function getFeedSourceReturnTwitterSource()
     {
-        $configuration = new Configuration();
-
-        $this->assertTrue($this->subject->getFeedSource($configuration) instanceof TwitterSource);
+        self::assertInstanceOf(TwitterSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
     /**
@@ -50,6 +43,6 @@ class TwitterFactoryTest extends UnitTestCase
      */
     public function getFeedUpdaterReturnTwitterUpdater()
     {
-        $this->assertTrue($this->subject->getFeedUpdater() instanceof TwitterFeedUpdater);
+        self::assertInstanceOf(TwitterFeedUpdater::class, $this->subject->getFeedUpdater());
     }
 }
