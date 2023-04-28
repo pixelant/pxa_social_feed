@@ -86,9 +86,9 @@ define([
 			 * @private
 			 */
 			function _activateTabs() {
-				var triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'))
+				let triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'))
 				triggerTabList.forEach(function (triggerEl) {
-					var tabTrigger = new bootstrap.Tab(triggerEl)
+					let tabTrigger = new bootstrap.Tab(triggerEl)
 
 					triggerEl.addEventListener('click', function (event) {
 						event.preventDefault()
