@@ -24,7 +24,10 @@ class EidController
 {
     const IDENTIFIER = 'pxa_social_feed_fb_access_token';
 
-    private TokenRepository $tokenRepository;
+    /**
+     * @var TokenRepository
+     */
+    private $tokenRepository = null;
 
     public function __construct()
     {

@@ -18,8 +18,9 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
 {
     /**
      * A toggle to enable the beta tier URL's.
+     * @var bool
      */
-    protected bool $enableBetaMode = false;
+    protected $enableBetaMode = false;
 
     /**
      * @return string
@@ -47,7 +48,9 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
             return [];
         }
 
-        return array_map(fn ($page) => GeneralUtility::makeInstance(FacebookPage::class, $page), $response['data']);
+        return array_map(function ($page) {
+            return GeneralUtility::makeInstance(FacebookPage::class, $page);
+        }, $response['data']);
     }
 
     /**
