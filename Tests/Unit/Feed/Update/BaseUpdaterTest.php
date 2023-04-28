@@ -6,6 +6,8 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Feed\Update\BaseUpdater;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
@@ -21,6 +23,12 @@ class BaseUpdaterTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
+        $reflection->setAccessible(true);
+        $singletonInstances = $reflection->getValue();
+        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
+        $reflection->setValue(null, $singletonInstances);
+
         $this->subject = $this->getAccessibleMock(BaseUpdater::class, ['update'], [], '', false);
     }
 
