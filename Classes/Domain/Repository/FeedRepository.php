@@ -4,6 +4,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -54,7 +55,7 @@ class FeedRepository extends Repository
     public function initializeObject()
     {
         /** @var $defaultQuerySettings Typo3QuerySettings */
-        $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $defaultQuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
 
         // Don't respect storage
         $defaultQuerySettings->setRespectStoragePage(false);

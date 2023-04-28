@@ -18,7 +18,6 @@ use Pixelant\PxaSocialFeed\Service\Expire\FacebookAccessTokenExpireService;
 use Pixelant\PxaSocialFeed\Service\Notification\NotificationService;
 use Pixelant\PxaSocialFeed\Utility\ConfigurationUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -28,11 +27,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class ImportFeedsTaskService
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
     /**
      * feeds repository
      * @var ConfigurationRepository
@@ -57,10 +51,9 @@ class ImportFeedsTaskService
     {
         $this->notificationService = $notificationService ?? GeneralUtility::makeInstance(NotificationService::class);
 
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->configurationRepository = $this->objectManager->get(ConfigurationRepository::class);
+        $this->configurationRepository = GeneralUtility::makeInstance(ConfigurationRepository::class);
 
-        $this->persistenceManager = $this->objectManager->get(PersistenceManager::class);
+        $this->persistenceManager = GeneralUtility::makeInstance(PersistenceManager::class);
     }
 
     /**

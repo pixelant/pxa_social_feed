@@ -8,6 +8,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class InstagramFeedUpdater
@@ -123,7 +124,7 @@ class InstagramFeedUpdater extends BaseUpdater
 
         $file_small = $downloadFolderSmall->createFile('small_' . $filename[0]);
 
-        $httpClient = $this->objectManager->get(Client::class);
+        $httpClient = GeneralUtility::makeInstance(Client::class);
         $response = $httpClient->get($url);
         $file_normal->setContents($response->getBody()->getContents());
 
@@ -147,7 +148,7 @@ class InstagramFeedUpdater extends BaseUpdater
     protected function createFeedItem(Configuration $configuration): Feed
     {
         /** @var Feed $feedItem */
-        $feedItem = $this->objectManager->get(Feed::class);
+        $feedItem = GeneralUtility::makeInstance(Feed::class);
 
         // Set configuration
         $feedItem->setConfiguration($configuration);

@@ -7,6 +7,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TwitterFeedUpdater
@@ -52,7 +53,7 @@ class TwitterFeedUpdater extends BaseUpdater
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {
-        $feedItem = $this->objectManager->get(Feed::class);
+        $feedItem = GeneralUtility::makeInstance(Feed::class);
         $date = new \DateTime($rawData['created_at']);
 
         $feedItem->setPostDate($date);

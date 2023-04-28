@@ -6,7 +6,6 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class FacebookSource
@@ -22,7 +21,7 @@ class FacebookSource extends BaseFacebookSource
     public function load(): array
     {
         // Get facebook page access token
-        $tokenRepository = GeneralUtility::makeInstance(ObjectManager::class)->get(TokenRepository::class);
+        $tokenRepository = GeneralUtility::makeInstance(TokenRepository::class);
         /** @var Token $pageAccessToken */
         $pageAccessToken = $tokenRepository->findFacebookPageToken(
             $this->getConfiguration()->getToken(),

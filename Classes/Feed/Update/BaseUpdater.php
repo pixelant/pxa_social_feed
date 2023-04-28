@@ -8,7 +8,6 @@ use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
@@ -19,11 +18,6 @@ use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 abstract class BaseUpdater implements FeedUpdaterInterface
 {
     use EmitSignalTrait;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager = null;
 
     /**
      * @var FeedRepository
@@ -42,8 +36,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     public function __construct()
     {
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->feedRepository = $this->objectManager->get(FeedRepository::class);
+        $this->feedRepository = GeneralUtility::makeInstance(FeedRepository::class);
         $this->feeds = new ObjectStorage();
     }
 
@@ -52,7 +45,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     public function persist(): void
     {
-        $this->objectManager->get(PersistenceManagerInterface::class)->persistAll();
+        GeneralUtility::makeInstance(PersistenceManagerInterface::class)->persistAll();
     }
 
     /**

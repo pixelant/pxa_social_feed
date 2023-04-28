@@ -95,7 +95,7 @@ class FacebookFeedUpdater extends BaseUpdater
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {
-        $feedItem = $this->objectManager->get(Feed::class);
+        $feedItem = GeneralUtility::makeInstance(Feed::class);
 
         $feedItem->setPostUrl($rawData['permalink_url']);
         $feedItem->setPostDate(\DateTime::createFromFormat(\DateTime::ISO8601, $rawData['created_time']));
