@@ -33,7 +33,7 @@ class YoutubeFactoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getFeedSourceReturnTwitterSource()
+    public function getFeedSourceReturnYoutubeSource()
     {
         self::assertInstanceOf(YoutubeSource::class, $this->subject->getFeedSource(new Configuration()));
     }
@@ -41,7 +41,7 @@ class YoutubeFactoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getFeedUpdaterReturnTwitterUpdater()
+    public function getFeedUpdaterReturnYoutubeUpdater()
     {
         self::assertInstanceOf(YoutubeFeedUpdater::class, $this->subject->getFeedUpdater());
     }
