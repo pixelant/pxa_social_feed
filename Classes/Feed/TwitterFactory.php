@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Feed;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
-use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
 use Pixelant\PxaSocialFeed\Feed\Source\TwitterSource;
-use Pixelant\PxaSocialFeed\Feed\Update\FeedUpdaterInterface;
 use Pixelant\PxaSocialFeed\Feed\Update\TwitterFeedUpdater;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 

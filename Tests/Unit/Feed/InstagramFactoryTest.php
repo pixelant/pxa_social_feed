@@ -7,7 +7,6 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use Pixelant\PxaSocialFeed\Feed\Source\InstagramSource;
 use Pixelant\PxaSocialFeed\Feed\Update\InstagramFeedUpdater;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FacebookFeedFactoryTest

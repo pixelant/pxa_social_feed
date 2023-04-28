@@ -5,9 +5,7 @@ namespace Pixelant\PxaSocialFeed\Feed;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
-use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
 use Pixelant\PxaSocialFeed\Feed\Update\FacebookFeedUpdater;
-use Pixelant\PxaSocialFeed\Feed\Update\FeedUpdaterInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
