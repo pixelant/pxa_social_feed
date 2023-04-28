@@ -8,7 +8,6 @@ use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use Pixelant\PxaSocialFeed\Feed\Source\InstagramSource;
 use Pixelant\PxaSocialFeed\Feed\Update\InstagramFeedUpdater;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class FacebookFeedFactoryTest
@@ -23,13 +22,7 @@ class InstagramFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new InstagramFactory();
-
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
-        $reflection->setValue(null, $singletonInstances);
+        $this->subject = $this->createMock(InstagramFactory::class);
     }
 
     protected function tearDown(): void
@@ -42,9 +35,7 @@ class InstagramFactoryTest extends UnitTestCase
      */
     public function getFeedSourceReturnInstagramSource()
     {
-        $configuration = new Configuration();
-
-        $this->assertTrue($this->subject->getFeedSource($configuration) instanceof InstagramSource);
+        self::assertInstanceOf(InstagramSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
     /**
@@ -52,6 +43,6 @@ class InstagramFactoryTest extends UnitTestCase
      */
     public function getFeedUpdaterReturnInstagramUpdater()
     {
-        $this->assertTrue($this->subject->getFeedUpdater() instanceof InstagramFeedUpdater);
+        self::assertInstanceOf(InstagramFeedUpdater::class, $this->subject->getFeedUpdater());
     }
 }

@@ -300,7 +300,7 @@ class AdministrationController extends ActionController
 
         if ($isNew) {
             // Save first, so we can pass it as argument
-            $this->objectManager->get(PersistenceManagerInterface::class)->persistAll();
+            GeneralUtility::makeInstance(PersistenceManagerInterface::class)->persistAll();
 
             // Redirect back to edit view, so user can now provide social ID according to selected token
             $this->redirect('editConfiguration', null, null, ['configuration' => $configuration]);
@@ -407,7 +407,7 @@ class AdministrationController extends ActionController
         // if view was found
         if ($this->view->getModuleTemplate() !== null) {
             /** @var UriBuilder $uriBuilder */
-            $uriBuilder = $this->objectManager->get(UriBuilder::class);
+            $uriBuilder = GeneralUtility::makeInstance(UriBuilder::class);
             $uriBuilder->setRequest($this->request);
 
             $menu = $this->view->getModuleTemplate()->getDocHeaderComponent()->getMenuRegistry()->makeMenu();

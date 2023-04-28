@@ -8,7 +8,6 @@ use Pixelant\PxaSocialFeed\Feed\Source\YoutubeSource;
 use Pixelant\PxaSocialFeed\Feed\Update\YoutubeFeedUpdater;
 use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class FacebookFeedFactoryTest
@@ -23,13 +22,7 @@ class YoutubeFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new YoutubeFactory();
-
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
-        $reflection->setValue(null, $singletonInstances);
+        $this->subject = $this->createMock(YoutubeFactory::class);
     }
 
     protected function tearDown(): void
@@ -40,18 +33,16 @@ class YoutubeFactoryTest extends UnitTestCase
     /**
      * @test
      */
-    public function getFeedSourceReturnTwitterSource()
+    public function getFeedSourceReturnYoutubeSource()
     {
-        $configuration = new Configuration();
-
-        $this->assertTrue($this->subject->getFeedSource($configuration) instanceof YoutubeSource);
+        self::assertInstanceOf(YoutubeSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
     /**
      * @test
      */
-    public function getFeedUpdaterReturnTwitterUpdater()
+    public function getFeedUpdaterReturnYoutubeUpdater()
     {
-        $this->assertTrue($this->subject->getFeedUpdater() instanceof YoutubeFeedUpdater);
+        self::assertInstanceOf(YoutubeFeedUpdater::class, $this->subject->getFeedUpdater());
     }
 }

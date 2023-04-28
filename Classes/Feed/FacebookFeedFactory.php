@@ -21,9 +21,9 @@ class FacebookFeedFactory implements FeedFactoryInterface
      * Feed source allow to fetch feed items
      *
      * @param Configuration $configuration
-     * @return FeedSourceInterface
+     * @return FacebookSource
      */
-    public function getFeedSource(Configuration $configuration): FeedSourceInterface
+    public function getFeedSource(Configuration $configuration): FacebookSource
     {
         return GeneralUtility::makeInstance(FacebookSource::class, $configuration);
     }
@@ -31,9 +31,9 @@ class FacebookFeedFactory implements FeedFactoryInterface
     /**
      * Feed updater. Will create/update feed items
      *
-     * @return FeedUpdaterInterface
+     * @return FacebookFeedUpdater
      */
-    public function getFeedUpdater(): FeedUpdaterInterface
+    public function getFeedUpdater(): FacebookFeedUpdater
     {
         return GeneralUtility::makeInstance(FacebookFeedUpdater::class);
     }

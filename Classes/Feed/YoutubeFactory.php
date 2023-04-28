@@ -21,9 +21,9 @@ class YoutubeFactory implements FeedFactoryInterface
      * Feed source allow to fetch feed items
      *
      * @param Configuration $configuration
-     * @return FeedSourceInterface
+     * @return YoutubeSource
      */
-    public function getFeedSource(Configuration $configuration): FeedSourceInterface
+    public function getFeedSource(Configuration $configuration): YoutubeSource
     {
         return GeneralUtility::makeInstance(YoutubeSource::class, $configuration);
     }
@@ -31,9 +31,9 @@ class YoutubeFactory implements FeedFactoryInterface
     /**
      * Feed updater. Will create/update feed items
      *
-     * @return FeedUpdaterInterface
+     * @return YoutubeFeedUpdater
      */
-    public function getFeedUpdater(): FeedUpdaterInterface
+    public function getFeedUpdater(): YoutubeFeedUpdater
     {
         return GeneralUtility::makeInstance(YoutubeFeedUpdater::class);
     }

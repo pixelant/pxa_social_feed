@@ -6,9 +6,10 @@ use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
+use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
 use Pixelant\PxaSocialFeed\Feed\Update\FacebookFeedUpdater;
+use Pixelant\PxaSocialFeed\Feed\Update\FeedUpdaterInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class FacebookFeedFactoryTest
@@ -23,13 +24,7 @@ class FacebookFeedFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new FacebookFeedFactory();
-
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
-        $reflection->setValue(null, $singletonInstances);
+        $this->subject = $this->createMock(FacebookFeedFactory::class);
     }
 
     protected function tearDown(): void
@@ -42,9 +37,7 @@ class FacebookFeedFactoryTest extends UnitTestCase
      */
     public function getFeedSourceReturnFacebookSource()
     {
-        $configuration = new Configuration();
-
-        $this->assertTrue($this->subject->getFeedSource($configuration) instanceof FacebookSource);
+        self::assertInstanceOf(FacebookSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
     /**
@@ -52,6 +45,6 @@ class FacebookFeedFactoryTest extends UnitTestCase
      */
     public function getFeedUpdaterReturnFacebookUpdater()
     {
-        $this->assertTrue($this->subject->getFeedUpdater() instanceof FacebookFeedUpdater);
+        self::assertInstanceOf(FacebookFeedUpdater::class, $this->subject->getFeedUpdater());
     }
 }

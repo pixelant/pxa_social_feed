@@ -46,7 +46,7 @@ abstract class AbstractBackendRepository extends Repository
     public function initializeObject()
     {
         /** @var Typo3QuerySettings $defaultQuerySettings */
-        $defaultQuerySettings = $this->objectManager->get(Typo3QuerySettings::class);
+        $defaultQuerySettings = GeneralUtility::makeInstance(Typo3QuerySettings::class);
 
         // don't add the pid constraint
         $defaultQuerySettings->setRespectStoragePage(false);
@@ -64,7 +64,7 @@ abstract class AbstractBackendRepository extends Repository
     public function findAllBackendGroupRestriction()
     {
         $query = $this->createQuery();
-        $queryParser = $this->objectManager->get(Typo3DbQueryParser::class);
+        $queryParser = GeneralUtility::makeInstance(Typo3DbQueryParser::class);
 
         $queryBuilder = $queryParser->convertQueryToDoctrineQueryBuilder($query);
         $queryBuilder

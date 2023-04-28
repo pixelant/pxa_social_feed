@@ -8,7 +8,6 @@ use Pixelant\PxaSocialFeed\Feed\Source\TwitterSource;
 use Pixelant\PxaSocialFeed\Feed\TwitterFactory;
 use Pixelant\PxaSocialFeed\Feed\Update\TwitterFeedUpdater;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class FacebookFeedFactoryTest
@@ -23,13 +22,7 @@ class TwitterFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $this->subject = new TwitterFactory();
-
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
-        $reflection->setValue(null, $singletonInstances);
+        $this->subject = $this->createMock(TwitterFactory::class);
     }
 
     protected function tearDown(): void
@@ -42,9 +35,7 @@ class TwitterFactoryTest extends UnitTestCase
      */
     public function getFeedSourceReturnTwitterSource()
     {
-        $configuration = new Configuration();
-
-        $this->assertTrue($this->subject->getFeedSource($configuration) instanceof TwitterSource);
+        self::assertInstanceOf(TwitterSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
     /**
@@ -52,6 +43,6 @@ class TwitterFactoryTest extends UnitTestCase
      */
     public function getFeedUpdaterReturnTwitterUpdater()
     {
-        $this->assertTrue($this->subject->getFeedUpdater() instanceof TwitterFeedUpdater);
+        self::assertInstanceOf(TwitterFeedUpdater::class, $this->subject->getFeedUpdater());
     }
 }
