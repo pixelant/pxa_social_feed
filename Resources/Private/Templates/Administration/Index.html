@@ -8,30 +8,26 @@
 
         <div id="tokens-confs">
             <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
-                <li class="tab-switch{f:if(condition: activeTokenTab, else: ' active')}">
-                    <a href="#configurations" data-toggle="tab"><f:translate key="module.configurations"/></a>
+                <li>
+                    <a id="configurations-tab" class="tab-switch{f:if(condition: activeTokenTab, else: ' active')}" href="#configurations" role="tab" aria-controls="configurations" aria-selected="true"><f:translate key="module.configurations"/></a>
                 </li>
-                <li class="{f:if(condition: isTokensValid, then:'', else: 'has-validation-error ')}tab-switch{f:if(condition: activeTokenTab, then: ' active')}">
-                    <a href="#tokens" data-toggle="tab"><f:translate key="module.tokens"/></a>
+                <li>
+                    <a id="tokens-tab" class="tab-switch{f:if(condition: isTokensValid, then:'', else: 'has-validation-error ')}{f:if(condition: activeTokenTab, then: ' active')}" href="#tokens" data-toggle="tab" role="tab" aria-controls="tokens" aria-selected="false"><f:translate key="module.tokens"/></a>
                 </li>
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane{f:if(condition: activeTokenTab, else: ' active')}" id="configurations">
+                <div class="tab-pane{f:if(condition: activeTokenTab, else: ' show active')}" id="configurations" role="tabpanel" aria-labelledby="configurations-tab">
                     <br>
-
                     <f:render partial="Backend/ListConfigurations" section="list" arguments="{configurations: configurations, isAdmin: isAdmin}"/>
-
                     <f:link.action class="btn btn-default" action="editConfiguration">
                         <f:translate key="module.add_new"/>
                     </f:link.action>
                 </div>
 
-                <div class="tab-pane{f:if(condition: activeTokenTab, then: ' active')}" id="tokens">
+                <div class="tab-pane{f:if(condition: activeTokenTab, then: ' show active')}" id="tokens"  role="tabpanel" aria-labelledby="tokens-tab">
                     <br>
-
                     <f:render partial="Backend/ListTokens" section="list" arguments="{tokens: tokens}"/>
-
                     <f:link.action class="btn btn-default" action="editToken">
                         <f:translate key="module.add_new"/>
                     </f:link.action>
