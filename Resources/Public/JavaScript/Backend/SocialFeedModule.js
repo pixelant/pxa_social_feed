@@ -1,19 +1,13 @@
-/**
- * Need for ElementBrowser
- */
-var setFormValueFromBrowseWin;
-
 define([
 	'jquery',
 	'bootstrap',
 	'TYPO3/CMS/Backend/Modal',
 	'TYPO3/CMS/Backend/Severity',
 	'TYPO3/CMS/Backend/Notification',
-	'clipboard'
-], function ($, bootstrap, Modal, Severity, Notification, clipboard) {
-
-	return (function ($, bootstrap, Modal, Severity, Notification, clipboard) {
-
+	'TYPO3/CMS/Backend/Utility/MessageUtility',
+	'clipboard',
+], function ($, bootstrap, Modal, Severity, Notification, MessageUtility, clipboard) {
+	return (function ($, bootstrap, Modal, Severity, Notification, MessageUtility, clipboard) {
 		/**
 		 * @private
 		 *
@@ -171,15 +165,36 @@ define([
 			 * @private
 			 */
 			function _winStorageBrowser() {
+				window.addEventListener('message', function (e) {
+					if (!MessageUtility.MessageUtility.verifyOrigin(e.origin)) {
+						throw 'Denied message sent by ' + e.origin;
+					}
+
+					if (typeof e.data.fieldName === 'undefined') {
+						throw 'fieldName not defined in message';
+					}
+
+					if (typeof e.data.value === 'undefined') {
+						throw 'value not defined in message';
+					}
+
+					const fieldElement = _getInsertTarget(e.data.fieldName);
+					if (fieldElement) {
+						fieldElement.value = e.data.value;
+					}
+
+					const storageTitleElement = document.querySelector(_getDomElementIdentifier('feedsStorageTitle'));
+					if (storageTitleElement) {
+						storageTitleElement.innerHTML = e.data.label;
+					}
+				});
+
 				$(_getDomElementIdentifier('winStorageBrowser')).on('click', function () {
 					var insertTarget = $(_getDomElementIdentifier('feedsStorageInput')),
-						randomIdentifier = Math.floor((Math.random() * 100000) + 1);
-
-					var width = $(this).data('popup-width') ? $(this).data('popup-width') : 700,
-						height = $(this).data('popup-height') ? $(this).data('popup-height') : 750;
+						randomIdentifier = Math.floor(Math.random() * 100000 + 1);
 
 					insertTarget.attr('data-insert-target', randomIdentifier);
-					_openTypo3WinBrowser('db', randomIdentifier + '|||pages', width, height);
+					_openTypo3WinBrowser('db', randomIdentifier + '|||pages');
 				});
 			}
 
@@ -190,21 +205,14 @@ define([
 			 *
 			 * @param mode
 			 * @param params
-			 * @param width
-			 * @param height
 			 */
-			function _openTypo3WinBrowser(mode, params, width, height) {
-				var openedPopupWindow, url;
-
-				url = _getSetting('browserUrl')
-					+ '&mode=' + mode + '&bparams=' + params;
-
-				openedPopupWindow = window.open(
-					url,
-					'Typo3WinBrowser',
-					'height=' + height + ',width=' + width + ',status=0,menubar=0,resizable=1,scrollbars=1'
-				);
-				openedPopupWindow.focus();
+			function _openTypo3WinBrowser(mode, params) {
+				const url = _getSetting('browserUrl') + '&mode=' + mode + '&bparams=' + params;
+				Modal.advanced({
+					type: Modal.types.iframe,
+					content: url,
+					size: Modal.sizes.large,
+				});
 			}
 
 			/**
@@ -220,11 +228,11 @@ define([
 			/**
 			 * Get insert target
 			 * @param reference
-			 * @return {*|jQuery|HTMLElement}
+			 * @return {HTMLElement|null}
 			 * @private
 			 */
 			function _getInsertTarget(reference) {
-				return $('[data-insert-target="' + reference + '"]');
+				return document.querySelector('[data-insert-target="' + reference + '"]');
 			}
 
 			/**
@@ -243,31 +251,9 @@ define([
 			 */
 			function _initToolTip() {
 				$(function () {
-					$('[data-toggle="tooltip"]').tooltip()
+					$('[data-toggle="tooltip"]').tooltip();
 				});
 			}
-
-			/**
-			 * @public
-			 *
-			 * callback from TYPO3/CMS/Recordlist/ElementBrowser
-			 *
-			 * @param fieldReference
-			 * @param elValue
-			 * @param elName
-			 * @return void
-			 */
-			setFormValueFromBrowseWin = function (fieldReference, elValue, elName) {
-				var result;
-				result = elValue.split('_');
-
-				_getInsertTarget(fieldReference)
-					.val(result.pop())
-					.trigger('paste');
-
-				$(_getDomElementIdentifier('feedsStorageTitle'))
-					.text(elName);
-			};
 
 			/**
 			 * return public methods
@@ -292,8 +278,7 @@ define([
 				}
 
 				return _socialFeedModuleInstance;
-			}
-		}
-
-	})($, bootstrap, Modal, Severity, Notification, clipboard);
+			},
+		};
+	})($, bootstrap, Modal, Severity, Notification, MessageUtility, clipboard);
 });
