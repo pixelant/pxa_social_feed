@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Task;
@@ -38,7 +39,6 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * Class ImportTask
- * @package Pixelant\PxaSocialFeed\Task
  */
 class ImportTask extends AbstractTask
 {

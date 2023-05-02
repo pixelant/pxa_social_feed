@@ -12,14 +12,13 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Class BaseUpdaterTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Feed\Update
  */
 class BaseUpdaterTest extends UnitTestCase
 {
     /**
      * @var BaseUpdater
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -50,7 +49,7 @@ class BaseUpdaterTest extends UnitTestCase
 
         $this->subject->_call('addOrUpdateFeedItem', $feed);
 
-        $this->assertEquals(1, $feedStorage->count());
+        self::assertEquals(1, $feedStorage->count());
     }
 
     /**
@@ -61,7 +60,7 @@ class BaseUpdaterTest extends UnitTestCase
         $feed = new Feed();
         $mockedRepository = $this->createMock(FeedRepository::class);
         $mockedRepository
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('add')
             ->with($feed);
 
@@ -81,7 +80,7 @@ class BaseUpdaterTest extends UnitTestCase
 
         $mockedRepository = $this->createMock(FeedRepository::class);
         $mockedRepository
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('update')
             ->with($feed);
 
@@ -98,6 +97,6 @@ class BaseUpdaterTest extends UnitTestCase
     {
         $value = 'test string';
 
-        $this->assertEquals($value, $this->subject->_call('encodeMessage', $value));
+        self::assertEquals($value, $this->subject->_call('encodeMessage', $value));
     }
 }

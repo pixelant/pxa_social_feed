@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Repository;
@@ -9,7 +10,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class BackendUserGroupRepository
- * @package Pixelant\PxaSocialFeed\Domain\Repository
  */
 class BackendUserGroupRepository
 {

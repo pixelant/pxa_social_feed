@@ -36,12 +36,11 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
  */
 class ConfigurationRepository extends AbstractBackendRepository
 {
-
     /**
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = [
-        'crdate' => QueryInterface::ORDER_DESCENDING
+        'crdate' => QueryInterface::ORDER_DESCENDING,
     ];
 
     /**

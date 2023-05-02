@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\SignalSlot;
@@ -10,14 +11,13 @@ use TYPO3\CMS\Extbase\SignalSlot\Dispatcher;
 
 /**
  * Trait EmitSignalTrait
- * @package Pixelant\PxaSocialFeed\Hooks
  */
 trait EmitSignalTrait
 {
     /**
-     * @var Dispatcher
+     * @var Dispatcher|null
      */
-    protected $signalSlotDispatcher = null;
+    protected $signalSlotDispatcher;
 
     /**
      * Emit signal
@@ -28,7 +28,7 @@ trait EmitSignalTrait
      */
     protected function emitSignal(string $name, array $variables): array
     {
-        $class = get_class($this);
+        $class = static::class;
         $variables[] = $this;
 
         return $this->getSignalSlotDispatcher()->dispatch(

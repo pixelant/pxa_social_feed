@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
@@ -11,7 +12,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FacebookFeedUpdater
- * @package Pixelant\PxaSocialFeed\Feed\Update
  */
 class FacebookFeedUpdater extends BaseUpdater
 {
@@ -56,7 +56,7 @@ class FacebookFeedUpdater extends BaseUpdater
             $feedItem->setUpdateDate((new \DateTime())->setTimestamp($updated));
         }
 
-        $feedItem->setLikes(intval($rawData['reactions']['summary']['total_count']));
+        $feedItem->setLikes((int)($rawData['reactions']['summary']['total_count']));
 
         // Call hook
         $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $configuration]);

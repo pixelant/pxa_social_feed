@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Model;
@@ -30,12 +31,11 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
 
 use League\OAuth2\Client\Provider\Exception\FacebookProviderException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use Pixelant\PxaSocialFeed\Provider\Facebook;
 use League\OAuth2\Client\Token\AccessToken;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
+use Pixelant\PxaSocialFeed\Provider\Facebook;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
-use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
@@ -82,7 +82,7 @@ class Token extends AbstractEntity
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $beGroup = null;
+    protected $beGroup;
 
     /**
      * @var string
@@ -90,7 +90,7 @@ class Token extends AbstractEntity
     protected $name = '';
 
     /**
-     * @var integer
+     * @var int
      */
     protected $type = 0;
 
@@ -125,9 +125,9 @@ class Token extends AbstractEntity
     protected $accessTokenSecret = '';
 
     /**
-     * @var ?Facebook
+     * @var Facebook|null
      */
-    protected $fb = null;
+    protected $fb;
 
     /**
      * @var string
@@ -135,9 +135,9 @@ class Token extends AbstractEntity
     protected string $fbSocialId = '';
 
     /**
-     * @var null|Token
+     * @var Token|null
      */
-    protected $parentToken = null;
+    protected $parentToken;
 
     /**
      * Initialize.
@@ -356,7 +356,7 @@ class Token extends AbstractEntity
         try {
             $expireAt = new \DateTime('+60 days');
             $token = new AccessToken([
-                'access_token' => $this->getAccessToken()
+                'access_token' => $this->getAccessToken(),
             ]);
             $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
         } catch (FacebookProviderException|IdentityProviderException $exception) {
@@ -392,7 +392,7 @@ class Token extends AbstractEntity
     public function getFacebookPagesIds(): array
     {
         $token = new AccessToken([
-            'access_token' => $this->getAccessToken()
+            'access_token' => $this->getAccessToken(),
         ]);
 
         try {
@@ -403,7 +403,7 @@ class Token extends AbstractEntity
 
         if (isset($body)) {
             $accounts = [
-                'me' => LocalizationUtility::translate('module.source_id_me', 'PxaSocialFeed')
+                'me' => LocalizationUtility::translate('module.source_id_me', 'PxaSocialFeed'),
             ];
             $accounts[$body->getId()] = sprintf(
                 '%s (ID: %s)',
@@ -418,7 +418,7 @@ class Token extends AbstractEntity
     }
 
     /**
-     * @return null|Token
+     * @return Token|null
      */
     public function getParentToken(): ?Token
     {

@@ -39,7 +39,7 @@ class FeedsController extends ActionController
     /**
      * @var FeedRepository
      */
-    protected $feedRepository = null;
+    protected $feedRepository;
 
     /**
      * @param FeedRepository $feedRepository
@@ -51,12 +51,10 @@ class FeedsController extends ActionController
 
     /**
      * List action
-     *
-     * @return void
      */
     public function listAction()
     {
-        $limit = $this->settings['feedsLimit'] ? intval($this->settings['feedsLimit']) : 10;
+        $limit = $this->settings['feedsLimit'] ? (int)($this->settings['feedsLimit']) : 10;
         $configurations = GeneralUtility::intExplode(',', $this->settings['configuration'], true);
 
         $feeds = $this->feedRepository->findByConfigurations($configurations, $limit);
@@ -67,8 +65,6 @@ class FeedsController extends ActionController
     /**
      * List ajax action
      * Prepare view for later ajax request
-     *
-     * @return void
      */
     public function listAjaxAction()
     {
@@ -81,7 +77,6 @@ class FeedsController extends ActionController
      * @param int $feedsLimit
      * @param string $partial
      * @param string $presentation
-     * @return void
      */
     public function loadFeedAjaxAction(
         string $configuration,
@@ -105,7 +100,7 @@ class FeedsController extends ActionController
         echo json_encode(
             [
                 'success' => true,
-                'html' => $this->view->render()
+                'html' => $this->view->render(),
             ]
         );
 

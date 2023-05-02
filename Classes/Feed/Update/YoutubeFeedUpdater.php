@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
@@ -11,7 +12,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class YoutubeFeedUpdater
- * @package Pixelant\PxaSocialFeed\Feed\Update
  */
 class YoutubeFeedUpdater extends BaseUpdater
 {

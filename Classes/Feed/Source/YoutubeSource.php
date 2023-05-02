@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
@@ -10,7 +11,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class YoutubeSource
- * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 class YoutubeSource extends BaseSource
 {
@@ -91,7 +91,7 @@ class YoutubeSource extends BaseSource
             'type' => 'video',
             'maxResults' => $configuration->getMaxItems(),
             'channelId' => $configuration->getSocialId(),
-            'key' => $configuration->getToken()->getApiKey()
+            'key' => $configuration->getToken()->getApiKey(),
         ];
 
         list($fields) = $this->emitSignal('youtubeEndPointRequestFields', [$fields]);

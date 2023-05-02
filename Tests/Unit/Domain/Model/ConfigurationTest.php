@@ -35,14 +35,13 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class ConfigurationTest extends UnitTestCase
 {
     /**
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -59,7 +58,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfPid()
     {
-        $this->assertEquals(0, $this->subject->getPid());
+        self::assertEquals(0, $this->subject->getPid());
     }
 
     /**
@@ -70,7 +69,7 @@ class ConfigurationTest extends UnitTestCase
         $value = 123;
 
         $this->subject->setPid($value);
-        $this->assertEquals($value, $this->subject->getPid());
+        self::assertEquals($value, $this->subject->getPid());
     }
 
     /**
@@ -78,7 +77,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfHidden()
     {
-        $this->assertEquals(false, $this->subject->isHidden());
+        self::assertFalse($this->subject->isHidden());
     }
 
     /**
@@ -89,7 +88,7 @@ class ConfigurationTest extends UnitTestCase
         $value = true;
 
         $this->subject->setHidden($value);
-        $this->assertEquals($value, $this->subject->isHidden());
+        self::assertEquals($value, $this->subject->isHidden());
     }
 
     /**
@@ -97,7 +96,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfName()
     {
-        $this->assertEquals('', $this->subject->getName());
+        self::assertEquals('', $this->subject->getName());
     }
 
     /**
@@ -109,7 +108,7 @@ class ConfigurationTest extends UnitTestCase
 
         $this->subject->setName($value);
 
-        $this->assertEquals($value, $this->subject->getName());
+        self::assertEquals($value, $this->subject->getName());
     }
 
     /**
@@ -117,7 +116,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfSocialId()
     {
-        $this->assertEquals('', $this->subject->getSocialId());
+        self::assertEquals('', $this->subject->getSocialId());
     }
 
     /**
@@ -129,7 +128,7 @@ class ConfigurationTest extends UnitTestCase
 
         $this->subject->setSocialId($value);
 
-        $this->assertEquals($value, $this->subject->getSocialId());
+        self::assertEquals($value, $this->subject->getSocialId());
     }
 
     /**
@@ -137,7 +136,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfMaxItems()
     {
-        $this->assertEquals(0, $this->subject->getMaxItems());
+        self::assertEquals(0, $this->subject->getMaxItems());
     }
 
     /**
@@ -149,7 +148,7 @@ class ConfigurationTest extends UnitTestCase
 
         $this->subject->setMaxItems($value);
 
-        $this->assertEquals($value, $this->subject->getMaxItems());
+        self::assertEquals($value, $this->subject->getMaxItems());
     }
 
     /**
@@ -157,7 +156,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfStorage()
     {
-        $this->assertEquals(0, $this->subject->getStorage());
+        self::assertEquals(0, $this->subject->getStorage());
     }
 
     /**
@@ -169,7 +168,7 @@ class ConfigurationTest extends UnitTestCase
 
         $this->subject->setStorage($value);
 
-        $this->assertEquals($value, $this->subject->getStorage());
+        self::assertEquals($value, $this->subject->getStorage());
     }
 
     /**
@@ -177,7 +176,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initialValueOfToken()
     {
-        $this->assertNull($this->subject->getToken());
+        self::assertNull($this->subject->getToken());
     }
 
     /**
@@ -189,7 +188,7 @@ class ConfigurationTest extends UnitTestCase
 
         $this->subject->setToken($token);
 
-        $this->assertSame($token, $this->subject->getToken());
+        self::assertSame($token, $this->subject->getToken());
     }
 
     /**
@@ -197,7 +196,7 @@ class ConfigurationTest extends UnitTestCase
      */
     public function initValueOfBeGroup()
     {
-        $this->assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
+        self::assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
     }
 
     /**
@@ -209,6 +208,6 @@ class ConfigurationTest extends UnitTestCase
 
         $this->subject->setBeGroup($beGroup);
 
-        $this->assertSame($beGroup, $this->subject->getBeGroup());
+        self::assertSame($beGroup, $this->subject->getBeGroup());
     }
 }

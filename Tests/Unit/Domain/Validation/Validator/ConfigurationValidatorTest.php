@@ -8,14 +8,13 @@ use Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator;
 
 /**
  * Class ConfigurationValidator
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Domain\Validation\Validator
  */
 class ConfigurationValidatorTest extends UnitTestCase
 {
     /**
      * @var ConfigurationValidator
      */
-    protected $subject= null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -39,6 +38,6 @@ class ConfigurationValidatorTest extends UnitTestCase
         $configuration->setName('  test ');
         $configuration->setSocialId(' social id    ');
 
-        $this->assertEquals(null, $this->subject->isValid($configuration));
+        self::assertNull($this->subject->isValid($configuration));
     }
 }

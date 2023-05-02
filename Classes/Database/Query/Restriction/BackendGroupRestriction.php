@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Database\Query\Restriction;
@@ -22,7 +23,7 @@ class BackendGroupRestriction implements QueryRestrictionInterface
     /**
      * @var BackendUserAuthentication|null
      */
-    protected $backendUserAuth = null;
+    protected $backendUserAuth;
 
     /**
      * Initialize

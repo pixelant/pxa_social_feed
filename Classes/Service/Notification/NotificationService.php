@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Service\Notification;
@@ -9,7 +10,6 @@ use TYPO3\CMS\Core\Utility\MailUtility;
 
 /**
  * Class ErrorImportingNotificationService
- * @package Pixelant\PxaSocialFeed\Service\Notification
  */
 class NotificationService
 {

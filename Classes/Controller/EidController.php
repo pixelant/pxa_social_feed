@@ -18,7 +18,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class EidController
- * @package Pixelant\PxaSocialFeed\Controller
  */
 class EidController
 {
@@ -27,7 +26,7 @@ class EidController
     /**
      * @var TokenRepository
      */
-    private $tokenRepository = null;
+    private $tokenRepository;
 
     public function __construct()
     {
@@ -47,9 +46,8 @@ class EidController
 
         if ($request->getQueryParams()['token']) {
             return $this->processRequest($request, $response);
-        } else {
-            return $response->withStatus(400, 'Bad request');
         }
+        return $response->withStatus(400, 'Bad request');
     }
 
     /**
@@ -130,7 +128,7 @@ class EidController
         $content[] = '<h3>Long-lived</h3>';
         $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
-        $this->tokenRepository->updateAccessToken($tokenUid, (string) $accessToken);
+        $this->tokenRepository->updateAccessToken($tokenUid, (string)$accessToken);
         $this->tokenRepository->removeAllPageTokensByParentToken($tokenUid);
 
         foreach ($fb->getLongLivePageTokens('me', $accessToken) as $page) {
@@ -146,7 +144,7 @@ class EidController
 
             $this->tokenRepository->addPageToken($pageAccessToken);
         }
-    
+
         $content[] = '<p>Token was updated. <b>You can close this window</b>.</p>';
 
         $content = '<div style="padding: 10px;background: #79A547;">' . implode('', $content) . '</div>';
@@ -169,7 +167,7 @@ class EidController
                 ['app_id', 'app_secret'],
                 'tx_pxasocialfeed_domain_model_token',
                 [
-                    'uid' => $tokenUid
+                    'uid' => $tokenUid,
                 ]
             )
             ->fetch();
@@ -203,7 +201,7 @@ class EidController
 
         try {
             $accessToken = $fb->getAccessToken('authorization_code', [
-                'code' => $_GET['code']
+                'code' => $_GET['code'],
             ]);
         } catch (IdentityProviderException $e) {
             // When Graph returns an error

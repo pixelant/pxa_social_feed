@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Task;
@@ -11,14 +12,13 @@ use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 
 /**
  * Trait AdditionalFieldProviderTrait
- * @package Pixelant\PxaSocialFeed\Task
  */
 trait AdditionalFieldProviderTrait
 {
     /**
-     * @var FlashMessageQueue
+     * @var FlashMessageQueue|null
      */
-    protected $flashMessageQueue = null;
+    protected $flashMessageQueue;
 
     /**
      * Get current action

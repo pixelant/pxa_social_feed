@@ -10,14 +10,13 @@ use Pixelant\PxaSocialFeed\Feed\Update\FacebookFeedUpdater;
 
 /**
  * Class FacebookFeedFactoryTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Feed
  */
 class FacebookFeedFactoryTest extends UnitTestCase
 {
     /**
      * @var FacebookFeedFactory
      */
-    protected $subject= null;
+    protected $subject;
 
     protected function setUp(): void
     {

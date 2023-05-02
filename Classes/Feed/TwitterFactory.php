@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed;
@@ -10,11 +11,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TwitterFactory
- * @package Pixelant\PxaSocialFeed\Feed
  */
 class TwitterFactory implements FeedFactoryInterface
 {
-
     /**
      * Feed source allow to fetch feed items
      *

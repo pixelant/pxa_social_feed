@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Utility;
@@ -8,8 +9,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Read plugin configuration
- *
- * @package Pixelant\PxaSocialFeed\Utility
  */
 class ConfigurationUtility
 {
@@ -33,6 +32,6 @@ class ConfigurationUtility
      */
     public static function isFeatureEnabled(string $feature): bool
     {
-        return boolval(static::getExtensionConfiguration()[$feature] ?? false);
+        return (bool)(static::getExtensionConfiguration()[$feature] ?? false);
     }
 }

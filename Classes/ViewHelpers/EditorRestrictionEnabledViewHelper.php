@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
@@ -9,8 +10,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  * Evaluate condition if restriction is enabled for editors
- *
- * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
 class EditorRestrictionEnabledViewHelper extends AbstractConditionViewHelper
 {

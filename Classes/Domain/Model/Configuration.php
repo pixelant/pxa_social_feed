@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Model;
@@ -63,10 +64,8 @@ class Configuration extends AbstractEntity
      * image size
      *
      * @var string
-     *
      */
     protected $imageSize = 'normal_images';
-
 
     /**
      * @var string
@@ -87,13 +86,13 @@ class Configuration extends AbstractEntity
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $token = null;
+    protected $token;
 
     /**
      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $beGroup = null;
+    protected $beGroup;
 
     /**
      * Initialize

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
@@ -12,7 +13,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class InstagramFeedUpdater
- * @package Pixelant\PxaSocialFeed\Feed\Update
  */
 class InstagramFeedUpdater extends BaseUpdater
 {
@@ -53,7 +53,6 @@ class InstagramFeedUpdater extends BaseUpdater
      *
      * @param Feed $feedItem
      * @param array $data
-     * @return void
      */
     public function populateGraphInstagramFeed(Feed $feedItem, array $data): void
     {
@@ -115,10 +114,9 @@ class InstagramFeedUpdater extends BaseUpdater
             $downloadFolderSmall = $storage->getFolder($downloadFolderSmallIdentifier);
         }
 
-
         $filename = explode('?', basename($url), 2);
         $normal_f_name = $filename[0];
-        $small_f_name = 'small_' .$filename[0];
+        $small_f_name = 'small_' . $filename[0];
 
         $file_normal = $downloadFolderNormal->createFile($filename[0]);
 
@@ -135,7 +133,7 @@ class InstagramFeedUpdater extends BaseUpdater
 
         return [
             'normal_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/normal/' . $normal_f_name,
-            'small_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/small/' . $small_f_name
+            'small_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/small/' . $small_f_name,
         ];
     }
 

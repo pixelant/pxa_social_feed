@@ -42,7 +42,7 @@ class TokenRepository extends AbstractBackendRepository
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = [
-        'crdate' => QueryInterface::ORDER_DESCENDING
+        'crdate' => QueryInterface::ORDER_DESCENDING,
     ];
 
     /**
@@ -61,7 +61,7 @@ class TokenRepository extends AbstractBackendRepository
         $query->matching(
             $query->logicalAnd([
                 $query->equals('parentToken', $token->getParentToken()),
-                $query->equals('fbSocialId', $fbSocialId)
+                $query->equals('fbSocialId', $fbSocialId),
             ])
         );
 
@@ -110,7 +110,7 @@ class TokenRepository extends AbstractBackendRepository
             ->getConnectionForTable('tx_pxasocialfeed_domain_model_token')
             ->update(
                 'tx_pxasocialfeed_domain_model_token',
-                ['access_token' => (string) $accessToken],
+                ['access_token' => (string)$accessToken],
                 ['uid' => $uid],
                 [\PDO::PARAM_STR]
             )

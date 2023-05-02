@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Utility;
@@ -7,7 +8,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 
 /**
  * Class LoggerUtility
- * @package Pixelant\PxaSocialFeed\Utility
  */
 class LoggerUtility
 {

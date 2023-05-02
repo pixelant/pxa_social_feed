@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 return (function () {
@@ -26,9 +27,9 @@ return (function () {
 
             'delete' => 'deleted',
             'enablecolumns' => [
-                'disabled' => 'hidden'
+                'disabled' => 'hidden',
             ],
-            'searchFields' => 'post_url,message,image,title,config,'
+            'searchFields' => 'post_url,message,image,title,config,',
         ],
         // @codingStandardsIgnoreStart
         'interface' => [
@@ -43,7 +44,7 @@ return (function () {
         ],
         'palettes' => [
             'core' => ['showitem' => 'hidden'],
-            'main' => ['showitem' => 'post_date, --linebreak--, title, --linebreak--, post_url, --linebreak--, message, --linebreak--, image, --linebreak--, likes, --linebreak--, configuration']
+            'main' => ['showitem' => 'post_date, --linebreak--, title, --linebreak--, post_url, --linebreak--, message, --linebreak--, image, --linebreak--, likes, --linebreak--, configuration'],
         ],
         // @codingStandardsIgnoreEnd
         'columns' => [
@@ -68,12 +69,12 @@ return (function () {
                     ],
                     'fieldWizard' => [
                         'selectIcons' => [
-                            'disabled' => false
-                        ]
+                            'disabled' => false,
+                        ],
                     ],
                     'size' => 1,
                     'maxitems' => 1,
-                ]
+                ],
             ],
             'post_date' => [
                 'exclude' => 1,
@@ -92,7 +93,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'message' => [
@@ -102,8 +103,8 @@ return (function () {
                     'type' => 'text',
                     'cols' => 40,
                     'rows' => 15,
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'image' => [
                 'exclude' => 1,
@@ -111,7 +112,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'small_image' => [
@@ -120,7 +121,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'likes' => [
@@ -129,8 +130,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 4,
-                    'eval' => 'int'
-                ]
+                    'eval' => 'int',
+                ],
             ],
             'title' => [
                 'exclude' => 1,
@@ -138,7 +139,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'external_identifier' => [
@@ -146,7 +147,7 @@ return (function () {
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.external_identifier',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
             ],
             'update_date' => [
@@ -171,21 +172,21 @@ return (function () {
                     'minitems' => 0,
                     'maxitems' => 1,
                     'renderType' => 'selectSingleBox',
-                ]
+                ],
             ],
             'pid' => [
                 'config' => [
-                    'type' => 'passthrough'
-                ]
+                    'type' => 'passthrough',
+                ],
             ],
             'media_type' => [
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.media_type',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim'
+                    'eval' => 'trim',
                 ],
-            ]
-        ]
+            ],
+        ],
     ];
 })();

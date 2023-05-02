@@ -10,14 +10,13 @@ use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
 
 /**
  * Class FacebookFeedFactoryTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Feed
  */
 class YoutubeFactoryTest extends UnitTestCase
 {
     /**
      * @var YoutubeFactory
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Domain\Model;
@@ -36,7 +37,6 @@ use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
  */
 class Feed extends AbstractEntity
 {
-
     /**
      * image media type
      */
@@ -57,9 +57,9 @@ class Feed extends AbstractEntity
     /**
      * updateDate
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
-    protected $updateDate = null;
+    protected $updateDate;
 
     /**
      * externalIdentifier
@@ -71,9 +71,9 @@ class Feed extends AbstractEntity
     /**
      * date
      *
-     * @var \DateTime
+     * @var \DateTime|null
      */
-    protected $postDate = null;
+    protected $postDate;
 
     /**
      * postUrl
@@ -130,7 +130,7 @@ class Feed extends AbstractEntity
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
-    protected $configuration = null;
+    protected $configuration;
 
     /**
      * media type
@@ -142,7 +142,7 @@ class Feed extends AbstractEntity
     /**
      * Returns the date
      *
-     * @return \DateTime $date
+     * @return \DateTime|null $date
      */
     public function getPostDate(): ?\DateTime
     {
@@ -153,7 +153,6 @@ class Feed extends AbstractEntity
      * Sets the date
      *
      * @param \DateTime $postDate
-     * @return void
      */
     public function setPostDate(\DateTime $postDate)
     {
@@ -205,7 +204,6 @@ class Feed extends AbstractEntity
      * Sets the message
      *
      * @param string $message
-     * @return void
      */
     public function setMessage(string $message): void
     {
@@ -226,7 +224,6 @@ class Feed extends AbstractEntity
      * Sets the image
      *
      * @param string $image
-     * @return void
      */
     public function setImage(string $image): void
     {
@@ -247,7 +244,6 @@ class Feed extends AbstractEntity
      * Sets the image
      *
      * @param string $smallImage
-     * @return void
      */
     public function setSmallImage(string $smallImage): void
     {
@@ -268,7 +264,6 @@ class Feed extends AbstractEntity
      * Sets the title
      *
      * @param string $title
-     * @return void
      */
     public function setTitle(string $title): void
     {
@@ -293,7 +288,6 @@ class Feed extends AbstractEntity
      * Sets the token
      *
      * @param Configuration $configuration
-     * @return void
      */
     public function setConfiguration(?Configuration $configuration)
     {
@@ -325,7 +319,7 @@ class Feed extends AbstractEntity
     }
 
     /**
-     * @param int $updateDate
+     * @param \DateTime $updateDate
      */
     public function setUpdateDate(\DateTime $updateDate)
     {
@@ -378,7 +372,6 @@ class Feed extends AbstractEntity
      * Sets the mediaType
      *
      * @param int $mediaType
-     * @return void
      */
     public function setMediaType(int $mediaType)
     {

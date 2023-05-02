@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
@@ -9,7 +10,6 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class TwitterSource
- * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 class TwitterSource extends BaseSource
 {
@@ -60,8 +60,8 @@ class TwitterSource extends BaseSource
     {
         $additionalOptions = [
             'headers' => [
-                'Authorization' => $autHeader
-            ]
+                'Authorization' => $autHeader,
+            ],
         ];
 
         return $this->performApiGetRequest($url, $additionalOptions);
@@ -103,7 +103,7 @@ class TwitterSource extends BaseSource
             'count' => (string)$configuration->getMaxItems(),
             'tweet_mode' => 'extended',
             'exclude_replies' => '1',
-            'include_rts' => '1'
+            'include_rts' => '1',
         ];
 
         list($fields) = $this->emitSignal('beforeReturnTwitterQueryFields', [$fields]);
@@ -127,7 +127,7 @@ class TwitterSource extends BaseSource
             'oauth_signature_method' => 'HMAC-SHA1',
             'oauth_token' => $token->getAccessToken(),
             'oauth_timestamp' => (string)time(),
-            'oauth_version' => '1.0'
+            'oauth_version' => '1.0',
         ];
 
         $sigBase = $this->buildSigBase(array_merge($oauth, $fields), $url);

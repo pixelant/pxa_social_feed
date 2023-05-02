@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Exception;
 
 /**
  * Class FacebookObtainAccessTokenException
- * @package Pixelant\PxaSocialFeed\Exception
  */
 class FacebookObtainAccessTokenException extends \Exception
 {

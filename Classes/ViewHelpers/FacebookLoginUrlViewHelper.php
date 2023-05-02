@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\ViewHelpers;
@@ -38,19 +39,18 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class TokenGenerationUrlViewHelper
- * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
 class FacebookLoginUrlViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
@@ -63,8 +63,6 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
 
     /**
      * Initialize
-     *
-     * @return void
      */
     public function initializeArguments()
     {
