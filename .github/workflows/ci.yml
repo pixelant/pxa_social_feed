@@ -17,10 +17,11 @@ jobs:
       - name: Configure PHP ${{ matrix.php-version }}
         uses: shivammathur/setup-php@v2
         with:
+          ini-values: memory_limit=-1, error_reporting=E_ALL, display_errors=On
           php-version: ${{ matrix.php-version }}
 
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: "Cache dependencies installed with composer"
         uses: actions/cache@v1
@@ -34,7 +35,7 @@ jobs:
         run: composer install --no-progress
 
       - name: Run PHP Code Sniffer
-        run: composer run php:codesniffer
+        run: composer run php:cs-fixer
 
       - name: Run PHP Unit tests
         run: composer run php:unittests
