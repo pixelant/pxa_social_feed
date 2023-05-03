@@ -8,14 +8,13 @@ use Pixelant\PxaSocialFeed\Service\Expire\FacebookAccessTokenExpireService;
 
 /**
  * Class FacebookAccessTokenExpireServiceTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Service\Expire
  */
 class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 {
     /**
      * @var FacebookAccessTokenExpireService
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -34,13 +33,13 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
     {
         $mockedToken = $this->createMock(Token::class);
         $mockedToken
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('isValidFacebookAccessToken')
             ->willReturn(true);
 
         $this->inject($this->subject, 'token', $mockedToken);
 
-        $this->assertFalse($this->subject->hasExpired());
+        self::assertFalse($this->subject->hasExpired());
     }
 
     /**
@@ -50,13 +49,13 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
     {
         $mockedToken = $this->createMock(Token::class);
         $mockedToken
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('isValidFacebookAccessToken')
             ->willReturn(false);
 
         $this->inject($this->subject, 'token', $mockedToken);
 
-        $this->assertTrue($this->subject->hasExpired());
+        self::assertTrue($this->subject->hasExpired());
     }
 
     /**
@@ -68,14 +67,14 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 
         $mockedSubject = $this->createPartialMock(FacebookAccessTokenExpireService::class, ['expireWhen']);
         $mockedSubject
-            ->expects($this->atLeastOnce())
+            ->expects(self::atLeastOnce())
             ->method('expireWhen')
             ->willReturn($expireAt);
 
-        $this->assertTrue($mockedSubject->willExpireSoon(4));
-        $this->assertTrue($mockedSubject->willExpireSoon(3));
+        self::assertTrue($mockedSubject->willExpireSoon(4));
+        self::assertTrue($mockedSubject->willExpireSoon(3));
 
-        $this->assertFalse($mockedSubject->willExpireSoon(2));
+        self::assertFalse($mockedSubject->willExpireSoon(2));
     }
 
     /**
@@ -87,13 +86,13 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 
         $mockedToken = $this->createMock(Token::class);
         $mockedToken
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFacebookAccessTokenMetadataExpirationDate')
             ->willReturn($expireAt);
 
         $this->inject($this->subject, 'token', $mockedToken);
 
-        $this->assertEquals(10, $this->subject->expireWhen());
+        self::assertEquals(10, $this->subject->expireWhen());
     }
 
     /**
@@ -103,13 +102,13 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
     {
         $mockedToken = $this->createMock(Token::class);
         $mockedToken
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFacebookAccessTokenMetadataExpirationDate')
             ->willReturn(null);
 
         $this->inject($this->subject, 'token', $mockedToken);
 
-        $this->assertEquals(0, $this->subject->expireWhen());
+        self::assertEquals(0, $this->subject->expireWhen());
     }
 
     /**
@@ -121,13 +120,13 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 
         $mockedToken = $this->createMock(Token::class);
         $mockedToken
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFacebookAccessTokenMetadataExpirationDate')
             ->willReturn($expireAt);
 
         $this->inject($this->subject, 'token', $mockedToken);
 
-        $this->assertEquals(0, $this->subject->expireWhen());
+        self::assertEquals(0, $this->subject->expireWhen());
     }
 
     /**
@@ -140,7 +139,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 
         $this->inject($this->subject, 'token', $token);
 
-        $this->assertTrue($this->subject->tokenRequireCheck());
+        self::assertTrue($this->subject->tokenRequireCheck());
     }
 
     /**
@@ -153,6 +152,6 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 
         $this->inject($this->subject, 'token', $token);
 
-        $this->assertFalse($this->subject->tokenRequireCheck());
+        self::assertFalse($this->subject->tokenRequireCheck());
     }
 }

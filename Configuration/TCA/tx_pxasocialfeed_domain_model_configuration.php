@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 return (function () {
@@ -16,15 +17,15 @@ return (function () {
 
             'delete' => 'deleted',
             'enablecolumns' => [
-                'disabled' => 'hidden'
+                'disabled' => 'hidden',
             ],
             'searchFields' => 'name, token, max_items, storage, social_id',
 
             'typeicon_classes' => [
-                'default' => 'ext-pxasocialfeed-model-icon'
+                'default' => 'ext-pxasocialfeed-model-icon',
             ],
 
-            'rootLevel' => 1
+            'rootLevel' => 1,
         ],
         'interface' => [
             'showRecordFieldList' => 'hidden, name, social_id, token, max_items, storage, be_group',
@@ -49,7 +50,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'image_size' => [
@@ -58,7 +59,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'social_id' => [
@@ -67,7 +68,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required'
+                    'eval' => 'trim,required',
                 ],
             ],
             'max_items' => [
@@ -76,7 +77,7 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'int'
+                    'eval' => 'int',
                 ],
             ],
             'storage' => [
@@ -84,7 +85,7 @@ return (function () {
                 'label' => $ll . '.storage',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'int,required'
+                    'eval' => 'int,required',
                 ],
             ],
             'token' => [
@@ -95,8 +96,8 @@ return (function () {
                     'foreign_table' => 'tx_pxasocialfeed_domain_model_token',
                     'minitems' => 0,
                     'maxitems' => 1,
-                    'renderType' => 'selectSingleBox'
-                ]
+                    'renderType' => 'selectSingleBox',
+                ],
             ],
             'be_group' => [
                 'exclude' => true,
@@ -109,9 +110,9 @@ return (function () {
                     'maxitems' => 20,
                     'foreign_table' => 'be_groups',
                     'foreign_table_where' => 'ORDER BY be_groups.title',
-                    'enableMultiSelectFilterTextfield' => true
-                ]
+                    'enableMultiSelectFilterTextfield' => true,
+                ],
             ],
-        ]
+        ],
     ];
 })();

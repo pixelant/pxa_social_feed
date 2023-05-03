@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed;
@@ -9,7 +10,6 @@ use Pixelant\PxaSocialFeed\Feed\Update\FeedUpdaterInterface;
 
 /**
  * Class FeedFactoryInterface
- * @package Pixelant\PxaSocialFeed\Feed
  */
 interface FeedFactoryInterface
 {

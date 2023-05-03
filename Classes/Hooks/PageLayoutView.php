@@ -34,7 +34,6 @@ use TYPO3\CMS\Fluid\View\StandaloneView;
 
 /**
  * Class PageLayoutView
- * @package Pixelant\PxaSocialFeed\Hooks
  */
 class PageLayoutView
 {

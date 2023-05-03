@@ -1,6 +1,6 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed;
 
@@ -11,11 +11,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class InstagramFactory
- * @package Pixelant\PxaSocialFeed\Feed
  */
 class InstagramFactory implements FeedFactoryInterface
 {
-
     /**
      * Feed source allow to fetch feed items
      *

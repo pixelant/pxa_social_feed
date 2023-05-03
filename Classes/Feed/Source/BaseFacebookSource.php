@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
@@ -7,7 +8,6 @@ use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
 
 /**
  * Class BaseFacebookSource
- * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 abstract class BaseFacebookSource extends BaseSource
 {

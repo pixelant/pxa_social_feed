@@ -1,11 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
 /**
  * Class InstagramSource
- * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 class InstagramSource extends BaseFacebookSource
 {
@@ -85,7 +85,7 @@ class InstagramSource extends BaseFacebookSource
             'shortcode',
             'thumbnail_url',
             'timestamp',
-            'username'
+            'username',
         ];
     }
 }

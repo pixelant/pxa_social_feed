@@ -10,14 +10,13 @@ use Pixelant\PxaSocialFeed\Feed\Update\InstagramFeedUpdater;
 
 /**
  * Class FacebookFeedFactoryTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Feed
  */
 class InstagramFactoryTest extends UnitTestCase
 {
     /**
      * @var InstagramFactory
      */
-    protected $subject= null;
+    protected $subject;
 
     protected function setUp(): void
     {

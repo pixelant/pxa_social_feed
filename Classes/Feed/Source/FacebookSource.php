@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
@@ -9,7 +10,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FacebookSource
- * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 class FacebookSource extends BaseFacebookSource
 {

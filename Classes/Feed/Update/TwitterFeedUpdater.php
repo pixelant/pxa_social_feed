@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
@@ -11,11 +12,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TwitterFeedUpdater
- * @package Pixelant\PxaSocialFeed\Feed\Update
  */
 class TwitterFeedUpdater extends BaseUpdater
 {
-
     /**
      * Create/Update feed items
      *
@@ -73,7 +72,6 @@ class TwitterFeedUpdater extends BaseUpdater
      *
      * @param Feed $feedItem
      * @param array $rawData
-     * @return void
      */
     protected function updateFeedItem(Feed $feedItem, array $rawData): void
     {
@@ -89,7 +87,7 @@ class TwitterFeedUpdater extends BaseUpdater
             $feedItem->setImage($image);
         }
 
-        $likes = intval($rawData['retweeted_status']['favorite_count'] ?? $rawData['favorite_count'] ?? 0);
+        $likes = (int)($rawData['retweeted_status']['favorite_count'] ?? $rawData['favorite_count'] ?? 0);
 
         if ($likes != $feedItem->getLikes()) {
             $feedItem->setLikes($likes);

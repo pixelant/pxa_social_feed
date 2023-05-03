@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 return (function () {
@@ -17,16 +18,16 @@ return (function () {
 
             'delete' => 'deleted',
             'enablecolumns' => [
-                'disabled' => 'hidden'
+                'disabled' => 'hidden',
             ],
             'searchFields' => 'app_id, app_secret, access_token',
 
             'typeicon_classes' => [
-                'default' => 'ext-pxasocialfeed-model-icon'
+                'default' => 'ext-pxasocialfeed-model-icon',
             ],
 
             'type' => 'type',
-            'rootLevel' => 1
+            'rootLevel' => 1,
         ],
         'interface' => [
             'showRecordFieldList' => 'hidden, name, type, app_id, app_secret, be_group',
@@ -40,18 +41,18 @@ return (function () {
                     'access_token' => [
                         'label' => $ll . '.access_token',
                         'config' => [
-                            'eval' => 'trim,required'
-                        ]
-                    ]
-                ]
+                            'eval' => 'trim,required',
+                        ],
+                    ],
+                ],
             ],
             \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE => [
                 'showitem' => 'name, type, --palette--;;paletteYoutubeApi' . $accessTab,
                 'columnsOverrides' => [
                     'api_key' => [
                         'label' => $ll . '.youtube_api_key',
-                    ]
-                ]
+                    ],
+                ],
             ],
         ],
         'palettes' => [
@@ -65,7 +66,7 @@ return (function () {
                 'label' => 'LLL:EXT:core/Resources/Private/Language/locallang_general.xlf:LGL.hidden',
                 'config' => [
                     'type' => 'check',
-                    'default' => 0
+                    'default' => 0,
                 ],
             ],
             'type' => [
@@ -79,8 +80,8 @@ return (function () {
                         [$ll . '.type.type.2', \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM],
                         [$ll . '.type.type.3', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER],
                         [$ll . '.type.type.4', \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE],
-                    ]
-                ]
+                    ],
+                ],
             ],
             'fb_social_id' => [
                 'exclude' => 1,
@@ -110,56 +111,56 @@ return (function () {
                 'label' => $ll . '.name',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'app_id' => [
                 'exclude' => true,
                 'label' => $ll . '.app_id',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'required,trim'
-                ]
+                    'eval' => 'required,trim',
+                ],
             ],
             'app_secret' => [
                 'exclude' => true,
                 'label' => $ll . '.app_secret',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'required,trim'
-                ]
+                    'eval' => 'required,trim',
+                ],
             ],
             'access_token' => [
                 'exclude' => true,
                 'label' => $ll . '.access_token',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim'
-                ]
+                    'eval' => 'trim',
+                ],
             ],
             'api_key' => [
                 'exclude' => true,
                 'label' => $ll . '.api_key',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required'
-                ]
+                    'eval' => 'trim,required',
+                ],
             ],
             'api_secret_key' => [
                 'exclude' => true,
                 'label' => $ll . '.api_secret_key',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required'
-                ]
+                    'eval' => 'trim,required',
+                ],
             ],
             'access_token_secret' => [
                 'exclude' => true,
                 'label' => $ll . '.access_token_secret',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required'
-                ]
+                    'eval' => 'trim,required',
+                ],
             ],
             'be_group' => [
                 'exclude' => true,
@@ -172,9 +173,9 @@ return (function () {
                     'maxitems' => 20,
                     'foreign_table' => 'be_groups',
                     'foreign_table_where' => 'ORDER BY be_groups.title',
-                    'enableMultiSelectFilterTextfield' => true
-                ]
+                    'enableMultiSelectFilterTextfield' => true,
+                ],
             ],
-        ]
+        ],
     ];
 })();

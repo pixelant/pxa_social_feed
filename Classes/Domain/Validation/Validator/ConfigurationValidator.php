@@ -31,7 +31,6 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 
 class ConfigurationValidator extends AbstractValidator
 {
-
     /**
      * Validates tokens
      *

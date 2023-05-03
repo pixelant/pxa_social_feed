@@ -7,14 +7,13 @@ use Pixelant\PxaSocialFeed\Service\Notification\NotificationService;
 
 /**
  * Class NotificationServiceTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Service\Notification
  */
 class NotificationServiceTest extends UnitTestCase
 {
     /**
      * @var NotificationService
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -36,8 +35,8 @@ class NotificationServiceTest extends UnitTestCase
 
         $subject = new NotificationService($receiver, $sender);
 
-        $this->assertEquals($sender, $subject->getSenderEmail());
-        $this->assertEquals($receiver, $subject->getReceiverEmail());
+        self::assertEquals($sender, $subject->getSenderEmail());
+        self::assertEquals($receiver, $subject->getReceiverEmail());
     }
 
     /**
@@ -45,7 +44,7 @@ class NotificationServiceTest extends UnitTestCase
      */
     public function initialValueForSenderEmail()
     {
-        $this->assertEmpty($this->subject->getSenderEmail());
+        self::assertEmpty($this->subject->getSenderEmail());
     }
 
     /**
@@ -56,7 +55,7 @@ class NotificationServiceTest extends UnitTestCase
         $value = 'test@site.com';
         $this->subject->setSenderEmail($value);
 
-        $this->assertEquals($value, $this->subject->getSenderEmail());
+        self::assertEquals($value, $this->subject->getSenderEmail());
     }
 
     /**
@@ -64,7 +63,7 @@ class NotificationServiceTest extends UnitTestCase
      */
     public function initialValueForReceiverEmail()
     {
-        $this->assertEmpty($this->subject->getReceiverEmail());
+        self::assertEmpty($this->subject->getReceiverEmail());
     }
 
     /**
@@ -75,7 +74,7 @@ class NotificationServiceTest extends UnitTestCase
         $value = 'receiver@site.com';
         $this->subject->setReceiverEmail($value);
 
-        $this->assertEquals($value, $this->subject->getReceiverEmail());
+        self::assertEquals($value, $this->subject->getReceiverEmail());
     }
 
     /**
@@ -89,7 +88,7 @@ class NotificationServiceTest extends UnitTestCase
         $this->subject->setSenderEmail($sender);
         $this->subject->setReceiverEmail($receiver);
 
-        $this->assertTrue($this->subject->canSendEmail());
+        self::assertTrue($this->subject->canSendEmail());
     }
 
     /**
@@ -103,7 +102,7 @@ class NotificationServiceTest extends UnitTestCase
         $this->subject->setSenderEmail($sender);
         $this->subject->setReceiverEmail($receiver);
 
-        $this->assertFalse($this->subject->canSendEmail());
+        self::assertFalse($this->subject->canSendEmail());
     }
 
     /**
@@ -117,6 +116,6 @@ class NotificationServiceTest extends UnitTestCase
         $this->subject->setSenderEmail($sender);
         $this->subject->setReceiverEmail($receiver);
 
-        $this->assertFalse($this->subject->canSendEmail());
+        self::assertFalse($this->subject->canSendEmail());
     }
 }

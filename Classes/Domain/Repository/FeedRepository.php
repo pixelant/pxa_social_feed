@@ -41,12 +41,11 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
  */
 class FeedRepository extends Repository
 {
-
     /**
      * @var array $defaultOrderings
      */
     protected $defaultOrderings = [
-        'postDate' => QueryInterface::ORDER_DESCENDING
+        'postDate' => QueryInterface::ORDER_DESCENDING,
     ];
 
     /**
@@ -82,7 +81,7 @@ class FeedRepository extends Repository
         $query->matching(
             $query->logicalAnd([
                 $query->logicalNot($query->in('uid', $storage)),
-                $query->equals('configuration', $configuration)
+                $query->equals('configuration', $configuration),
             ])
         );
 
@@ -129,7 +128,7 @@ class FeedRepository extends Repository
 
         $logicalAnd = [
             $query->equals('pid', $pid),
-            $query->equals('externalIdentifier', $externalIdentifier)
+            $query->equals('externalIdentifier', $externalIdentifier),
         ];
 
         $query->matching($query->logicalAnd($logicalAnd));

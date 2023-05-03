@@ -9,11 +9,11 @@ defined('TYPO3_MODE') or die();
         'PxaSocialFeed',
         'Showfeed',
         [
-            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax, listAjax'
+            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax, listAjax',
         ],
         // non-cacheable actions
         [
-            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax'
+            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax',
         ]
     );
 
@@ -25,7 +25,7 @@ defined('TYPO3_MODE') or die();
         'extension' => $_EXTKEY,
         'title' => $ll . 'task.import.name',
         'description' => $ll . 'task.import.description',
-        'additionalFields' => \Pixelant\PxaSocialFeed\Task\ImportTaskAdditionalFieldProvider::class
+        'additionalFields' => \Pixelant\PxaSocialFeed\Task\ImportTaskAdditionalFieldProvider::class,
     ];
 
     // hook for extension BE view

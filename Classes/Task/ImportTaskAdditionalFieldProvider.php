@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Task;
@@ -36,7 +37,6 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  ***************************************************************/
 class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
 {
-
     use AdditionalFieldProviderTrait;
 
     /**
@@ -78,21 +78,21 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
             'code' => SchedulerUtility::getAvailableConfigurationsSelectBox($taskInfo['pxasocialfeed_configs'] ?? []),
             'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.configs',
             'cshKey' => '',
-            'cshLabel' => ''
+            'cshLabel' => '',
         ];
 
         $additionalFields['pxasocialfeed_receiver_email'] = [
             'code' => $this->getInputField('pxasocialfeed_receiver_email', $taskInfo['pxasocialfeed_receiver_email']),
             'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.receiver_email',
             'cshKey' => '',
-            'cshLabel' => ''
+            'cshLabel' => '',
         ];
 
         $additionalFields['pxasocialfeed_sender_email'] = [
             'code' => $this->getInputField('pxasocialfeed_sender_email', $taskInfo['pxasocialfeed_sender_email']),
             'label' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:scheduler.sender_email',
             'cshKey' => '',
-            'cshLabel' => ''
+            'cshLabel' => '',
         ];
 
         return $additionalFields;
@@ -134,7 +134,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         $task->setConfigurations($submittedData['pxasocialfeed_configs'] ?? []);
         $task->setReceiverEmail($submittedData['pxasocialfeed_receiver_email']);
         $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
-        $task->setRunAllConfigurations((bool) ($submittedData['pxasocialfeed_run_all_configs'] ?? false));
+        $task->setRunAllConfigurations((bool)($submittedData['pxasocialfeed_run_all_configs'] ?? false));
     }
 
     /**

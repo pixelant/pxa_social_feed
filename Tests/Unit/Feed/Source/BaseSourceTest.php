@@ -7,14 +7,13 @@ use Pixelant\PxaSocialFeed\Feed\Source\BaseSource;
 
 /**
  * Class BaseSourceTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Feed\Source
  */
 class BaseSourceTest extends UnitTestCase
 {
     /**
      * @var BaseSource
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -36,7 +35,7 @@ class BaseSourceTest extends UnitTestCase
 
         $result = $this->subject->_call('addFieldsAsGetParametersToUrl', $url, $fields);
 
-        $this->assertEquals($url, $result);
+        self::assertEquals($url, $result);
     }
 
     /**
@@ -51,6 +50,6 @@ class BaseSourceTest extends UnitTestCase
 
         $result = $this->subject->_call('addFieldsAsGetParametersToUrl', $url, $fields);
 
-        $this->assertEquals($expect, $result);
+        self::assertEquals($expect, $result);
     }
 }

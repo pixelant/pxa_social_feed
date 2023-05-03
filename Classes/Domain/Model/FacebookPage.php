@@ -42,11 +42,11 @@ class FacebookPage
      */
     public function __construct(array $data)
     {
-        $this->accessToken = strval($data['access_token'] ?? '');
-        $this->category = strval($data['category'] ?? '');
+        $this->accessToken = (string)($data['access_token'] ?? '');
+        $this->category = (string)($data['category'] ?? '');
         $this->categoryList = is_array($data['category_list']) ? $data['category_list'] : [];
-        $this->name = strval($data['name'] ?? '');
-        $this->id = strval($data['id'] ?? '');
+        $this->name = (string)($data['name'] ?? '');
+        $this->id = (string)($data['id'] ?? '');
         $this->tasks = is_array($data['tasks']) ? $data['tasks'] : [];
     }
 

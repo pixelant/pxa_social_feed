@@ -73,8 +73,8 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
 
         $appSecretProof = AppSecretProof::create($this->clientSecret, $token->getToken());
 
-        return $this->getBaseGraphUrl().$this->graphApiVersion.'/me?fields='.implode(',', $fields)
-                        .'&access_token='.$token.'&appsecret_proof='.$appSecretProof;
+        return $this->getBaseGraphUrl() . $this->graphApiVersion . '/me?fields=' . implode(',', $fields)
+                        . '&access_token=' . $token . '&appsecret_proof=' . $appSecretProof;
     }
 
     /**
@@ -98,7 +98,7 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
 
         $response = $this->getParsedResponse($request);
 
-        if (false === is_array($response)) {
+        if (is_array($response) === false) {
             throw new \UnexpectedValueException(
                 'Invalid response received from Authorization Server. Expected JSON.'
             );
@@ -125,7 +125,7 @@ class Facebook extends \League\OAuth2\Client\Provider\Facebook
     {
         $appSecretProof = AppSecretProof::create($this->clientSecret, $token->getToken());
 
-        return $this->getBaseGraphUrl().$this->graphApiVersion.
-               "/{$userId}/accounts?access_token=".$token.'&appsecret_proof='.$appSecretProof;
+        return $this->getBaseGraphUrl() . $this->graphApiVersion .
+               "/{$userId}/accounts?access_token=" . $token . '&appsecret_proof=' . $appSecretProof;
     }
 }

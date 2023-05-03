@@ -10,19 +10,18 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class ParseMessageViewHelper
- * @package Pixelant\PxaSocialFeed\ViewHelpers
  */
 class ParseMessageViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 

@@ -36,7 +36,6 @@ abstract class AbstractValidator extends \TYPO3\CMS\Extbase\Validation\Validator
 {
     /**
      * @param AbstractEntity $object
-     * @return void
      */
     protected function trimObjectProperties($object)
     {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
@@ -13,7 +14,6 @@ use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
 
 /**
  * Class BaseUpdater
- * @package Pixelant\PxaSocialFeed\Feed\Update
  */
 abstract class BaseUpdater implements FeedUpdaterInterface
 {
@@ -22,14 +22,14 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     /**
      * @var FeedRepository
      */
-    protected $feedRepository = null;
+    protected $feedRepository;
 
     /**
      * Keep all processed feed items
      *
-     * @var ObjectStorage
+     * @var ObjectStorage<Feed>
      */
-    protected $feeds = null;
+    protected $feeds;
 
     /**
      * BaseUpdater constructor.

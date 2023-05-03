@@ -27,7 +27,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Validation\Validator;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 

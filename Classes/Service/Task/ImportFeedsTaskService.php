@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Service\Task;
@@ -22,7 +23,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
 
 /**
  * Class ImportFeedsTaskService
- * @package Pixelant\PxaSocialFeed\Service\Task
  */
 class ImportFeedsTaskService
 {
@@ -35,7 +35,7 @@ class ImportFeedsTaskService
     /**
      * @var NotificationService
      */
-    protected $notificationService = null;
+    protected $notificationService;
 
     /**
      * @var PersistenceManager
@@ -192,7 +192,6 @@ class ImportFeedsTaskService
      * Disable a configuration, if feature enabled
      *
      * @param Configuration $configuration
-     * @return void
      */
     protected function disableConfiguration(Configuration $configuration): void
     {

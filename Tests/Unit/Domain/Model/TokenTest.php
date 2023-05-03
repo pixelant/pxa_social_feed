@@ -26,7 +26,6 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Facebook\Authentication\AccessTokenMetadata;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -36,14 +35,13 @@ use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class TokenTest extends UnitTestCase
 {
     /**
      * @var Token
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -60,7 +58,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForTypeForPid()
     {
-        $this->assertEquals(0, $this->subject->getPid());
+        self::assertEquals(0, $this->subject->getPid());
     }
 
     /**
@@ -72,7 +70,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setPid($pid);
 
-        $this->assertEquals($pid, $this->subject->getPid());
+        self::assertEquals($pid, $this->subject->getPid());
     }
 
     /**
@@ -80,7 +78,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForType()
     {
-        $this->assertEquals(0, $this->subject->getType());
+        self::assertEquals(0, $this->subject->getType());
     }
 
     /**
@@ -92,7 +90,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setType($value);
 
-        $this->assertEquals($value, $this->subject->getType());
+        self::assertEquals($value, $this->subject->getType());
     }
 
     /**
@@ -100,7 +98,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForAppId()
     {
-        $this->assertEquals('', $this->subject->getAppId());
+        self::assertEquals('', $this->subject->getAppId());
     }
 
     /**
@@ -112,7 +110,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setAppId($value);
 
-        $this->assertEquals($value, $this->subject->getAppId());
+        self::assertEquals($value, $this->subject->getAppId());
     }
 
     /**
@@ -120,7 +118,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForAppSecret()
     {
-        $this->assertEquals('', $this->subject->getAppSecret());
+        self::assertEquals('', $this->subject->getAppSecret());
     }
 
     /**
@@ -132,7 +130,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setAppSecret($value);
 
-        $this->assertEquals($value, $this->subject->getAppSecret());
+        self::assertEquals($value, $this->subject->getAppSecret());
     }
 
     /**
@@ -140,7 +138,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForAccessToken()
     {
-        $this->assertEquals('', $this->subject->getAccessToken());
+        self::assertEquals('', $this->subject->getAccessToken());
     }
 
     /**
@@ -152,7 +150,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setAccessToken($value);
 
-        $this->assertEquals($value, $this->subject->getAccessToken());
+        self::assertEquals($value, $this->subject->getAccessToken());
     }
 
     /**
@@ -160,7 +158,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForApiKey()
     {
-        $this->assertEquals('', $this->subject->getApiKey());
+        self::assertEquals('', $this->subject->getApiKey());
     }
 
     /**
@@ -172,7 +170,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setApiKey($value);
 
-        $this->assertEquals($value, $this->subject->getApiKey());
+        self::assertEquals($value, $this->subject->getApiKey());
     }
 
     /**
@@ -180,7 +178,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForApiSecretKey()
     {
-        $this->assertEquals('', $this->subject->getApiSecretKey());
+        self::assertEquals('', $this->subject->getApiSecretKey());
     }
 
     /**
@@ -192,7 +190,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setApiSecretKey($value);
 
-        $this->assertEquals($value, $this->subject->getApiSecretKey());
+        self::assertEquals($value, $this->subject->getApiSecretKey());
     }
 
     /**
@@ -200,7 +198,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForAccessTokenSecret()
     {
-        $this->assertEquals('', $this->subject->getAccessTokenSecret());
+        self::assertEquals('', $this->subject->getAccessTokenSecret());
     }
 
     /**
@@ -212,7 +210,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setAccessTokenSecret($value);
 
-        $this->assertEquals($value, $this->subject->getAccessTokenSecret());
+        self::assertEquals($value, $this->subject->getAccessTokenSecret());
     }
 
     /**
@@ -222,7 +220,7 @@ class TokenTest extends UnitTestCase
     {
         $this->subject->setAccessToken('');
 
-        $this->assertFalse($this->subject->isValidFacebookAccessToken());
+        self::assertFalse($this->subject->isValidFacebookAccessToken());
     }
 
     /**
@@ -235,11 +233,11 @@ class TokenTest extends UnitTestCase
 
         $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadataExpirationDate']);
         $mockedToken
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('getFacebookAccessTokenMetadataExpirationDate')
             ->willReturn($endDate);
 
-        $this->assertEquals($expect, $mockedToken->getFacebookAccessTokenValidPeriod());
+        self::assertEquals($expect, $mockedToken->getFacebookAccessTokenValidPeriod());
     }
 
     /**
@@ -249,7 +247,7 @@ class TokenTest extends UnitTestCase
     {
         $this->subject->setType(Token::FACEBOOK);
 
-        $this->assertTrue($this->subject->isFacebookType());
+        self::assertTrue($this->subject->isFacebookType());
     }
 
     /**
@@ -259,7 +257,7 @@ class TokenTest extends UnitTestCase
     {
         $this->subject->setType(Token::INSTAGRAM);
 
-        $this->assertTrue($this->subject->isInstagramType());
+        self::assertTrue($this->subject->isInstagramType());
     }
 
     /**
@@ -269,7 +267,7 @@ class TokenTest extends UnitTestCase
     {
         $this->subject->setType(Token::TWITTER);
 
-        $this->assertTrue($this->subject->isTwitterType());
+        self::assertTrue($this->subject->isTwitterType());
     }
 
     /**
@@ -279,7 +277,7 @@ class TokenTest extends UnitTestCase
     {
         $this->subject->setType(Token::YOUTUBE);
 
-        $this->assertTrue($this->subject->isYoutubeType());
+        self::assertTrue($this->subject->isYoutubeType());
     }
 
     /**
@@ -287,7 +285,7 @@ class TokenTest extends UnitTestCase
      */
     public function initialValueForName()
     {
-        $this->assertEquals('', $this->subject->getName());
+        self::assertEquals('', $this->subject->getName());
     }
 
     /**
@@ -299,7 +297,7 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setName($name);
 
-        $this->assertEquals($name, $this->subject->getName());
+        self::assertEquals($name, $this->subject->getName());
     }
 
     /**
@@ -307,7 +305,7 @@ class TokenTest extends UnitTestCase
      */
     public function initValueOfBeGroup()
     {
-        $this->assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
+        self::assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
     }
 
     /**
@@ -319,6 +317,6 @@ class TokenTest extends UnitTestCase
 
         $this->subject->setBeGroup($beGroup);
 
-        $this->assertSame($beGroup, $this->subject->getBeGroup());
+        self::assertSame($beGroup, $this->subject->getBeGroup());
     }
 }

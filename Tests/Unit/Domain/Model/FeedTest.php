@@ -35,14 +35,13 @@ use Pixelant\PxaSocialFeed\Domain\Model\Feed;
  *
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- *
  */
 class FeedTest extends UnitTestCase
 {
     /**
      * @var \Pixelant\PxaSocialFeed\Domain\Model\Feed
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -59,7 +58,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfPid()
     {
-        $this->assertEquals(0, $this->subject->getPid());
+        self::assertEquals(0, $this->subject->getPid());
     }
 
     /**
@@ -70,7 +69,7 @@ class FeedTest extends UnitTestCase
         $value = 123;
 
         $this->subject->setPid($value);
-        $this->assertEquals($value, $this->subject->getPid());
+        self::assertEquals($value, $this->subject->getPid());
     }
 
     /**
@@ -78,7 +77,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfUpdateDate()
     {
-        $this->assertNull($this->subject->getUpdateDate());
+        self::assertNull($this->subject->getUpdateDate());
     }
 
     /**
@@ -90,7 +89,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setUpdateDate($date);
 
-        $this->assertSame($date, $this->subject->getUpdateDate());
+        self::assertSame($date, $this->subject->getUpdateDate());
     }
 
     /**
@@ -98,7 +97,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfExternalIdentifier()
     {
-        $this->assertEmpty($this->subject->getExternalIdentifier());
+        self::assertEmpty($this->subject->getExternalIdentifier());
     }
 
     /**
@@ -110,7 +109,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setExternalIdentifier($value);
 
-        $this->assertEquals($value, $this->subject->getExternalIdentifier());
+        self::assertEquals($value, $this->subject->getExternalIdentifier());
     }
 
     /**
@@ -118,7 +117,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfPostDate()
     {
-        $this->assertNull($this->subject->getPostDate());
+        self::assertNull($this->subject->getPostDate());
     }
 
     /**
@@ -130,7 +129,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setPostDate($date);
 
-        $this->assertSame($date, $this->subject->getPostDate());
+        self::assertSame($date, $this->subject->getPostDate());
     }
 
     /**
@@ -138,7 +137,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfPostUrl()
     {
-        $this->assertEmpty($this->subject->getPostUrl());
+        self::assertEmpty($this->subject->getPostUrl());
     }
 
     /**
@@ -150,7 +149,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setPostUrl($value);
 
-        $this->assertEquals($value, $this->subject->getPostUrl());
+        self::assertEquals($value, $this->subject->getPostUrl());
     }
 
     /**
@@ -158,7 +157,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfMessage()
     {
-        $this->assertEmpty($this->subject->getMessage());
+        self::assertEmpty($this->subject->getMessage());
     }
 
     /**
@@ -170,7 +169,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setMessage($value);
 
-        $this->assertEquals($value, $this->subject->getMessage());
+        self::assertEquals($value, $this->subject->getMessage());
     }
 
     /**
@@ -178,7 +177,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfImage()
     {
-        $this->assertEmpty($this->subject->getImage());
+        self::assertEmpty($this->subject->getImage());
     }
 
     /**
@@ -190,7 +189,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setImage($value);
 
-        $this->assertEquals($value, $this->subject->getImage());
+        self::assertEquals($value, $this->subject->getImage());
     }
 
     /**
@@ -198,7 +197,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfLikes()
     {
-        $this->assertEquals(0, $this->subject->getLikes());
+        self::assertEquals(0, $this->subject->getLikes());
     }
 
     /**
@@ -210,7 +209,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setLikes($value);
 
-        $this->assertEquals($value, $this->subject->getLikes());
+        self::assertEquals($value, $this->subject->getLikes());
     }
 
     /**
@@ -218,7 +217,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfTitle()
     {
-        $this->assertEmpty($this->subject->getTitle());
+        self::assertEmpty($this->subject->getTitle());
     }
 
     /**
@@ -230,7 +229,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setTitle($value);
 
-        $this->assertEquals($value, $this->subject->getTitle());
+        self::assertEquals($value, $this->subject->getTitle());
     }
 
     /**
@@ -238,7 +237,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfType()
     {
-        $this->assertEquals(0, $this->subject->getType());
+        self::assertEquals(0, $this->subject->getType());
     }
 
     /**
@@ -250,7 +249,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setType($value);
 
-        $this->assertEquals($value, $this->subject->getType());
+        self::assertEquals($value, $this->subject->getType());
     }
 
     /**
@@ -258,7 +257,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfConfiguration()
     {
-        $this->assertNull($this->subject->getConfiguration());
+        self::assertNull($this->subject->getConfiguration());
     }
 
     /**
@@ -270,7 +269,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setConfiguration($fixture);
 
-        $this->assertSame($fixture, $this->subject->getConfiguration());
+        self::assertSame($fixture, $this->subject->getConfiguration());
     }
 
     /**
@@ -278,7 +277,7 @@ class FeedTest extends UnitTestCase
      */
     public function initialValueOfMediaType()
     {
-        $this->assertEquals(Feed::IMAGE, $this->subject->getMediaType());
+        self::assertEquals(Feed::IMAGE, $this->subject->getMediaType());
     }
 
     /**
@@ -290,7 +289,7 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setMediaType($value);
 
-        $this->assertEquals($value, $this->subject->getMediaType());
+        self::assertEquals($value, $this->subject->getMediaType());
     }
 
     /**
@@ -302,6 +301,6 @@ class FeedTest extends UnitTestCase
 
         $this->subject->setMessage($value);
 
-        $this->assertEquals($value, $this->subject->getDecodedMessage());
+        self::assertEquals($value, $this->subject->getDecodedMessage());
     }
 }

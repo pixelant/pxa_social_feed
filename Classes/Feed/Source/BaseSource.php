@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
@@ -12,7 +13,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class BaseSource
- * @package Pixelant\PxaSocialFeed\Feed\Source
  */
 abstract class BaseSource implements FeedSourceInterface
 {
@@ -21,7 +21,7 @@ abstract class BaseSource implements FeedSourceInterface
     /**
      * @var Configuration
      */
-    protected $configuration = null;
+    protected $configuration;
 
     /**
      * @param Configuration $configuration
@@ -77,11 +77,10 @@ abstract class BaseSource implements FeedSourceInterface
 
         if ($response->getStatusCode() === 200) {
             return $response;
-        } else {
-            $body = (string)$response->getBody();
-            // @codingStandardsIgnoreStart
-            throw new BadResponseException("Api request return status '{$response->getStatusCode()}' while trying to request '$url' with message '$body'", 1562910160643);
-            // @codingStandardsIgnoreEnd
         }
+        $body = (string)$response->getBody();
+        // @codingStandardsIgnoreStart
+        throw new BadResponseException("Api request return status '{$response->getStatusCode()}' while trying to request '$url' with message '$body'", 1562910160643);
+        // @codingStandardsIgnoreEnd
     }
 }

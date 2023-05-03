@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Controller;
@@ -58,26 +59,25 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class AdministrationController extends ActionController
 {
-
     /**
      * @var ConfigurationRepository
      */
-    protected $configurationRepository = null;
+    protected $configurationRepository;
 
     /**
      * @var TokenRepository
      */
-    protected $tokenRepository = null;
+    protected $tokenRepository;
 
     /**
      * @var FeedRepository
      */
-    protected $feedRepository = null;
+    protected $feedRepository;
 
     /**
      * @var BackendUserGroupRepository
      */
-    protected $backendUserGroupRepository = null;
+    protected $backendUserGroupRepository;
 
     /**
      * BackendTemplateContainer
@@ -129,7 +129,6 @@ class AdministrationController extends ActionController
      * Set up the doc header properly here
      *
      * @param ViewInterface $view
-     * @return void
      */
     protected function initializeView(ViewInterface $view): void
     {
@@ -150,7 +149,7 @@ class AdministrationController extends ActionController
                         GeneralUtility::getFileAbsFileName(
                             'EXT:pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
                         )
-                    )
+                    ),
                 ],
                 'shim' => [
                     'deps' => ['jquery'],
@@ -169,7 +168,6 @@ class AdministrationController extends ActionController
      * Index action to show all configurations and tokens
      *
      * @param bool $activeTokenTab
-     * @return void
      */
     public function indexAction($activeTokenTab = false): void
     {
@@ -241,7 +239,6 @@ class AdministrationController extends ActionController
      * Delete token
      *
      * @param Token $token
-     * @return void
      */
     public function deleteTokenAction(Token $token): void
     {
@@ -270,7 +267,6 @@ class AdministrationController extends ActionController
      * Edit configuration
      *
      * @param Configuration $configuration
-     * @return void
      */
     public function editConfigurationAction(Configuration $configuration = null): void
     {
@@ -285,14 +281,13 @@ class AdministrationController extends ActionController
      *
      * @param Configuration $configuration
      * @Extbase\Validate("\Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator", param="configuration")
-     * @return void
      */
     public function updateConfigurationAction(Configuration $configuration): void
     {
         $isNew = $configuration->getUid() === null;
 
         // If storage was updated and it's not new configuration, need to migrate existing feed records
-        if (false == $isNew && $configuration->_isDirty('storage')) {
+        if ($isNew == false && $configuration->_isDirty('storage')) {
             $this->migrateFeedsToNewStorage($configuration, $configuration->getStorage());
         }
 
@@ -313,7 +308,6 @@ class AdministrationController extends ActionController
      * Delete configuration and feed items
      *
      * @param Configuration $configuration
-     * @return void
      */
     public function deleteConfigurationAction(Configuration $configuration): void
     {
@@ -399,8 +393,6 @@ class AdministrationController extends ActionController
 
     /**
      * create BE menu
-     *
-     * @return void
      */
     protected function createMenu(): void
     {
@@ -477,7 +469,7 @@ class AdministrationController extends ActionController
         $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
 
         return json_encode([
-            'browserUrl' => (string)$uriBuilder->buildUriFromRoute('wizard_element_browser')
+            'browserUrl' => (string)$uriBuilder->buildUriFromRoute('wizard_element_browser'),
         ]);
     }
 

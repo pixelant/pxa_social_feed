@@ -1,4 +1,5 @@
 <?php
+
 defined('TYPO3_MODE') or die();
 
 (function () {
@@ -14,12 +15,12 @@ defined('TYPO3_MODE') or die();
             [
                 \Pixelant\PxaSocialFeed\Controller\AdministrationController::class =>
                     'index, editToken, updateToken, deleteToken, editConfiguration, ' .
-                    'updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration'
+                    'updateConfiguration, deleteConfiguration, resetAccessToken, runConfiguration',
             ],
             [
                 'access' => 'user,group',
                 'icon' => 'EXT:pxa_social_feed/Resources/Public/Icons/BE/feed.svg',
-                'labels' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf'
+                'labels' => 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf',
             ]
         );
     }

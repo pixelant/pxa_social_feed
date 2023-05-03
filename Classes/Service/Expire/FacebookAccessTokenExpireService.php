@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Service\Expire;
@@ -7,14 +8,13 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
 
 /**
  * Class FacebookAccessTokenExpireService
- * @package Pixelant\PxaSocialFeed\Service\Expire
  */
 class FacebookAccessTokenExpireService
 {
     /**
      * @var Token
      */
-    protected $token = null;
+    protected $token;
 
     /**
      * @param Token $token

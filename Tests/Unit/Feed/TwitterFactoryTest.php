@@ -10,14 +10,13 @@ use Pixelant\PxaSocialFeed\Feed\Update\TwitterFeedUpdater;
 
 /**
  * Class FacebookFeedFactoryTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Feed
  */
 class TwitterFactoryTest extends UnitTestCase
 {
     /**
      * @var TwitterFactory
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {

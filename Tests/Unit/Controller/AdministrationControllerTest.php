@@ -9,14 +9,13 @@ use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * Class AdministrationControllerTest
- * @package Pixelant\PxaSocialFeed\Tests\Unit\Controller
  */
 class AdministrationControllerTest extends UnitTestCase
 {
     /**
      * @var AdministrationController
      */
-    protected $subject = null;
+    protected $subject;
 
     protected function setUp(): void
     {
@@ -41,12 +40,12 @@ class AdministrationControllerTest extends UnitTestCase
     public function findAllByRepositoryUseFindAllIfRestrictionIsDisable()
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxa_social_feed'] = [
-            'editorRestriction' => false
+            'editorRestriction' => false,
         ];
 
         $mockedRepository = $this->createPartialMock(AbstractBackendRepository::class, ['findAllBackendGroupRestriction', 'findAll']);
         $mockedRepository
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('findAll')
             ->willReturn($this->createMock(QueryResultInterface::class));
 
@@ -59,12 +58,12 @@ class AdministrationControllerTest extends UnitTestCase
     public function findAllByRepositoryUseFindAllWithRestricitonIfRestrictionIsEnabled()
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxa_social_feed'] = [
-            'editorRestriction' => true
+            'editorRestriction' => true,
         ];
 
         $mockedRepository = $this->createPartialMock(AbstractBackendRepository::class, ['findAllBackendGroupRestriction', 'findAll']);
         $mockedRepository
-            ->expects($this->once())
+            ->expects(self::once())
             ->method('findAllBackendGroupRestriction')
             ->willReturn($this->createMock(QueryResultInterface::class));
 
