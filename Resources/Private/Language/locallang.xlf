@@ -84,6 +84,9 @@
             <trans-unit id="module.max_items">
                 <source>Maximum items</source>
             </trans-unit>
+            <trans-unit id="module.perform_clean_up">
+                <source>Cleanup after import</source>
+            </trans-unit>
             <trans-unit id="module.storage">
                 <source>Storage</source>
             </trans-unit>
