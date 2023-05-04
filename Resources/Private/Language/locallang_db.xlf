@@ -38,6 +38,18 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.update_date">
                 <source>Update date</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.1">
+                <source>Facebook</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.2">
+                <source>Instagram</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.3">
+                <source>Twitter</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.type.4">
+                <source>Youtube</source>
+            </trans-unit>
             <!--Table tx_pxasocialfeed_domain_model_feed:END-->
 
             <!--Table tx_pxasocialfeed_domain_model_token:START-->
@@ -89,7 +101,7 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.4">
                 <source>Youtube API</source>
             </trans-unit>
-            <!--Table tx_pxasocialfeed_domain_model_configuration:END-->
+            <!--Table tx_pxasocialfeed_domain_model_token:END-->
 
             <!--Table tx_pxasocialfeed_domain_model_configuration:START-->
             <trans-unit id="tx_pxasocialfeed_domain_model_config">
