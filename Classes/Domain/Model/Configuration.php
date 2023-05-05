@@ -54,6 +54,13 @@ class Configuration extends AbstractEntity
     protected $hidden = false;
 
     /**
+     * clear
+     *
+     * @var bool
+     */
+    protected $performCleanUp = true;
+
+    /**
      * name
      *
      * @var string
@@ -242,4 +249,20 @@ class Configuration extends AbstractEntity
 
         return is_array($raw) ? $raw['title'] : '';
     }
+
+    /**
+     * @param bool $performCleanUp
+     */
+    public function setPerformCleanUp(bool $performCleanUp): void
+    {
+        $this->performCleanUp = $performCleanUp;
+    }
+
+    /**
+    * @return bool
+    */
+   public function getPerformCleanUp(): bool
+   {
+       return $this->performCleanUp;
+   }
 }

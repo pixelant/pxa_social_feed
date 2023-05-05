@@ -55,6 +55,10 @@
                             <td><f:form.textfield property="maxItems" class="form-control" value="{f:if(condition: configuration, else: '10')}"/></td>
                         </tr>
                         <tr>
+                          <td><f:translate key="module.perform_clean_up" /></td>
+                          <td><f:form.checkbox property="performCleanUp" value="1" class="form-check-input" /></td>
+                        </tr>
+                        <tr>
                             <td><f:translate key="module.storage"/></td>
                             <td>
                                 <f:render partial="Backend/Typo3WinBrowserEditor" arguments="{configuration: configuration}"/>

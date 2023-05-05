@@ -125,6 +125,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.storage">
                 <source>Storage</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_config.perform_clean_up">
+                <source>Perform a cleanup after import finished</source>
+            </trans-unit>
             <!--Table tx_pxasocialfeed_domain_model_config:END-->
         </body>
     </file>

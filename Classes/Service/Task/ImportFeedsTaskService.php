@@ -120,7 +120,10 @@ class ImportFeedsTaskService
         $updater->persist();
 
         // Remove items from feed that are not valid anymore
-        $updater->cleanUp($configuration);
+        if ($configuration->getPerformCleanUp()) {
+            $updater->cleanUp($configuration);
+        }
+
         // Save changes
         $updater->persist();
     }

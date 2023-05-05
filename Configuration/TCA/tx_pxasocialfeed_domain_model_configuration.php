@@ -71,6 +71,13 @@ return (function () {
                     'eval' => 'trim,required',
                 ],
             ],
+            'perform_clean_up' => [
+                'exclude' => 1,
+                'label' => $ll . '.perform_clean_up',
+                'config' => [
+                    'type' => 'check',
+                ],
+            ],
             'max_items' => [
                 'exclude' => 1,
                 'label' => $ll . '.max_items',

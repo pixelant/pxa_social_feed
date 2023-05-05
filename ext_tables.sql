@@ -73,22 +73,24 @@ CREATE TABLE tx_pxasocialfeed_domain_model_token
 CREATE TABLE tx_pxasocialfeed_domain_model_configuration
 (
 
-    uid       int(11)                         NOT NULL auto_increment,
-    pid       int(11)             DEFAULT '0' NOT NULL,
+    uid                   int(11)                         NOT NULL auto_increment,
+    pid                   int(11)             DEFAULT '0' NOT NULL,
 
-    name      varchar(255)        DEFAULT ''  NOT NULL,
-    image_size varchar(255)       DEFAULT 'normal_images'  NOT NULL,
-    social_id varchar(255)        DEFAULT ''  NOT NULL,
-    token     int(11) unsigned    DEFAULT '0',
-    max_items int(11) unsigned    DEFAULT '0',
-    storage   int(11)             DEFAULT '0' NOT NULL,
-    be_group  varchar(255)        DEFAULT '0' NOT NULL,
+    name                  varchar(255)        DEFAULT ''  NOT NULL,
+    image_size            varchar(255)        DEFAULT 'normal_images'  NOT NULL,
+    social_id             varchar(255)        DEFAULT ''  NOT NULL,
+    token                 int(11) unsigned    DEFAULT '0',
+    max_items             int(11) unsigned    DEFAULT '0',
+    storage               int(11)             DEFAULT '0' NOT NULL,
+    be_group              varchar(255)        DEFAULT '0' NOT NULL,
+    perform_clean_up      tinyint(4)          DEFAULT '1' NOT NULL,
 
-    tstamp    int(11) unsigned    DEFAULT '0' NOT NULL,
-    crdate    int(11) unsigned    DEFAULT '0' NOT NULL,
-    cruser_id int(11) unsigned    DEFAULT '0' NOT NULL,
-    deleted   tinyint(4) unsigned DEFAULT '0' NOT NULL,
-    hidden    tinyint(4) unsigned DEFAULT '0' NOT NULL,
+
+    tstamp                int(11) unsigned    DEFAULT '0' NOT NULL,
+    crdate                int(11) unsigned    DEFAULT '0' NOT NULL,
+    cruser_id             int(11) unsigned    DEFAULT '0' NOT NULL,
+    deleted               tinyint(4) unsigned DEFAULT '0' NOT NULL,
+    hidden                tinyint(4) unsigned DEFAULT '0' NOT NULL,
 
     PRIMARY KEY (uid),
     KEY parent (pid)
