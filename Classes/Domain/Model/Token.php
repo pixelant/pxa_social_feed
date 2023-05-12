@@ -511,7 +511,6 @@ class Token extends AbstractEntity
                 ]
             );
         }
-
         return $this->fb;
     }
 
