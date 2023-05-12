@@ -82,9 +82,10 @@ class TwitterFeedUpdater extends BaseUpdater
         }
 
         // Media
-        $image = $rawData['entities']['media'][0]['media_url_https'] ?? '';
-        if ($feedItem->getImage() != $image) {
-            $feedItem->setImage($image);
+        $url = $rawData['entities']['media'][0]['media_url_https'] ?? '';
+        $imageRef = $this->storeImg($url, $feedItem);
+        if ($imageRef  != null) {
+            $feedItem->addFalMedia($imageRef);
         }
 
         $likes = (int)($rawData['retweeted_status']['favorite_count'] ?? $rawData['favorite_count'] ?? 0);

@@ -34,7 +34,7 @@ class FacebookFeedUpdater extends BaseUpdater
                     $feedItem = $this->createFeedItem($rawItem, $source->getConfiguration());
                 }
 
-                $this->updateFeedItem($feedItem, $rawItem, $source->getConfiguration());
+                $this->updateFeedItem($feedItem, $rawItem);
             }
         }
     }
@@ -46,7 +46,7 @@ class FacebookFeedUpdater extends BaseUpdater
      * @param array $rawData
      * @param Configuration $configuration
      */
-    protected function updateFeedItem(Feed $feedItem, array $rawData, Configuration $configuration): void
+    protected function updateFeedItem(Feed $feedItem, array $rawData): void
     {
         $updated = strtotime($rawData['updated_time']);
         $feedUpdated = $feedItem->getUpdateDate() ? $feedItem->getUpdateDate()->getTimestamp() : 0;
@@ -59,7 +59,7 @@ class FacebookFeedUpdater extends BaseUpdater
         $feedItem->setLikes((int)($rawData['reactions']['summary']['total_count']));
 
         // Call hook
-        $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $configuration]);
+        $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $feedItem->getConfiguration()]);
 
         $this->addOrUpdateFeedItem($feedItem);
     }
@@ -76,11 +76,17 @@ class FacebookFeedUpdater extends BaseUpdater
             $feed->setMessage($this->encodeMessage($rawData['message']));
         }
 
+        $imageFileRef = null;
         if (isset($rawData['attachments']['data'][0]['media']['image']['src'])) {
-            $feed->setImage($rawData['attachments']['data'][0]['media']['image']['src']);
+            $imageFileRef = $this->storeImg($rawData['attachments']['data'][0]['media']['image']['src'], $feed);
         } elseif (isset($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'])) {
-            $feed->setImage($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src']);
+            $imageFileRef = $this->storeImg($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'], $feed);
         }
+
+        if ($imageFileRef != null) {
+            $feed->addFalMedia($imageFileRef);
+        }
+
         if (isset($rawData['attachments']['data'][0]['title'])) {
             $feed->setTitle($rawData['attachments']['data'][0]['title']);
         }

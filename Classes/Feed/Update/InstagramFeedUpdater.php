@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
-use GuzzleHttp\Client;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
@@ -62,12 +61,10 @@ class InstagramFeedUpdater extends BaseUpdater
             ? ($data['thumbnail_url'] ?: $data['media_url'] ?: '') // Thumbnail or Media url for video
             : ($data['media_url'] ?: ''); // Media or empty string
 
-        //store 2 images by URL here (!) and add 2 paths
-
-        $imagePath = $this->storeImg($media);
-
-        $feedItem->setImage($imagePath['normal_image']);
-        $feedItem->setSmallImage($imagePath['small_image']);
+        $imageFileRef = $this->storeImg($media, $feedItem);
+        if ($imageFileRef  != null) {
+            $feedItem->addFalMedia($imageFileRef);
+        }
 
         // Set media type
         $feedItem->setMediaType(
@@ -91,50 +88,6 @@ class InstagramFeedUpdater extends BaseUpdater
 
         // Set likes
         $feedItem->setLikes((int)$data['like_count']);
-    }
-
-    protected function storeImg($url)
-    {
-        $resourceFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
-            \TYPO3\CMS\Core\Resource\ResourceFactory::class
-        );
-        $storage= $resourceFactory->getDefaultStorage();
-
-        $downloadFolderNormalIdentifier = 'socialmedia/instacontent/normal';
-        if (!$storage->hasFolder($downloadFolderNormalIdentifier)) {
-            $downloadFolderNormal = $storage->createFolder($downloadFolderNormalIdentifier);
-        } else {
-            $downloadFolderNormal = $storage->getFolder($downloadFolderNormalIdentifier);
-        }
-
-        $downloadFolderSmallIdentifier = 'socialmedia/instacontent/small';
-        if (!$storage->hasFolder($downloadFolderSmallIdentifier)) {
-            $downloadFolderSmall = $storage->createFolder($downloadFolderSmallIdentifier);
-        } else {
-            $downloadFolderSmall = $storage->getFolder($downloadFolderSmallIdentifier);
-        }
-
-        $filename = explode('?', basename($url), 2);
-        $normal_f_name = $filename[0];
-        $small_f_name = 'small_' . $filename[0];
-
-        $file_normal = $downloadFolderNormal->createFile($filename[0]);
-
-        $file_small = $downloadFolderSmall->createFile('small_' . $filename[0]);
-
-        $httpClient = GeneralUtility::makeInstance(Client::class);
-        $response = $httpClient->get($url);
-        $file_normal->setContents($response->getBody()->getContents());
-
-        // need to minify the image here, dunno how
-        $file_small->setContents($response->getBody()->getContents());
-
-        $conf = $storage->getConfiguration();
-
-        return [
-            'normal_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/normal/' . $normal_f_name,
-            'small_image' => '/' . $conf['basePath'] . 'socialmedia/instacontent/small/' . $small_f_name,
-        ];
     }
 
     /**
