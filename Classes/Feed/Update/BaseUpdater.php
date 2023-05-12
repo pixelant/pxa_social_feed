@@ -8,20 +8,20 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception as DriverException;
 use Exception;
 use GuzzleHttp\Client;
-use InvalidArgumentException;
 use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\FileReference;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
-use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
+use RuntimeException;
 use TYPO3\CMS\Core\Resource\Exception\ExistingTargetFolderException;
-use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderWritePermissionsException;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Exception\IllegalFileExtensionException;
-use RuntimeException;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientFileWritePermissionsException;
+use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderAccessPermissionsException;
+use TYPO3\CMS\Core\Resource\Exception\InsufficientFolderWritePermissionsException;
 use TYPO3\CMS\Core\Resource\Exception\InsufficientUserPermissionsException;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\MimeTypeDetector;
@@ -29,8 +29,8 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\PersistenceManagerInterface;
-use TYPO3\CMS\Extbase\Reflection\Exception\UnknownClassException;
 use TYPO3\CMS\Extbase\Reflection\ClassSchema\Exception\NoSuchPropertyException;
+use TYPO3\CMS\Extbase\Reflection\Exception\UnknownClassException;
 
 /**
  * Class BaseUpdater
@@ -124,23 +124,22 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     }
 
     /**
-     * 
-     * @param string $url 
-     * @param Feed $feed 
-     * @return null|FileReference 
-     * @throws UnknownClassException 
-     * @throws NoSuchPropertyException 
-     * @throws InvalidArgumentException 
-     * @throws InsufficientFolderAccessPermissionsException 
-     * @throws ExistingTargetFolderException 
-     * @throws InsufficientFolderWritePermissionsException 
-     * @throws Exception 
-     * @throws FileDoesNotExistException 
-     * @throws GuzzleException 
-     * @throws IllegalFileExtensionException 
-     * @throws RuntimeException 
-     * @throws InsufficientFileWritePermissionsException 
-     * @throws InsufficientUserPermissionsException 
+     * @param string $url
+     * @param Feed $feed
+     * @return FileReference|null
+     * @throws UnknownClassException
+     * @throws NoSuchPropertyException
+     * @throws InvalidArgumentException
+     * @throws InsufficientFolderAccessPermissionsException
+     * @throws ExistingTargetFolderException
+     * @throws InsufficientFolderWritePermissionsException
+     * @throws Exception
+     * @throws FileDoesNotExistException
+     * @throws GuzzleException
+     * @throws IllegalFileExtensionException
+     * @throws RuntimeException
+     * @throws InsufficientFileWritePermissionsException
+     * @throws InsufficientUserPermissionsException
      */
     protected function storeImg(string $url, Feed $feed): ?FileReference
     {
@@ -159,23 +158,22 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     }
 
     /**
-     * 
-     * @param string $url 
-     * @param Configuration $configuration 
-     * @return null|File 
-     * @throws InvalidArgumentException 
-     * @throws DBALException 
-     * @throws DriverException 
-     * @throws InsufficientFolderAccessPermissionsException 
-     * @throws ExistingTargetFolderException 
-     * @throws InsufficientFolderWritePermissionsException 
-     * @throws Exception 
-     * @throws FileDoesNotExistException 
-     * @throws GuzzleException 
-     * @throws IllegalFileExtensionException 
-     * @throws RuntimeException 
-     * @throws InsufficientFileWritePermissionsException 
-     * @throws InsufficientUserPermissionsException 
+     * @param string $url
+     * @param Configuration $configuration
+     * @return File|null
+     * @throws InvalidArgumentException
+     * @throws DBALException
+     * @throws DriverException
+     * @throws InsufficientFolderAccessPermissionsException
+     * @throws ExistingTargetFolderException
+     * @throws InsufficientFolderWritePermissionsException
+     * @throws Exception
+     * @throws FileDoesNotExistException
+     * @throws GuzzleException
+     * @throws IllegalFileExtensionException
+     * @throws RuntimeException
+     * @throws InsufficientFileWritePermissionsException
+     * @throws InsufficientUserPermissionsException
      */
     protected function downloadImage(string $url, Configuration $configuration): ?File
     {
