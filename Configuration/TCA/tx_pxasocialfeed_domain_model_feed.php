@@ -33,18 +33,18 @@ return (function () {
         ],
         // @codingStandardsIgnoreStart
         'interface' => [
-            'showRecordFieldList' => 'hidden, post_date, post_url, message, image, media_type, likes, title, configuration, update_date, external_identifier, type',
+            'showRecordFieldList' => 'hidden, post_date, post_url, message, media_type, likes, title, configuration, update_date, external_identifier, type',
         ],
         'types' => [
-            '0' => ['showitem' => '--palette--;;core, --palette--;;main'],
-            '1' => ['showitem' => '--palette--;;core, --palette--;;main'],
-            '2' => ['showitem' => '--palette--;;core, --palette--;;main'],
-            '3' => ['showitem' => '--palette--;;core, --palette--;;main'],
-            '4' => ['showitem' => '--palette--;;core, --palette--;;main'],
+            '0' => ['showitem' => '--palette--;;core, --palette--;;main,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media, fal_media,fal_related_files'],
+            '1' => ['showitem' => '--palette--;;core, --palette--;;main,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media, fal_media,fal_related_files'],
+            '2' => ['showitem' => '--palette--;;core, --palette--;;main,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media, fal_media,fal_related_files'],
+            '3' => ['showitem' => '--palette--;;core, --palette--;;main,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media, fal_media,fal_related_files'],
+            '4' => ['showitem' => '--palette--;;core, --palette--;;main,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media, fal_media,fal_related_files'],
         ],
         'palettes' => [
             'core' => ['showitem' => 'hidden'],
-            'main' => ['showitem' => 'post_date, --linebreak--, title, --linebreak--, post_url, --linebreak--, message, --linebreak--, image, --linebreak--, likes, --linebreak--, configuration'],
+            'main' => ['showitem' => 'post_date, --linebreak--, title, --linebreak--, post_url, --linebreak--, message, --linebreak--, likes, --linebreak--, configuration'],
         ],
         // @codingStandardsIgnoreEnd
         'columns' => [
@@ -123,6 +123,34 @@ return (function () {
                     'size' => 30,
                     'eval' => 'trim',
                 ],
+            ],
+            'fal_media' => [
+              'exclude' => true,
+              'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
+              'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+                'fal_media',
+                [
+                  'appearance' => [
+                    'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                  ],
+                  'foreign_match_fields' => [
+                    'fieldname' => 'fal_media',
+                    'tablenames' => 'tx_pxasocialfeed_domain_model_feed',
+                    'table_local' => 'sys_file',
+                  ],
+                  'overrideChildTca' => [
+                    'types' => [
+                      \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                        'showitem' => '
+                          --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                          --palette--;;filePalette
+                        ',
+                      ],
+                    ],
+                  ],
+                ],
+                'jpg,jpeg,png,gif,svg'
+              ),
             ],
             'likes' => [
                 'exclude' => 1,

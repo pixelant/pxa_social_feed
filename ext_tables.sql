@@ -18,6 +18,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_feed
     update_date         int(11)             DEFAULT NULL,
     configuration       int(11) unsigned    DEFAULT '0',
     media_type          int(11) unsigned    DEFAULT '1',
+    fal_media           int(11) unsigned    DEFAULT '0',
 
     type                varchar(100)                    NOT NULL DEFAULT '0',
     tstamp              int(11) unsigned    DEFAULT '0' NOT NULL,
