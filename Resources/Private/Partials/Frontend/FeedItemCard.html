@@ -4,8 +4,9 @@
 
     <li class="social-feed-item social-feed-{feed.configuration.token.type}" data-posturl="{feed.postUrl}">
 				<h3 class="social-feed-title">{feed.title}</h3>
-        <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.image)}" style="{f:if(then: 'background-image:url({feed.image});', condition: feed.image)}">
-            <div class="social-feed-information">
+
+        <div class="social-feed-image-container{f:if(else: ' no-image', condition: feed.falMedia)}" style="{f:if(condition: feed.falMedia, then: 'background-image:url({f:uri.image(src:feed.falMedia.0.originalResource.publicUrl)});')}">
+          <div class="social-feed-information">
                 <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/type-{feed.configuration.token.type}-icon.svg" class="social-feed-icon" alt="social icon" />
                 <span class="social-feed-date">{feed.postDate -> f:format.date(format: settings.dateFormat)}</span>
             </div>

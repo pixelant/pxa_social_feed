@@ -4,9 +4,9 @@
 
     <li class="social-feed-item social-feed-{feed.configuration.token.type}" data-posturl="{feed.postUrl}">
 				<h3 class="social-feed-title">{feed.title}</h3>
-        <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.image)}">
-            <f:if condition="{feed.image}">
-                <img src="{feed.image}" alt="{feed.image}" />
+        <div class="social-feed-image-container{f:if(else: ' no-image', then: '', condition: feed.falMedia)}">
+            <f:if condition="{feed.falMedia}">
+              <f:image image="{feed.falMedia.0}" title="{feed.falMedia.0.title}" alt="{feed.falMedia.0.alternative}" />
             </f:if>
         </div>
         <span class="social-feed-information">
