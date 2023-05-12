@@ -30,6 +30,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  ***************************************************************/
 
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -90,13 +91,13 @@ class Configuration extends AbstractEntity
     protected $storage = 0;
 
     /**
-     * @var \Pixelant\PxaSocialFeed\Domain\Model\Token
+     * @var Token
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $token;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<BackendUserGroup>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $beGroup;
@@ -126,7 +127,7 @@ class Configuration extends AbstractEntity
     }
 
     /**
-     * @return ObjectStorage
+     * @return ObjectStorage<BackendUserGroup>
      */
     public function getBeGroup(): ObjectStorage
     {
@@ -134,7 +135,7 @@ class Configuration extends AbstractEntity
     }
 
     /**
-     * @param ObjectStorage $beGroup
+     * @param ObjectStorage<BackendUserGroup> $beGroup
      */
     public function setBeGroup(ObjectStorage $beGroup): void
     {

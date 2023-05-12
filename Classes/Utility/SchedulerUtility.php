@@ -76,7 +76,7 @@ class SchedulerUtility
      * @param bool $runAllConfigurations
      * @return string
      */
-    public static function getSelectedConfigurationsInfo(array $configurations, bool $runAllConfigurations)
+    public static function getSelectedConfigurationsInfo(array $configurations, bool $runAllConfigurations): string
     {
         if ($runAllConfigurations) {
             return 'Feeds: All configurations';

@@ -49,7 +49,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         array &$taskInfo,
         $task,
         SchedulerModuleController $parentObject
-    ) {
+    ): array {
         $additionalFields = [];
 
         if ($this->getAction($parentObject) == 'add') {
@@ -106,7 +106,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
     public function validateAdditionalFields(
         array &$submittedData,
         SchedulerModuleController $parentObject
-    ) {
+    ): bool {
         // nothing to validate, just list of uids
         $valid = false;
 
@@ -127,7 +127,7 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
 
     /**
      * @param array $submittedData
-     * @param AbstractTask|ImportTask $task
+     * @param ImportTask $task
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {

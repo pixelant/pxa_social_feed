@@ -104,7 +104,7 @@ class AdministrationController extends ActionController
     /**
      * @param ConfigurationRepository $configurationRepository
      */
-    public function injectConfigurationRepository(ConfigurationRepository $configurationRepository)
+    public function injectConfigurationRepository(ConfigurationRepository $configurationRepository): void
     {
         $this->configurationRepository = $configurationRepository;
     }
@@ -112,7 +112,7 @@ class AdministrationController extends ActionController
     /**
      * @param TokenRepository $tokenRepository
      */
-    public function injectTokenRepository(TokenRepository $tokenRepository)
+    public function injectTokenRepository(TokenRepository $tokenRepository): void
     {
         $this->tokenRepository = $tokenRepository;
     }
@@ -120,7 +120,7 @@ class AdministrationController extends ActionController
     /**
      * @param FeedRepository $feedRepository
      */
-    public function injectFeedRepository(FeedRepository $feedRepository)
+    public function injectFeedRepository(FeedRepository $feedRepository): void
     {
         $this->feedRepository = $feedRepository;
     }

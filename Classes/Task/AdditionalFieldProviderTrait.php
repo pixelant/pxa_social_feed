@@ -26,7 +26,7 @@ trait AdditionalFieldProviderTrait
      * @param SchedulerModuleController $schedulerModuleController
      * @return string
      */
-    protected function getAction(SchedulerModuleController $schedulerModuleController)
+    protected function getAction(SchedulerModuleController $schedulerModuleController): string
     {
         return method_exists($schedulerModuleController, 'getCurrentAction')
             ? (string)$schedulerModuleController->getCurrentAction()
@@ -40,7 +40,7 @@ trait AdditionalFieldProviderTrait
      * @param int $severity Optional severity, must be one of \TYPO3\CMS\Core\Messaging\FlashMessage constants
      * @throws \InvalidArgumentException if the message body is no string
      */
-    protected function addMessage(string $messageBody, int $severity = AbstractMessage::OK)
+    protected function addMessage(string $messageBody, int $severity = AbstractMessage::OK): void
     {
         if (!is_string($messageBody)) {
             throw new \InvalidArgumentException(
@@ -63,7 +63,7 @@ trait AdditionalFieldProviderTrait
     /**
      * @return FlashMessageQueue
      */
-    protected function getFlashMessageQueue()
+    protected function getFlashMessageQueue(): FlashMessageQueue
     {
         if ($this->flashMessageQueue === null) {
             /** @var FlashMessageService $service */
