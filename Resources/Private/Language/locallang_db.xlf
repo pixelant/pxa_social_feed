@@ -20,6 +20,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.image">
                 <source>Image</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_feeds.fal_media">
+                <source>Media file</source>
+            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_feeds.title">
                 <source>Title</source>
             </trans-unit>

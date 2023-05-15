@@ -29,8 +29,10 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
+use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
 /**
  * Feeds
@@ -92,6 +94,7 @@ class Feed extends AbstractEntity
     /**
      * image
      *
+     * @deprecated will be removed in a future version
      * @var string
      */
     protected $image = '';
@@ -99,6 +102,7 @@ class Feed extends AbstractEntity
     /**
      * small image
      *
+     * @deprecated will be removed in a future version
      * @var string
      */
     protected $smallImage = '';
@@ -133,11 +137,36 @@ class Feed extends AbstractEntity
     protected $configuration;
 
     /**
+     * Fal media items
+     *
+     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     */
+    protected $falMedia;
+
+    /**
      * media type
      *
      * @var int
      */
     protected $mediaType = self::IMAGE;
+
+    public function __construct()
+    {
+        // Do not remove the next line: It would break the functionality
+        $this->initializeObject();
+    }
+
+    /**
+     * Initializes all ObjectStorage properties when model is reconstructed from DB (where __construct is not called)
+     * Do not modify this method!
+     * It will be rewritten on each save in the extension builder
+     * You may modify the constructor of this class instead.
+     */
+    public function initializeObject(): void
+    {
+        $this->falMedia = $this->falMedia ?? new ObjectStorage();
+    }
 
     /**
      * Returns the date
@@ -213,6 +242,7 @@ class Feed extends AbstractEntity
     /**
      * Returns the image
      *
+     * @deprecated will be removed in a future version
      * @return string $image
      */
     public function getImage(): string
@@ -223,6 +253,7 @@ class Feed extends AbstractEntity
     /**
      * Sets the image
      *
+     * @deprecated will be removed in a future version
      * @param string $image
      */
     public function setImage(string $image): void
@@ -233,6 +264,7 @@ class Feed extends AbstractEntity
     /**
      * Returns small image
      *
+     * @deprecated will be removed in a future version
      * @return string $smallImage
      */
     public function getSmallImage(): string
@@ -243,6 +275,7 @@ class Feed extends AbstractEntity
     /**
      * Sets the image
      *
+     * @deprecated will be removed in a future version
      * @param string $smallImage
      */
     public function setSmallImage(string $smallImage): void
@@ -376,5 +409,46 @@ class Feed extends AbstractEntity
     public function setMediaType(int $mediaType)
     {
         $this->mediaType = $mediaType;
+    }
+
+    /**
+     * Get the Fal media items
+     *
+     * @return ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>|null
+     */
+    public function getFalMedia(): ?ObjectStorage
+    {
+        if ($this->falMedia instanceof LazyLoadingProxy) {
+            $this->falMedia->_loadRealInstance();
+        }
+        if ($this->falMedia instanceof ObjectStorage) {
+            return $this->falMedia;
+        }
+
+        /** @var ObjectStorage<FileReference> */
+        $falMedia = new ObjectStorage();
+
+        return $this->falMedia = $falMedia;
+    }
+
+    /**
+     * Set Fal media relation
+     *
+     * @param ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $falMedia
+     */
+    public function setFalMedia(ObjectStorage $falMedia): void
+    {
+        $this->falMedia = $falMedia;
+    }
+
+    /**
+     * Add a Fal media file reference
+     *
+     * @param FileReference $falMedia
+     */
+    public function addFalMedia(FileReference $falMedia): void
+    {
+        $this->falMedia = $this->getFalMedia();
+        $this->falMedia->attach($falMedia);
     }
 }
