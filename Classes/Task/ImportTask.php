@@ -69,7 +69,7 @@ class ImportTask extends AbstractTask
      *
      * @return bool
      */
-    public function execute()
+    public function execute(): bool
     {
         $notificationService = $this->getNotificationService();
         $importTaskService = GeneralUtility::makeInstance(ImportFeedsTaskService::class, $notificationService);
@@ -122,7 +122,7 @@ class ImportTask extends AbstractTask
     /**
      * @param array $configurations
      */
-    public function setConfigurations(array $configurations)
+    public function setConfigurations(array $configurations): void
     {
         $this->configurations = $configurations;
     }

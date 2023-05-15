@@ -91,7 +91,7 @@ class FacebookFeedUpdater extends BaseUpdater
      *
      * @param array $rawData
      * @param Configuration $configuration
-     * @return object|Feed
+     * @return Feed
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {

@@ -20,7 +20,7 @@ class EditorRestrictionEnabledViewHelper extends AbstractConditionViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return ConfigurationUtility::isFeatureEnabled('editorRestriction');
     }
