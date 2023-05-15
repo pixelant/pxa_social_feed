@@ -112,6 +112,26 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     }
 
     /**
+     * Get an existing items from the references that matches the file
+     *
+     * @param ObjectStorage<FileReference> $items
+     *
+     * @return bool|FileReference
+     */
+    protected function checkIfFalRelationIfAlreadyExists(ObjectStorage $items, FileReference $fileReference)
+    {
+        $reference = false;
+        foreach ($items as $item) {
+            if ($item->getFileUid() === $fileReference->getFileUid()) {
+                $reference = $item;
+                break;
+            }
+        }
+
+        return $reference;
+    }
+
+    /**
      * Use json_encode to get emoji character convert to unicode
      * @TODO is there better way to do this ?
      *

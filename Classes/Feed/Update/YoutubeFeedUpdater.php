@@ -58,7 +58,7 @@ class YoutubeFeedUpdater extends BaseUpdater
 
         $url = $rawData['snippet']['thumbnails']['high']['url'] ?? '';
         $imageRef = $this->storeImg($url, $feedItem);
-        if ($imageRef != null) {
+        if ($imageRef != null && !$this->checkIfFalRelationIfAlreadyExists($feedItem->getFalMedia(), $imageRef)) {
             $feedItem->addFalMedia($imageRef);
         }
 

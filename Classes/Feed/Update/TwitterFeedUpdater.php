@@ -84,7 +84,7 @@ class TwitterFeedUpdater extends BaseUpdater
         // Media
         $url = $rawData['entities']['media'][0]['media_url_https'] ?? '';
         $imageRef = $this->storeImg($url, $feedItem);
-        if ($imageRef  != null) {
+        if ($imageRef != null && !$this->checkIfFalRelationIfAlreadyExists($feedItem->getFalMedia(), $imageRef)) {
             $feedItem->addFalMedia($imageRef);
         }
 
