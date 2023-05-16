@@ -139,7 +139,7 @@ class Feed extends AbstractEntity
     /**
      * Fal media items
      *
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>
+     * @var ObjectStorage<\Pixelant\PxaSocialFeed\Domain\Model\FileReference>
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $falMedia;
@@ -414,7 +414,7 @@ class Feed extends AbstractEntity
     /**
      * Get the Fal media items
      *
-     * @return ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference>|null
+     * @return ObjectStorage<\Pixelant\PxaSocialFeed\Domain\Model\FileReference>|null
      */
     public function getFalMedia(): ?ObjectStorage
     {
@@ -434,7 +434,7 @@ class Feed extends AbstractEntity
     /**
      * Set Fal media relation
      *
-     * @param ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\FileReference> $falMedia
+     * @param ObjectStorage<\Pixelant\PxaSocialFeed\Domain\Model\FileReference> $falMedia
      */
     public function setFalMedia(ObjectStorage $falMedia): void
     {

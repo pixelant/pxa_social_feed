@@ -76,15 +76,15 @@ class FacebookFeedUpdater extends BaseUpdater
             $feed->setMessage($this->encodeMessage($rawData['message']));
         }
 
-        $imageFileRef = null;
+        $imageRef = null;
         if (isset($rawData['attachments']['data'][0]['media']['image']['src'])) {
-            $imageFileRef = $this->storeImg($rawData['attachments']['data'][0]['media']['image']['src'], $feed);
+            $imageRef = $this->storeImg($rawData['attachments']['data'][0]['media']['image']['src'], $feed);
         } elseif (isset($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'])) {
-            $imageFileRef = $this->storeImg($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'], $feed);
+            $imageRef = $this->storeImg($rawData['attachments']['data'][0]['subattachments']['data'][0]['media']['image']['src'], $feed);
         }
 
-        if ($imageFileRef != null) {
-            $feed->addFalMedia($imageFileRef);
+        if ($imageRef != null && !$this->checkIfFalRelationIfAlreadyExists($feed->getFalMedia(), $imageRef)) {
+            $feed->addFalMedia($imageRef);
         }
 
         if (isset($rawData['attachments']['data'][0]['title'])) {
@@ -97,7 +97,7 @@ class FacebookFeedUpdater extends BaseUpdater
      *
      * @param array $rawData
      * @param Configuration $configuration
-     * @return Feed
+     * @return object|Feed
      */
     protected function createFeedItem(array $rawData, Configuration $configuration): Feed
     {

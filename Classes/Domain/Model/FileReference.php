@@ -15,4 +15,12 @@ class FileReference extends \TYPO3\CMS\Extbase\Domain\Model\FileReference
     {
         $this->uidLocal = (int)$originalFile->getUid();
     }
+
+    /**
+     * Get File UID.
+     */
+    public function getFileUid(): int
+    {
+        return $this->uidLocal;
+    }
 }
