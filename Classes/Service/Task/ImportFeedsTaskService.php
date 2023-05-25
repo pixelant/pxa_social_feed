@@ -13,6 +13,7 @@ use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\FeedFactoryInterface;
 use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use Pixelant\PxaSocialFeed\Feed\TwitterFactory;
+use Pixelant\PxaSocialFeed\Feed\TwitterV2Factory;
 use Pixelant\PxaSocialFeed\Feed\YoutubeFactory;
 use Pixelant\PxaSocialFeed\Service\Expire\FacebookAccessTokenExpireService;
 use Pixelant\PxaSocialFeed\Service\Notification\NotificationService;
@@ -149,6 +150,9 @@ class ImportFeedsTaskService
 
             case $token->isTwitterType():
                 return GeneralUtility::makeInstance(TwitterFactory::class);
+
+            case $token->isTwitterV2Type():
+                return GeneralUtility::makeInstance(TwitterV2Factory::class);
 
             case $token->isYoutubeType():
                 return GeneralUtility::makeInstance(YoutubeFactory::class);

@@ -56,6 +56,7 @@ CREATE TABLE tx_pxasocialfeed_domain_model_token
     api_key             varchar(255)        DEFAULT ''  NOT NULL,
     api_secret_key      varchar(255)        DEFAULT ''  NOT NULL,
     access_token_secret varchar(255)        DEFAULT ''  NOT NULL,
+    bearer_token        varchar(255)        DEFAULT ''  NOT NULL,
 
     tstamp              int(11) unsigned    DEFAULT '0' NOT NULL,
     crdate              int(11) unsigned    DEFAULT '0' NOT NULL,

@@ -72,6 +72,11 @@ class Token extends AbstractEntity
     const FACEBOOK_PAGE = 5;
 
     /**
+     * twitter token v2 API
+     */
+    const TWITTER_V2 = 6;
+
+    /**
      * Default PID
      *
      * @var int
@@ -123,6 +128,11 @@ class Token extends AbstractEntity
      * @var string
      */
     protected $accessTokenSecret = '';
+
+    /**
+     * @var string
+     */
+    protected $bearerToken = '';
 
     /**
      * @var Facebook|null
@@ -281,6 +291,22 @@ class Token extends AbstractEntity
     public function setAccessTokenSecret(string $accessTokenSecret): void
     {
         $this->accessTokenSecret = $accessTokenSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBearerToken(): string
+    {
+        return $this->bearerToken;
+    }
+
+    /**
+     * @param string $bearerToken
+     */
+    public function setBearerToken(string $bearerToken): void
+    {
+        $this->bearerToken = $bearerToken;
     }
 
     /**
@@ -485,6 +511,16 @@ class Token extends AbstractEntity
     }
 
     /**
+     * Check if it's of type twitter
+     *
+     * @return bool
+     */
+    public function isTwitterV2Type(): bool
+    {
+        return $this->type === static::TWITTER_V2;
+    }
+
+    /**
      * Check if it's of type youtube
      *
      * @return bool
@@ -525,6 +561,7 @@ class Token extends AbstractEntity
             static::FACEBOOK,
             static::INSTAGRAM,
             static::TWITTER,
+            static::TWITTER_V2,
             static::YOUTUBE,
         ];
     }
