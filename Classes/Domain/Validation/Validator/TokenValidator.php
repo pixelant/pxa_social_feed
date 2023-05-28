@@ -61,6 +61,9 @@ class TokenValidator extends AbstractValidator
             case $token->isTwitterType():
                 $properties = ['apiKey', 'apiSecretKey', 'accessToken', 'accessTokenSecret'];
                 break;
+            case $token->isTwitterV2Type():
+                $properties = ['bearerToken'];
+                break;
             case $token->isYoutubeType():
                 $properties = ['apiKey'];
                 break;

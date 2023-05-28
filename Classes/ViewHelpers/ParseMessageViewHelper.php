@@ -92,6 +92,7 @@ class ParseMessageViewHelper extends AbstractViewHelper
                 );
                 break;
             case Token::TWITTER:
+            case Token::TWITTER_V2:
                 // Convert hashtags to twitter searches in <a> links
                 $text = preg_replace_callback(
                     "/#([[:alnum:]\/.]+)/u",

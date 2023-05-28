@@ -89,6 +89,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.twitter_access_token">
                 <source>Twitter access token</source>
             </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.bearer_token">
+                <source>Twitter app bearer token</source>
+            </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type">
                 <source>Type of token</source>
             </trans-unit>
@@ -103,6 +106,9 @@
             </trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.4">
                 <source>Youtube API</source>
+            </trans-unit>
+            <trans-unit id="tx_pxasocialfeed_domain_model_tokens.type.type.6">
+                <source>Twitter v2 API</source>
             </trans-unit>
             <!--Table tx_pxasocialfeed_domain_model_token:END-->
 

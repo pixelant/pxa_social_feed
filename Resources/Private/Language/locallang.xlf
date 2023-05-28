@@ -124,13 +124,16 @@
                 <source>Facebook page that is connected to instagram account</source>
             </trans-unit>
             <trans-unit id="module.social_id3">
-                <source>Twitter account ID(name)</source>
+                <source>Twitter account ID (name without @)</source>
             </trans-unit>
             <trans-unit id="module.social_id4">
                 <source>Youtube channel ID</source>
             </trans-unit>
             <trans-unit id="module.social_id5">
               <source>Facebook Page id</source>
+            </trans-unit>
+            <trans-unit id="module.social_id6">
+                <source>Twitter account ID</source>
             </trans-unit>
             <trans-unit id="module.social_id_tooltip">
                 <source>Either Facebook (might be 'me' or page ID) / Twitter / Instagram (Facebook page ID) / YouTube ID</source>
@@ -162,6 +165,9 @@
             <trans-unit id="module.access_token">
                 <source>Access token</source>
             </trans-unit>
+            <trans-unit id="module.bearer_token">
+                <source>Bearer Token</source>
+            </trans-unit>
 
             <trans-unit id="module.type.1">
                 <source>Facebook User</source>
@@ -177,6 +183,9 @@
             </trans-unit>
             <trans-unit id="module.type.5">
                 <source>Facebook Page</source>
+            </trans-unit>
+            <trans-unit id="module.type.6">
+                <source>Twitter v2</source>
             </trans-unit>
 
             <trans-unit id="validator.error.1578488026895">

@@ -46,6 +46,9 @@ return (function () {
                     ],
                 ],
             ],
+            \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER_V2 => [
+                'showitem' => 'name, type, --palette--;;paletteTwitterV2Api' . $accessTab,
+            ],
             \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE => [
                 'showitem' => 'name, type, --palette--;;paletteYoutubeApi' . $accessTab,
                 'columnsOverrides' => [
@@ -58,6 +61,7 @@ return (function () {
         'palettes' => [
             'paletteGraphApi' => ['showitem' => 'app_id, --linebreak--, app_secret, --linebreak--, access_token'],
             'paletteTwitterApi' => ['showitem' => 'api_key, --linebreak--, api_secret_key, --linebreak--, access_token, --linebreak--, access_token_secret'],
+            'paletteTwitterV2Api' => ['showitem' => 'bearer_token'],
             'paletteYoutubeApi' => ['showitem' => 'api_key'],
         ],
         'columns' => [
@@ -79,6 +83,7 @@ return (function () {
                         [$ll . '.type.type.1', \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK],
                         [$ll . '.type.type.2', \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM],
                         [$ll . '.type.type.3', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER],
+                        [$ll . '.type.type.6', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER_V2],
                         [$ll . '.type.type.4', \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE],
                     ],
                 ],
@@ -161,6 +166,14 @@ return (function () {
                     'type' => 'input',
                     'eval' => 'trim,required',
                 ],
+            ],
+            'bearer_token' => [
+                'exclude' => true,
+                'label' => $ll . '.bearer_token',
+                'config' => [
+                    'type' => 'input',
+                    'eval' => 'trim,required'
+                ]
             ],
             'be_group' => [
                 'exclude' => true,
