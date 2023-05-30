@@ -114,6 +114,7 @@ class TwitterV2Source extends BaseSource
             'tweet.fields' => 'created_at,public_metrics',
             'media.fields' => 'url,preview_image_url',
             'user.fields' => 'profile_image_url',
+            'exclude' => 'replies',
         ];
 
         [$fields] = $this->emitSignal('beforeReturnTwitterQueryFields', [$fields]);
