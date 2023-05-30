@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Service\Task;
 
+use GuzzleHttp\Exception\ClientException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\ConfigurationRepository;
@@ -90,7 +91,9 @@ class ImportFeedsTaskService
                     $configuration->getUid(),
                     $exception->getMessage()
                 );
-                $this->disableConfiguration($configuration);
+                if ($exception instanceof ClientException) {
+                    $this->disableConfiguration($configuration, $exception->getCode());
+                }
             }
         }
 
@@ -129,7 +132,7 @@ class ImportFeedsTaskService
         $updater->persist();
     }
 
-     /**
+    /**
      * @param Token $token
      */
     protected function getFactory(Token $token): FeedFactoryInterface
@@ -199,11 +202,20 @@ class ImportFeedsTaskService
      * Disable a configuration, if feature enabled
      *
      * @param Configuration $configuration
+     * @param int $httpErrorCode
      */
-    protected function disableConfiguration(Configuration $configuration): void
+    protected function disableConfiguration(Configuration $configuration, int $httpErrorCode): void
     {
         $extConf = ConfigurationUtility::getExtensionConfiguration();
         if (!($extConf['disableConfigurationOnFailure'] ?? false)) {
+            return;
+        }
+        $codes = GeneralUtility::intExplode(
+            ',',
+            $extConf['disableConfigurationOnFailureErrorCodes'] ?? '',
+            true
+        );
+        if ($codes !== [] && !in_array($httpErrorCode, $codes, true)) {
             return;
         }
 
