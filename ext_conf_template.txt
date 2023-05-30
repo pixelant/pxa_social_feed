@@ -9,3 +9,6 @@ excludeBackendUserGroups =
 
 # cat=basic/enable/200; type=boolean; label=Disable configuration if the feed import task failed
 disableConfigurationOnFailure = 0
+
+# cat=basic/enable/200; type=boolean; label=List of http error codes that can disable configuration (if empty, error code is not checked)
+disableConfigurationOnFailureErrorCodes = 403,404
