@@ -81,6 +81,11 @@ class Configuration extends AbstractEntity
     protected $socialId = '';
 
     /**
+     * @var string
+     */
+    protected $endPointEntry = '';
+
+    /**
      * @var int
      */
     protected $maxItems = 0;
@@ -169,6 +174,22 @@ class Configuration extends AbstractEntity
     public function setSocialId(string $socialId): void
     {
         $this->socialId = $socialId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndPointEntry(): string
+    {
+        return $this->endPointEntry;
+    }
+
+    /**
+     * @param string $endPointEntry
+     */
+    public function setEndPointEntry(string $endPointEntry): void
+    {
+        $this->endPointEntry = $endPointEntry;
     }
 
     /**

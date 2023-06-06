@@ -28,10 +28,10 @@ return (function () {
             'rootLevel' => 1,
         ],
         'interface' => [
-            'showRecordFieldList' => 'hidden, name, social_id, token, max_items, storage, be_group',
+            'showRecordFieldList' => 'hidden, name, social_id, end_point_entry, token, max_items, storage, be_group',
         ],
         'types' => [
-            '1' => ['showitem' => '--palette--;;1, name, social_id, max_items, storage' . $accessTab],
+            '1' => ['showitem' => '--palette--;;1, name, social_id, end_point_entry, max_items, storage' . $accessTab],
         ],
         'palettes' => [
             '1' => ['showitem' => ''],
@@ -69,6 +69,15 @@ return (function () {
                     'type' => 'input',
                     'size' => 30,
                     'eval' => 'trim,required',
+                ],
+            ],
+            'end_point_entry' => [
+                'exclude' => 1,
+                'label' => $ll . '.end_point_entry',
+                'config' => [
+                    'type' => 'input',
+                    'size' => 30,
+                    'eval' => 'trim',
                 ],
             ],
             'perform_clean_up' => [
