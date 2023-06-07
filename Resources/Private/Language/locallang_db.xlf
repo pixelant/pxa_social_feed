@@ -125,6 +125,9 @@
             <trans-unit id="tx_pxasocialfeed_domain_model_config.social_id">
                 <source>Social id</source>
             </trans-unit>
+			<trans-unit id="tx_pxasocialfeed_domain_model_config.end_point_entry">
+				<source>End point entry (feed source)</source>
+			</trans-unit>
             <trans-unit id="tx_pxasocialfeed_domain_model_config.max_items">
                 <source>Maximum import items</source>
             </trans-unit>

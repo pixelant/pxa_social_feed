@@ -51,6 +51,30 @@
                             </td>
                         </tr>
                         <tr>
+                            <td><f:translate key="module.end_point_entry"/></td>
+                            <td>
+                                <f:if condition="{configuration}">
+                                    <f:then>
+                                        <f:alias map="{token: configuration.token}">
+                                            <f:if condition="{token.facebookType} || {token.facebookPageType}">
+                                                <f:then>
+                                                    <f:form.select property="endPointEntry" options="{feed: 'Facebook Feed', posts: 'Facebook Posts'}" class="form-control"/>
+                                                </f:then>
+                                                <f:else>
+                                                    <f:translate key="module.not_available_for_this_token" />
+                                                </f:else>
+                                            </f:if>
+                                        </f:alias>
+                                    </f:then>
+                                    <f:else>
+                                        <p class="bg-warning bg-notification">
+                                            <f:translate key="module.save_configuration_first" />
+                                        </p>
+                                    </f:else>
+                                </f:if>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><f:translate key="module.max_items"/></td>
                             <td><f:form.textfield property="maxItems" class="form-control" value="{f:if(condition: configuration, else: '10')}"/></td>
                         </tr>

@@ -138,6 +138,12 @@
             <trans-unit id="module.social_id_tooltip">
                 <source>Either Facebook (might be 'me' or page ID) / Twitter / Instagram (Facebook page ID) / YouTube ID</source>
             </trans-unit>
+            <trans-unit id="module.end_point_entry">
+                <source>End point entry (feed source)</source>
+            </trans-unit>
+            <trans-unit id="module.not_available_for_this_token">
+                <source>Not available for this token</source>
+            </trans-unit>
             <trans-unit id="module.save_configuration_first">
                 <source>Please select token and save configuration first</source>
             </trans-unit>

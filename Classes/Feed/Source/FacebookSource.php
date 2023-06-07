@@ -29,7 +29,11 @@ class FacebookSource extends BaseFacebookSource
         )->getFirst();
 
         $fb = $pageAccessToken->getFb();
-        $endPointUrl = $this->generateEndPoint($this->getConfiguration()->getSocialId(), 'feed');
+        $endPointEntry = $this->getConfiguration()->getEndPointEntry();
+        if (!in_array($endPointEntry, ['feed', 'posts'])) {
+            $endPointEntry = 'feed';
+        }
+        $endPointUrl = $this->generateEndPoint($this->getConfiguration()->getSocialId(), $endPointEntry);
         $response = file_get_contents(
             $fb::BASE_GRAPH_URL .
             self::GRAPH_VERSION . '/' . $endPointUrl
