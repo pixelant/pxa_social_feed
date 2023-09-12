@@ -283,8 +283,8 @@ class Configuration extends AbstractEntity
     /**
     * @return bool
     */
-   public function getPerformCleanUp(): bool
-   {
-       return $this->performCleanUp;
-   }
+    public function getPerformCleanUp(): bool
+    {
+        return $this->performCleanUp;
+    }
 }
