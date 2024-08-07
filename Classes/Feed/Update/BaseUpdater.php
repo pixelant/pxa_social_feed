@@ -207,8 +207,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
             $downloadFolder = $storage->getFolder($folderPath);
         }
 
-        $baseUrl = explode('?', basename($url), 2);
-        $filename = md5($baseUrl[0]);
+        $filename = md5($url);
 
         $file = $downloadFolder->getFile($filename);
         if ($file == null) {
