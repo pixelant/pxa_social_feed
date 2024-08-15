@@ -14,8 +14,8 @@ class LoggerUtility
     /**
      * Message type
      */
-    const INFO = 0;
-    const ERROR = 1;
+    public const INFO = 0;
+    public const ERROR = 1;
 
     /**
      * Log error

@@ -61,6 +61,6 @@ class BackendGroupRestriction implements QueryRestrictionInterface
             }
         }
 
-        return $expressionBuilder->orX(...$constraints);
+        return $expressionBuilder->or(...$constraints);
     }
 }

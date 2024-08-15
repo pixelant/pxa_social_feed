@@ -7,6 +7,7 @@ namespace Pixelant\PxaSocialFeed\Feed\Update;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Event\BeforeUpdateTwitterV2FeedEvent;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -38,10 +39,8 @@ class TwitterV2FeedUpdater extends BaseUpdater
             }
 
             $this->updateFeedItem($feedItem, $rawData, $includes);
-
-            // Call hook
-            $this->emitSignal('beforeUpdateTwitterFeed', [$feedItem, $rawData, $source->getConfiguration(), $includes]);
-
+            // dispatch event
+            $this->eventDispatcher->dispatch(new BeforeUpdateTwitterV2FeedEvent($feedItem, $rawData, $source->getConfiguration(), $includes));
             $this->addOrUpdateFeedItem($feedItem);
         }
     }

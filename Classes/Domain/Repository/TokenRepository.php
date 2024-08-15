@@ -26,12 +26,12 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 /**
  * The repository for Feeds
@@ -51,18 +51,20 @@ class TokenRepository extends AbstractBackendRepository
      * @param Token  $token
      * @param string $fbSocialId
      *
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface<QueryResult>
+     * @return QueryResultInterface<QueryResult>
      */
     public function findFacebookPageToken(Token $token, string $fbSocialId)
     {
         $query = $this->createQuery();
-        $query->getQuerySettings()->setIgnoreEnableFields(true);
-
+        $query->getQuerySettings ()->setIgnoreEnableFields ( TRUE );
+        //TODO: handle Facebook Social ID and parent token
+        // $query->equals('parentToken', $token->getParentToken()),
+        // $query->equals('fbSocialId', $fbSocialId),
         $query->matching(
-            $query->logicalAnd([
-                $query->equals('parentToken', $token->getParentToken()),
-                $query->equals('fbSocialId', $fbSocialId),
-            ])
+            $query->logicalAnd(
+                $query->equals ( 'parentToken', 0 ),
+                $query->equals ( 'fbSocialId', '' ),
+            )
         );
 
         $query->setLimit(1);

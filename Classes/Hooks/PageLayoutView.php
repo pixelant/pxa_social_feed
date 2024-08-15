@@ -26,9 +26,9 @@ namespace Pixelant\PxaSocialFeed\Hooks;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Service\FlexFormService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -70,8 +70,7 @@ class PageLayoutView
 
                 $configurations = $queryBuilder
                     ->select('name')
-                    ->from('tx_pxasocialfeed_domain_model_configuration')
-                    ->where(
+                    ->from('tx_pxasocialfeed_domain_model_configuration')->where(
                         $queryBuilder->expr()->in(
                             'uid',
                             $queryBuilder->createNamedParameter(
@@ -79,9 +78,8 @@ class PageLayoutView
                                 Connection::PARAM_INT_ARRAY
                             )
                         )
-                    )
-                    ->execute()
-                    ->fetchAll(\PDO::FETCH_COLUMN);
+                    )->executeQuery()
+                    ->fetchAllAssociative();
 
                 if (is_array($configurations)) {
                     $configurations = implode(', ', $configurations);
@@ -112,10 +110,10 @@ class PageLayoutView
     }
 
     /**
-     * @return \TYPO3\CMS\Core\Service\FlexFormService
+     * @return FlexFormService
      */
     protected function getFlexFormService()
     {
-        return GeneralUtility::makeInstance(\TYPO3\CMS\Core\Service\FlexFormService::class);
+        return GeneralUtility::makeInstance(FlexFormService::class);
     }
 }

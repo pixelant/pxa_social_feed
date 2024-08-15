@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') or die();
+defined('TYPO3') or die();
 
 return (function () {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:';
@@ -12,7 +12,6 @@ return (function () {
             'label_alt' => 'message,post_url',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'default_sortby' => 'crdate DESC',
 
             'type' => 'type',
@@ -30,10 +29,6 @@ return (function () {
                 'disabled' => 'hidden',
             ],
             'searchFields' => 'post_url,message,image,title,config,',
-        ],
-        // @codingStandardsIgnoreStart
-        'interface' => [
-            'showRecordFieldList' => 'hidden, post_date, post_url, message, media_type, likes, title, configuration, update_date, external_identifier, type',
         ],
         'types' => [
             '0' => ['showitem' => '--palette--;;core, --palette--;;main,--div--;LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:tabs.media, fal_media,fal_related_files'],
@@ -62,10 +57,10 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.1', 1, 'ext-pxasocialfeed-model-icon-facebook'],
-                        [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.2', 2, 'ext-pxasocialfeed-model-icon-instagram'],
-                        [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.3', 3, 'ext-pxasocialfeed-model-icon-twitter'],
-                        [$ll . 'tx_pxasocialfeed_domain_model_feeds.type.4', 4, 'ext-pxasocialfeed-model-icon-youtube'],
+                        ['label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.type.1', 'value' => 1, 'icon' => 'ext-pxasocialfeed-model-icon-facebook'],
+                        ['label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.type.2', 'value' => 2, 'icon' => 'ext-pxasocialfeed-model-icon-instagram'],
+                        ['label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.type.3', 'value' => 3, 'icon' => 'ext-pxasocialfeed-model-icon-twitter'],
+                        ['label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.type.4', 'value' => 4, 'icon' => 'ext-pxasocialfeed-model-icon-youtube'],
                     ],
                     'fieldWizard' => [
                         'selectIcons' => [
@@ -128,28 +123,27 @@ return (function () {
               'exclude' => true,
               'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
               'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                'fal_media',
-                [
-                  'appearance' => [
-                    'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
-                  ],
-                  'foreign_match_fields' => [
-                    'fieldname' => 'fal_media',
-                    'tablenames' => 'tx_pxasocialfeed_domain_model_feed',
-                    'table_local' => 'sys_file',
-                  ],
-                  'overrideChildTca' => [
-                    'types' => [
-                      \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
-                        'showitem' => '
-                          --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                  'fal_media',
+                  [
+                    'appearance' => [
+                      'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
+                    ],
+                    'foreign_match_fields' => [
+                      'fieldname' => 'fal_media',
+                      'tablenames' => 'tx_pxasocialfeed_domain_model_feed',
+                    ],
+                    'overrideChildTca' => [
+                      'types' => [
+                        \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                          'showitem' => '
+                          --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
                           --palette--;;filePalette
                         ',
+                        ],
                       ],
                     ],
                   ],
-                ],
-                'jpg,jpeg,png,gif,svg'
+                  'jpg,jpeg,png,gif,svg'
               ),
             ],
             'likes' => [
@@ -215,6 +209,9 @@ return (function () {
                     'eval' => 'trim',
                 ],
             ],
+        ],
+        'security' => [
+            'ignorePageTypeRestriction' => true,
         ],
     ];
 })();

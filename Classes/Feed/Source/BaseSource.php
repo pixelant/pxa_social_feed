@@ -6,7 +6,6 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Exception\BadResponseException;
-use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -16,8 +15,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class BaseSource implements FeedSourceInterface
 {
-    use EmitSignalTrait;
-
     /**
      * @var Configuration
      */

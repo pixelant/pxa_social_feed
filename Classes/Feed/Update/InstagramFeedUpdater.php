@@ -7,7 +7,9 @@ namespace Pixelant\PxaSocialFeed\Feed\Update;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Event\BeforeUpdateInstagramFeedEvent;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -38,10 +40,9 @@ class InstagramFeedUpdater extends BaseUpdater
 
             // Add/update instagram feed data gotten from facebook
             $this->populateGraphInstagramFeed($feedItem, $rawData);
-
-            // Call hook
-            $this->emitSignal('beforeUpdateInstagramFeed', [$feedItem, $rawData, $source->getConfiguration()]);
-
+            // dispatch event
+            $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+            $eventDispatcher->dispatch(new BeforeUpdateInstagramFeedEvent($feedItem, $rawData, $source->getConfiguration()));
             // Add/update
             $this->addOrUpdateFeedItem($feedItem);
         }

@@ -7,6 +7,4 @@ namespace Pixelant\PxaSocialFeed\Exception;
 /**
  * Class BadResponseException
  */
-class BadResponseException extends \Exception
-{
-}
+class BadResponseException extends \Exception {}

@@ -13,10 +13,12 @@
             <f:translate key="module.valid_days" arguments="{0: token.facebookAccessTokenValidPeriod}" />
             <br><br>
             <f:link.action action="resetAccessToken"
-                           arguments="{token: token}"
+                           arguments="{resetToken: token}"
                            data="{confirmation-title: '{f:translate(key: \'module.reset_token\')}', confirmation-message: '{f:translate(key: \'module.reset_token_question\')}'}"
                            class="btn btn-default btn-sm confirmation-action">
-                <f:translate key="module.regenerate_access_token" />
+                    <span class="btn btn-default" aria-hidden="true">
+                        <f:translate key="module.regenerate_access_token" />
+                    </span>
             </f:link.action>
         </p>
     </f:then>

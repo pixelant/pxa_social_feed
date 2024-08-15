@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Update;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Driver\Exception as DriverException;
-use Exception;
+use Doctrine\DBAL\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
@@ -14,7 +13,9 @@ use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\FileReference;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
-use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
+use Pixelant\PxaSocialFeed\Event\ChangedFeedItemEvent;
+use Pixelant\PxaSocialFeed\Event\RemovedFeedItemEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use RuntimeException;
 use TYPO3\CMS\Core\Resource\Exception\ExistingTargetFolderException;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
@@ -37,8 +38,6 @@ use TYPO3\CMS\Extbase\Reflection\Exception\UnknownClassException;
  */
 abstract class BaseUpdater implements FeedUpdaterInterface
 {
-    use EmitSignalTrait;
-
     /**
      * @var FeedRepository
      */
@@ -81,14 +80,12 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     public function cleanUp(Configuration $configuration): void
     {
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
         if (count($this->feeds) > 0) {
             /** @var Feed $feedToRemove */
             foreach ($this->feedRepository->findNotInStorage($this->feeds, $configuration) as $feedToRemove) {
-                // todo: remove in next major version
-                /** @deprecated The call to changedFeedItem is deprecated and will be removed in version 4 */
-                $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'changedFeedItem', [$feedToRemove]);
-
-                $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'removedFeedItem', [$feedToRemove]);
+                $eventDispatcher->dispatch(new ChangedFeedItemEvent($feedToRemove));
+                $eventDispatcher->dispatch(new RemovedFeedItemEvent($feedToRemove));
                 $this->feedRepository->remove($feedToRemove);
             }
         }
@@ -102,9 +99,10 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      */
     protected function addOrUpdateFeedItem(Feed $feed): void
     {
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
         // Check if $feed is new or modified and emit change event
         if ($feed->_isDirty() || $feed->_isNew()) {
-            $this->getSignalSlotDispatcher()->dispatch(__CLASS__, 'changedFeedItem', [$feed]);
+            $eventDispatcher->dispatch(new ChangedFeedItemEvent($feed));
         }
 
         $this->feeds->attach($feed);
@@ -182,7 +180,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      * @param Configuration $configuration
      * @return File|null
      * @throws InvalidArgumentException
-     * @throws DBALException
+     * @throws Exception
      * @throws DriverException
      * @throws InsufficientFolderAccessPermissionsException
      * @throws ExistingTargetFolderException

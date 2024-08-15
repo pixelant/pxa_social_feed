@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
+use Pixelant\PxaSocialFeed\Event\BeforeReturnTwitterQueryFieldsEvent;
 use Pixelant\PxaSocialFeed\Exception\BadResponseException;
 use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TwitterSource
@@ -16,7 +19,7 @@ class TwitterSource extends BaseSource
     /**
      * Twitter api
      */
-    const API_URL = 'https://api.twitter.com/1.1/';
+    public const API_URL = 'https://api.twitter.com/1.1/';
 
     /**
      * Load feed source
@@ -99,16 +102,17 @@ class TwitterSource extends BaseSource
 
         // Important to pass field value as string, because it's encoded with rawurlencode
         $fields = [
-            'screen_name' => $configuration->getSocialId(),
-            'count' => (string)$configuration->getMaxItems(),
-            'tweet_mode' => 'extended',
+            'screen_name'     => $configuration->getSocialId(),
+            'count'           => (string)$configuration->getMaxItems(),
+            'tweet_mode'      => 'extended',
             'exclude_replies' => '1',
-            'include_rts' => '1',
+            'include_rts'     => '1',
         ];
 
-        list($fields) = $this->emitSignal('beforeReturnTwitterQueryFields', [$fields]);
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+        $event           = $eventDispatcher->dispatch(new BeforeReturnTwitterQueryFieldsEvent($fields));
 
-        return $fields;
+        return $event->getFields();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') or die();
+defined('TYPO3') or die();
 
 return (function () {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_tokens';
@@ -13,7 +13,6 @@ return (function () {
             'label_alt' => 'uid',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'default_sortby' => 'crdate DESC',
 
             'delete' => 'deleted',
@@ -28,9 +27,6 @@ return (function () {
 
             'type' => 'type',
             'rootLevel' => 1,
-        ],
-        'interface' => [
-            'showRecordFieldList' => 'hidden, name, type, app_id, app_secret, be_group',
         ],
         'types' => [
             \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK => ['showitem' => 'name, type, --palette--;;paletteGraphApi' . $accessTab],
@@ -80,11 +76,11 @@ return (function () {
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => [
-                        [$ll . '.type.type.1', \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK],
-                        [$ll . '.type.type.2', \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM],
-                        [$ll . '.type.type.3', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER],
-                        [$ll . '.type.type.6', \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER_V2],
-                        [$ll . '.type.type.4', \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE],
+                        ['label' => $ll . '.type.type.1', 'value' => \Pixelant\PxaSocialFeed\Domain\Model\Token::FACEBOOK],
+                        ['label' => $ll . '.type.type.2', 'value' => \Pixelant\PxaSocialFeed\Domain\Model\Token::INSTAGRAM],
+                        ['label' => $ll . '.type.type.3', 'value' => \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER],
+                        ['label' => $ll . '.type.type.6', 'value' => \Pixelant\PxaSocialFeed\Domain\Model\Token::TWITTER_V2],
+                        ['label' => $ll . '.type.type.4', 'value' => \Pixelant\PxaSocialFeed\Domain\Model\Token::YOUTUBE],
                     ],
                 ],
             ],
@@ -105,7 +101,7 @@ return (function () {
                     'renderType' => 'selectSingle',
                     'default' => 0,
                     'items' => [
-                        ['', 0],
+                        ['label' => '', 'value' => 0],
                     ],
                     'foreign_table' => 'tx_pxasocialfeed_domain_model_token',
                     'foreign_table_where' => 'AND {#tx_pxasocialfeed_domain_model_token}.{#pid}=###CURRENT_PID### AND {#tx_pxasocialfeed_domain_model_token}.{#sys_language_uid} IN (-1,0)',
@@ -124,7 +120,8 @@ return (function () {
                 'label' => $ll . '.app_id',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'required,trim',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'app_secret' => [
@@ -132,7 +129,8 @@ return (function () {
                 'label' => $ll . '.app_secret',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'required,trim',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'access_token' => [
@@ -148,7 +146,8 @@ return (function () {
                 'label' => $ll . '.api_key',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'api_secret_key' => [
@@ -156,7 +155,8 @@ return (function () {
                 'label' => $ll . '.api_secret_key',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'access_token_secret' => [
@@ -164,7 +164,8 @@ return (function () {
                 'label' => $ll . '.access_token_secret',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'bearer_token' => [
@@ -172,8 +173,9 @@ return (function () {
                 'label' => $ll . '.bearer_token',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'trim,required'
-                ]
+                    'eval' => 'trim',
+                    'required' => true,
+                ],
             ],
             'be_group' => [
                 'exclude' => true,
@@ -186,9 +188,11 @@ return (function () {
                     'maxitems' => 20,
                     'foreign_table' => 'be_groups',
                     'foreign_table_where' => 'ORDER BY be_groups.title',
-                    'enableMultiSelectFilterTextfield' => true,
                 ],
             ],
+        ],
+        'security' => [
+            'ignorePageTypeRestriction' => true,
         ],
     ];
 })();

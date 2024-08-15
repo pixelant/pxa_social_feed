@@ -103,7 +103,7 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
 
         $variableProvider->add($redirectUrlAs, $redirectUrl);
 
-        if (strpos($url, 'redirect_uri=&') !== false) {
+        if (str_contains($url, 'redirect_uri=&')) {
             $urlStructure = explode('redirect_uri=&', $url);
             $url = sprintf(
                 '%sredirect_uri=%s&%s',

@@ -3,6 +3,7 @@
 namespace Pixelant\PxaSocialFeed\Controller;
 
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
+use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -49,10 +50,12 @@ class FeedsController extends ActionController
         $this->feedRepository = $feedRepository;
     }
 
+    protected function initializeView($view) {}
+
     /**
      * List action
      */
-    public function listAction()
+    public function listAction(): ResponseInterface
     {
         $limit = $this->settings['feedsLimit'] ? (int)($this->settings['feedsLimit']) : 10;
         $configurations = GeneralUtility::intExplode(',', $this->settings['configuration'], true);
@@ -60,14 +63,16 @@ class FeedsController extends ActionController
         $feeds = $this->feedRepository->findByConfigurations($configurations, $limit);
 
         $this->view->assign('feeds', $feeds);
+        return $this->htmlResponse();
     }
 
     /**
      * List ajax action
      * Prepare view for later ajax request
      */
-    public function listAjaxAction()
+    public function listAjaxAction(): ResponseInterface
     {
+        return $this->htmlResponse();
     }
 
     /**
