@@ -57,8 +57,8 @@ class FeedsController extends ActionController
      */
     public function listAction(): ResponseInterface
     {
-        $limit = $this->settings['feedsLimit'] ? (int)($this->settings['feedsLimit']) : 10;
-        $configurations = GeneralUtility::intExplode(',', $this->settings['configuration'], true);
+        $limit = (int)($this->settings['feedsLimit'] ?? 10);
+        $configurations = GeneralUtility::intExplode(',', $this->settings['configuration'] ?? '', true);
 
         $feeds = $this->feedRepository->findByConfigurations($configurations, $limit);
 
