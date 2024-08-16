@@ -28,9 +28,8 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup;
+use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
@@ -97,14 +96,14 @@ class Configuration extends AbstractEntity
 
     /**
      * @var Token
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
+    #[Lazy]
     protected $token;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<BackendUserGroup>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var ObjectStorage<BackendUserGroup>
      */
+    #[Lazy]
     protected $beGroup;
 
     /**
@@ -283,8 +282,8 @@ class Configuration extends AbstractEntity
     /**
     * @return bool
     */
-   public function getPerformCleanUp(): bool
-   {
-       return $this->performCleanUp;
-   }
+    public function getPerformCleanUp(): bool
+    {
+        return $this->performCleanUp;
+    }
 }

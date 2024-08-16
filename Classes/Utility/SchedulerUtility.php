@@ -87,8 +87,7 @@ class SchedulerUtility
 
         $statement = $queryBuilder
             ->select('uid', 'name')
-            ->from('tx_pxasocialfeed_domain_model_configuration')
-            ->where(
+            ->from('tx_pxasocialfeed_domain_model_configuration')->where(
                 $queryBuilder->expr()->in(
                     'uid',
                     $queryBuilder->createNamedParameter(
@@ -96,12 +95,11 @@ class SchedulerUtility
                         Connection::PARAM_INT_ARRAY
                     )
                 )
-            )
-            ->execute();
+            )->executeQuery();
 
         $info = 'Feeds: ';
 
-        while ($config = $statement->fetch()) {
+        while ($config = $statement->fetchAssociative()) {
             $info .= $config['name'] . ' [UID: ' . $config['uid'] . ']; ';
         }
 

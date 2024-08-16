@@ -38,7 +38,7 @@ class ConfigurationValidator extends AbstractValidator
      *
      * @return bool
      */
-    public function isValid($configuration)
+    public function isValid($configuration): void
     {
         // do trim
         $this->trimObjectProperties($configuration);
@@ -62,10 +62,6 @@ class ConfigurationValidator extends AbstractValidator
                 $this->translateErrorMessage('validator.error.' . $errorCode, 'PxaSocialFeed'),
                 $errorCode
             );
-
-            return false;
         }
-
-        return true;
     }
 }

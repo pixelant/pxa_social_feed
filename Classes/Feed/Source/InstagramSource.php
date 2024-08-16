@@ -9,7 +9,7 @@ namespace Pixelant\PxaSocialFeed\Feed\Source;
  */
 class InstagramSource extends BaseFacebookSource
 {
-    const BASE_INSTAGRAM_GRAPH_URL = 'https://graph.facebook.com/';
+    public const BASE_INSTAGRAM_GRAPH_URL = 'https://graph.facebook.com/';
 
     /**
      * Load feed source

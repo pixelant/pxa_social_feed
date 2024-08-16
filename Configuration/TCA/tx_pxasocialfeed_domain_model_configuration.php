@@ -1,6 +1,6 @@
 <?php
 
-defined('TYPO3_MODE') or die();
+defined('TYPO3') or die();
 
 return (function () {
     $ll = 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_db.xlf:tx_pxasocialfeed_domain_model_config';
@@ -12,7 +12,6 @@ return (function () {
             'label' => 'name',
             'tstamp' => 'tstamp',
             'crdate' => 'crdate',
-            'cruser_id' => 'cruser_id',
             'default_sortby' => 'crdate DESC',
 
             'delete' => 'deleted',
@@ -26,9 +25,6 @@ return (function () {
             ],
 
             'rootLevel' => 1,
-        ],
-        'interface' => [
-            'showRecordFieldList' => 'hidden, name, social_id, end_point_entry, token, max_items, storage, be_group',
         ],
         'types' => [
             '1' => ['showitem' => '--palette--;;1, name, social_id, end_point_entry, max_items, storage' . $accessTab],
@@ -50,7 +46,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'image_size' => [
@@ -59,7 +56,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'social_id' => [
@@ -68,7 +66,8 @@ return (function () {
                 'config' => [
                     'type' => 'input',
                     'size' => 30,
-                    'eval' => 'trim,required',
+                    'eval' => 'trim',
+                    'required' => true,
                 ],
             ],
             'end_point_entry' => [
@@ -101,7 +100,8 @@ return (function () {
                 'label' => $ll . '.storage',
                 'config' => [
                     'type' => 'input',
-                    'eval' => 'int,required',
+                    'eval' => 'int',
+                    'required' => true,
                 ],
             ],
             'token' => [
@@ -126,9 +126,11 @@ return (function () {
                     'maxitems' => 20,
                     'foreign_table' => 'be_groups',
                     'foreign_table_where' => 'ORDER BY be_groups.title',
-                    'enableMultiSelectFilterTextfield' => true,
                 ],
             ],
+        ],
+        'security' => [
+            'ignorePageTypeRestriction' => true,
         ],
     ];
 })();

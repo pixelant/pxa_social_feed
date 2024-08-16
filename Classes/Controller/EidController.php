@@ -21,7 +21,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class EidController
 {
-    const IDENTIFIER = 'pxa_social_feed_fb_access_token';
+    public const IDENTIFIER = 'pxa_social_feed_fb_access_token';
 
     /**
      * @var TokenRepository

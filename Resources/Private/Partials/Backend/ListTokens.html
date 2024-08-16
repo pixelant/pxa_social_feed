@@ -20,11 +20,11 @@
                             <td>
                                 <div class="btn-group">
                                     <f:if condition="{token.facebookPageType} == FALSE">
-                                        <f:link.action action="editToken" class="btn btn-default" arguments="{token: token}" title="{f:translate(key: 'module.edit')}">
+                                        <f:link.action action="editToken" class="btn btn-default" arguments="{tokenToEdit: token}" title="{f:translate(key: 'module.edit')}">
                                             <core:icon identifier="actions-document-open" />
                                         </f:link.action>
                                     </f:if>
-                                    <f:link.action action="deleteToken" class="btn btn-default delete-action" arguments="{token: token}" title="{f:translate(key: 'module.delete')}">
+                                    <f:link.action action="deleteToken" class="btn btn-danger delete-action" arguments="{tokenToDelete: token}" title="{f:translate(key: 'module.delete')}">
                                         <core:icon identifier="actions-edit-delete" />
                                     </f:link.action>
                                 </div>

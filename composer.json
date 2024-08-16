@@ -17,9 +17,9 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
-    "typo3/cms-core": "^10.3 || ^11.5",
-    "typo3/cms-scheduler": "^10.3 || ^11.5",
+	"php": ">=8.1",
+	"typo3/cms-core": "^11.5 || ^12.4",
+	"typo3/cms-scheduler": "^11.5 || ^12.4",
     "league/oauth2-facebook": "2.0.5"
   },
   "require-dev": {

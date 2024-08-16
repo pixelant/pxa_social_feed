@@ -12,13 +12,13 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'info@pixelant.net',
     'author_company' => 'Pixelant',
     'state' => 'stable',
+    'version' => '4.0.0',
     'uploadfolder' => '0',
     'createDirs' => '',
     'clearCacheOnLoad' => 0,
-    'version' => '3.7.2',
     'constraints' => [
         'depends' => [
-            'typo3' => '10.3.0-11.5.99',
+            'typo3' => '11.5.0-12.4.99',
         ],
         'conflicts' => [
         ],

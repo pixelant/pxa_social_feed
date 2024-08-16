@@ -7,14 +7,16 @@ namespace Pixelant\PxaSocialFeed\Feed\Update;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Event\BeforeUpdateFacebookFeedEvent;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FacebookFeedUpdater
  */
 class FacebookFeedUpdater extends BaseUpdater
-{
+    {
     /**
      * Create/Update feed items
      *
@@ -56,11 +58,10 @@ class FacebookFeedUpdater extends BaseUpdater
             $feedItem->setUpdateDate((new \DateTime())->setTimestamp($updated));
         }
 
-        $feedItem->setLikes((int)($rawData['reactions']['summary']['total_count']));
-
-        // Call hook
-        $this->emitSignal('beforeUpdateFacebookFeed', [$feedItem, $rawData, $feedItem->getConfiguration()]);
-
+        $feedItem->setLikes((int)($rawData[ 'reactions' ][ 'summary' ][ 'total_count' ]));
+        // dispatch event
+        $eventDispatcher = GeneralUtility::makeInstance ( EventDispatcherInterface::class);
+        $eventDispatcher->dispatch ( new BeforeUpdateFacebookFeedEvent ( $feedItem, $rawData, $feedItem->getConfiguration () ) );
         $this->addOrUpdateFeedItem($feedItem);
     }
 

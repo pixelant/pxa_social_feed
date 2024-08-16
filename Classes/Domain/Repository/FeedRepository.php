@@ -4,11 +4,14 @@ namespace Pixelant\PxaSocialFeed\Domain\Repository;
 
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Http\ApplicationType;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\Generic\QueryResult;
 use TYPO3\CMS\Extbase\Persistence\Generic\Typo3QuerySettings;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
+use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
 
 /***************************************************************
@@ -58,10 +61,10 @@ class FeedRepository extends Repository
         // Don't respect storage
         $defaultQuerySettings->setRespectStoragePage(false);
 
-        if (TYPO3_MODE === 'BE' || TYPO3_MODE === 'CLI') {
+        if (ApplicationType::fromRequest($GLOBALS[ 'TYPO3_REQUEST' ])->isBackend() || Environment::isCli()) {
             // don't add fields from enable columns constraint
             $defaultQuerySettings->setIgnoreEnableFields(true);
-            $defaultQuerySettings->setEnableFieldsToBeIgnored(['disabled']);
+            $defaultQuerySettings->setEnableFieldsToBeIgnored([ 'disabled' ]);
         }
 
         $this->setDefaultQuerySettings($defaultQuerySettings);
@@ -72,17 +75,17 @@ class FeedRepository extends Repository
      *
      * @param ObjectStorage $storage
      * @param Configuration $configuration
-     * @return \TYPO3\CMS\Extbase\Persistence\QueryResultInterface<Feed>
+     * @return QueryResultInterface<Feed>
      */
     public function findNotInStorage(ObjectStorage $storage, Configuration $configuration)
     {
         $query = $this->createQuery();
 
         $query->matching(
-            $query->logicalAnd([
+            $query->logicalAnd(
                 $query->logicalNot($query->in('uid', $storage)),
                 $query->equals('configuration', $configuration),
-            ])
+            )
         );
 
         return $query->execute();
@@ -126,12 +129,12 @@ class FeedRepository extends Repository
     {
         $query = $this->createQuery();
 
-        $logicalAnd = [
-            $query->equals('pid', $pid),
-            $query->equals('externalIdentifier', $externalIdentifier),
-        ];
-
-        $query->matching($query->logicalAnd($logicalAnd));
+        $query->matching(
+            $query->logicalAnd(
+                $query->equals('pid', $pid),
+                $query->equals('externalIdentifier', $externalIdentifier),
+            ),
+        );
 
         return $query->execute()->getFirst();
     }

@@ -28,7 +28,6 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
 use League\OAuth2\Client\Provider\Exception\FacebookProviderException;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
@@ -44,37 +43,37 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class Token extends AbstractEntity
 {
-    use EmitSignalTrait;
+    // use EmitSignalTrait;
 
     /**
      * facebook user token
      */
-    const FACEBOOK = 1;
+    public const FACEBOOK = 1;
 
     /**
      * instagram_oauth2
      */
-    const INSTAGRAM = 2;
+    public const INSTAGRAM = 2;
 
     /**
      * twitter token
      */
-    const TWITTER = 3;
+    public const TWITTER = 3;
 
     /**
      * youtube token
      */
-    const YOUTUBE = 4;
+    public const YOUTUBE = 4;
 
     /**
      * facebook page token
      */
-    const FACEBOOK_PAGE = 5;
+    public const FACEBOOK_PAGE = 5;
 
     /**
      * twitter token v2 API
      */
-    const TWITTER_V2 = 6;
+    public const TWITTER_V2 = 6;
 
     /**
      * Default PID
@@ -84,7 +83,7 @@ class Token extends AbstractEntity
     protected $pid = 0;
 
     /**
-     * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<\TYPO3\CMS\Extbase\Domain\Model\BackendUserGroup>
+     * @var ObjectStorage<BackendUserGroup>|null
      * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
     protected $beGroup;
@@ -145,7 +144,7 @@ class Token extends AbstractEntity
     protected string $fbSocialId = '';
 
     /**
-     * @var Token|null
+     * @var Token
      */
     protected $parentToken;
 
@@ -310,9 +309,9 @@ class Token extends AbstractEntity
     }
 
     /**
-     * @return ObjectStorage
+     * @return ObjectStorage|null
      */
-    public function getBeGroup(): ObjectStorage
+    public function getBeGroup(): ?ObjectStorage
     {
         return $this->beGroup;
     }
@@ -320,7 +319,7 @@ class Token extends AbstractEntity
     /**
      * @param ObjectStorage $beGroup
      */
-    public function setBeGroup(ObjectStorage $beGroup): void
+    public function setBeGroup($beGroup): void
     {
         $this->beGroup = $beGroup;
     }
@@ -448,11 +447,11 @@ class Token extends AbstractEntity
      */
     public function getParentToken(): ?Token
     {
-        if ($this->parentToken instanceof Token) {
+        if ( $this->parentToken instanceof Token )
+            {
             return $this->parentToken;
-        }
-
-        return null;
+            }
+        return NULL;
     }
 
     /**

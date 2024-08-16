@@ -36,10 +36,8 @@ class TokenValidator extends AbstractValidator
      * Validates tokens
      *
      * @param Token $token
-     *
-     * @return bool
      */
-    protected function isValid($token)
+    protected function isValid($token): void
     {
         if (!in_array($token->getType(), Token::getAvailableTokensTypes())) {
             $this->addError(
@@ -49,8 +47,6 @@ class TokenValidator extends AbstractValidator
                 ),
                 1562851281828
             );
-
-            return false;
         }
 
         switch (true) {
@@ -84,11 +80,7 @@ class TokenValidator extends AbstractValidator
                     ),
                     1221559976
                 );
-
-                return false;
             }
         }
-
-        return true;
     }
 }

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Task;
 
 use Pixelant\PxaSocialFeed\Utility\SchedulerUtility;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
+use TYPO3\CMS\Scheduler\AbstractAdditionalFieldProvider;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
@@ -35,10 +35,9 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterface
+class ImportTaskAdditionalFieldProvider extends AbstractAdditionalFieldProvider
 {
     use AdditionalFieldProviderTrait;
-
     /**
      * @param array $taskInfo
      * @param ImportTask $task
@@ -97,7 +96,6 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
 
         return $additionalFields;
     }
-
     /**
      * @param array $submittedData
      * @param SchedulerModuleController $parentObject
@@ -113,18 +111,17 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         if (!isset($submittedData['pxasocialfeed_run_all_configs'])
             && !isset($submittedData['pxasocialfeed_configs'])
         ) {
-            $this->addMessage('Wrong configurations select', FlashMessage::ERROR);
+            $this->addMessage('Wrong configurations select', AbstractMessage::ERROR);
         } elseif (!$this->isValidEmail($submittedData['pxasocialfeed_sender_email'])
             || !$this->isValidEmail($submittedData['pxasocialfeed_receiver_email'])
         ) {
-            $this->addMessage('Please provide a valid email address.', FlashMessage::ERROR);
+            $this->addMessage('Please provide a valid email address.', AbstractMessage::ERROR);
         } else {
             $valid = true;
         }
 
         return $valid;
     }
-
     /**
      * @param array $submittedData
      * @param ImportTask $task
@@ -136,7 +133,6 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
         $task->setSenderEmail($submittedData['pxasocialfeed_sender_email']);
         $task->setRunAllConfigurations((bool)($submittedData['pxasocialfeed_run_all_configs'] ?? false));
     }
-
     /**
      * Input field code
      *
@@ -153,7 +149,6 @@ class ImportTaskAdditionalFieldProvider implements AdditionalFieldProviderInterf
             htmlspecialchars($value)
         );
     }
-
     /**
      * Validate email
      *

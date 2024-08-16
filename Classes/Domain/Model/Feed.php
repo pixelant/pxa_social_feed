@@ -28,7 +28,7 @@ namespace Pixelant\PxaSocialFeed\Domain\Model;
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-
+use TYPO3\CMS\Extbase\Annotation\ORM\Lazy;
 use TYPO3\CMS\Extbase\Domain\Model\FileReference;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\Generic\LazyLoadingProxy;
@@ -42,12 +42,12 @@ class Feed extends AbstractEntity
     /**
      * image media type
      */
-    const IMAGE = 1;
+    public const IMAGE = 1;
 
     /**
      * video media type
      */
-    const VIDEO = 2;
+    public const VIDEO = 2;
 
     /**
      * pid
@@ -131,17 +131,17 @@ class Feed extends AbstractEntity
     /**
      * token
      *
-     * @var \Pixelant\PxaSocialFeed\Domain\Model\Configuration
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
+     * @var Configuration
      */
+    #[Lazy]
     protected $configuration;
 
     /**
      * Fal media items
      *
      * @var ObjectStorage<\Pixelant\PxaSocialFeed\Domain\Model\FileReference>
-     * @TYPO3\CMS\Extbase\Annotation\ORM\Lazy
      */
+    #[Lazy]
     protected $falMedia;
 
     /**

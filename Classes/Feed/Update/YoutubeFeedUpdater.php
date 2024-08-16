@@ -7,7 +7,9 @@ namespace Pixelant\PxaSocialFeed\Feed\Update;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
+use Pixelant\PxaSocialFeed\Event\BeforeUpdateYoutubeFeedEvent;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -35,10 +37,9 @@ class YoutubeFeedUpdater extends BaseUpdater
             }
 
             $this->updateFeedItem($feedItem, $rawData);
-
-            // Call hook
-            $this->emitSignal('beforeUpdateYoutubeFeed', [$feedItem, $rawData, $source->getConfiguration()]);
-
+            // dispatch event
+            $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+            $eventDispatcher->dispatch(new BeforeUpdateYoutubeFeedEvent($feedItem, $rawData, $source->getConfiguration()));
             $this->addOrUpdateFeedItem($feedItem);
         }
     }

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Task;
 
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
 
@@ -30,29 +31,30 @@ trait AdditionalFieldProviderTrait
     {
         return method_exists($schedulerModuleController, 'getCurrentAction')
             ? (string)$schedulerModuleController->getCurrentAction()
-            : $schedulerModuleController->CMD;
+            : (string)$schedulerModuleController->getCurrentAction();
     }
 
     /**
-     * Creates a Message object and adds it to the FlashMessageQueue.
+     * Add a flash message
      *
-     * @param string $messageBody The message
-     * @param int $severity Optional severity, must be one of \TYPO3\CMS\Core\Messaging\FlashMessage constants
-     * @throws \InvalidArgumentException if the message body is no string
+     * @param string $message the flash message content
+     * @param value-of<ContextualFeedbackSeverity>|ContextualFeedbackSeverity $severity the flash message severity
+     *
+     * @todo: Change $severity to allow ContextualFeedbackSeverity only in v13
      */
-    protected function addMessage(string $messageBody, int $severity = AbstractMessage::OK): void
+    protected function addMessage(string $message, int|ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): void
     {
-        if (!is_string($messageBody)) {
+        if (!is_string($message)) {
             throw new \InvalidArgumentException(
-                'The message body must be of type string, "' . gettype($messageBody) . '" given.',
+                'The message body must be of type string, "' . gettype($message) . '" given.',
                 1548921638461
             );
         }
 
         /* @var \TYPO3\CMS\Core\Messaging\FlashMessage $flashMessage */
         $flashMessage = GeneralUtility::makeInstance(
-            \TYPO3\CMS\Core\Messaging\FlashMessage::class,
-            $messageBody,
+            FlashMessage::class,
+            $message,
             '',
             $severity,
             true

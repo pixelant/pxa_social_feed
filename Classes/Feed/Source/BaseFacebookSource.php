@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
+use Pixelant\PxaSocialFeed\Event\FacebookEndPointEvent;
+use Pixelant\PxaSocialFeed\Event\FacebookEndPointRequestFieldsEvent;
 use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class BaseFacebookSource
  */
 abstract class BaseFacebookSource extends BaseSource
 {
-    const GRAPH_VERSION = 'v12.0';
+    public const GRAPH_VERSION = 'v12.0';
 
     /**
      * Generate facebook endpoint
@@ -22,18 +26,17 @@ abstract class BaseFacebookSource extends BaseSource
      */
     protected function generateEndPoint(string $id, string $endPointEntry): string
     {
-        $limit = $this->getConfiguration()->getMaxItems();
-
-        $fields = $this->getEndPointFields();
-
-        list($fields) = $this->emitSignal('facebookEndPointRequestFields', [$fields]);
-
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+        $limit           = $this->getConfiguration()->getMaxItems();
+        $fields          = $this->getEndPointFields();
+        $event           = $eventDispatcher->dispatch(new FacebookEndPointRequestFieldsEvent($fields));
+        $fieldsArray     = $event->getFields();
         $url = $id . '/' . $endPointEntry;
 
         $queryParams = [
-            'fields' => implode(',', $fields),
-            'limit' => $limit,
-            'access_token' => $this->getConfiguration()->getToken()->getAccessToken(),
+            'fields'          => implode(',', $fieldsArray),
+            'limit'           => $limit,
+            'access_token'    => $this->getConfiguration()->getToken()->getAccessToken(),
             'appsecret_proof' => hash_hmac(
                 'sha256',
                 $this->getConfiguration()->getToken()->getAccessToken(),
@@ -42,10 +45,14 @@ abstract class BaseFacebookSource extends BaseSource
         ];
 
         $endPoint = $this->addFieldsAsGetParametersToUrl($url, $queryParams);
+        $event    = $eventDispatcher->dispatch(new FacebookEndPointEvent($endPoint));
 
-        list($endPoint) = $this->emitSignal('faceBookEndPoint', [$endPoint]);
+        // dd ( $event->getEndPoint () );
+        // $endPointArray = $event->getEndPoint ();
 
-        return $endPoint;
+        // list( $endPoint ) = $endPointArray;
+
+        return $event->getEndPoint();
     }
 
     /**
