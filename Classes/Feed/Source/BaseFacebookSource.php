@@ -15,7 +15,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 abstract class BaseFacebookSource extends BaseSource
 {
-    public const GRAPH_VERSION = 'v12.0';
+    public const GRAPH_VERSION = 'v24.0';
 
     /**
      * Generate facebook endpoint
