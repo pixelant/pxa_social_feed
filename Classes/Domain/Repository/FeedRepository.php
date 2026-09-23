@@ -61,12 +61,6 @@ class FeedRepository extends Repository
         // Don't respect storage
         $defaultQuerySettings->setRespectStoragePage(false);
 
-        if ( Environment::isCli() || ApplicationType::fromRequest($GLOBALS[ 'TYPO3_REQUEST' ])->isBackend() ) {
-            // don't add fields from enable columns constraint
-            $defaultQuerySettings->setIgnoreEnableFields(true);
-            $defaultQuerySettings->setEnableFieldsToBeIgnored([ 'disabled' ]);
-        }
-
         $this->setDefaultQuerySettings($defaultQuerySettings);
     }
 
