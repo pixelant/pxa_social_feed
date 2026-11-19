@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Service\Expire;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Service\Expire\FacebookAccessTokenExpireService;
 
@@ -18,17 +18,17 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createPartialMock(FacebookAccessTokenExpireService::class, []);
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function hasExpiredReturnFalseIfTokenValid()
     {
         $mockedToken = $this->createMock(Token::class);
@@ -42,9 +42,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertFalse($this->subject->hasExpired());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function hasExpiredReturnTrueIfTokenNotValid()
     {
         $mockedToken = $this->createMock(Token::class);
@@ -58,9 +56,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertTrue($this->subject->hasExpired());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function willExpireSoonCheckIfTokenLifeTimeIsLowAccordingToGivenValue()
     {
         $expireAt = 3;
@@ -77,9 +73,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertFalse($mockedSubject->willExpireSoon(2));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function expireWhenReturnNumberOfDaysOfTokenLifeTime()
     {
         $expireAt = (new \DateTime())->modify('+10 days');
@@ -95,9 +89,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertEquals(10, $this->subject->expireWhen());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function expireWhenReturnNumberZeroIfNoExpireDate()
     {
         $mockedToken = $this->createMock(Token::class);
@@ -111,9 +103,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertEquals(0, $this->subject->expireWhen());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function expireWhenReturnNumberZeroIfNoExpireDateTokenExpired()
     {
         $expireAt = (new \DateTime())->modify('-2 days');
@@ -129,9 +119,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertEquals(0, $this->subject->expireWhen());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function tokenRequireReturnTrueOnCorrectType()
     {
         $token = new Token();
@@ -142,9 +130,7 @@ class FacebookAccessTokenExpireServiceTest extends UnitTestCase
         self::assertTrue($this->subject->tokenRequireCheck());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function tokenRequireReturnFalseOnInCorrectType()
     {
         $token = new Token();

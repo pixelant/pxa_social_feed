@@ -1,42 +1,33 @@
 name: Continuous Integration
 
-on: [ push, pull_request ]
+on: [push, pull_request]
+
+permissions:
+  contents: read
 
 jobs:
-  ci:
-    name: Suite to run
+  test:
+    name: TYPO3 13.4 / PHP ${{ matrix.php }} / ${{ matrix.dependencies }}
     runs-on: ubuntu-latest
-
     strategy:
+      fail-fast: false
       matrix:
-        php-version:
-          - 7.4
-          - 8.0
-          - 8.1
-
+        php: ['8.2', '8.3', '8.4']
+        dependencies: [highest]
+        include:
+          - php: '8.2'
+            dependencies: lowest
     steps:
-      - name: Configure PHP ${{ matrix.php-version }}
-        uses: shivammathur/setup-php@v2
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
         with:
-          ini-values: memory_limit=-1, error_reporting=E_ALL, display_errors=On
-          php-version: ${{ matrix.php-version }}
-
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: "Cache dependencies installed with composer"
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache
-          key: php${{ matrix.php-version }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            php${{ matrix.php-version }}-composer-
-
-      - name: Install Composer dependencies
-        run: composer install --no-progress
-
-      - name: Run PHP Code Sniffer
-        run: composer run php:cs-fixer
-
-      - name: Run PHP Unit tests
-        run: composer run php:unittests
+          php-version: ${{ matrix.php }}
+          extensions: intl, mbstring, pdo_sqlite, gd, zip
+          tools: composer:v2
+          coverage: none
+      - name: Validate package metadata
+        run: composer validate --strict
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-progress ${{ matrix.dependencies == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
+      - name: Run checks
+        run: composer tests:all

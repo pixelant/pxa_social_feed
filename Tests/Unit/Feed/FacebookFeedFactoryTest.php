@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\FacebookFeedFactory;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
@@ -20,25 +20,23 @@ class FacebookFeedFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createMock(FacebookFeedFactory::class);
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFeedSourceReturnFacebookSource()
     {
         self::assertInstanceOf(FacebookSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFeedUpdaterReturnFacebookUpdater()
     {
         self::assertInstanceOf(FacebookFeedUpdater::class, $this->subject->getFeedUpdater());

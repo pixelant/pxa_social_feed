@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 
@@ -45,25 +45,23 @@ class FeedTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Feed();
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfPid()
     {
         self::assertEquals(0, $this->subject->getPid());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetPid()
     {
         $value = 123;
@@ -72,17 +70,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getPid());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfUpdateDate()
     {
         self::assertNull($this->subject->getUpdateDate());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetUpdateDate()
     {
         $date = new \DateTime();
@@ -92,17 +86,13 @@ class FeedTest extends UnitTestCase
         self::assertSame($date, $this->subject->getUpdateDate());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfExternalIdentifier()
     {
         self::assertEmpty($this->subject->getExternalIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetExternalIdentifier()
     {
         $value = 'test';
@@ -112,17 +102,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getExternalIdentifier());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfPostDate()
     {
         self::assertNull($this->subject->getPostDate());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetPostDate()
     {
         $date = new \DateTime();
@@ -132,17 +118,13 @@ class FeedTest extends UnitTestCase
         self::assertSame($date, $this->subject->getPostDate());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfPostUrl()
     {
         self::assertEmpty($this->subject->getPostUrl());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetPostUrl()
     {
         $value = 'post url';
@@ -152,17 +134,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getPostUrl());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfMessage()
     {
         self::assertEmpty($this->subject->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetMessage()
     {
         $value = 'message';
@@ -172,17 +150,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getMessage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfImage()
     {
         self::assertEmpty($this->subject->getImage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetImage()
     {
         $value = 'image';
@@ -192,17 +166,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getImage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfLikes()
     {
         self::assertEquals(0, $this->subject->getLikes());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetLikes()
     {
         $value = 120;
@@ -212,17 +182,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getLikes());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfTitle()
     {
         self::assertEmpty($this->subject->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetTitle()
     {
         $value = 'title';
@@ -232,17 +198,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getTitle());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfType()
     {
         self::assertEquals(0, $this->subject->getType());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetType()
     {
         $value = 3;
@@ -252,17 +214,13 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getType());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfConfiguration()
     {
         self::assertNull($this->subject->getConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetConfiguration()
     {
         $fixture = new Configuration();
@@ -272,17 +230,13 @@ class FeedTest extends UnitTestCase
         self::assertSame($fixture, $this->subject->getConfiguration());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfMediaType()
     {
         self::assertEquals(Feed::IMAGE, $this->subject->getMediaType());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetMediaType()
     {
         $value = Feed::VIDEO;
@@ -292,9 +246,7 @@ class FeedTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getMediaType());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getDecodedMessageReturnMessage()
     {
         $value = 'message2';

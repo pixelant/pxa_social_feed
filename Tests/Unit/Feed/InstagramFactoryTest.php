@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\InstagramFactory;
 use Pixelant\PxaSocialFeed\Feed\Source\InstagramSource;
@@ -20,25 +20,23 @@ class InstagramFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createMock(InstagramFactory::class);
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFeedSourceReturnInstagramSource()
     {
         self::assertInstanceOf(InstagramSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFeedUpdaterReturnInstagramUpdater()
     {
         self::assertInstanceOf(InstagramFeedUpdater::class, $this->subject->getFeedUpdater());

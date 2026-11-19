@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\Source\YoutubeSource;
 use Pixelant\PxaSocialFeed\Feed\Update\YoutubeFeedUpdater;
@@ -20,25 +20,23 @@ class YoutubeFactoryTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->createMock(YoutubeFactory::class);
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFeedSourceReturnYoutubeSource()
     {
         self::assertInstanceOf(YoutubeSource::class, $this->subject->getFeedSource(new Configuration()));
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function getFeedUpdaterReturnYoutubeUpdater()
     {
         self::assertInstanceOf(YoutubeFeedUpdater::class, $this->subject->getFeedUpdater());
