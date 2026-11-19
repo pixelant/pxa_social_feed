@@ -402,7 +402,13 @@ class Token extends AbstractEntity
             session_start();
         }
 
-        $fb = $this->getFb($clientId, $clientSecret, $redirectUrl);
+        // Metadata checks may have cached a provider without a redirect URI.
+        $fb = new Facebook([
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+            'redirectUri' => $redirectUrl,
+            'graphApiVersion' => FacebookSource::GRAPH_VERSION,
+        ]);
         $url = $fb->getAuthorizationUrl(['scope' => $permissions]);
         $_SESSION['pxa_social_feed_oauth'][$this->getUid()] = $fb->getState();
         return $url;
