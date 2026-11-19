@@ -1,20 +1,13 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<f:alias map="{ll: 'LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:'}">
-    <strong><f:translate key="{ll}plugin_title" /></strong>
-    <hr>
-
-    <f:render section="pre" contentAs="content">
-        <b><f:translate key="{ll}loadType" /></b>: {settings.switchableControllerActions}<br>
-        <b><f:translate key="{ll}presentation" /></b>: {settings.presentation}<br>
-        <b><f:translate key="{ll}appearanceFeedItem" /></b>: {settings.partial}<br>
-        <b><f:translate key="{ll}feedsLimit" /></b>: <f:if condition="{settings.feedsLimit}" then="{settings.feedsLimit}" else="{f:translate(key: '{ll}unlimited')}" /><br>
-        <b><f:translate key="{ll}loadLikesCount" /></b>: <f:if condition="{settings.loadLikesCount}" then="{f:translate(key: '{ll}yes')}" else="{f:translate(key: '{ll}no')}" /><br>
-
-        <f:if condition="{configurations}">
-            <b><f:translate key="{ll}feeds" /></b>: {configurations}
-        </f:if>
-    </f:render>
-</f:alias>
-
-<f:section name="pre"><pre>{content -> f:format.raw() -> f:spaceless()}</pre></f:section>
+<strong>Pxa Social Feed</strong>
+<dl>
+    <dt><f:translate key="LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.load_type" /></dt>
+    <dd>{settings.loadType}</dd>
+    <dt><f:translate key="LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.presentation" /></dt>
+    <dd>{settings.presentation}</dd>
+    <dt><f:translate key="LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.amount_feeds" /></dt>
+    <dd>{settings.feedsLimit}</dd>
+    <dt><f:translate key="LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.config" /></dt>
+    <dd>{configurations}</dd>
+</dl>
 </html>

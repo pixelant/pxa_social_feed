@@ -2,19 +2,30 @@
 
 defined('TYPO3') || die('Access denied.');
 
-\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerPlugin(
-    'pxa_social_feed',
+use Pixelant\PxaSocialFeed\Preview\SocialFeedPreviewRenderer;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+
+ExtensionUtility::registerPlugin(
+    'PxaSocialFeed',
     'Showfeed',
-    'Pxa Social Feed'
+    'Pxa Social Feed',
+    'ext-pxasocialfeed-wizard-icon',
 );
 
-// @codingStandardsIgnoreStart
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['pxasocialfeed_showfeed'] = 'pages,recursive,layout,select_key';
-$GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['pxasocialfeed_showfeed'] = 'pi_flexform';
-// @codingStandardsIgnoreEnd
-
-// Add flexform
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
-    'pxasocialfeed_showfeed',
-    'FILE:EXT:pxa_social_feed/Configuration/FlexForm/SocialFeed.xml'
+$GLOBALS['TCA']['tt_content']['types']['pxasocialfeed_showfeed']['showitem'] = '
+    --palette--;;general, --palette--;;headers, pi_flexform,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:appearance,
+    --palette--;;frames, --palette--;;appearanceLinks,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:language,
+    --palette--;;language,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:access,
+    --palette--;;hidden, --palette--;;access,
+    --div--;LLL:EXT:core/Resources/Private/Language/Form/locallang_tabs.xlf:extended
+';
+$GLOBALS['TCA']['tt_content']['types']['pxasocialfeed_showfeed']['previewRenderer'] = SocialFeedPreviewRenderer::class;
+ExtensionManagementUtility::addPiFlexFormValue(
+    '*',
+    'FILE:EXT:pxa_social_feed/Configuration/FlexForm/SocialFeed.xml',
+    'pxasocialfeed_showfeed'
 );

@@ -1,5 +1,5 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
-     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+     xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers">
 
 <f:layout name="Default"/>
 
@@ -31,7 +31,7 @@
 </f:section>
 
 <f:section name="uri">
-	<f:uri.action action="loadFeedAjax"
+	<f:uri.action action="loadFeedAjax" pluginName="Ajax"
 								pageType="7378121"
 								absolute="1"
 								arguments="{configuration: settings.configuration, feedsLimit: settings.feedsLimit, partial: settings.partial, presentation: settings.presentation}" />

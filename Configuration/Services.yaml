@@ -10,3 +10,7 @@ services:
       - '../Classes/Domain/Model/*'
   Pixelant\PxaSocialFeed\Controller\AdministrationController:
     tags: ['backend.controller']
+  Pixelant\PxaSocialFeed\Preview\SocialFeedPreviewRenderer:
+    public: true
+  Pixelant\PxaSocialFeed\Updates\MigratePluginUpdate:
+    public: true
