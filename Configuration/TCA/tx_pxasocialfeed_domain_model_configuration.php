@@ -90,17 +90,15 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . '.max_items',
                 'config' => [
-                    'type' => 'input',
+                    'type' => 'number',
                     'size' => 30,
-                    'eval' => 'int',
                 ],
             ],
             'storage' => [
                 'exclude' => 1,
                 'label' => $ll . '.storage',
                 'config' => [
-                    'type' => 'input',
-                    'eval' => 'int',
+                    'type' => 'number',
                     'required' => true,
                 ],
             ],

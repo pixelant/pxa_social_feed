@@ -8,7 +8,6 @@ use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Database\Query\Expression\CompositeExpression;
 use TYPO3\CMS\Core\Database\Query\Expression\ExpressionBuilder;
 use TYPO3\CMS\Core\Database\Query\Restriction\QueryRestrictionInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Restrict access by BE user group
@@ -51,7 +50,7 @@ class BackendGroupRestriction implements QueryRestrictionInterface
                     $expressionBuilder->eq($fieldName, $expressionBuilder->literal('0')),
                 ];
 
-                $backendGroupIds = GeneralUtility::intExplode(',', $this->backendUserAuth->groupList);
+                $backendGroupIds = array_map('intval', array_keys($this->backendUserAuth->userGroups));
                 foreach ($backendGroupIds as $backendGroupId) {
                     $constraints[] = $expressionBuilder->inSet(
                         $fieldName,

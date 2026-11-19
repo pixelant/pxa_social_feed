@@ -26,9 +26,9 @@ namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Test case for class \Pixelant\PxaSocialFeed\Domain\Model\Token.
@@ -195,11 +195,11 @@ class TokenTest extends UnitTestCase
     public function getFacebookAccessTokenValidPeriodReturnDifferenceInDays()
     {
         $expect = '+7';
-        $endDate = (new \DateTime())->modify('+7 days');
+        $endDate = (new \DateTime())->modify('+7 days +1 hour');
 
         $mockedToken = $this->createPartialMock(Token::class, ['getFacebookAccessTokenMetadataExpirationDate']);
         $mockedToken
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getFacebookAccessTokenMetadataExpirationDate')
             ->willReturn($endDate);
 

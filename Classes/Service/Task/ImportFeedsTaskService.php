@@ -48,7 +48,7 @@ class ImportFeedsTaskService
      * TaskUtility constructor.
      * @param NotificationService $notificationService
      */
-    public function __construct(NotificationService $notificationService = null)
+    public function __construct(?NotificationService $notificationService = null)
     {
         $this->notificationService = $notificationService ?? GeneralUtility::makeInstance(NotificationService::class);
 

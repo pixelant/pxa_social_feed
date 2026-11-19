@@ -35,15 +35,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class TokenGenerationUrlViewHelper
  */
 class FacebookLoginUrlViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -60,6 +57,10 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
      * @var string
      */
     protected $defaultPermissions = 'public_profile, user_posts';
+    public function render()
+    {
+        return self::renderStatic($this->arguments, $this->renderChildren(...), $this->renderingContext);
+    }
 
     /**
      * Initialize
@@ -144,17 +145,9 @@ class FacebookLoginUrlViewHelper extends AbstractViewHelper
      */
     protected static function buildRedirectUrl(int $tokenUid): string
     {
-        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
-            || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO']
-            === 'https' ? 'https' : 'http';
-
-        return sprintf(
-            '%s://%s%s/?eID=%s&token=%d',
-            $protocol,
-            GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
-            GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',
-            EidController::IDENTIFIER,
-            $tokenUid
-        );
+        return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . '?' . http_build_query([
+            'eID' => EidController::IDENTIFIER,
+            'token' => $tokenUid,
+        ]);
     }
 }

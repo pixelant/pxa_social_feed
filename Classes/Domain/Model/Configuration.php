@@ -44,7 +44,7 @@ class Configuration extends AbstractEntity
      *
      * @var int
      */
-    protected $pid = 0;
+    protected ?int $pid = 0;
 
     /**
      * hidden

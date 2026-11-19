@@ -56,14 +56,11 @@ class TokenRepository extends AbstractBackendRepository
     public function findFacebookPageToken(Token $token, string $fbSocialId)
     {
         $query = $this->createQuery();
-        $query->getQuerySettings ()->setIgnoreEnableFields ( TRUE );
-        //TODO: handle Facebook Social ID and parent token
-        // $query->equals('parentToken', $token->getParentToken()),
-        // $query->equals('fbSocialId', $fbSocialId),
+        $query->getQuerySettings()->setIgnoreEnableFields(true);
         $query->matching(
             $query->logicalAnd(
-                $query->equals ( 'parentToken', 0 ),
-                $query->equals ( 'fbSocialId', '' ),
+                $query->equals('parentToken', $token),
+                $query->equals('fbSocialId', $fbSocialId),
             )
         );
 
@@ -114,7 +111,7 @@ class TokenRepository extends AbstractBackendRepository
                 'tx_pxasocialfeed_domain_model_token',
                 ['access_token' => (string)$accessToken],
                 ['uid' => $uid],
-                [\PDO::PARAM_STR]
+                ['access_token' => \TYPO3\CMS\Core\Database\Connection::PARAM_STR]
             )
         ;
     }

@@ -1,217 +1,104 @@
 import DocumentService from '@typo3/core/document-service.js';
-import Notification from '@typo3/backend/notification.js';
 import Modal from '@typo3/backend/modal.js';
-import $ from 'jquery';
+import Notification from '@typo3/backend/notification.js';
 import Severity from '@typo3/backend/severity.js';
-import bootstrap from '@typo3/backend/bootstrap';
-/*
- * file created by Abdellatif Landolsi <abdellatif@landolsi.de> for TYPO3 v12.4
- * Date: 2023-10-19
- */
+import { Tab, Tooltip } from 'bootstrap';
 
 class SocialFeedAdministrationModule {
   constructor() {
-    this._isRunning = false;
-    this._domElementsSelectors = {
-      confirmationButton: '.delete-action,.confirmation-action',
-      selectSocialType: '#select-type',
-      socialTypeUrlKeep: '#type-url-',
-      winStorageBrowser: '[data-identifier="browse-feeds-storage"]',
-      feedsStorageInput: '[data-identifier="feeds-storage-input"]',
-      feedsStorageTitle: '[data-identifier="feed-storage-title"]',
-      copyRedirectUriButton: '.copy-redirect-uri-button',
-      facebookLoginButton: '.facebook-login-link',
-    };
-    DocumentService.ready().then(() => {
-      this.initialize();
-    });
+    DocumentService.ready().then(() => this.initialize());
   }
+
   initialize() {
-    if (this._isRunning === false) {
-      this._bootstrap();
+    this.root = document.querySelector('.pxa-social-feed-be-adminnistration');
+    if (!this.root || this.root.dataset.initialized === 'true') {
+      return;
     }
-    _isRunning = true;
-  }
+    this.root.dataset.initialized = 'true';
 
-  _bootstrap() {
-    this._deleteConfirmation();
-    this._facebookLoginWindow();
-    this._changeSocialType();
-    this._winStorageBrowser();
-    this._getRedirectUriButtonClick();
-    this._initToolTip();
-    this._activateTabs();
-  }
-
-  /**
-   * Activate the tabs for the backend module
-   *
-   * @private
-   */
-  _activateTabs() {
-    let triggerTabList = [].slice.call(document.querySelectorAll('#tabs a'));
-    triggerTabList.forEach(function (triggerEl) {
-      let tabTrigger = new bootstrap.Tab(triggerEl);
-
-      triggerEl.addEventListener('click', function (event) {
+    this.root.querySelectorAll('.delete-action, .confirmation-action').forEach((button) => {
+      button.addEventListener('click', (event) => {
         event.preventDefault();
-        tabTrigger.show();
+        const modal = Modal.confirm(
+          button.dataset.confirmationTitle || 'Delete',
+          button.dataset.confirmationMessage || 'Are you sure you want to delete this record?',
+          Severity.warning,
+        );
+        modal.addEventListener('confirm.button.ok', () => {
+          Modal.dismiss();
+          window.location.assign(button.href);
+        });
       });
     });
-  }
 
-  /**
-   * If user try to delete something
-   *
-   * @private
-   */
-  _deleteConfirmation() {
-    this._getDomElementIdentifier('confirmationButton').on('click', function (e) {
-      e.preventDefault();
+    this.root.querySelector('#select-type')?.addEventListener('change', (event) => {
+      const target = document.getElementById(`type-url-${event.target.value}`);
+      if (target?.value) {
+        window.location.assign(target.value);
+      }
+    });
 
-      var $this = $(this);
-      var title = $this.data('confirmation-title') || 'Delete';
-      var message = $this.data('confirmation-message') || 'Are you sure you want to delete this record ?';
-
-      var url = $this.attr('href'),
-        modal = Modal.confirm(title, message, Severity.warning);
-
-      modal.on('confirm.button.cancel', function () {
-        Modal.dismiss(modal);
-      });
-
-      modal.on('confirm.button.ok', function () {
-        Modal.dismiss(modal);
-        window.location.href = url;
+    this.root.querySelectorAll('.facebook-login-link').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.open(link.href, 'Facebook login', 'width=800,height=800');
       });
     });
-  }
 
-  /**
-   * Show window with facebook login
-   *
-   * @private
-   */
-  _facebookLoginWindow() {
-    this._getDomElementIdentifier('facebookLoginButton').on('click', function (e) {
-      e.preventDefault();
-
-      var $this = $(this);
-      var w = 800;
-      var h = 800;
-
-      var y = window.top.outerHeight / 2 + window.top.screenY - h / 2;
-      var x = window.top.outerWidth / 2 + window.top.screenX - w / 2;
-
-      window.open($this.attr('href'), 'Facebook login', 'height=' + h + ',width=' + w + 'top=' + y + ', left=' + x);
-    });
-  }
-
-  /**
-   * Switch to different social type
-   *
-   * @private
-   */
-  _changeSocialType() {
-    this._getDomElementIdentifier('selectSocialType').on('change', function () {
-      var selectSocialType = $(this).find(':selected').val();
-
-      window.location.href = $(_getDomElementIdentifier('socialTypeUrlKeep') + selectSocialType).val();
-    });
-  }
-
-  /**
-   * Copy redirect uri to clipboard
-   * @private
-   */
-  _getRedirectUriButtonClick() {
-    new clipboard(this._getDomElementIdentifier('copyRedirectUriButton'));
-  }
-
-  /**
-   * Load browser pages window
-   *
-   * @private
-   */
-  _winStorageBrowser() {
-    window.addEventListener('message', function (e) {
-      if (!MessageUtility.MessageUtility.verifyOrigin(e.origin)) {
-        throw 'Denied message sent by ' + e.origin;
-      }
-
-      if (typeof e.data.fieldName === 'undefined') {
-        throw 'fieldName not defined in message';
-      }
-
-      if (typeof e.data.value === 'undefined') {
-        throw 'value not defined in message';
-      }
-
-      const fieldElement = this._getInsertTarget(e.data.fieldName);
-      if (fieldElement) {
-        fieldElement.value = e.data.value;
-      }
-
-      const storageTitleElement = document.querySelector(this._getDomElementIdentifier('feedsStorageTitle'));
-      if (storageTitleElement) {
-        storageTitleElement.innerHTML = e.data.label;
-      }
+    this.root.querySelectorAll('.copy-redirect-uri-button').forEach((button) => {
+      button.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const target = this.root.querySelector(button.dataset.clipboardTarget);
+        if (target) {
+          try {
+            await navigator.clipboard.writeText(target.textContent);
+          } catch {
+            Notification.error('Copy failed', 'Please copy the displayed redirect URI manually.');
+          }
+        }
+      });
     });
 
-    this._getDomElementIdentifier('winStorageBrowser').on('click', function () {
-      var insertTarget = this._getDomElementIdentifier('feedsStorageInput'),
-        randomIdentifier = Math.floor(Math.random() * 100000 + 1);
-
-      insertTarget.attr('data-insert-target', randomIdentifier);
-      this._openTypo3WinBrowser('db', randomIdentifier + '|||pages');
+    this.root.querySelectorAll('#tabs a').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        Tab.getOrCreateInstance(link).show();
+      });
     });
-  }
-
-  /**
-   * @private
-   *
-   * opens a popup window with the element browser
-   *
-   * @param mode
-   * @param params
-   */
-  _openTypo3WinBrowser(mode, params) {
-    const url = _getSetting('browserUrl') + '&mode=' + mode + '&bparams=' + params;
-    Modal.advanced({
-      type: Modal.types.iframe,
-      content: url,
-      size: Modal.sizes.large,
+    this.root.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((element) => {
+      Tooltip.getOrCreateInstance(element);
     });
-  }
 
-  /**
-   * Get selector
-   * @param elementIdentifier
-   * @return {*|undefined}
-   * @private
-   */
-  _getDomElementIdentifier(elementIdentifier) {
-    return _domElementsSelectors[elementIdentifier] || undefined;
-  }
+    this.root.querySelector('[data-identifier="browse-feeds-storage"]')?.addEventListener('click', (event) => {
+      event.preventDefault();
+      const input = this.root.querySelector('[data-identifier="feeds-storage-input"]');
+      if (!input || !this.root.dataset.browserUrl) {
+        return;
+      }
+      input.dataset.insertTarget = `pxa-storage-${Date.now()}`;
+      const url = new URL(this.root.dataset.browserUrl, window.location.href);
+      url.searchParams.set('mode', 'db');
+      url.searchParams.set('bparams', `${input.dataset.insertTarget}|||pages`);
+      Modal.advanced({ type: Modal.types.iframe, content: url.toString(), size: Modal.sizes.large });
+    });
 
-  /**
-   * Get insert target
-   * @param reference
-   * @return {HTMLElement|null}
-   * @private
-   */
-  _getInsertTarget(reference) {
-    return document.querySelector('[data-insert-target="' + reference + '"]');
-  }
-
-  /**
-   * Get settings
-   * @param key
-   * @return {*|undefined}
-   * @private
-   */
-  _getSetting(key) {
-    return settings[key] || undefined;
+    window.addEventListener('message', (event) => {
+      if (event.origin !== window.location.origin || !event.data || typeof event.data.fieldName !== 'string') {
+        return;
+      }
+      const input = this.root.querySelector('[data-identifier="feeds-storage-input"]');
+      const selectedPage = /^(?:pages_)?(\d+)$/.exec(String(event.data.value));
+      if (!input || !input.dataset.insertTarget || event.data.fieldName !== input.dataset.insertTarget
+        || event.data.actionName !== 'typo3:elementBrowser:elementAdded' || !selectedPage) {
+        return;
+      }
+      input.value = selectedPage[1];
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+      const title = this.root.querySelector('[data-identifier="feed-storage-title"]');
+      if (title) {
+        title.textContent = event.data.label || '';
+      }
+    });
   }
 }
 

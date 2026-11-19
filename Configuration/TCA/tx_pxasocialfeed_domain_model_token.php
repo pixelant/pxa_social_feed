@@ -37,7 +37,8 @@ return (function () {
                     'access_token' => [
                         'label' => $ll . '.access_token',
                         'config' => [
-                            'eval' => 'trim,required',
+                            'eval' => 'trim',
+                            'required' => true,
                         ],
                     ],
                 ],

@@ -75,10 +75,8 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.post_date',
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
+                    'type' => 'datetime',
                     'size' => 12,
-                    'eval' => 'datetime',
                     'default' => null,
                 ],
             ],
@@ -120,39 +118,19 @@ return (function () {
                 ],
             ],
             'fal_media' => [
-              'exclude' => true,
-              'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
-              'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
-                  'fal_media',
-                  [
-                    'appearance' => [
-                      'createNewRelationLinkTitle' => 'LLL:EXT:frontend/Resources/Private/Language/locallang_ttc.xlf:images.addFileReference',
-                    ],
-                    'foreign_match_fields' => [
-                      'fieldname' => 'fal_media',
-                      'tablenames' => 'tx_pxasocialfeed_domain_model_feed',
-                    ],
-                    'overrideChildTca' => [
-                      'types' => [
-                        \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
-                          'showitem' => '
-                          --palette--;LLL:EXT:core/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
-                          --palette--;;filePalette
-                        ',
-                        ],
-                      ],
-                    ],
-                  ],
-                  'jpg,jpeg,png,gif,svg'
-              ),
+                'exclude' => true,
+                'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.fal_media',
+                'config' => [
+                    'type' => 'file',
+                    'allowed' => 'jpg,jpeg,png,gif,svg',
+                ],
             ],
             'likes' => [
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.likes',
                 'config' => [
-                    'type' => 'input',
+                    'type' => 'number',
                     'size' => 4,
-                    'eval' => 'int',
                 ],
             ],
             'title' => [
@@ -176,10 +154,8 @@ return (function () {
                 'exclude' => 1,
                 'label' => $ll . 'tx_pxasocialfeed_domain_model_feeds.update_date',
                 'config' => [
-                    'type' => 'input',
-                    'renderType' => 'inputDateTime',
+                    'type' => 'datetime',
                     'size' => 12,
-                    'eval' => 'datetime',
                     'default' => null,
                 ],
             ],

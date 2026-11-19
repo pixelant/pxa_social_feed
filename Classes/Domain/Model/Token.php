@@ -33,7 +33,6 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Pixelant\PxaSocialFeed\Provider\Facebook;
-use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -43,8 +42,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class Token extends AbstractEntity
 {
-    // use EmitSignalTrait;
-
     /**
      * facebook user token
      */
@@ -80,7 +77,7 @@ class Token extends AbstractEntity
      *
      * @var int
      */
-    protected $pid = 0;
+    protected ?int $pid = 0;
 
     /**
      * @var ObjectStorage<BackendUserGroup>|null
@@ -401,12 +398,14 @@ class Token extends AbstractEntity
     public function getFacebookLoginUrl(string $clientId, string $clientSecret, string $redirectUrl, array $permissions)
     {
         // required by SDK login
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
         $fb = $this->getFb($clientId, $clientSecret, $redirectUrl);
-        return $fb->getAuthorizationUrl([
-            'scope' => $permissions,
-        ]) . '&bypass=1';
+        $url = $fb->getAuthorizationUrl(['scope' => $permissions]);
+        $_SESSION['pxa_social_feed_oauth'][$this->getUid()] = $fb->getState();
+        return $url;
     }
 
     /**
@@ -447,11 +446,10 @@ class Token extends AbstractEntity
      */
     public function getParentToken(): ?Token
     {
-        if ( $this->parentToken instanceof Token )
-            {
+        if ($this->parentToken instanceof Token) {
             return $this->parentToken;
-            }
-        return NULL;
+        }
+        return null;
     }
 
     /**

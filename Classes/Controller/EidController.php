@@ -13,7 +13,7 @@ use Pixelant\PxaSocialFeed\Provider\Facebook;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Http\Response;
+use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -41,57 +41,55 @@ class EidController
      */
     public function addFbAccessTokenAction(ServerRequestInterface $request): ResponseInterface
     {
-        /** @var Response $response */
-        $response = GeneralUtility::makeInstance(Response::class);
-
-        if ($request->getQueryParams()['token']) {
-            return $this->processRequest($request, $response);
+        $query = $request->getQueryParams();
+        $tokenUid = filter_var($query['token'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+        if ($tokenUid === false || !is_string($query['code'] ?? null) || $query['code'] === '') {
+            return new HtmlResponse('Missing token or authorization code.', 400);
         }
-        return $response->withStatus(400, 'Bad request');
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
+        if (!$this->consumeState($query, $tokenUid)) {
+            return new HtmlResponse('Invalid or expired OAuth state. Start token generation again in the backend.', 400);
+        }
+        return $this->processRequest($request, new HtmlResponse(''));
     }
 
-    /**
-     * Process request and get token
-     *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @return ResponseInterface
-     */
+    protected function consumeState(array $query, int $tokenUid): bool
+    {
+        $expected = $_SESSION['pxa_social_feed_oauth'][$tokenUid] ?? null;
+        $state = $query['state'] ?? null;
+        if (!is_string($expected) || $expected === '' || !is_string($state) || !hash_equals($expected, $state)) {
+            return false;
+        }
+        unset($_SESSION['pxa_social_feed_oauth'][$tokenUid]);
+        return true;
+    }
+
     protected function processRequest(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        session_start();
-
         $tokenUid = (int)$request->getQueryParams()['token'];
-        list('app_id' => $appId, 'app_secret' => $appSecret) = $this->getTokenAppIdAndSecret($tokenUid);
-
-        if ($appId && $appSecret) {
-            try {
-                $fb = new Facebook(
-                    [
-                        'clientId' => $appId,
-                        'clientSecret' => $appSecret,
-                        'redirectUri' => $this->buildRedirectUrl($tokenUid),
-                        'graphApiVersion' => FacebookSource::GRAPH_VERSION,
-                    ]
-                );
-
-                $accessToken = $this->obtainAccessToken($fb);
-
-                $this->getAndPersistLongLivedAccessToken($fb, $accessToken, $tokenUid, $response);
-            } catch (FacebookObtainAccessTokenException $exception) {
-                // Get error and return response
-                $response = $response->withStatus($exception->getStatusCode());
-                $response->getBody()->write($exception->getMessage());
-            } catch (\Exception $exception) {
-                $response = $response->withStatus(503);
-                $response->getBody()->write($exception->getMessage());
-            }
-        } else {
-            $response = $response->withStatus(400);
-            $response->getBody()->write('Missing app ID and secret');
+        $credentials = $this->getTokenAppIdAndSecret($tokenUid);
+        $appId = $credentials['app_id'] ?? '';
+        $appSecret = $credentials['app_secret'] ?? '';
+        if (!$appId || !$appSecret) {
+            return new HtmlResponse('Missing app ID and secret.', 400);
         }
-
-        return $response;
+        try {
+            $fb = new Facebook([
+                'clientId' => $appId,
+                'clientSecret' => $appSecret,
+                'redirectUri' => $this->buildRedirectUrl($tokenUid),
+                'graphApiVersion' => FacebookSource::GRAPH_VERSION,
+            ]);
+            $accessToken = $this->obtainAccessToken($fb, $request->getQueryParams()['code']);
+            $this->getAndPersistLongLivedAccessToken($fb, $accessToken, $tokenUid, $response);
+        } catch (FacebookObtainAccessTokenException $exception) {
+            return new HtmlResponse(htmlspecialchars($exception->getMessage(), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'), $exception->getStatusCode());
+        } catch (\Exception $exception) {
+            return new HtmlResponse('Token generation failed. Check the provider credentials and permissions.', 503);
+        }
+        return $response->withHeader('Cache-Control', 'no-store')->withHeader('Referrer-Policy', 'no-referrer');
     }
 
     /**
@@ -109,8 +107,6 @@ class EidController
         ResponseInterface $response
     ): void {
         $content = [];
-        $content[] = '<h3>Access Token</h3>';
-        $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
         // Exchanges a short-lived access token for a long-lived one
         try {
@@ -124,9 +120,6 @@ class EidController
 
             throw $accessTokenException;
         }
-
-        $content[] = '<h3>Long-lived</h3>';
-        $content[] = "<p>Value: {$accessToken->getToken()}</p>";
 
         $this->tokenRepository->updateAccessToken($tokenUid, (string)$accessToken);
         $this->tokenRepository->removeAllPageTokensByParentToken($tokenUid);
@@ -170,7 +163,7 @@ class EidController
                     'uid' => $tokenUid,
                 ]
             )
-            ->fetch();
+            ->fetchAssociative();
 
         if (is_array($row)) {
             return $row;
@@ -186,22 +179,11 @@ class EidController
      * @return AccessToken
      * @throws FacebookObtainAccessTokenException
      */
-    protected function obtainAccessToken(Facebook $fb): AccessToken
+    protected function obtainAccessToken(Facebook $fb, string $code): AccessToken
     {
-        // If we don't have an authorization code then get one
-        if (!isset($_GET['code'])) {
-            $authUrl = $fb->getAuthorizationUrl([
-                'scope' => ['email', 'pages_show_list', 'pages_read_engagement', 'pages_read_user_content', 'business_management'],
-            ]);
-            $_SESSION['oauth2state'] = $fb->getState();
-
-            echo '<a href="' . $authUrl . '">Log in with Facebook!</a>';
-            exit;
-        }
-
         try {
             $accessToken = $fb->getAccessToken('authorization_code', [
-                'code' => $_GET['code'],
+                'code' => $code,
             ]);
         } catch (IdentityProviderException $e) {
             // When Graph returns an error
@@ -241,17 +223,9 @@ class EidController
      */
     protected function buildRedirectUrl(int $tokenUid): string
     {
-        $protocol = isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] === 'on' || $_SERVER['HTTPS'] === 1)
-            || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO']
-            === 'https' ? 'https' : 'http';
-
-        return sprintf(
-            '%s://%s%s/?eID=%s&token=%d',
-            $protocol,
-            GeneralUtility::getIndpEnv('TYPO3_HOST_ONLY'),
-            GeneralUtility::getIndpEnv('TYPO3_PORT') ? (':' . GeneralUtility::getIndpEnv('TYPO3_PORT')) : '',
-            self::IDENTIFIER,
-            $tokenUid
-        );
+        return GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . '?' . http_build_query([
+            'eID' => EidController::IDENTIFIER,
+            'token' => $tokenUid,
+        ]);
     }
 }
