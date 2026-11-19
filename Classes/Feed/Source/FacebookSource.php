@@ -13,6 +13,8 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FacebookSource extends BaseFacebookSource
 {
+    private ?Token $pageToken = null;
+
     /**
      * Load feed source
      *
@@ -20,27 +22,31 @@ class FacebookSource extends BaseFacebookSource
      */
     public function load(): array
     {
-        // Get facebook page access token
-        $tokenRepository = GeneralUtility::makeInstance(TokenRepository::class);
-        /** @var Token $pageAccessToken */
-        $pageAccessToken = $tokenRepository->findFacebookPageToken(
-            $this->getConfiguration()->getToken(),
-            $this->configuration->getSocialId()
-        )->getFirst();
+        $configuredToken = $this->getConfiguration()->getToken();
+        $pageAccessToken = $configuredToken->isFacebookPageType() ? $configuredToken
+            : GeneralUtility::makeInstance(TokenRepository::class)->findFacebookPageToken(
+                $configuredToken,
+                $this->configuration->getSocialId()
+            )->getFirst();
 
-        $fb = $pageAccessToken->getFb();
+        if ($pageAccessToken === null) {
+            throw new \UnexpectedValueException('Generate a Facebook page token for the configured page before importing.', 1731600002);
+        }
+        $this->pageToken = $pageAccessToken;
         $endPointEntry = $this->getConfiguration()->getEndPointEntry();
         if (!in_array($endPointEntry, ['feed', 'posts'])) {
             $endPointEntry = 'feed';
         }
         $endPointUrl = $this->generateEndPoint($this->getConfiguration()->getSocialId(), $endPointEntry);
-        $response = file_get_contents(
-            $fb::BASE_GRAPH_URL .
-            self::GRAPH_VERSION . '/' . $endPointUrl
-        );
-        $response = json_decode($response, true);
+        $response = $this->performApiGetRequest('https://graph.facebook.com/' . self::GRAPH_VERSION . '/' . $endPointUrl);
+        $response = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         return $this->getDataFromResponse($response);
+    }
+
+    protected function getRequestToken(): Token
+    {
+        return $this->pageToken ?? parent::getRequestToken();
     }
 
     /**

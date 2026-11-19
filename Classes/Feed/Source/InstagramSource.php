@@ -20,11 +20,8 @@ class InstagramSource extends BaseFacebookSource
     {
         $instagramId = $this->getInstagramId();
         $endPointUrl = $this->generateEndPoint($instagramId, 'media');
-        $response = file_get_contents(
-            self::BASE_INSTAGRAM_GRAPH_URL .
-            self::GRAPH_VERSION . '/' . $endPointUrl
-        );
-        $response = json_decode($response, true);
+        $response = $this->performApiGetRequest(self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION . '/' . $endPointUrl);
+        $response = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
 
         return $this->getDataFromResponse($response);
     }
@@ -38,13 +35,12 @@ class InstagramSource extends BaseFacebookSource
     {
         try {
             $pageId = $this->getConfiguration()->getSocialId();
-            $access_token = $this->getConfiguration()->getToken()->getAccessToken();
-            $response = file_get_contents(
-                self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION .
-                '/' . $pageId . '?fields=instagram_business_account' .
-                '&access_token=' . $access_token
-            );
-            $responseBody = json_decode($response, true);
+            $url = $this->addFieldsAsGetParametersToUrl(self::BASE_INSTAGRAM_GRAPH_URL . self::GRAPH_VERSION . '/' . $pageId, [
+                'fields' => 'instagram_business_account',
+                'access_token' => $this->getConfiguration()->getToken()->getAccessToken(),
+            ]);
+            $response = $this->performApiGetRequest($url);
+            $responseBody = json_decode((string)$response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\Exception $exception) {
             throw new \UnexpectedValueException(
                 'Could not get instagram business account ID for page with ID ' . $pageId . '. Check you settings.',

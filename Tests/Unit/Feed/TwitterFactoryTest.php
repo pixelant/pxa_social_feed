@@ -2,11 +2,11 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed;
 
-use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Feed\Source\TwitterSource;
 use Pixelant\PxaSocialFeed\Feed\TwitterFactory;
 use Pixelant\PxaSocialFeed\Feed\Update\TwitterFeedUpdater;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class FacebookFeedFactoryTest
@@ -21,12 +21,14 @@ class TwitterFactoryTest extends UnitTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->subject = $this->createMock(TwitterFactory::class);
+        $this->subject = new TwitterFactory();
+        \TYPO3\CMS\Core\Utility\GeneralUtility::setSingletonInstance(\Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository::class, $this->createMock(\Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository::class));
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        \TYPO3\CMS\Core\Utility\GeneralUtility::purgeInstances();
         parent::tearDown();
     }
 

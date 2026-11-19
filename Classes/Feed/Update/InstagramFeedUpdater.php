@@ -59,8 +59,8 @@ class InstagramFeedUpdater extends BaseUpdater
         $isVideo = strtolower($data['media_type']) === 'video';
 
         $media = $isVideo
-            ? ($data['thumbnail_url'] ?: $data['media_url'] ?: '') // Thumbnail or Media url for video
-            : ($data['media_url'] ?: ''); // Media or empty string
+            ? ($data['thumbnail_url'] ?? $data['media_url'] ?? '') // Thumbnail or Media url for video
+            : ($data['media_url'] ?? ''); // Media or empty string
 
         $imageRef = $this->storeImg($media, $feedItem);
         if ($imageRef != null && !$this->checkIfFalRelationIfAlreadyExists($feedItem->getFalMedia(), $imageRef)) {
@@ -73,7 +73,7 @@ class InstagramFeedUpdater extends BaseUpdater
         );
 
         // Set message
-        $feedItem->setMessage($this->encodeMessage($data['caption'] ?: ''));
+        $feedItem->setMessage($this->encodeMessage($data['caption'] ?? ''));
 
         // Set url
         $feedItem->setPostUrl($data['permalink']);
@@ -88,7 +88,7 @@ class InstagramFeedUpdater extends BaseUpdater
         $feedItem->setExternalIdentifier($data['id']);
 
         // Set likes
-        $feedItem->setLikes((int)$data['like_count']);
+        $feedItem->setLikes((int)($data['like_count'] ?? 0));
     }
 
     /**

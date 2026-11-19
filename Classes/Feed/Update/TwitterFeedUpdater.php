@@ -18,15 +18,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class TwitterFeedUpdater extends BaseUpdater
 {
     /**
-     * @var EventDispatcherInterface
-     */
-    private EventDispatcherInterface $eventDispatcher;
-
-    public function injectEventDispatcher(EventDispatcherInterface $eventDispatcher): void
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-    /**
      * Create/Update feed items
      *
      * @param FeedSourceInterface $source
@@ -46,7 +37,7 @@ class TwitterFeedUpdater extends BaseUpdater
             }
 
             $this->updateFeedItem($feedItem, $rawData);
-            $this->eventDispatcher->dispatch(new BeforeUpdateTwitterFeedEvent($feedItem, $rawData, $source->getConfiguration()));
+            GeneralUtility::makeInstance(EventDispatcherInterface::class)->dispatch(new BeforeUpdateTwitterFeedEvent($feedItem, $rawData, $source->getConfiguration()));
             $this->addOrUpdateFeedItem($feedItem);
         }
     }
@@ -84,7 +75,7 @@ class TwitterFeedUpdater extends BaseUpdater
     protected function updateFeedItem(Feed $feedItem, array $rawData): void
     {
         // Update text
-        $text = $rawData['full_text'] ?: $rawData['text'] ?: '';
+        $text = $rawData['full_text'] ?? $rawData['text'] ?? '';
         if ($feedItem->getMessage() != $text) {
             $feedItem->setMessage($this->encodeMessage($text));
         }

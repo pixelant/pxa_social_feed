@@ -8,7 +8,6 @@ use Doctrine\DBAL\Driver\Exception as DriverException;
 use Doctrine\DBAL\Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use InvalidArgumentException;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\FileReference;
@@ -16,7 +15,6 @@ use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Event\ChangedFeedItemEvent;
 use Pixelant\PxaSocialFeed\Event\RemovedFeedItemEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
-use RuntimeException;
 use TYPO3\CMS\Core\Resource\Exception\ExistingTargetFolderException;
 use TYPO3\CMS\Core\Resource\Exception\FileDoesNotExistException;
 use TYPO3\CMS\Core\Resource\Exception\IllegalFileExtensionException;
@@ -147,7 +145,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      * @return FileReference|null
      * @throws UnknownClassException
      * @throws NoSuchPropertyException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @throws InsufficientFolderAccessPermissionsException
      * @throws ExistingTargetFolderException
      * @throws InsufficientFolderWritePermissionsException
@@ -155,7 +153,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      * @throws FileDoesNotExistException
      * @throws GuzzleException
      * @throws IllegalFileExtensionException
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @throws InsufficientFileWritePermissionsException
      * @throws InsufficientUserPermissionsException
      */
@@ -179,7 +177,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      * @param string $url
      * @param Configuration $configuration
      * @return File|null
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      * @throws Exception
      * @throws DriverException
      * @throws InsufficientFolderAccessPermissionsException
@@ -189,7 +187,7 @@ abstract class BaseUpdater implements FeedUpdaterInterface
      * @throws FileDoesNotExistException
      * @throws GuzzleException
      * @throws IllegalFileExtensionException
-     * @throws RuntimeException
+     * @throws \RuntimeException
      * @throws InsufficientFileWritePermissionsException
      * @throws InsufficientUserPermissionsException
      */
@@ -197,6 +195,10 @@ abstract class BaseUpdater implements FeedUpdaterInterface
     {
         $resourceFactory = GeneralUtility::makeInstance(ResourceFactory::class);
         $storage = $resourceFactory->getDefaultStorage();
+
+        if ($storage === null) {
+            throw new \RuntimeException('Configure a default file storage before importing feed images.', 1731600001);
+        }
 
         $folderPath = 'socialfeed/' . strtolower($configuration->getName()) . '/';
         if (!$storage->hasFolder($folderPath)) {
@@ -206,20 +208,25 @@ abstract class BaseUpdater implements FeedUpdaterInterface
         }
 
         $filename = md5($url);
-
-        $file = $downloadFolder->getFile($filename);
-        if ($file == null) {
-            $httpClient = GeneralUtility::makeInstance(Client::class);
-            $response = $httpClient->get($url);
-            if ($response->getStatusCode() === 200) {
-                $mimetype = $response->getHeader('Content-Type')[0];
-                $fileExtensions =  $this->mimeTypeDetector->getFileExtensionsForMimeType($mimetype);
-
-                $file = $downloadFolder->createFile($filename . (('.' . $fileExtensions[0]) ?? ''));
-                $file->setContents($response->getBody()->getContents());
+        // FAL throws for missing files. Reuse the same hash including its detected extension.
+        foreach ($downloadFolder->getFiles() as $existingFile) {
+            if (str_starts_with($existingFile->getName(), $filename . '.')) {
+                return $existingFile;
             }
         }
 
+        $httpClient = GeneralUtility::makeInstance(Client::class);
+        $response = $httpClient->get($url);
+        if ($response->getStatusCode() !== 200) {
+            return null;
+        }
+        $mimetype = strtolower(trim(explode(';', $response->getHeaderLine('Content-Type'))[0]));
+        $fileExtensions = $this->mimeTypeDetector->getFileExtensionsForMimeType($mimetype);
+        if (!str_starts_with($mimetype, 'image/') || $fileExtensions === []) {
+            return null;
+        }
+        $file = $downloadFolder->createFile($filename . '.' . $fileExtensions[0]);
+        $file->setContents((string)$response->getBody());
         return $file;
     }
 }
