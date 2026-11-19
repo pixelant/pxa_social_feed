@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.2', '8.3', '8.4']
+        php: ['8.2', '8.3', '8.4', '8.5']
         dependencies: [highest]
         include:
           - php: '8.2'
@@ -31,3 +31,13 @@ jobs:
         run: composer update --prefer-dist --no-progress ${{ matrix.dependencies == 'lowest' && '--prefer-lowest --prefer-stable' || '' }}
       - name: Run checks
         run: composer tests:all
+
+  javascript:
+    name: Backend JavaScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test Tests/JavaScript/*.test.mjs

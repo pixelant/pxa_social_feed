@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Pixelant\PxaSocialFeed\Tests\Functional;
 
 use PHPUnit\Framework\Attributes\Test;
-use Pixelant\PxaSocialFeed\Updates\MigratePluginUpdate;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
@@ -45,7 +44,7 @@ final class CompatibilityTest extends FunctionalTestCase
         $connection->insert('tt_content', ['uid' => 2, 'pid' => 1, 'CType' => 'text', 'header' => 'Keep me']);
         $connection->insert('tt_content', ['uid' => 3, 'pid' => 1, 'CType' => 'list', 'list_type' => 'pxasocialfeed_showfeed', 'hidden' => 1, 'deleted' => 1, 'pi_flexform' => str_replace('listAjax;Feeds-&gt;loadFeedAjax', 'list', $flexForm)]);
         $connection->insert('tt_content', ['uid' => 4, 'pid' => 1, 'CType' => 'list', 'list_type' => 'pxasocialfeed_showfeed', 'pi_flexform' => 'invalid xml']);
-        $wizard = GeneralUtility::makeInstance(MigratePluginUpdate::class);
+        $wizard = $this->get(\TYPO3\CMS\Install\Service\UpgradeWizardsService::class)->getUpgradeWizard('pxaSocialFeedMigratePlugin');
         self::assertTrue($wizard->updateNecessary());
         self::assertTrue($wizard->executeUpdate());
         self::assertFalse($wizard->updateNecessary());
