@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Tests\Functional;
 
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -44,22 +45,47 @@ final class BackendTest extends FunctionalTestCase
             'configuration form' => ['editConfiguration', 'feeds-storage-input', Token::YOUTUBE],
             'existing Facebook token' => ['index', 'id="tokens-confs"', Token::FACEBOOK],
             'existing Instagram token' => ['index', 'id="tokens-confs"', Token::INSTAGRAM],
+            'Facebook expiry unknown' => ['index', 'id="tokens-confs"', Token::FACEBOOK, null],
+            'Instagram expiry unknown' => ['index', 'id="tokens-confs"', Token::INSTAGRAM, null],
+            'Facebook expiry unlimited' => ['index', 'id="tokens-confs"', Token::FACEBOOK, 0],
+            'Instagram expiry unlimited' => ['index', 'id="tokens-confs"', Token::INSTAGRAM, 0],
+            'rejected Facebook token' => ['index', 'id="tokens-confs"', Token::FACEBOOK, null, false],
+            'rejected Instagram token' => ['index', 'id="tokens-confs"', Token::INSTAGRAM, null, false],
+            'Facebook page token' => ['index', 'id="tokens-confs"', Token::FACEBOOK_PAGE],
+            'Twitter credentials' => ['index', 'id="tokens-confs"', Token::TWITTER],
+            'Twitter v2 credentials' => ['index', 'id="tokens-confs"', Token::TWITTER_V2],
         ];
     }
 
     #[Test]
     #[DataProvider('backendActions')]
-    public function rendersTheBackendModuleWithTheCoreModuleLayout(string $action, string $expected, int $tokenType): void
+    public function rendersTheBackendModuleWithTheCoreModuleLayout(string $action, string $expected, int $tokenType, ?int $expires = 1900000000, bool $tokenIsValid = true): void
     {
         $this->get(ConnectionPool::class)->getConnectionForTable('be_users')->insert('be_users', [
             'uid' => 1, 'pid' => 0, 'username' => 'admin', 'admin' => 1,
         ]);
         $this->setUpBackendUser(1);
-        $this->get(ConnectionPool::class)->getConnectionForTable('tx_pxasocialfeed_domain_model_token')->insert('tx_pxasocialfeed_domain_model_token', ['uid' => 1, 'type' => $tokenType, 'api_key' => 'fixture', 'access_token' => 'existing-token']);
+        $credentials = [
+            'app_secret' => 'fixture-app-secret',
+            'api_key' => 'fixture-api-key',
+            'api_secret_key' => 'fixture-api-secret',
+            'access_token' => 'existing-token',
+            'access_token_secret' => 'fixture-token-secret',
+            'bearer_token' => 'fixture-bearer-token',
+        ];
+        $this->get(ConnectionPool::class)->getConnectionForTable('tx_pxasocialfeed_domain_model_token')->insert('tx_pxasocialfeed_domain_model_token', ['uid' => 1, 'type' => $tokenType, 'app_id' => 'fixture-app-id'] + $credentials);
         if (in_array($tokenType, [Token::FACEBOOK, Token::INSTAGRAM], true)) {
             $provider = $this->createMock(Facebook::class);
-            $provider->expects($this->atLeastOnce())->method('getLongLivedAccessToken')->with('existing-token')
-                ->willReturn(new AccessToken(['access_token' => 'long-lived-token', 'expires' => time() + 864000]));
+            $exchange = $provider->expects($this->atLeastOnce())->method('getLongLivedAccessToken')->with('existing-token');
+            if ($tokenIsValid) {
+                $response = ['access_token' => 'long-lived-token'];
+                if ($expires !== null) {
+                    $response['expires'] = $expires;
+                }
+                $exchange->willReturn(new AccessToken($response));
+            } else {
+                $exchange->willThrowException(new IdentityProviderException('Rejected token', 400, []));
+            }
             $this->get(TokenRepository::class)->findByUid(1)->_setProperty('fb', $provider);
         }
         $GLOBALS['LANG'] = $this->get(\TYPO3\CMS\Core\Localization\LanguageServiceFactory::class)->create('default');
@@ -75,6 +101,35 @@ final class BackendTest extends FunctionalTestCase
         self::assertStringContainsString('pxa-social-feed-be-adminnistration', (string)$response->getBody());
         self::assertStringContainsString('social-feed-administration-module.js', (string)$response->getBody());
         self::assertStringContainsString($expected, (string)$response->getBody());
+        if ($action === 'index') {
+            $html = (string)$response->getBody();
+            foreach ($credentials as $credential) {
+                self::assertStringNotContainsString($credential, $html);
+            }
+            $document = new \DOMDocument();
+            @$document->loadHTML($html);
+            $xpath = new \DOMXPath($document);
+            self::assertCount(2, $xpath->query('//ul[@id="tabs"]//a[contains(concat(" ", normalize-space(@class), " "), " nav-link ")]'));
+            self::assertSame('true', $xpath->evaluate('string(//*[@id="configurations-tab"]/@aria-selected)'));
+            self::assertSame('false', $xpath->evaluate('string(//*[@id="tokens-tab"]/@aria-selected)'));
+            self::assertCount(0, $xpath->query('//a[contains(concat(" ", normalize-space(@class), " "), " btn ")]//span[contains(concat(" ", normalize-space(@class), " "), " btn ")]'));
+            if (in_array($tokenType, [Token::FACEBOOK, Token::INSTAGRAM], true)) {
+                self::assertStringNotContainsString('Could not get expire date', $html);
+                if (!$tokenIsValid) {
+                    self::assertStringContainsString('alert-warning', $html);
+                    self::assertStringContainsString('Access token generation is required', $html);
+                } elseif ($expires === null || $expires === 0) {
+                    self::assertStringContainsString('alert-info', $html);
+                    self::assertStringContainsString('No expiration date was provided by Facebook.', $html);
+                    self::assertStringNotContainsString('Token is valid till', $html);
+                    self::assertStringNotContainsString('Valid for ', $html);
+                } else {
+                    self::assertStringContainsString('alert-success', $html);
+                    self::assertStringContainsString(date('d-m-Y', $expires), $html);
+                    self::assertStringContainsString('Valid for ', $html);
+                }
+            }
+        }
     }
 
     #[Test]

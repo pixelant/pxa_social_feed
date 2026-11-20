@@ -14,6 +14,10 @@
 
 ### Fixed
 
+- Restore Bootstrap 5 backend tabs and readable token-status alerts. Show a
+  separate message when Facebook provides no expiration date, and remove the
+  nested regeneration button.
+- Mask stored credentials in the token overview for every provider.
 - Pass token strings to the typed Facebook provider API when opening the backend
   with existing Facebook/Instagram tokens. Use the provider's returned expiration
   instead of assuming another 60 days, and skip empty-token lookups.

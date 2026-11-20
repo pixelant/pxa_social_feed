@@ -111,6 +111,15 @@
             <trans-unit id="module.valid_days">
                 <source>Valid for %s days</source>
             </trans-unit>
+            <trans-unit id="module.token_expiration_unknown">
+                <source>Access token is valid. No expiration date was provided by Facebook.</source>
+            </trans-unit>
+            <trans-unit id="module.credential_hidden">
+                <source>Stored credential (hidden)</source>
+            </trans-unit>
+            <trans-unit id="module.credential_not_configured">
+                <source>Not configured</source>
+            </trans-unit>
             <trans-unit id="module.copy_url">
                 <source>Copy fallback URL for facebook settings.</source>
             </trans-unit>

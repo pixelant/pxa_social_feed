@@ -1,33 +1,38 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" xmlns:pxa="http://typo3.org/ns/Pixelant/PxaSocialFeed/ViewHelpers" data-namespace-typo3-fluid="true">
 <b><f:translate key="module.app_id"/></b>: {token.appId}<br />
-<b><f:translate key="module.app_secret"/></b>: {token.appSecret}<br />
+<b><f:translate key="module.app_secret"/></b>: <f:render partial="Backend/TokenInfo/Secret" arguments="{value: token.appSecret}" /><br />
 
 <f:if condition="{token.validFacebookAccessToken}">
     <f:then>
-        <p class="bg-success bg-notification">
-            <f:translate key="module.token_valid" />
-            <f:if condition="{token.facebookAccessTokenMetadataExpirationDate}">
-                <f:format.date format="d-m-Y">{token.facebookAccessTokenMetadataExpirationDate}</f:format.date>
-            </f:if>
-            <br>
-            <f:translate key="module.valid_days" arguments="{0: token.facebookAccessTokenValidPeriod}" />
-            <br><br>
+        <f:variable name="expiresAt" value="{token.facebookAccessTokenMetadataExpirationDate}" />
+        <div class="alert {f:if(condition: expiresAt, then: 'alert-success', else: 'alert-info')} mb-0">
+            <p>
+                <f:if condition="{expiresAt}">
+                    <f:then>
+                        <f:translate key="module.token_valid" />
+                        <f:format.date format="d-m-Y">{expiresAt}</f:format.date>
+                        <br>
+                        <f:translate key="module.valid_days" arguments="{0: token.facebookAccessTokenValidPeriod}" />
+                    </f:then>
+                    <f:else>
+                        <f:translate key="module.token_expiration_unknown" />
+                    </f:else>
+                </f:if>
+            </p>
             <f:link.action action="resetAccessToken"
                            arguments="{resetToken: token}"
                            data="{confirmation-title: '{f:translate(key: \'module.reset_token\')}', confirmation-message: '{f:translate(key: \'module.reset_token_question\')}'}"
-                           class="btn btn-default btn-sm confirmation-action">
-                    <span class="btn btn-default" aria-hidden="true">
-                        <f:translate key="module.regenerate_access_token" />
-                    </span>
+                           class="btn btn-default btn-sm confirmation-action text-decoration-none">
+                <f:translate key="module.regenerate_access_token" />
             </f:link.action>
-        </p>
+        </div>
     </f:then>
     <f:else>
         <pxa:facebookLoginUrl token="{token}"
                               loginUrlAs="loginUrl"
                               redirectUrlAs="redirectUrl"
                               permissions="{permissions}">
-            <p class="bg-warning bg-notification">
+            <div class="alert alert-warning">
                 <b>Access token generation is required</b>
                 <br>
                 <br>
@@ -50,7 +55,7 @@
                 <button class="btn btn-default copy-redirect-uri-button" data-clipboard-target="#redirect-uri-holder-{token.uid}">
                     <f:translate key="module.copy_url" />
                 </button>
-            </p>
+            </div>
 
             <a href="{loginUrl}" target="_blank" class="btn facebook-login-link">
                 <f:image src="EXT:pxa_social_feed/Resources/Public/Icons/BE/fb_login_button.png" />

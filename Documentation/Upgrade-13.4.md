@@ -142,6 +142,29 @@ Deploy the updated extension revision (including the Composer lock reference in
 the consuming project), rebuild/redeploy the container and clear TYPO3/PHP caches.
 This code fix requires no additional database migration wizard.
 
+### Backend UI review
+
+The demo review also exposed missing Bootstrap 5 tab classes and legacy status
+backgrounds. Tabs now use `nav-item`, `nav-link`, current data attributes and
+matching selection states. Token feedback uses theme-aware alerts and one
+regeneration button. A successful provider response without an expiry gets an
+informational message; it no longer produces an empty date or an error sentence
+inside the number of remaining days. An unknown expiry alone does not require
+regenerating the token.
+
+The overview masks app secrets, API keys and access tokens, including Facebook
+page and Twitter/X records. Credential values are not included in the overview's
+HTML. Existing credential edit forms remain available to authorized editors.
+
+Nine additional backend rendering cases cover absent/zero expiry, rejected
+Facebook/Instagram tokens and the other provider types. All overview cases check
+for credential disclosure and correct tab markup. The complete suite passes on
+PHP **8.2.35** with lowest dependencies and PHP **8.5.12** with current dependencies:
+**119 unit tests / 166 assertions** and **38 functional tests / 398 assertions**.
+The lowest run retains the previously documented vendor deprecation. Local
+browser previews with the real TYPO3 13.4.40 stylesheet verify known, unknown and
+rejected-token states and switching between the two tabs.
+
 ## Site-specific acceptance still required
 
 No real provider credentials were available. The local suite replaces external
