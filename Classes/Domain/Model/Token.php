@@ -328,24 +328,16 @@ class Token extends AbstractEntity
      */
     public function isValidFacebookAccessToken(): bool
     {
-        $isValid = true;
         if (empty($this->accessToken)) {
-            $isValid = false;
-        } else {
-            try {
-                $token = new AccessToken([
-                    'access_token' => $this->getAccessToken(),
-                ]);
-                $this->getFb(
-                    $this->getAppId(),
-                    $this->getAppSecret()
-                )->getLongLivedAccessToken($token);
-            } catch (FacebookProviderException|IdentityProviderException $exception) {
-                $isValid = false;
-            }
+            return false;
         }
-
-        return $isValid;
+        try {
+            $this->getFb($this->getAppId(), $this->getAppSecret())
+                ->getLongLivedAccessToken($this->getAccessToken());
+            return true;
+        } catch (FacebookProviderException|IdentityProviderException $exception) {
+            return false;
+        }
     }
 
     /**
@@ -375,17 +367,17 @@ class Token extends AbstractEntity
      */
     public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
     {
+        if (empty($this->accessToken)) {
+            return null;
+        }
         try {
-            $expireAt = new \DateTime('+60 days');
-            $token = new AccessToken([
-                'access_token' => $this->getAccessToken(),
-            ]);
-            $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
+            $token = $this->getFb($this->getAppId(), $this->getAppSecret())
+                ->getLongLivedAccessToken($this->getAccessToken());
         } catch (FacebookProviderException|IdentityProviderException $exception) {
             return null;
         }
-
-        return $expireAt;
+        $expires = $token->getExpires();
+        return $expires !== null && $expires > 0 ? (new \DateTime())->setTimestamp($expires) : null;
     }
 
     /**

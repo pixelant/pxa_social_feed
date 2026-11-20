@@ -14,6 +14,10 @@
 
 ### Fixed
 
+- Pass token strings to the typed Facebook provider API when opening the backend
+  with existing Facebook/Instagram tokens. Use the provider's returned expiration
+  instead of assuming another 60 days, and skip empty-token lookups.
+
 - Restore backend module rendering, page selection, confirmations and editor
   group filtering after removal of legacy TYPO3 APIs.
 - Repair Twitter v2 construction/events and Facebook page-token selection.

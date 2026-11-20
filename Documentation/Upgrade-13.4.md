@@ -121,6 +121,27 @@ page-token selection and persisted FAL file references. Two Node tests verify
 page selection messages and confirmation before deletion. Changed PHP files
 were formatted with the TYPO3 coding standards on PHP 8.2.
 
+## Follow-up verification on 20 November 2026
+
+Opening the module with an existing Facebook or Instagram token exposed two
+calls passing an `AccessToken` object to the provider's string parameter. Both
+calls now pass the stored token string. The expiration display uses the returned
+OAuth token's expiry; unknown expirations remain unknown and empty tokens do not
+trigger a request. The previous tests had only rendered the module with YouTube
+tokens and did not cover this failure path.
+
+Eight additional unit cases cover typed calls, rejected/empty tokens, known and
+unknown expiry, and the real Facebook provider with an HTTP fixture. Two new
+backend rendering cases include stored Facebook and Instagram tokens. The full
+suite passes with **119 unit tests / 166 assertions** and **29 functional tests /
+188 assertions** on PHP **8.2.35** with lowest resolvable dependencies and PHP
+**8.5.12** with current dependencies. The existing vendor deprecation in the
+lowest run remains; the current run has no test deprecations.
+
+Deploy the updated extension revision (including the Composer lock reference in
+the consuming project), rebuild/redeploy the container and clear TYPO3/PHP caches.
+This code fix requires no additional database migration wizard.
+
 ## Site-specific acceptance still required
 
 No real provider credentials were available. The local suite replaces external
@@ -149,4 +170,7 @@ git diff --stat 0285730..codex/typo3-13.4
 git diff --check 0285730..codex/typo3-13.4
 ```
 
-The branch has not been pushed and no release tag has been created.
+The review branch is `201-v13-migration` in the fork
+`git@github.com:SilentHunter124/pxa_social_feed.git` (remote `fork`). It contains
+the original migration commits and subsequent review fixes. No release tag has
+been created.

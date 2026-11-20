@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Tests\Functional;
 
+use League\OAuth2\Client\Token\AccessToken;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Pixelant\PxaSocialFeed\Controller\AdministrationController;
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Domain\Repository\BackendUserGroupRepository;
 use Pixelant\PxaSocialFeed\Domain\Repository\TokenRepository;
+use Pixelant\PxaSocialFeed\Provider\Facebook;
 use Pixelant\PxaSocialFeed\Task\ImportTaskAdditionalFieldProvider;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -35,18 +38,30 @@ final class BackendTest extends FunctionalTestCase
 
     public static function backendActions(): array
     {
-        return [['index', 'id="tokens-confs"'], ['editToken', 'tokenToEdit'], ['editConfiguration', 'feeds-storage-input']];
+        return [
+            'index' => ['index', 'id="tokens-confs"', Token::YOUTUBE],
+            'token form' => ['editToken', 'tokenToEdit', Token::YOUTUBE],
+            'configuration form' => ['editConfiguration', 'feeds-storage-input', Token::YOUTUBE],
+            'existing Facebook token' => ['index', 'id="tokens-confs"', Token::FACEBOOK],
+            'existing Instagram token' => ['index', 'id="tokens-confs"', Token::INSTAGRAM],
+        ];
     }
 
     #[Test]
     #[DataProvider('backendActions')]
-    public function rendersTheBackendModuleWithTheCoreModuleLayout(string $action, string $expected): void
+    public function rendersTheBackendModuleWithTheCoreModuleLayout(string $action, string $expected, int $tokenType): void
     {
         $this->get(ConnectionPool::class)->getConnectionForTable('be_users')->insert('be_users', [
             'uid' => 1, 'pid' => 0, 'username' => 'admin', 'admin' => 1,
         ]);
         $this->setUpBackendUser(1);
-        $this->get(ConnectionPool::class)->getConnectionForTable('tx_pxasocialfeed_domain_model_token')->insert('tx_pxasocialfeed_domain_model_token', ['uid' => 1, 'type' => 4, 'api_key' => 'fixture']);
+        $this->get(ConnectionPool::class)->getConnectionForTable('tx_pxasocialfeed_domain_model_token')->insert('tx_pxasocialfeed_domain_model_token', ['uid' => 1, 'type' => $tokenType, 'api_key' => 'fixture', 'access_token' => 'existing-token']);
+        if (in_array($tokenType, [Token::FACEBOOK, Token::INSTAGRAM], true)) {
+            $provider = $this->createMock(Facebook::class);
+            $provider->expects($this->atLeastOnce())->method('getLongLivedAccessToken')->with('existing-token')
+                ->willReturn(new AccessToken(['access_token' => 'long-lived-token', 'expires' => time() + 864000]));
+            $this->get(TokenRepository::class)->findByUid(1)->_setProperty('fb', $provider);
+        }
         $GLOBALS['LANG'] = $this->get(\TYPO3\CMS\Core\Localization\LanguageServiceFactory::class)->create('default');
         $module = $this->get(\TYPO3\CMS\Backend\Module\ModuleProvider::class)->getModule('tools_pxasocialfeed');
         $request = (new \TYPO3\CMS\Core\Http\ServerRequest('https://typo3-testing.local/typo3/module/tools/PxaSocialFeedPxasocialfeed'))
