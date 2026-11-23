@@ -6,27 +6,84 @@ compatibility range. This feature branch is not a published release.
 
 ## Upgrade an existing site
 
-1. Back up the database, file storages, Composer files and site configuration.
-   Rehearse the upgrade on a staging copy with the site's template overrides.
-2. Upgrade the TYPO3 installation and install this branch's extension version.
-   Composer must also install `typo3/cms-scheduler` and `typo3/cms-install`.
-   Use the current security patch of TYPO3 13.4.
-3. Apply the database schema and extension setup, then run the extension wizard:
+### Preparation and deployment
 
-   ```sh
-   vendor/bin/typo3 extension:setup
-   vendor/bin/typo3 upgrade:run pxaSocialFeedMigratePlugin
-   vendor/bin/typo3 cache:flush
-   ```
+Back up the database, file storages, Composer files and site configuration.
+Rehearse the upgrade on a staging copy with the site's template overrides.
+Follow TYPO3's core upgrade path for the site's source version; this guide covers
+the extension-specific steps and does not replace the core upgrade instructions.
 
-   The wizard is also available in the Install Tool's Upgrade section. Run the
-   other upgrade wizards required by TYPO3 for your site's source version.
-4. Keep the extension's Minimum TypoScript included. Reconcile local overrides
+Deploy TYPO3 13.4 with the current security patch and the compatible extension
+version. Composer must also install `typo3/cms-scheduler` and `typo3/cms-install`.
+Update and commit the consuming project's `composer.lock` as part of the build,
+then deploy the resulting files or rebuilt container image. Composer is needed
+in the build environment; it does not have to be installed in the running web
+container. Replacing an image alone does not migrate the existing database.
+
+After deployment, choose either the UI or console procedure below. Both run the
+same extension migration. A UI-only administrator needs the prepared application
+files or image from the person responsible for deployment.
+
+### Upgrade through the backend UI
+
+Use a system maintainer account with access to the Admin Tools / Install Tool.
+An ordinary editor account is insufficient. Labels may differ with the backend
+language.
+
+1. Open **Admin Tools > Maintenance**, flush the TYPO3 caches and rebuild the
+   PHP autoload information if that action is offered for the installation.
+2. Open **Admin Tools > Maintenance > Analyze Database Structure**. Apply the
+   required schema additions and changes. Postpone removal of obsolete tables
+   and columns until the upgrade wizards have completed.
+3. Open **Upgrade Wizard** in the Upgrade module and run the required TYPO3 core
+   wizards for the site's source version. Run **Migrate Pxa Social Feed plugins
+   to TYPO3 13.4** (`pxaSocialFeedMigratePlugin`) when offered. It appears only if
+   old Social Feed plugin records still need migration.
+4. Flush the TYPO3 caches again under **Maintenance**, then complete the shared
+   checks below. No shell commands are required for these post-deployment steps.
+
+If the backend cannot be opened, use the standalone Install Tool at
+`/typo3/install.php` (relative to the installation's base URL) with its configured
+Install Tool password. Follow the hosting setup's procedure to enable access.
+See the [TYPO3 13.4 maintenance documentation](https://docs.typo3.org/m/typo3/reference-coreapi/13.4/en-us/Administration/Tools/Maintenance/Index.html)
+for the database analyzer and cache tools. Rebuilding autoload information in
+the UI is available only in classic mode; Composer deployments generate it in
+the build environment.
+
+### Upgrade through the console
+
+Run these commands from the TYPO3 project's root in the deployed environment,
+using the PHP version and database configuration of that installation:
+
+```sh
+vendor/bin/typo3 extension:setup
+vendor/bin/typo3 upgrade:list
+```
+
+Run the required TYPO3 core upgrade wizards for the site's source version, then
+run the extension migration and clear caches:
+
+```sh
+vendor/bin/typo3 upgrade:run pxaSocialFeedMigratePlugin
+vendor/bin/typo3 cache:flush
+```
+
+For containers, execute the commands inside the running application container.
+Do not run them during an image build against the live site's database. The
+extension wizard is repeatable and makes no changes if no old plugin records
+remain.
+
+### Checks after either upgrade procedure
+
+1. Keep the extension's Minimum TypoScript included. Reconcile local overrides
    with the changes below. Open and save a migrated content element in the
    backend and verify its selected configurations and rendering mode.
-5. Configure a writable **default FAL storage** for imported images. Verify the
+2. Configure a writable **default FAL storage** for imported images. Verify the
    existing scheduler task, its selected configurations and notification addresses.
-6. Complete the provider and browser checks below before deployment.
+3. Complete the provider and browser checks below before production deployment.
+   The migration preserves stored tokens; a TYPO3 upgrade alone does not require
+   regenerating them. If a provider requires a new login, start it from the
+   upgraded backend as described below.
 
 ## Content and template changes
 
@@ -71,9 +128,11 @@ provider fields and reuse FAL images with their detected extension. Graph reques
 use TYPO3's HTTP client. Text-only cards and the Twitter v2 icon render correctly.
 Factories are tested as real objects instead of mocking the factories themselves.
 
-## Reproduce the checks
+## Reproduce the checks (extension development)
 
-Run from a fresh extension checkout with PHP, Composer, SQLite and Node.js 22+:
+These commands test the extension itself; they are not the site upgrade
+procedure. Run from a fresh extension checkout with PHP, Composer, SQLite and
+Node.js 22+:
 
 ```sh
 composer update --prefer-dist
@@ -178,22 +237,3 @@ permissions. Before deployment verify:
 - The site's custom templates, carousel/masonry JavaScript, backend page picker
   and both delivery modes in a browser. Test mail delivery using the site's
   configured transport and test its actual database engine; local tests used SQLite.
-
-## Git workflow
-
-The full upstream history, branches and tags were fetched. The feature branch is
-`codex/typo3-13.4`, based on upstream `master` at
-`0285730f0fe749d671a4547c7ffe308cf2a63ddd`. Work is grouped into Conventional
-Commits for toolchain, backend/OAuth, plugin migration, imports and documentation.
-Commit bodies explain intent and verification, including the OAuth cache regression. Inspect the complete work with:
-
-```sh
-git log --reverse --format=full 0285730..codex/typo3-13.4
-git diff --stat 0285730..codex/typo3-13.4
-git diff --check 0285730..codex/typo3-13.4
-```
-
-The review branch is `201-v13-migration` in the fork
-`git@github.com:SilentHunter124/pxa_social_feed.git` (remote `fork`). It contains
-the original migration commits and subsequent review fixes. No release tag has
-been created.
