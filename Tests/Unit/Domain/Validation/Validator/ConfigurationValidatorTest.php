@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Validation\Validator;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Configuration;
 use Pixelant\PxaSocialFeed\Domain\Validation\Validator\ConfigurationValidator;
 
@@ -18,6 +18,7 @@ class ConfigurationValidatorTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->getAccessibleMock(
             ConfigurationValidator::class,
             ['isValid']
@@ -27,11 +28,10 @@ class ConfigurationValidatorTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function trimObjectPropertiesWillTrimAllStringProperties()
     {
         $configuration = new Configuration();

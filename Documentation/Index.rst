@@ -30,6 +30,8 @@ Add Facebook, Instagram, Twitter and YouTube feed on the site.
 
 ----
 
+For TYPO3 13.4, see the :download:`upgrade and verification guide <Upgrade-13.4.md>`.
+
 **Table of Contents:**
 
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pixelant\PxaSocialFeed\Feed\Source;
 
+use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Event\FacebookEndPointEvent;
 use Pixelant\PxaSocialFeed\Event\FacebookEndPointRequestFieldsEvent;
 use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
@@ -36,23 +37,23 @@ abstract class BaseFacebookSource extends BaseSource
         $queryParams = [
             'fields'          => implode(',', $fieldsArray),
             'limit'           => $limit,
-            'access_token'    => $this->getConfiguration()->getToken()->getAccessToken(),
+            'access_token'    => $this->getRequestToken()->getAccessToken(),
             'appsecret_proof' => hash_hmac(
                 'sha256',
-                $this->getConfiguration()->getToken()->getAccessToken(),
-                $this->getConfiguration()->getToken()->getAppSecret()
+                $this->getRequestToken()->getAccessToken(),
+                $this->getRequestToken()->getAppSecret()
             ),
         ];
 
         $endPoint = $this->addFieldsAsGetParametersToUrl($url, $queryParams);
         $event    = $eventDispatcher->dispatch(new FacebookEndPointEvent($endPoint));
 
-        // dd ( $event->getEndPoint () );
-        // $endPointArray = $event->getEndPoint ();
-
-        // list( $endPoint ) = $endPointArray;
-
         return $event->getEndPoint();
+    }
+
+    protected function getRequestToken(): Token
+    {
+        return $this->getConfiguration()->getToken();
     }
 
     /**
@@ -61,7 +62,7 @@ abstract class BaseFacebookSource extends BaseSource
      * @param array $response
      * @return array
      */
-    protected function getDataFromResponse(array $response): array
+    protected function getDataFromResponse(mixed $response): array
     {
         if (!is_array($response) || !isset($response['data'])) {
             throw new InvalidFeedSourceData(

@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Controller;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Controller\AdministrationController;
 use Pixelant\PxaSocialFeed\Domain\Repository\AbstractBackendRepository;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
@@ -19,6 +19,7 @@ class AdministrationControllerTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->getAccessibleMock(
             AdministrationController::class,
             null,
@@ -31,12 +32,11 @@ class AdministrationControllerTest extends UnitTestCase
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
         unset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxa_social_feed']);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function findAllByRepositoryUseFindAllIfRestrictionIsDisable()
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxa_social_feed'] = [
@@ -52,9 +52,7 @@ class AdministrationControllerTest extends UnitTestCase
         $this->subject->_call('findAllByRepository', $mockedRepository);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function findAllByRepositoryUseFindAllWithRestricitonIfRestrictionIsEnabled()
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['pxa_social_feed'] = [

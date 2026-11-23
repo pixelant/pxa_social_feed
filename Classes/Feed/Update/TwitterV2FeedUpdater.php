@@ -9,6 +9,7 @@ use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Event\BeforeUpdateTwitterV2FeedEvent;
 use Pixelant\PxaSocialFeed\Feed\Source\FeedSourceInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -40,7 +41,7 @@ class TwitterV2FeedUpdater extends BaseUpdater
 
             $this->updateFeedItem($feedItem, $rawData, $includes);
             // dispatch event
-            $this->eventDispatcher->dispatch(new BeforeUpdateTwitterV2FeedEvent($feedItem, $rawData, $source->getConfiguration(), $includes));
+            GeneralUtility::makeInstance(EventDispatcherInterface::class)->dispatch(new BeforeUpdateTwitterV2FeedEvent($feedItem, $rawData, $source->getConfiguration(), $includes));
             $this->addOrUpdateFeedItem($feedItem);
         }
     }

@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Domain\Model;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
@@ -45,25 +45,23 @@ class ConfigurationTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = new \Pixelant\PxaSocialFeed\Domain\Model\Configuration();
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfPid()
     {
         self::assertEquals(0, $this->subject->getPid());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetPid()
     {
         $value = 123;
@@ -72,17 +70,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getPid());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfHidden()
     {
         self::assertFalse($this->subject->isHidden());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetHidden()
     {
         $value = true;
@@ -91,17 +85,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertEquals($value, $this->subject->isHidden());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfName()
     {
         self::assertEquals('', $this->subject->getName());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetName()
     {
         $value = 'name';
@@ -111,17 +101,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getName());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfSocialId()
     {
         self::assertEquals('', $this->subject->getSocialId());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetSocialId()
     {
         $value = 'social id';
@@ -131,17 +117,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getSocialId());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfMaxItems()
     {
         self::assertEquals(0, $this->subject->getMaxItems());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetMaxItems()
     {
         $value = 1000;
@@ -151,17 +133,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getMaxItems());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfStorage()
     {
         self::assertEquals(0, $this->subject->getStorage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetStorage()
     {
         $value = 12;
@@ -171,17 +149,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getStorage());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueOfToken()
     {
         self::assertNull($this->subject->getToken());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetToken()
     {
         $token = new Token();
@@ -191,17 +165,13 @@ class ConfigurationTest extends UnitTestCase
         self::assertSame($token, $this->subject->getToken());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initValueOfBeGroup()
     {
         self::assertInstanceOf(ObjectStorage::class, $this->subject->getBeGroup());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetBeGroup()
     {
         $beGroup = new ObjectStorage();

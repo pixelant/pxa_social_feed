@@ -7,12 +7,21 @@ defined('TYPO3') or die();
         'PxaSocialFeed',
         'Showfeed',
         [
-            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax, listAjax',
+            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, listAjax',
         ],
         // non-cacheable actions
         [
-            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list, loadFeedAjax',
-        ]
+            \Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'list',
+        ],
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
+    );
+
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::configurePlugin(
+        'PxaSocialFeed',
+        'Ajax',
+        [\Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'loadFeedAjax'],
+        [\Pixelant\PxaSocialFeed\Controller\FeedsController::class => 'loadFeedAjax'],
+        \TYPO3\CMS\Extbase\Utility\ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
     );
 
     $ll = 'LLL:EXT:' . 'pxa_social_feed' . '/Resources/Private/Language/locallang_be.xlf:';
@@ -26,17 +35,12 @@ defined('TYPO3') or die();
         'additionalFields' => \Pixelant\PxaSocialFeed\Task\ImportTaskAdditionalFieldProvider::class,
     ];
 
-    // hook for extension BE view
-    $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['pxasocialfeed_showfeed']['pxa_social_feed'] =
-        \Pixelant\PxaSocialFeed\Hooks\PageLayoutView::class . '->getExtensionInformation';
-    // @codingStandardsIgnoreEnd
-
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
-        "@import 'EXT:pxa_social_feed/Configuration/TSconfig/ContentElementWizard.tsconfig'"
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup(
+        'module.tx_pxasocialfeed.persistence.storagePid = 0'
     );
 
     // Register eID to obtain access token
     $eID = \Pixelant\PxaSocialFeed\Controller\EidController::IDENTIFIER;
-    $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID] =
-        \Pixelant\PxaSocialFeed\Controller\EidController::class . '::addFbAccessTokenAction';
+    $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include'][$eID]
+        = \Pixelant\PxaSocialFeed\Controller\EidController::class . '::addFbAccessTokenAction';
 })();

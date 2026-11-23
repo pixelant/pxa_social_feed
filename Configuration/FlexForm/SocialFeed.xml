@@ -5,104 +5,85 @@
     <sheets>
         <sDEF>
             <ROOT>
-                <TCEforms>
-                    <sheetTitle>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.name</sheetTitle>
-                </TCEforms>
+                <sheetTitle>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.name</sheetTitle>
                 <type>array</type>
                 <el>
-                    <switchableControllerActions>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.load_type</label>
-                            <config>
-                                <type>select</type>
-                                <renderType>selectSingle</renderType>
-                                <items>
-                                    <numIndex index="0">
-                                        <numIndex index="0">Standard</numIndex>
-                                        <numIndex index="1">\Pixelant\PxaSocialFeed\Controller\FeedsController->list</numIndex>
-                                    </numIndex>
-                                    <numIndex index="1">
-                                        <numIndex index="0">Ajax</numIndex>
-                                        <numIndex index="1">\Pixelant\PxaSocialFeed\Controller\FeedsController->listAjax;\Pixelant\PxaSocialFeed\Controller\FeedsController->loadFeedAjax</numIndex>
-                                    </numIndex>
-                                </items>
-                            </config>
-                        </TCEforms>
-                    </switchableControllerActions>
-
+                    <settings.loadType>
+                        <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.load_type</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items>
+                                <numIndex index="0">
+                                    <label>Standard</label>
+                                    <value>standard</value>
+                                </numIndex>
+                                <numIndex index="1">
+                                    <label>Ajax</label>
+                                    <value>ajax</value>
+                                </numIndex>
+                            </items>
+                        </config>
+                    </settings.loadType>
                     <settings.presentation>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.presentation</label>
-                            <config>
-                                <type>select</type>
-                                <renderType>selectSingle</renderType>
-                                <items>
-                                    <numIndex index="0">
-                                        <numIndex index="0">Owl Carousel</numIndex>
-                                        <numIndex index="1">owl-carousel</numIndex>
-                                    </numIndex>
-                                    <numIndex index="1">
-                                        <numIndex index="0">Masonry grid layout</numIndex>
-                                        <numIndex index="1">masonry</numIndex>
-                                    </numIndex>
-                                </items>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.presentation</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items>
+                                <numIndex index="0">
+                                    <label>Owl Carousel</label>
+                                    <value>owl-carousel</value>
+                                </numIndex>
+                                <numIndex index="1">
+                                    <label>Masonry grid layout</label>
+                                    <value>masonry</value>
+                                </numIndex>
+                            </items>
+                        </config>
                     </settings.presentation>
-
                     <settings.partial>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial</label>
-                            <config>
-                                <type>select</type>
-                                <renderType>selectSingle</renderType>
-                                <items>
-                                    <numIndex index="0">
-                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.0</numIndex>
-                                        <numIndex index="1">FeedItemCard</numIndex>
-                                    </numIndex>
-                                    <numIndex index="1">
-                                        <numIndex index="0">LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.1</numIndex>
-                                        <numIndex index="1">FeedItemDynamic</numIndex>
-                                    </numIndex>
-                                </items>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items>
+                                <numIndex index="0">
+                                    <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.0</label>
+                                    <value>FeedItemCard</value>
+                                </numIndex>
+                                <numIndex index="1">
+                                    <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.partial.1</label>
+                                    <value>FeedItemDynamic</value>
+                                </numIndex>
+                            </items>
+                        </config>
                     </settings.partial>
-
                     <settings.feedsLimit>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.amount_feeds</label>
-                            <config>
-                                <type>input</type>
-                                <size>30</size>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.amount_feeds</label>
+                        <config>
+                            <type>input</type>
+                            <size>30</size>
+                        </config>
                     </settings.feedsLimit>
-
                     <settings.loadLikesCount>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.loadLikesCount</label>
-                            <config>
-                                <type>check</type>
-                                <default>1</default>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.loadLikesCount</label>
+                        <config>
+                            <type>check</type>
+                            <default>1</default>
+                        </config>
                     </settings.loadLikesCount>
-
                     <settings.configuration>
-                        <TCEforms>
-                            <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.config</label>
-                            <config>
-                                <type>select</type>
-                                <renderType>selectMultipleSideBySide</renderType>
-                                <size>10</size>
-                                <minitems>1</minitems>
-                                <maxitems>999</maxitems>
-                                <autoSizeMax>7</autoSizeMax>
-                                <foreign_table>tx_pxasocialfeed_domain_model_configuration</foreign_table>
-                            </config>
-                        </TCEforms>
+                        <label>LLL:EXT:pxa_social_feed/Resources/Private/Language/locallang_be.xlf:flexform.config</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectMultipleSideBySide</renderType>
+                            <size>10</size>
+                            <minitems>1</minitems>
+                            <maxitems>999</maxitems>
+                            <autoSizeMax>7</autoSizeMax>
+                            <foreign_table>tx_pxasocialfeed_domain_model_configuration</foreign_table>
+                        </config>
                     </settings.configuration>
                 </el>
             </ROOT>

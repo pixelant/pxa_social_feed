@@ -1,9 +1,10 @@
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
-     xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers">
+     xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers">
 
-    <f:layout name="Backend/Default" />
+    <f:layout name="Module" />
 
-    <f:section name="content">
+    <f:section name="Content">
+        <div class="pxa-social-feed-be-adminnistration" data-browser-url="{browserUrl}">
         <f:comment><!--clean all messages--></f:comment>
         <f:flashMessages as="messages" />
 
@@ -21,7 +22,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <span data-toggle="tooltip" data-placement="top" title="{f:translate(key: 'module.social_id_tooltip')}">
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="{f:translate(key: 'module.social_id_tooltip')}">
                                     <f:translate key="module.social_id{configuration.token.type}"/>
                                 </span>
                             </td>
@@ -125,5 +126,6 @@
                 </f:link.action>
             </f:else>
         </f:if>
+        </div>
     </f:section>
 </div>

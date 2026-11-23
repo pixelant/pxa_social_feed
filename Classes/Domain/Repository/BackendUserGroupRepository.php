@@ -19,7 +19,7 @@ class BackendUserGroupRepository
      * @param array $exclude Uids of groups to exclude
      * @return array
      */
-    public function findAll(array $exclude = null)
+    public function findAll(?array $exclude = null)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('be_groups');
@@ -37,6 +37,6 @@ class BackendUserGroupRepository
             );
         }
 
-        return $queryBuilder->execute()->fetchAll();
+        return $queryBuilder->executeQuery()->fetchAllAssociative();
     }
 }

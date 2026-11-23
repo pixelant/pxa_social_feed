@@ -9,6 +9,7 @@ use Pixelant\PxaSocialFeed\Exception\BadResponseException;
 use Pixelant\PxaSocialFeed\Exception\InvalidFeedSourceData;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TwitterSource
@@ -19,10 +20,6 @@ class TwitterV2Source extends BaseSource
      * Twitter api
      */
     public const API_URL = 'https://api.twitter.com/2/';
-
-    public function __construct(
-        private readonly EventDispatcherInterface $eventDispatcher,
-    ) {}
 
     /**
      * Load feed source
@@ -123,9 +120,10 @@ class TwitterV2Source extends BaseSource
             'exclude' => 'replies',
         ];
 
-        [ $fields ] = $this->eventDispatcher->dispatch(new BeforeReturnTwitterQueryFieldsEvent($fields));
+        $event = GeneralUtility::makeInstance(EventDispatcherInterface::class)
+            ->dispatch(new BeforeReturnTwitterQueryFieldsEvent($fields));
 
-        return $fields;
+        return $event->getFields();
     }
 
     /**

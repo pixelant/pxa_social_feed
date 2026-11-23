@@ -14,7 +14,7 @@ plugin.tx_pxasocialfeed {
     }
 
     settings {
-        dateFormat = %d-%m-%y
+        dateFormat = d-m-y
     }
 }
 
@@ -30,13 +30,7 @@ pxaAjaxFeedLoad {
         userFunc = TYPO3\CMS\Extbase\Core\Bootstrap->run
         vendorName = Pixelant
         extensionName = PxaSocialFeed
-        pluginName = Showfeed
-
-        switchableControllerActions {
-            \Pixelant\PxaSocialFeed\Controller\FeedsController {
-                1 = loadFeedAjax
-            }
-        }
+        pluginName = Ajax
 
         settings =< plugin.tx_pxasocialfeed.settings
     }

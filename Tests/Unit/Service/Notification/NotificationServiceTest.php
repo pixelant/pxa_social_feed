@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Service\Notification;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Service\Notification\NotificationService;
 
 /**
@@ -17,17 +17,17 @@ class NotificationServiceTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = new NotificationService();
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function valuesPassedToConstuctorSetToProperties()
     {
         $sender = 'sender@site.com';
@@ -39,17 +39,13 @@ class NotificationServiceTest extends UnitTestCase
         self::assertEquals($receiver, $subject->getReceiverEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueForSenderEmail()
     {
         self::assertEmpty($this->subject->getSenderEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetSenderEmail()
     {
         $value = 'test@site.com';
@@ -58,17 +54,13 @@ class NotificationServiceTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getSenderEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function initialValueForReceiverEmail()
     {
         self::assertEmpty($this->subject->getReceiverEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSetReceiverEmail()
     {
         $value = 'receiver@site.com';
@@ -77,9 +69,7 @@ class NotificationServiceTest extends UnitTestCase
         self::assertEquals($value, $this->subject->getReceiverEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSendEmailReturnTrueOnValidSenderAndReceiver()
     {
         $sender = 'sender@site.com';
@@ -91,9 +81,7 @@ class NotificationServiceTest extends UnitTestCase
         self::assertTrue($this->subject->canSendEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSendEmailReturnFalseOninValidSender()
     {
         $sender = 'invalid';
@@ -105,9 +93,7 @@ class NotificationServiceTest extends UnitTestCase
         self::assertFalse($this->subject->canSendEmail());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function canSendEmailReturnFalseOninValidReceiver()
     {
         $sender = 'sender@site.com';

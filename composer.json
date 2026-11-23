@@ -17,15 +17,22 @@
     }
   ],
   "require": {
-	"php": ">=8.1",
-	"typo3/cms-core": "^11.5 || ^12.4",
-	"typo3/cms-scheduler": "^11.5 || ^12.4",
-    "league/oauth2-facebook": "2.0.5"
+    "php": "^8.2",
+    "typo3/cms-backend": "^13.4",
+    "typo3/cms-core": "^13.4",
+    "typo3/cms-extbase": "^13.4",
+    "typo3/cms-fluid": "^13.4",
+    "typo3/cms-frontend": "^13.4",
+    "typo3/cms-scheduler": "^13.4",
+    "league/oauth2-facebook": "^2.3",
+    "typo3/cms-install": "^13.4",
+    "league/oauth2-client": "^2.8"
   },
   "require-dev": {
-    "nimut/testing-framework": "^6.0",
-    "squizlabs/php_codesniffer": "^3.4",
-    "typo3/coding-standards": "^0.6"
+    "typo3/testing-framework": "^9.7",
+    "phpunit/phpunit": "^11.5",
+    "typo3/coding-standards": "^0.9",
+    "typo3/cms-fluid-styled-content": "^13.4"
   },
   "autoload-dev": {
     "psr-4": {
@@ -35,38 +42,25 @@
   "config": {
     "vendor-dir": ".Build/vendor",
     "bin-dir": ".Build/bin",
-    "preferred-install": {
-      "typo3/cms": "source"
-    },
     "allow-plugins": {
-      "typo3/cms-composeinstallers": true,
       "typo3/cms-composer-installers": true,
       "typo3/class-alias-loader": true
     }
   },
   "scripts": {
-    "pre-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/pxa_social_feed ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/pxa_social_feed"
-    ],
-    "post-autoload-dump": [
-      "@prepare-extension-test-structure"
-    ],
-    "prepare-extension-test-structure": [
-      "Nimut\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
-    ],
-    "php:cs-fixer": "@php php-cs-fixer fix -v --dry-run --using-cache no --diff",
-    "php:codesniffer": ".Build/bin/phpcs --standard=PSR2 Classes/ *.php && .Build/bin/phpcs -n --standard=PSR2 Configuration/TCA/",
-    "php:unittests": "export TYPO3_PATH_WEB=$PWD/.Build/Web && .Build/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
-    "tests:all": "composer php:codesniffer && composer php:unittests"
+    "php:lint": "find Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 php -l && find . -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 php -l",
+    "php:cs-fixer": "php-cs-fixer fix --dry-run --diff",
+    "php:unittests": "phpunit -c Tests/UnitTests.xml",
+    "php:functionaltests": "phpunit -c Tests/FunctionalTests.xml",
+    "tests:all": [
+      "@php:lint",
+      "@php:unittests",
+      "@php:functionaltests"
+    ]
   },
   "extra": {
-    "branch-alias": {
-      "dev-master": "0.0.x-dev"
-    },
     "typo3/cms": {
       "extension-key": "pxa_social_feed",
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
       "web-dir": ".Build/Web"
     }
   }

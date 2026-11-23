@@ -4,6 +4,7 @@ namespace Pixelant\PxaSocialFeed\Controller;
 
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Psr\Http\Message\ResponseInterface;
+use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 
@@ -50,13 +51,15 @@ class FeedsController extends ActionController
         $this->feedRepository = $feedRepository;
     }
 
-    protected function initializeView($view) {}
-
     /**
      * List action
      */
     public function listAction(): ResponseInterface
     {
+        if (($this->settings['loadType'] ?? 'standard') === 'ajax') {
+            return $this->htmlResponse($this->view->render('ListAjax'));
+        }
+
         $limit = (int)($this->settings['feedsLimit'] ?? 10);
         $configurations = GeneralUtility::intExplode(',', $this->settings['configuration'] ?? '', true);
 
@@ -88,7 +91,7 @@ class FeedsController extends ActionController
         int $feedsLimit = 10,
         string $partial = '',
         string $presentation = ''
-    ) {
+    ): ResponseInterface {
         $feeds = $this->feedRepository->findByConfigurations(
             GeneralUtility::intExplode(',', $configuration, true),
             $feedsLimit
@@ -100,15 +103,9 @@ class FeedsController extends ActionController
 
         $this->view->assignMultiple(compact('feeds', 'settings'));
 
-        header('Content-Type: application/json');
-
-        echo json_encode(
-            [
-                'success' => true,
-                'html' => $this->view->render(),
-            ]
-        );
-
-        exit(0);
+        return new JsonResponse([
+            'success' => true,
+            'html' => $this->view->render(),
+        ]);
     }
 }

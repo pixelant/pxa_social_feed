@@ -64,7 +64,7 @@ class YoutubeFeedUpdater extends BaseUpdater
         }
 
         $title = $rawData['snippet']['title'] ?? '';
-        if ($this != $feedItem->getTitle()) {
+        if ($title !== $feedItem->getTitle()) {
             $feedItem->setTitle($title);
         }
     }

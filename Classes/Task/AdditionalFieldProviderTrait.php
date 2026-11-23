@@ -29,9 +29,7 @@ trait AdditionalFieldProviderTrait
      */
     protected function getAction(SchedulerModuleController $schedulerModuleController): string
     {
-        return method_exists($schedulerModuleController, 'getCurrentAction')
-            ? (string)$schedulerModuleController->getCurrentAction()
-            : (string)$schedulerModuleController->getCurrentAction();
+        return $schedulerModuleController->getCurrentAction()->value;
     }
 
     /**
@@ -42,15 +40,8 @@ trait AdditionalFieldProviderTrait
      *
      * @todo: Change $severity to allow ContextualFeedbackSeverity only in v13
      */
-    protected function addMessage(string $message, int|ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): void
+    protected function addMessage(string $message, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): void
     {
-        if (!is_string($message)) {
-            throw new \InvalidArgumentException(
-                'The message body must be of type string, "' . gettype($message) . '" given.',
-                1548921638461
-            );
-        }
-
         /* @var \TYPO3\CMS\Core\Messaging\FlashMessage $flashMessage */
         $flashMessage = GeneralUtility::makeInstance(
             FlashMessage::class,

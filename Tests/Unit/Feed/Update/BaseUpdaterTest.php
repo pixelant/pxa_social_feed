@@ -2,13 +2,12 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed\Update;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
 use Pixelant\PxaSocialFeed\Domain\Model\Feed;
 use Pixelant\PxaSocialFeed\Domain\Repository\FeedRepository;
 use Pixelant\PxaSocialFeed\Feed\Update\BaseUpdater;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 /**
  * Class BaseUpdaterTest
@@ -22,57 +21,51 @@ class BaseUpdaterTest extends UnitTestCase
 
     protected function setUp(): void
     {
-        $reflection = new \ReflectionProperty(GeneralUtility::class, 'singletonInstances');
-        $reflection->setAccessible(true);
-        $singletonInstances = $reflection->getValue();
-        $singletonInstances[ObjectManager::class] = $this->createMock(ObjectManager::class);
-        $reflection->setValue(null, $singletonInstances);
-
+        parent::setUp();
+        $dispatcher = $this->createMock(\Psr\EventDispatcher\EventDispatcherInterface::class);
+        $dispatcher->method('dispatch')->willReturnArgument(0);
+        GeneralUtility::addInstance(\Psr\EventDispatcher\EventDispatcherInterface::class, $dispatcher);
         $this->subject = $this->getAccessibleMock(BaseUpdater::class, ['update'], [], '', false);
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        GeneralUtility::purgeInstances();
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addOrUpdateFeedItemSaveItemInFeedsStorage()
     {
         $feed = new Feed();
         $feedStorage = new ObjectStorage();
 
-        $this->inject($this->subject, 'feedRepository', $this->createMock(FeedRepository::class));
-        $this->inject($this->subject, 'feeds', $feedStorage);
+        $this->subject->_set('feedRepository', $this->createMock(FeedRepository::class));
+        $this->subject->_set('feeds', $feedStorage);
 
         $this->subject->_call('addOrUpdateFeedItem', $feed);
 
         self::assertEquals(1, $feedStorage->count());
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addOrUpdateFeedItemCallAddOnNewItem()
     {
         $feed = new Feed();
         $mockedRepository = $this->createMock(FeedRepository::class);
         $mockedRepository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('add')
             ->with($feed);
 
-        $this->inject($this->subject, 'feedRepository', $mockedRepository);
-        $this->inject($this->subject, 'feeds', $this->createMock(ObjectStorage::class));
+        $this->subject->_set('feedRepository', $mockedRepository);
+        $this->subject->_set('feeds', $this->createMock(ObjectStorage::class));
 
         $this->subject->_call('addOrUpdateFeedItem', $feed);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addOrUpdateFeedItemCallUpdateOnExistingItem()
     {
         $feed = new Feed();
@@ -80,19 +73,17 @@ class BaseUpdaterTest extends UnitTestCase
 
         $mockedRepository = $this->createMock(FeedRepository::class);
         $mockedRepository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('update')
             ->with($feed);
 
-        $this->inject($this->subject, 'feedRepository', $mockedRepository);
-        $this->inject($this->subject, 'feeds', $this->createMock(ObjectStorage::class));
+        $this->subject->_set('feedRepository', $mockedRepository);
+        $this->subject->_set('feeds', $this->createMock(ObjectStorage::class));
 
         $this->subject->_call('addOrUpdateFeedItem', $feed);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function encodeMessageForSimpleStringReturnSameString()
     {
         $value = 'test string';

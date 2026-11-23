@@ -25,7 +25,7 @@ use TYPO3\CMS\Core\Http\RedirectResponse;
 use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Type\ContextualFeedbackSeverity;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\PathUtility;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Annotation as Extbase;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Mvc\Web\Routing\UriBuilder;
@@ -93,16 +93,12 @@ class AdministrationController extends ActionController
      */
     protected ModuleTemplate $moduleTemplate;
 
-    /**
-     * @param BackendUserGroupRepository $backendUserGroupRepository
-     */
-    public function __construct(BackendUserGroupRepository $backendUserGroupRepository, private ModuleTemplateFactory $moduleTemplateFactor, private readonly PageRenderer $pageRenderer)
-    {
+    public function __construct(
+        BackendUserGroupRepository $backendUserGroupRepository,
+        ModuleTemplateFactory $moduleTemplateFactory,
+        private readonly PageRenderer $pageRenderer,
+    ) {
         $this->backendUserGroupRepository = $backendUserGroupRepository;
-    }
-
-    public function injectModuleTemplateFactory(ModuleTemplateFactory $moduleTemplateFactory): void
-    {
         $this->moduleTemplateFactory = $moduleTemplateFactory;
     }
 
@@ -130,37 +126,20 @@ class AdministrationController extends ActionController
         $this->feedRepository = $feedRepository;
     }
 
-    protected function initializeView()
-    {
-        // $this->pageRenderer->addCssFile ( 'EXT:pxa_social_feed/Resources/Public/Css/Backend/SocialFeedModule.css' );
-        // $this->pageRenderer->loadJavaScriptModule ( '@pixelant/pxa-social-feed/social-feed-administration-module.js' );
-
-        $this->pageRenderer->addRequireJsConfiguration(
-            [
-                'paths' => [
-                    'clipboard' => PathUtility::getAbsoluteWebPath(
-                        GeneralUtility::getFileAbsFileName(
-                            'EXT:pxa_social_feed/Resources/Public/JavaScript/clipboard.min'
-                        )
-                    ),
-                ],
-                'shim' => [
-                    'deps' => ['jquery'],
-                    'clipboard' => ['exports' => 'ClipboardJS'],
-                ],
-            ]
-        );
-
-        $this->pageRenderer->loadRequireJsModule(
-            'TYPO3/CMS/PxaSocialFeed/Backend/SocialFeedModule',
-            "function(socialFeedModule) { socialFeedModule.getInstance({$this->getInlineSettings()}).run() }"
-        );
-    }
-
-    public function initializeAction()
+    public function initializeAction(): void
     {
         $this->moduleTemplate = $this->moduleTemplateFactory->create($this->request);
+        $this->pageRenderer->addCssFile('EXT:pxa_social_feed/Resources/Public/Css/Backend/SocialFeedModule.css');
+        $this->pageRenderer->loadJavaScriptModule('@pixelant/pxa-social-feed/social-feed-administration-module.js');
         $this->createMenu();
+    }
+
+    protected function resolveView(): ViewInterface
+    {
+        $this->moduleTemplate->assign('settings', $this->settings);
+        $this->moduleTemplate->assign('browserUrl', (string)GeneralUtility::makeInstance(BackendUriBuilder::class)
+            ->buildUriFromRoute('wizard_element_browser'));
+        return $this->moduleTemplate;
     }
 
     /**
@@ -179,8 +158,7 @@ class AdministrationController extends ActionController
             'isAdmin' => $GLOBALS['BE_USER']->isAdmin(),
         ]);
 
-        $this->moduleTemplate->setContent ( $this->view->render () );
-        return $this->htmlResponse($this->moduleTemplate->renderContent());
+        return $this->moduleTemplate->renderResponse('Administration/Index');
     }
 
     /**
@@ -189,7 +167,7 @@ class AdministrationController extends ActionController
      * @param Token|null $tokenToEdit
      * @param int $type
      */
-    public function editTokenAction(Token $tokenToEdit = null, int $type = Token::FACEBOOK): ResponseInterface
+    public function editTokenAction(?Token $tokenToEdit = null, int $type = Token::FACEBOOK): ResponseInterface
     {
         $token = $tokenToEdit;
         $isNew = $token === null;
@@ -208,8 +186,7 @@ class AdministrationController extends ActionController
         $this->view->assignMultiple(compact('token', 'type', 'isNew', 'availableTypes'));
         $this->assignBEGroups();
 
-        $this->moduleTemplate->setContent ( $this->view->render () );
-        return $this->htmlResponse ( $this->moduleTemplate->renderContent () );
+        return $this->moduleTemplate->renderResponse('Administration/EditToken');
     }
 
     /**
@@ -230,7 +207,7 @@ class AdministrationController extends ActionController
             ContextualFeedbackSeverity::INFO,
         );
 
-        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', [], 'Administration', 'PxaSocialFeed') . '&activeTokenTab=1');
+        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', ['activeTokenTab' => true], 'Administration', 'PxaSocialFeed'));
     }
 
     /**
@@ -238,10 +215,10 @@ class AdministrationController extends ActionController
      *
      * @param Token $token
      */
-    public function resetAccessTokenAction ( Token $resetToken ) : RedirectResponse
+    public function resetAccessTokenAction(Token $resetToken): RedirectResponse
     {
-        $resetToken->setAccessToken ( '' );
-        $this->tokenRepository->update ( $resetToken );
+        $resetToken->setAccessToken('');
+        $this->tokenRepository->update($resetToken);
 
         $this->addFlashMessage(
             'Access token was reset',
@@ -249,7 +226,7 @@ class AdministrationController extends ActionController
             ContextualFeedbackSeverity::INFO,
         );
 
-        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', [], 'Administration', 'PxaSocialFeed') . '&activeTokenTab=1');
+        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', ['activeTokenTab' => true], 'Administration', 'PxaSocialFeed'));
     }
 
     /**
@@ -257,19 +234,18 @@ class AdministrationController extends ActionController
      *
      * @param Token $tokenToDelete
      */
-    public function deleteTokenAction ( Token $tokenToDelete ) : RedirectResponse
+    public function deleteTokenAction(Token $tokenToDelete): RedirectResponse
     {
-        $tokenConfigurations = $this->configurationRepository->findConfigurationByToken ( $tokenToDelete );
+        $tokenConfigurations = $this->configurationRepository->findConfigurationByToken($tokenToDelete);
 
         if ($tokenConfigurations->count() === 0) {
-            $this->tokenRepository->remove ( $tokenToDelete );
+            $this->tokenRepository->remove($tokenToDelete);
 
-            if ( $tokenToDelete->getType () === Token::FACEBOOK )
-                {
+            if ($tokenToDelete->getType() === Token::FACEBOOK) {
                 // Remove all page access tokens created by this token
                 $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
                     ->getConnectionForTable('tx_pxasocialfeed_domain_model_token');
-                $queryBuilder->delete ( 'tx_pxasocialfeed_domain_model_token', [ 'parent_token' => $tokenToDelete->getUid () ] );
+                $queryBuilder->delete('tx_pxasocialfeed_domain_model_token', [ 'parent_token' => $tokenToDelete->getUid() ]);
             }
 
             $this->addFlashMessage(
@@ -278,7 +254,7 @@ class AdministrationController extends ActionController
                 ContextualFeedbackSeverity::INFO,
             );
 
-            return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', [], 'Administration', 'PxaSocialFeed') . '&activeTokenTab=1');
+            return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', ['activeTokenTab' => true], 'Administration', 'PxaSocialFeed'));
         }
 
         $this->addFlashMessage(
@@ -290,7 +266,7 @@ class AdministrationController extends ActionController
             ContextualFeedbackSeverity::ERROR,
         );
 
-        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', [], 'Administration', 'PxaSocialFeed') . '&activeTokenTab=1');
+        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', ['activeTokenTab' => true], 'Administration', 'PxaSocialFeed'));
     }
 
     /**
@@ -298,16 +274,14 @@ class AdministrationController extends ActionController
      *
      * @param Configuration $configuration
      */
-    public function editConfigurationAction(Configuration $configuration = null): ResponseInterface
+    public function editConfigurationAction(?Configuration $configuration = null): ResponseInterface
     {
         $tokens = $this->findAllByRepository($this->tokenRepository);
 
         $this->view->assignMultiple(compact('configuration', 'tokens'));
         $this->assignBEGroups();
 
-
-        $this->moduleTemplate->setContent ( $this->view->render () );
-        return $this->htmlResponse ( $this->moduleTemplate->renderContent () );
+        return $this->moduleTemplate->renderResponse('Administration/EditConfiguration');
     }
 
     /**
@@ -440,7 +414,7 @@ class AdministrationController extends ActionController
      * @param array|null $arguments
      * @return string
      */
-    protected function translate(string $key, array $arguments = null): ?string
+    protected function translate(string $key, ?array $arguments = null): ?string
     {
         $key = 'module.' . $key;
 
@@ -509,24 +483,12 @@ class AdministrationController extends ActionController
     }
 
     /**
-     * Generate settings for JS
-     */
-    protected function getInlineSettings(): string
-    {
-        $uriBuilder = GeneralUtility::makeInstance(BackendUriBuilder::class);
-
-        return json_encode([
-            'browserUrl' => (string)$uriBuilder->buildUriFromRoute('wizard_element_browser'),
-        ]);
-    }
-
-    /**
      * Shortcut to redirect to index on tokens tab with flash message
      *
      * @param string|null $message
      * @param int $severity
      */
-    protected function redirectToIndexTokenTab(string $message = null, int $severity = ContextualFeedbackSeverity::OK): RedirectResponse
+    protected function redirectToIndexTokenTab(?string $message = null, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): RedirectResponse
     {
         if (!empty($message)) {
             $this->addFlashMessage(
@@ -536,7 +498,7 @@ class AdministrationController extends ActionController
             );
         }
 
-        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', [], 'Administration', 'PxaSocialFeed') . '&activeTokenTab=1');
+        return new RedirectResponse($this->uriBuilder->reset()->uriFor('index', ['activeTokenTab' => true], 'Administration', 'PxaSocialFeed'));
     }
 
     /**
@@ -545,7 +507,7 @@ class AdministrationController extends ActionController
      * @param string|null $message
      * @param int $severity
      */
-    protected function redirectToIndex(string $message = null, int $severity = ContextualFeedbackSeverity::OK): RedirectResponse
+    protected function redirectToIndex(?string $message = null, ContextualFeedbackSeverity $severity = ContextualFeedbackSeverity::OK): RedirectResponse
     {
         if (!empty($message)) {
             $this->addFlashMessage(

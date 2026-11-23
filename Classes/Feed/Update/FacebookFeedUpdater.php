@@ -16,7 +16,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  * Class FacebookFeedUpdater
  */
 class FacebookFeedUpdater extends BaseUpdater
-    {
+{
     /**
      * Create/Update feed items
      *
@@ -58,10 +58,10 @@ class FacebookFeedUpdater extends BaseUpdater
             $feedItem->setUpdateDate((new \DateTime())->setTimestamp($updated));
         }
 
-        $feedItem->setLikes((int)($rawData[ 'reactions' ][ 'summary' ][ 'total_count' ]));
+        $feedItem->setLikes((int)($rawData['reactions']['summary']['total_count'] ?? 0));
         // dispatch event
-        $eventDispatcher = GeneralUtility::makeInstance ( EventDispatcherInterface::class);
-        $eventDispatcher->dispatch ( new BeforeUpdateFacebookFeedEvent ( $feedItem, $rawData, $feedItem->getConfiguration () ) );
+        $eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
+        $eventDispatcher->dispatch(new BeforeUpdateFacebookFeedEvent($feedItem, $rawData, $feedItem->getConfiguration()));
         $this->addOrUpdateFeedItem($feedItem);
     }
 

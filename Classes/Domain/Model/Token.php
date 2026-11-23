@@ -33,7 +33,6 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Pixelant\PxaSocialFeed\Feed\Source\FacebookSource;
 use Pixelant\PxaSocialFeed\Provider\Facebook;
-use Pixelant\PxaSocialFeed\SignalSlot\EmitSignalTrait;
 use TYPO3\CMS\Extbase\DomainObject\AbstractEntity;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
@@ -43,8 +42,6 @@ use TYPO3\CMS\Extbase\Utility\LocalizationUtility;
  */
 class Token extends AbstractEntity
 {
-    // use EmitSignalTrait;
-
     /**
      * facebook user token
      */
@@ -80,7 +77,7 @@ class Token extends AbstractEntity
      *
      * @var int
      */
-    protected $pid = 0;
+    protected ?int $pid = 0;
 
     /**
      * @var ObjectStorage<BackendUserGroup>|null
@@ -331,24 +328,16 @@ class Token extends AbstractEntity
      */
     public function isValidFacebookAccessToken(): bool
     {
-        $isValid = true;
         if (empty($this->accessToken)) {
-            $isValid = false;
-        } else {
-            try {
-                $token = new AccessToken([
-                    'access_token' => $this->getAccessToken(),
-                ]);
-                $this->getFb(
-                    $this->getAppId(),
-                    $this->getAppSecret()
-                )->getLongLivedAccessToken($token);
-            } catch (FacebookProviderException|IdentityProviderException $exception) {
-                $isValid = false;
-            }
+            return false;
         }
-
-        return $isValid;
+        try {
+            $this->getFb($this->getAppId(), $this->getAppSecret())
+                ->getLongLivedAccessToken($this->getAccessToken());
+            return true;
+        } catch (FacebookProviderException|IdentityProviderException $exception) {
+            return false;
+        }
     }
 
     /**
@@ -378,17 +367,17 @@ class Token extends AbstractEntity
      */
     public function getFacebookAccessTokenMetadataExpirationDate(): ?\DateTime
     {
+        if (empty($this->accessToken)) {
+            return null;
+        }
         try {
-            $expireAt = new \DateTime('+60 days');
-            $token = new AccessToken([
-                'access_token' => $this->getAccessToken(),
-            ]);
-            $this->getFb($this->getAppId(), $this->getAppSecret())->getLongLivedAccessToken($token);
+            $token = $this->getFb($this->getAppId(), $this->getAppSecret())
+                ->getLongLivedAccessToken($this->getAccessToken());
         } catch (FacebookProviderException|IdentityProviderException $exception) {
             return null;
         }
-
-        return $expireAt;
+        $expires = $token->getExpires();
+        return $expires !== null && $expires > 0 ? (new \DateTime())->setTimestamp($expires) : null;
     }
 
     /**
@@ -401,12 +390,20 @@ class Token extends AbstractEntity
     public function getFacebookLoginUrl(string $clientId, string $clientSecret, string $redirectUrl, array $permissions)
     {
         // required by SDK login
-        session_start();
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
 
-        $fb = $this->getFb($clientId, $clientSecret, $redirectUrl);
-        return $fb->getAuthorizationUrl([
-            'scope' => $permissions,
-        ]) . '&bypass=1';
+        // Metadata checks may have cached a provider without a redirect URI.
+        $fb = new Facebook([
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+            'redirectUri' => $redirectUrl,
+            'graphApiVersion' => FacebookSource::GRAPH_VERSION,
+        ]);
+        $url = $fb->getAuthorizationUrl(['scope' => $permissions]);
+        $_SESSION['pxa_social_feed_oauth'][$this->getUid()] = $fb->getState();
+        return $url;
     }
 
     /**
@@ -447,11 +444,10 @@ class Token extends AbstractEntity
      */
     public function getParentToken(): ?Token
     {
-        if ( $this->parentToken instanceof Token )
-            {
+        if ($this->parentToken instanceof Token) {
             return $this->parentToken;
-            }
-        return NULL;
+        }
+        return null;
     }
 
     /**

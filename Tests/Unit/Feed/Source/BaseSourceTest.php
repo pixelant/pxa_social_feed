@@ -2,7 +2,7 @@
 
 namespace Pixelant\PxaSocialFeed\Tests\Unit\Feed\Source;
 
-use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 use Pixelant\PxaSocialFeed\Feed\Source\BaseSource;
 
 /**
@@ -17,17 +17,17 @@ class BaseSourceTest extends UnitTestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->subject = $this->getAccessibleMock(BaseSource::class, ['load'], [], '', false);
     }
 
     protected function tearDown(): void
     {
         unset($this->subject);
+        parent::tearDown();
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addFieldsAsGetParametersToUrlWithEmptyFieldsReturnSameUrl()
     {
         $url = 'https://site.com/api.json';
@@ -38,9 +38,7 @@ class BaseSourceTest extends UnitTestCase
         self::assertEquals($url, $result);
     }
 
-    /**
-     * @test
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
     public function addFieldsAsGetParametersToUrlWithFieldsReturnUrlWithGetParameters()
     {
         $url = 'https://site.com/api.json';

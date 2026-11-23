@@ -8,17 +8,26 @@ use Pixelant\PxaSocialFeed\ViewHelpers\ParseMessageViewHelper;
 
 class ParseMessageViewHelperTest extends TestCase
 {
-    /**
-     * @test
-     * @dataProvider parseMessageDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\Test]
+    #[\PHPUnit\Framework\Attributes\DataProvider('parseMessageDataProvider')]
     public function parseMessage(int $type, string $text, string $expectaction)
     {
         $result = ParseMessageViewHelper::parseFeedMessage($text, $type);
         self::assertEquals($expectaction, $result);
     }
 
-    public function parseMessageDataProvider(): array
+    #[\PHPUnit\Framework\Attributes\Test]
+    public function escapesProviderHtmlAndDoesNotRewriteUrlsIntoNestedLinks(): void
+    {
+        $result = ParseMessageViewHelper::parseFeedMessage('<img src=x onerror="alert(1)"> https://example.org/?a=1&b=2#anchor @user', Token::TWITTER_V2);
+        self::assertStringNotContainsString('<img', $result);
+        self::assertStringContainsString('&lt;img', $result);
+        self::assertStringContainsString('href="https://example.org/?a=1&amp;b=2#anchor"', $result);
+        self::assertSame(2, substr_count($result, '<a '));
+        self::assertStringNotContainsString('hashtag/anchor', $result);
+    }
+
+    public static function parseMessageDataProvider(): array
     {
         return [
             'facebook' => [

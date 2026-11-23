@@ -1,7 +1,0 @@
-plugin.tx_pxasocialfeed {
-    features {
-        ignoreAllEnableFieldsInBe = 1
-    }
-}
-module.tx_pxasocialfeed < plugin.tx_pxasocialfeed
-

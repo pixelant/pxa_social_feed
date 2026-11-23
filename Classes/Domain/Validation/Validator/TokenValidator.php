@@ -49,6 +49,7 @@ class TokenValidator extends AbstractValidator
             );
         }
 
+        $properties = [];
         switch (true) {
             case $token->isFacebookType():
             case $token->isInstagramType():

@@ -6,15 +6,12 @@ use Pixelant\PxaSocialFeed\Domain\Model\Token;
 use Pixelant\PxaSocialFeed\Exception\UnsupportedTokenType;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Class ParseMessageViewHelper
  */
 class ParseMessageViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var bool
      */
@@ -24,6 +21,10 @@ class ParseMessageViewHelper extends AbstractViewHelper
      * @var bool
      */
     protected $escapeOutput = false;
+    public function render()
+    {
+        return self::renderStatic($this->arguments, $this->renderChildren(...), $this->renderingContext);
+    }
 
     /**
      * Arguments initializations
@@ -62,121 +63,42 @@ class ParseMessageViewHelper extends AbstractViewHelper
      */
     public static function parseFeedMessage($text, $type)
     {
-        // Convert urls to links
-        $text = preg_replace(
-            '$(\s|^)(https?://[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
-            ' <a href="$2" target="_blank" rel="noreferrer">$2</a> ',
-            $text
-        );
-        $text = preg_replace(
-            '$(\s|^)(www\.[a-z0-9_./?=&-]+)(?![^<>]*>)$i',
-            '<a href="http://$2" target="_blank" rel="noreferrer">$2</a> ',
-            $text
-        );
-
-        switch ($type) {
-            case Token::FACEBOOK_PAGE:
-            case Token::FACEBOOK:
-                // Convert hashtags to facebook searches in <a> links
-                $text = preg_replace_callback(
-                    "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" '
-                                . 'href="https://www.facebook.com/hashtag/%s?source=feed_text">#%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-                break;
-            case Token::TWITTER:
-            case Token::TWITTER_V2:
-                // Convert hashtags to twitter searches in <a> links
-                $text = preg_replace_callback(
-                    "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://twitter.com/hashtag/%s">#%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-
-                // Convert @tags to twitter profiles in <a> links
-                $text = preg_replace_callback(
-                    "/@([[:alnum:]\/._]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.twitter.com/%s/">@%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-                break;
-            case Token::INSTAGRAM:
-                // Convert hashtags to instagram searches in <a> links
-                $text = preg_replace_callback(
-                    "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" '
-                                . 'href="https://www.instagram.com/explore/tags/%s/">#%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-                // Convert @tags to instagram profiles in <a> links
-                $text = preg_replace_callback(
-                    "/@([[:alnum:]\/._]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.instagram.com/%s/">@%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-                break;
-            case Token::YOUTUBE:
-                //Convert hashtags to youtube searches in <a> links
-                $text = preg_replace_callback(
-                    "/#([[:alnum:]\/.]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" '
-                                . 'href="https://www.youtube.com/results?search_query=%s">#%s</a>',
-                            rawurlencode('#' . $matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-                // Convert @tags to youtube profiles in <a> links
-                $text = preg_replace_callback(
-                    "/@([[:alnum:]\/._]+)/u",
-                    function ($matches) {
-                        return sprintf(
-                            '<a target="_blank" rel="noreferrer" href="https://www.youtube.com/user/%s/">@%s</a>',
-                            rawurlencode($matches[1]),
-                            htmlspecialchars($matches[1])
-                        );
-                    },
-                    $text
-                );
-                break;
-            default:
-                throw new UnsupportedTokenType("Token type $type is not supported by view helper", 1564384491599);
+        $hashtagUrls = [
+            Token::FACEBOOK => 'https://www.facebook.com/hashtag/%s?source=feed_text',
+            Token::FACEBOOK_PAGE => 'https://www.facebook.com/hashtag/%s?source=feed_text',
+            Token::TWITTER => 'https://twitter.com/hashtag/%s',
+            Token::TWITTER_V2 => 'https://twitter.com/hashtag/%s',
+            Token::INSTAGRAM => 'https://www.instagram.com/explore/tags/%s/',
+            Token::YOUTUBE => 'https://www.youtube.com/results?search_query=%s',
+        ];
+        $profileUrls = [
+            Token::TWITTER => 'https://www.twitter.com/%s/',
+            Token::TWITTER_V2 => 'https://www.twitter.com/%s/',
+            Token::INSTAGRAM => 'https://www.instagram.com/%s/',
+            Token::YOUTUBE => 'https://www.youtube.com/user/%s/',
+        ];
+        if (!isset($hashtagUrls[$type])) {
+            throw new UnsupportedTokenType("Token type $type is not supported by view helper", 1564384491599);
         }
-
-        return $text;
+        // Escape imported text once; generate links only from the original text, never from generated HTML.
+        $parts = preg_split('~((?:https?://|www\.)[^\s<>"\']+|(?<![\p{L}\p{N}_])[#@][\p{L}\p{N}_/.]+)~u', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $result = '';
+        foreach ($parts ?: [$text] as $part) {
+            $escaped = htmlspecialchars($part, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+            $url = null;
+            if (preg_match('~^https?://~i', $part)) {
+                $url = $part;
+            } elseif (str_starts_with($part, 'www.')) {
+                $url = 'http://' . $part;
+            } elseif (str_starts_with($part, '#')) {
+                $tag = $type === Token::YOUTUBE ? $part : substr($part, 1);
+                $url = sprintf($hashtagUrls[$type], rawurlencode($tag));
+            } elseif (str_starts_with($part, '@') && isset($profileUrls[$type])) {
+                $url = sprintf($profileUrls[$type], rawurlencode(substr($part, 1)));
+            }
+            $result .= $url === null ? $escaped : '<a target="_blank" rel="noreferrer" href="'
+                . htmlspecialchars($url, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '">' . $escaped . '</a>';
+        }
+        return $result;
     }
 }
